@@ -51,7 +51,7 @@ async function loginAnonymous(props: LoginProps, app: IAppContextCB) {
 
 function ButtonAnonymous(props: LoginProps) {
 	const app = useContext(AppContext)
-	const [loading, setLoading] = useState(false)
+	const [loading, setLoading] = useState<boolean>(false)
 	async function cb() {
 		setLoading(true)
 		try {

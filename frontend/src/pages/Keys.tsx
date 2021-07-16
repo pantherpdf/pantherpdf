@@ -9,7 +9,7 @@ type IKeyPublicShortWithKey = IKeyPublicShort & {key?: string}
 export default function Keys() {
 	const app = useContext(AppContext)
 	const [keys, setKeys] = useState<IKeyPublicShortWithKey[]>([])
-	const [loading, setLoading] = useState(true)
+	const [loading, setLoading] = useState<boolean>(true)
 
 	// load keys
 	useEffect(() => {
