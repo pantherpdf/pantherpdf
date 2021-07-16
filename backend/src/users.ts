@@ -9,6 +9,7 @@ export async function createUser(user: IUser): Promise<string> {
 		throw new Error('already has _id in userData')
 	}
 	const db = await connectToDatabase()
+	db.logEvent(null, 'userCreate', {modifiedEmail: user.email})
 	const res = await db.users.insertOne(user)
 	return res.insertedId.toHexString()
 }
@@ -21,6 +22,7 @@ export async function createSession(email: string): Promise<string> {
 		email,
 		sid,
 	}
+	db.logEvent(null, 'userLogin', {modifiedEmail: email})
 	await db.sessions.insertOne(data)
 	return sid
 }
@@ -29,8 +31,12 @@ export async function createSession(email: string): Promise<string> {
 export function sidFromEvent(event: Event): string | null {
 	if ('authorization' in event.headers) {
 		const txt = event.headers.authorization as string
-		if (txt.startsWith('Bearer ')) {
-			return txt.substring(7)
+		if (txt.startsWith('Bearer sid:')) {
+			return txt.substring(11)
+		}
+	}
+	return null
+}
 		}
 	}
 	return null
@@ -57,26 +63,25 @@ export async function userDataFromEmail(email: string): Promise<IUser | null> {
 }
 
 
-export async function userDataFromEvent(event: Event): Promise<IUser | null> {
+export async function userEmailFromEvent(event: Event): Promise<string | null> {
 	const sid = sidFromEvent(event)
-	if (!sid)
-		return null
-	const email = await userEmailFromSid(sid)
+	if (sid) {
+		return userEmailFromSid(sid)
+	}
+	const key = keyFromEvent(event)
+	if (key) {
+		return userEmailFromKey(key)
+	}
+	return null
+}
+
+
+export async function userDataFromEvent(event: Event): Promise<IUser | null> {
+	const email = await userEmailFromEvent(event)
 	if (!email)
 		return null
 	const data = await userDataFromEmail(email)
 	if (!data)
 		return null
 	return data
-}
-
-
-export async function userEmailFromEvent(event: Event): Promise<string | null> {
-	const sid = sidFromEvent(event)
-	if (!sid)
-		return null
-	const email = await userEmailFromSid(sid)
-	if (!email)
-		return null
-	return email
 }

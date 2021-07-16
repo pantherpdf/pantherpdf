@@ -1,9 +1,10 @@
 import React from 'react'
-import type { IReportShort, IUserWithId, UserDataResponse } from '../../backend/shared/types'
+import type { IReportShort, IUser, UserDataResponse } from '../../backend/shared/types'
 
 
 export interface IAppContextData {
-	user: IUserWithId | null,
+	user: IUser | null,
+	sid: string | null,
 	reports: IReportShort[],
 }
 
@@ -15,6 +16,7 @@ export interface IAppContextCB extends IAppContextData {
 export function AppContextDefaultData(): IAppContextData {
 	return {
 		user: null,
+		sid: null,
 		reports: [],
 	}
 }
@@ -33,7 +35,7 @@ export function getApp(data: IAppContextData, setData: React.Dispatch<React.SetS
 	const app: IAppContextCB = {
 		...data,
 		setSid: async (sid: string) => {
-			const r = await fetch('/.netlify/functions/userData', {headers: {Authorization: `Bearer ${sid}`}})
+			const r = await fetch('/.netlify/functions/userData', {headers: {Authorization: `Bearer sid:${sid}`}})
 			const js = await r.json() as UserDataResponse
 			if (!r.ok) {
 				window.localStorage.removeItem('sid')
@@ -43,14 +45,14 @@ export function getApp(data: IAppContextData, setData: React.Dispatch<React.SetS
 				return
 			}
 			window.localStorage.setItem('sid', sid)
-			setData({...data, ...js})
+			setData({...data, sid, ...js})
 		},
 		logout: async () => {
 			const sid = window.localStorage.getItem('sid')
 			window.localStorage.removeItem('sid')
-			setData({...data, user: null})
+			setData({...data, sid:null, user: null})
 			if (sid && sid.length > 0) {
-				await fetch('/.netlify/functions/logout', {method: 'POST', headers: {Authorization: `Bearer ${sid}`}})
+				await fetch('/.netlify/functions/logout', {method: 'POST', headers: {Authorization: `Bearer sid:${sid}`}})
 			}
 		},
 	}

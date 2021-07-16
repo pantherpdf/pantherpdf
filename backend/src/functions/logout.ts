@@ -10,11 +10,16 @@ const handler: Handler = async (event, context) => {
 	const sid = await sidFromEvent(event)
 	if (sid) {
 		const db = await connectToDatabase()
+		db.logEvent(event, 'logout')
 		await db.sessions.deleteOne({sid})
+		return {
+			statusCode: 200,
+			body: JSON.stringify({}),
+		}
 	}
 	return {
-		statusCode: 200,
-		body: JSON.stringify({}),
+		statusCode: 400,
+		body: JSON.stringify({msg: 'sid not found'}),
 	}
 };
 

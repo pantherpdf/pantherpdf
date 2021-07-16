@@ -46,3 +46,16 @@ export type LoginAnonymousResponse = { sid: string, anonymousId: string } | Erro
 
 // userData
 export type UserDataResponse = { user: IUser, reports: IReportShort[] } | ErrorResponse
+
+
+// events
+export interface IEvent {
+	email?: string,
+	sid?: string,
+	key?: string,
+	ip?: string,
+	userAgent?: string,
+	time: string,
+	type: string,
+	[x: string]: any 
+}

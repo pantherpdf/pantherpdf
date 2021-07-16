@@ -18,6 +18,7 @@ const handler: Handler = async (event, context) => {
 			user,
 			reports,
 		}
+		db.logEvent(event, 'userData')
 		return {
 			statusCode: 200,
 			body: JSON.stringify(dt),
