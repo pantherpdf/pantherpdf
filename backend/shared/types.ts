@@ -42,3 +42,7 @@ export function LoginAnonymousRequestTypeGuard(r: any): r is LoginAnonymousReque
 	return true
 }
 export type LoginAnonymousResponse = { sid: string, anonymousId: string } | ErrorResponse
+
+
+// userData
+export type UserDataResponse = { user: IUser, reports: IReportShort[] } | ErrorResponse

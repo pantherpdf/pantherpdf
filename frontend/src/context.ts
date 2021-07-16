@@ -1,5 +1,5 @@
 import React from 'react'
-import type { IReportShort, IUserWithId } from '../../backend/shared/types'
+import type { IReportShort, IUserWithId, UserDataResponse } from '../../backend/shared/types'
 
 
 export interface IAppContextData {
@@ -34,17 +34,16 @@ export function getApp(data: IAppContextData, setData: React.Dispatch<React.SetS
 		...data,
 		setSid: async (sid: string) => {
 			const r = await fetch('/.netlify/functions/userData', {headers: {Authorization: `Bearer ${sid}`}})
-			const js = await r.json()
+			const js = await r.json() as UserDataResponse
 			if (!r.ok) {
 				window.localStorage.removeItem('sid')
 				setData({...data, user: null})
-				const msg: string = (js && typeof js.msg === 'string') ? js.msg : 'Unknown error'
+				const msg: string = (js && 'msg' in js) ? js.msg : 'Unknown error'
 				alert(`Error: ${msg}`)
 				return
 			}
-			const userData = js as IUserWithId
 			window.localStorage.setItem('sid', sid)
-			setData({...data, user: userData})
+			setData({...data, ...js})
 		},
 		logout: async () => {
 			const sid = window.localStorage.getItem('sid')

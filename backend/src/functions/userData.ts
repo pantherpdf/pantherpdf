@@ -1,5 +1,5 @@
 import { Handler } from "@netlify/functions";
-import { IReport, IReportShort } from "../../shared/types";
+import { IReport, IReportShort, UserDataResponse } from "../../shared/types";
 import connectToDatabase from "../db";
 import { userDataFromEvent } from '../users'
 
@@ -13,7 +13,8 @@ const handler: Handler = async (event, context) => {
 		const db = await connectToDatabase()
 		const reports = await db.collection<IReport>('reports').find({email: user.email}).project({name:1}).toArray() as any as IReportShort[]
 
-		const dt = {
+		delete (user as any)._id
+		const dt: UserDataResponse = {
 			user,
 			reports,
 		}
