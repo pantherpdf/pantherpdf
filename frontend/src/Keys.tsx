@@ -2,13 +2,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState, useContext } from 'react'
 import { AppContext } from './context'
 import { IKeyPublicShort, KeyAddRequest, KeysResponse, KeyAddResponse, KeyRemoveRequest, KeyRemoveResponse } from '../../backend/shared/types'
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faTrash, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 type IKeyPublicShortWithKey = IKeyPublicShort & {key?: string}
 
 export default function Keys() {
 	const app = useContext(AppContext)
 	const [keys, setKeys] = useState<IKeyPublicShortWithKey[]>([])
+	const [loading, setLoading] = useState(true)
 
 	// load keys
 	useEffect(() => {
@@ -21,6 +22,7 @@ export default function Keys() {
 				throw new Error(msg)
 			}
 			setKeys(js)
+			setLoading(false)
 		})()
 	}, [app.sid])
 
@@ -57,39 +59,43 @@ export default function Keys() {
 
 	return <>
 		<h1>Keys</h1>
-		<table className='table'>
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th style={{width:'220px'}}>Time</th>
-					<th style={{width:'50px'}}>&nbsp;</th>
-				</tr>
-			</thead>
-			<tbody>
-				{keys.map(k => <tr key={k.name}>
-					<td>
-						<strong className='d-block'>{k.name}</strong>
-						{'key' in k && <div className='alert alert-success' role='alert'>
-							<strong className='d-block'>Secret key:</strong>
-							{k.key}
-						</div>}
-					</td>
-					<td><small>{k.time}</small></td>
-					<td>
-						<button className='btn btn-outline-danger btn-sm' onClick={() => deleteKey(k.name)}>
-							<FontAwesomeIcon icon={faTrash} />
-						</button>
-					</td>
-				</tr>)}
-			</tbody>
-		</table>
-		{keys.length === 0 && <p>No keys in database.</p>}
-		<button
-			className='btn btn-primary'
-			onClick={addNewKey}
-		>
-			<FontAwesomeIcon icon={faPlus} className='me-2' />
-			Add new key
-		</button>
+		{loading ? <>
+			<FontAwesomeIcon icon={faSpinner} spin={true} className='ms-2' /> 
+		</>: <>
+			<table className='table'>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th style={{width:'220px'}}>Time</th>
+						<th style={{width:'50px'}}>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+					{keys.map(k => <tr key={k.name}>
+						<td>
+							<strong className='d-block'>{k.name}</strong>
+							{'key' in k && <div className='alert alert-success' role='alert'>
+								<strong className='d-block'>Secret key:</strong>
+								{k.key}
+							</div>}
+						</td>
+						<td><small>{k.time}</small></td>
+						<td>
+							<button className='btn btn-outline-danger btn-sm' onClick={() => deleteKey(k.name)}>
+								<FontAwesomeIcon icon={faTrash} />
+							</button>
+						</td>
+					</tr>)}
+				</tbody>
+			</table>
+			{keys.length === 0 && <p>No keys in database.</p>}
+			<button
+				className='btn btn-primary'
+				onClick={addNewKey}
+			>
+				<FontAwesomeIcon icon={faPlus} className='me-2' />
+				Add new key
+			</button>
+		</>}
 	</>
 }
