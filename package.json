@@ -1,0 +1,16 @@
+{
+  "name": "kelgrand-reports",
+  "version": "1.0.0",
+  "private": true,
+  "repository": "https://github.com/ibanic/kelgrand-reports.git",
+  "workspaces": ["backend", "frontend"],
+  "scripts": {
+    "start": "concurrently \"yarn workspace reports-backend start\" \"yarn workspace reports-frontend start\"",
+    "build": "yarn workspace reports-backend build && yarn workspace reports-frontend build",
+    "test": "yarn workspace reports-backend test && yarn workspace reports-frontend test"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.0",
+    "start-server-and-test": "^1.12.5"
+  }
+}

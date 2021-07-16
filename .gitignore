@@ -1,0 +1,8 @@
+.DS_Store
+/node_modules/
+/yarn-error.log
+
+# dotenv environment variable files
+/.env*
+# keep example
+!/.env.example
