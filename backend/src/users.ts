@@ -37,6 +37,13 @@ export function sidFromEvent(event: Event): string | null {
 	}
 	return null
 }
+
+
+export function keyFromEvent(event: Event): string | null {
+	if ('authorization' in event.headers) {
+		const txt = event.headers.authorization as string
+		if (txt.startsWith('Bearer key:')) {
+			return txt.substring(11)
 		}
 	}
 	return null
@@ -46,6 +53,16 @@ export function sidFromEvent(event: Event): string | null {
 export async function userEmailFromSid(sid: string): Promise<string | null> {
 	const db = await connectToDatabase()
 	const res = await db.sessions.findOne({sid})
+	if (res) {
+		return res.email
+	}
+	return null
+}
+
+
+export async function userEmailFromKey(key: string): Promise<string | null> {
+	const db = await connectToDatabase()
+	const res = await db.keys.findOne({key})
 	if (res) {
 		return res.email
 	}

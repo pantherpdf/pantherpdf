@@ -48,6 +48,51 @@ export type LoginAnonymousResponse = { sid: string, anonymousId: string } | Erro
 export type UserDataResponse = { user: IUser, reports: IReportShort[] } | ErrorResponse
 
 
+// keys
+export interface IKey {
+	key: string,
+	name: string,
+	email: string,
+	time: string,
+}
+export interface IKeyPublicShort {
+	name: string,
+	time: string,
+}
+export type KeysResponse = IKeyPublicShort[] | ErrorResponse
+
+export type KeyAddRequest = { name: string }
+export function KeyAddRequestTypeGuard(r: any): r is KeyAddRequest {
+	if (typeof r != 'object')
+		return false
+	if (!('name' in r) || typeof r.name != 'string')
+		return false
+	return true
+}
+export type KeyAddResponse = (IKeyPublicShort&{ key: string, }) | ErrorResponse
+
+export type KeyRemoveRequest = { name: string }
+export function KeyRemoveRequestTypeGuard(r: any): r is KeyRemoveRequest {
+	if (typeof r != 'object')
+		return false
+	if (!('name' in r) || typeof r.name != 'string')
+		return false
+	return true
+}
+export type KeyRemoveResponse = { } | ErrorResponse
+
+export type KeyUpdateRequest = { nameOld: string, nameNew: string }
+export function KeyUpdateRequestTypeGuard(r: any): r is KeyUpdateRequest {
+	if (typeof r != 'object')
+		return false
+	if (!('nameOld' in r) || typeof r.nameOld != 'string')
+		return false
+	if (!('nameNew' in r) || typeof r.nameNew != 'string')
+		return false
+	return true
+}
+
+
 // events
 export interface IEvent {
 	email?: string,

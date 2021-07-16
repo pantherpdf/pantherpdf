@@ -11,6 +11,7 @@ interface ICache {
 	db: Db,
 	logEvent: (rqEvent: Event|null, type: string, otherData?: object) => Promise<void>,
 	users: Collection<With_id<IUser>>,
+	keys: Collection<With_id<IKey>>,
 	sessions: Collection<With_id<ISession>>,
 	reports: Collection<With_id<IReport>>,
 	events: Collection<With_id<IEvent>>,
@@ -65,6 +66,7 @@ export default async function connectToDatabase() {
 				await this.events.insertOne(event)
 			},
 			users: db.collection<With_id<IUser>>('users'),
+			keys: db.collection<With_id<IKey>>('keys'),
 			sessions: db.collection<With_id<ISession>>('sessions'),
 			reports: db.collection<With_id<IReport>>('reports'),
 			events: db.collection<With_id<IEvent>>('events'),
