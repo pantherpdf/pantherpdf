@@ -1,8 +1,8 @@
 import './Login.css'
-import { AppContext, IAppContextCB } from './context'
+import { AppContext, IAppContextCB } from '../context'
 import { useContext, useState } from 'react'
 import type { RouteComponentProps } from 'react-router-dom'
-import type { LoginAnonymousResponse } from '../../backend/shared/types'
+import type { LoginAnonymousResponse } from '../../../backend/shared/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 

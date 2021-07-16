@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react'
 import './global.scss'
 import './App.css'
-import Login from './Login'
+import Login from './pages/Login'
 import { AppContext, getApp, IAppContextData, AppContextDefaultData } from './context'
 import { BrowserRouter, Route, Redirect, RouteProps } from 'react-router-dom'
 import App from './App'
-import Dashboard from './Dashboard'
-import Keys from './Keys'
-import Settings from './Settings'
+import Dashboard from './pages/Dashboard'
+import Keys from './pages/Keys'
+import Settings from './pages/Settings'
 
 
 function PrivateRoute (props1: RouteProps) {
