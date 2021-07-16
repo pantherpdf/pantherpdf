@@ -69,3 +69,14 @@ export async function userDataFromEvent(event: Event): Promise<IUser | null> {
 		return null
 	return data
 }
+
+
+export async function userEmailFromEvent(event: Event): Promise<string | null> {
+	const sid = sidFromEvent(event)
+	if (!sid)
+		return null
+	const email = await userEmailFromSid(sid)
+	if (!email)
+		return null
+	return email
+}
