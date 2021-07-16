@@ -1,5 +1,4 @@
 import { Handler } from "@netlify/functions";
-import { ISession } from "../../shared/types";
 import connectToDatabase from "../db";
 import { sidFromEvent } from '../users'
 
@@ -11,7 +10,7 @@ const handler: Handler = async (event, context) => {
 	const sid = await sidFromEvent(event)
 	if (sid) {
 		const db = await connectToDatabase()
-		await db.collection<ISession>('sessions').deleteOne({sid})
+		await db.sessions.deleteOne({sid})
 	}
 	return {
 		statusCode: 200,

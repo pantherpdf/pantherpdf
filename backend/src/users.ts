@@ -1,6 +1,6 @@
 import connectToDatabase from './db'
 import crypto from 'crypto'
-import { Event } from "@netlify/functions/src/function/event"
+import type { Event } from "@netlify/functions/src/function/event"
 import type { IUser, ISession } from '../shared/types'
 
 
@@ -9,7 +9,7 @@ export async function createUser(user: IUser): Promise<string> {
 		throw new Error('already has _id in userData')
 	}
 	const db = await connectToDatabase()
-	const res = await db.collection<IUser>('users').insertOne(user)
+	const res = await db.users.insertOne(user)
 	return res.insertedId.toHexString()
 }
 
@@ -21,7 +21,7 @@ export async function createSession(email: string): Promise<string> {
 		email,
 		sid,
 	}
-	await db.collection<ISession>('sessions').insertOne(data)
+	await db.sessions.insertOne(data)
 	return sid
 }
 
@@ -39,7 +39,7 @@ export function sidFromEvent(event: Event): string | null {
 
 export async function userEmailFromSid(sid: string): Promise<string | null> {
 	const db = await connectToDatabase()
-	const res = await db.collection<ISession>('sessions').findOne({sid})
+	const res = await db.sessions.findOne({sid})
 	if (res) {
 		return res.email
 	}
@@ -49,7 +49,7 @@ export async function userEmailFromSid(sid: string): Promise<string | null> {
 
 export async function userDataFromEmail(email: string): Promise<IUser | null> {
 	const db = await connectToDatabase()
-	const res = await db.collection<IUser>('users').findOne({email})
+	const res = await db.users.findOne({email})
 	if (res) {
 		return res
 	}

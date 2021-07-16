@@ -19,7 +19,7 @@ const handler: Handler = async (event, context) => {
 	let anonymousId
 	if (rq.anonymousId) {
 		const email = `anonymous-${rq.anonymousId}`
-		const user = await db.collection<IUser>('users').findOne({email})
+		const user = await db.users.findOne({email})
 		if (user) {
 			sid = await createSession(user.email)
 			anonymousId = rq.anonymousId
