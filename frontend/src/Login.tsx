@@ -2,6 +2,7 @@ import './Login.css'
 import { AppContext, IAppContextCB } from './context'
 import { useContext, useState } from 'react'
 import type { RouteComponentProps } from 'react-router-dom'
+import type { LoginAnonymousResponse } from '../../backend/shared/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
@@ -9,12 +10,21 @@ interface LoginProps extends RouteComponentProps {
 }
 
 async function loginAnonymous(props: LoginProps, app: IAppContextCB) {
-	let r, js
+	const anonymousId = window.localStorage.getItem('anonymousId')
+
+	// request data
+	const data: {anonymousId?:string} = {}
+	if (anonymousId) {
+		data.anonymousId = anonymousId
+	}
+
+	let r: Response | undefined
+	let js: LoginAnonymousResponse | undefined
 	try {
 		r = await fetch('/.netlify/functions/loginAnonymous', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({}),
+			body: JSON.stringify(data),
 		})
 		js = await r.json()
 	}
@@ -25,16 +35,16 @@ async function loginAnonymous(props: LoginProps, app: IAppContextCB) {
 	}
 	if (!r.ok) {
 		console.log(js)
-		const msg: string = (js && typeof js.msg === 'string') ? js.msg : 'Unknown error'
+		const msg: string = (js && 'msg' in js && typeof js.msg === 'string') ? js.msg : 'Unknown error'
 		alert(`Error while creating anonymous user: ${msg}`)
 		return
 	}
-	if (!(typeof js === 'object' && typeof js.sid === 'string')) {
+	if (!(typeof js === 'object' && 'sid' in js && typeof js.sid === 'string')) {
 		alert(`Bad response, missing id.`)
 		return
 	}
-	const sid = js.sid as string
-	await app.setSid(sid)
+	window.localStorage.setItem('anonymousId', js.anonymousId)
+	await app.setSid(js.sid)
 	props.history.replace('/dashboard')
 }
 
