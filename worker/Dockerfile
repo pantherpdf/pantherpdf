@@ -45,3 +45,6 @@ RUN pip3 install requests websocket markdown2 jsonschema websocket-client fontTo
 WORKDIR /app
 EXPOSE 80
 CMD sh /app/start.sh
+
+# TODO:
+# pip install via requirements
