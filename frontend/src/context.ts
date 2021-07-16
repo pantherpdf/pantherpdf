@@ -1,5 +1,5 @@
 import React from 'react'
-import type { IReportShort, IUserWithId } from '../../types'
+import type { IReportShort, IUserWithId } from '../../backend/shared/types'
 
 
 export interface IAppContextData {

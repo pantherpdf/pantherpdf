@@ -1,6 +1,6 @@
 import { Handler } from "@netlify/functions"
 import { createUser, createSession } from '../users'
-import type { IUser } from '../../../types'
+import type { IUser } from '../../shared/types'
 import crypto from 'crypto'
 
 const handler: Handler = async (event, context) => {

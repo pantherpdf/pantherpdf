@@ -1,5 +1,5 @@
 import { Handler } from "@netlify/functions";
-import { ISession } from "../../../types";
+import { ISession } from "../../shared/types";
 import connectToDatabase from "../db";
 import { sidFromEvent } from '../users'
 
