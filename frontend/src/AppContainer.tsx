@@ -50,11 +50,11 @@ function AppContainer() {
 
 	return <AppContext.Provider value={app}>
 		<BrowserRouter>
-			<Route path='/'><Redirect to='/dashboard' /></Route>
-			<Route path='/login' component={Login} />
-			<PrivateRoute path='/dashboard' component={Dashboard} />
-			<PrivateRoute path='/keys' component={Keys} />
-			<PrivateRoute path='/settings' component={Settings} />
+			<Route exact path='/'><Redirect to='/dashboard' /></Route>
+			<Route exact path='/login' component={Login} />
+			<PrivateRoute exact path='/dashboard' component={Dashboard} />
+			<PrivateRoute exact path='/keys' component={Keys} />
+			<PrivateRoute exact path='/settings' component={Settings} />
 		</BrowserRouter>
 	</AppContext.Provider>
 }

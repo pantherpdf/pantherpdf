@@ -7,8 +7,6 @@ import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 type IKeyPublicShortWithKey = IKeyPublicShort & {key?: string}
 
 export default function Keys() {
-	console.log('keys')
-	
 	const app = useContext(AppContext)
 	const [keys, setKeys] = useState<IKeyPublicShortWithKey[]>([])
 
