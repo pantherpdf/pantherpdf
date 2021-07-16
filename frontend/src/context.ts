@@ -1,5 +1,5 @@
 import React from 'react'
-import type { IReportShort, IUser, UserDataResponse } from '../../backend/shared/types'
+import type { IReportShort, IUser, UserDataResponse, ReportNewRequest, ReportNewResponse } from '../../backend/shared/types'
 
 
 export interface IAppContextData {
@@ -11,6 +11,7 @@ export interface IAppContextData {
 export interface IAppContextCB extends IAppContextData {
 	setSid: (sid: string) => Promise<void>,
 	logout: () => Promise<void>,
+	reportNew: (name: string) => Promise<string>,
 }
 
 export function AppContextDefaultData(): IAppContextData {
@@ -24,8 +25,9 @@ export function AppContextDefaultData(): IAppContextData {
 export function AppContextDefaultCB(): IAppContextCB {
 	return {
 		...AppContextDefaultData(),
-		setSid: async (sid: string) => {},
+		setSid: async (sid) => {},
 		logout: async () => {},
+		reportNew: async (name) => { throw new Error('Not implemented') },
 	}
 }
 
@@ -55,6 +57,22 @@ export function getApp(data: IAppContextData, setData: React.Dispatch<React.SetS
 				await fetch('/.netlify/functions/logout', {method: 'POST', headers: {Authorization: `Bearer sid:${sid}`}})
 			}
 		},
+		reportNew: async (name) => {
+			const rq: ReportNewRequest = { name }
+			const r = await fetch('/.netlify/functions/reportsAdd', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json', Authorization: `Bearer sid:${app.sid}` },
+				body: JSON.stringify(rq),
+			})
+			const js = await r.json() as ReportNewResponse
+			if (!r.ok || 'msg' in js) {
+				const msg = 'msg' in js ? js.msg : 'unknown error'
+				alert(`Error: ${msg}`)
+				throw new Error(msg)
+			}
+			setData({...data, reports:[...data.reports, js]})
+			return js._id
+		}
 	}
 	return app
 }

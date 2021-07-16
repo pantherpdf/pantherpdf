@@ -3,7 +3,7 @@ import { AppContext } from './context'
 import { useContext } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome, faSignOutAlt, faPlus, faKey, faCog, IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faSignOutAlt, faPlus, faKey, faCog, IconDefinition, faFileAlt } from '@fortawesome/free-solid-svg-icons'
 
 interface IProps extends RouteComponentProps<any> {
 	children: React.ReactChild | React.ReactChild[],
@@ -21,6 +21,14 @@ export default function App(props: IProps) {
 		['/keys', 'Keys', faKey],
 		['/settings', 'Settings', faCog],
 	]
+
+	async function newReport() {
+		const name = prompt('Report name: ')
+		if (!name)
+			return
+		const id = await app.reportNew(name)
+		props.history.push(`/reports/${id}`)
+	}
 
 	return <>
 		<nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow-sm">
@@ -62,22 +70,17 @@ export default function App(props: IProps) {
 						</ul>
 						<h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
 							<span>Reports</span>
-							<Link to='/server-new' className="btn btn-light btn-sm text-muted">
+							<button className="btn btn-light btn-sm text-muted" onClick={newReport}>
 								<FontAwesomeIcon icon={faPlus} />
-							</Link>
+							</button>
 						</h6>
 						<ul className="nav flex-column mb-2">
-							{/*userObj.servers.map(srv2 => { const srv=srv2.name; return <li className="nav-item" key={srv}>
-								<Link className={'nav-link '+(props.match.path==='/servers/:name'&&props.match.params.name===srv ? 'active' : '')} to={'/servers/'+srv}>
-									<span style={{color:(srv2.running ? '#009900' : '#999')}}>
-										<FontAwesomeIcon icon={faServer} fixedWidth className='me-2' />
-									</span>
-									<span className='ml-1'>
-										{srv.endsWith('.kelgrand.com') ? srv.substring(0,srv.length-13) : srv}
-									</span>
-									
+							{app.reports.map(r => <li className="nav-item" key={r._id}>
+								<Link className={'nav-link '+(props.match.path==='/reports/:id'&&props.match.params.id===r._id ? 'active' : '')} to={`/reports/${r._id}`}>
+									<FontAwesomeIcon icon={faFileAlt} className='me-2' />
+									{r.name}
 								</Link>
-							</li>})*/}
+							</li>)}
 						</ul>
 					</div>
 				</nav>

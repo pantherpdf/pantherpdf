@@ -17,10 +17,12 @@ export interface ISession {
 export interface IReport {
 	email: string,
 	name: string,
+	time: string,
+	data: object[],
 }
 
 export interface IReportShort {
-	id: string,
+	_id: string,
 	name: string,
 }
 
@@ -104,3 +106,31 @@ export interface IEvent {
 	type: string,
 	[x: string]: any 
 }
+
+
+// Reports
+export interface ReportNewRequest {
+	name: string,
+}
+export function ReportNewRequestTypeGuard(r: any): r is ReportNewRequest {
+	if (typeof r != 'object')
+		return false
+	if (!('name' in r) || typeof r.name != 'string')
+		return false
+	return true
+}
+export type ReportNewResponse = IReportShort | ErrorResponse
+
+export interface ReportRemoveRequest {
+	id: string,
+}
+export function ReportRemoveRequestTypeGuard(r: any): r is ReportRemoveRequest {
+	if (typeof r != 'object')
+		return false
+	if (!('id' in r) || typeof r.id != 'string')
+		return false
+	return true
+}
+export type ReportRemoveResponse = { } | ErrorResponse
+
+export type ReportResponse = { obj: IReport } | ErrorResponse
