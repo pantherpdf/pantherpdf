@@ -37,7 +37,7 @@ export default function Report(props: ReportProps) {
 	if (!data) {
 		return <h1>Error. Report not found</h1>
 	}
-	return <div>
+	return <main>
 		<h1>Report {props.match.params.id}</h1>
-	</div>
+	</main>
 }

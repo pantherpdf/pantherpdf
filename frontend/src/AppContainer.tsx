@@ -1,13 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react'
 import './global.scss'
-import './App.css'
-import Login from './pages/Login'
 import { AppContext, getApp, IAppContextData, AppContextDefaultData } from './context'
 import { BrowserRouter, Route, Redirect, RouteProps, Switch } from 'react-router-dom'
 import App from './App'
-import Dashboard from './pages/Dashboard'
-import Keys from './pages/Keys'
+import Home from './pages/Home'
+import Login from './pages/Login'
 import Settings from './pages/Settings'
+import Reports from './pages/Reports'
 import Report from './pages/Report'
 import NotFound from './pages/NotFound'
 
@@ -26,6 +25,22 @@ function PrivateRoute (props1: RouteProps) {
 		}}
 	/>
 }
+
+
+function PublicRoute (props1: RouteProps) {
+	const Component = props1.component
+	const props2 = {...props1}
+	delete props2.component
+	if (!Component)
+		return null
+	return <Route
+		{...props2}
+		render={(props3: any) => {
+			return <App {...props3}><Component {...props3} /></App>
+		}}
+	/>
+}
+
 
 function AppContainer() {
 	const [data, setData] = useState<IAppContextData>(AppContextDefaultData())
@@ -53,13 +68,12 @@ function AppContainer() {
 	return <AppContext.Provider value={app}>
 		<BrowserRouter>
 			<Switch>
-				<Route exact path='/'><Redirect to='/dashboard' /></Route>
-				<Route exact path='/login' component={Login} />
-				<PrivateRoute exact path='/dashboard' component={Dashboard} />
-				<PrivateRoute exact path='/keys' component={Keys} />
-				<PrivateRoute exact path='/settings' component={Settings} />
+				<PublicRoute exact path='/' component={Home} />
+				<PublicRoute exact path='/login' component={Login} />
+				<PrivateRoute exact path='/reports' component={Reports} />
 				<PrivateRoute exact path='/reports/:id' component={Report} />
-				<Route component={NotFound} />
+				<PrivateRoute exact path='/settings' component={Settings} />
+				<PublicRoute component={NotFound} />
 			</Switch>
 		</BrowserRouter>
 	</AppContext.Provider>

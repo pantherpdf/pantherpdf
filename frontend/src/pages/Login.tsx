@@ -45,7 +45,7 @@ async function loginAnonymous(props: LoginProps, app: IAppContextCB) {
 	}
 	window.localStorage.setItem('anonymousId', js.anonymousId)
 	await app.setSid(js.sid)
-	props.history.replace('/dashboard')
+	props.history.replace('/reports')
 }
 
 
