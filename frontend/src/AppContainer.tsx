@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react'
 import './global.scss'
 import { AppContext, getApp, IAppContextData, AppContextDefaultData } from './context'
 import { BrowserRouter, Route, Redirect, RouteProps, Switch } from 'react-router-dom'
-import App from './App'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Settings from './pages/Settings'
@@ -21,7 +20,7 @@ function PrivateRoute (props1: RouteProps) {
 	return <Route
 		{...props2}
 		render={(props3: any) => {
-			return app.user ? <App {...props3}><Component {...props3} /></App> : <Redirect to='/login' />
+			return app.user ? <Component {...props3} /> : <Redirect to='/login' />
 		}}
 	/>
 }
@@ -36,7 +35,7 @@ function PublicRoute (props1: RouteProps) {
 	return <Route
 		{...props2}
 		render={(props3: any) => {
-			return <App {...props3}><Component {...props3} /></App>
+			return <Component {...props3} />
 		}}
 	/>
 }

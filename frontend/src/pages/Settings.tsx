@@ -1,3 +1,5 @@
+import App from '../Layout'
+import type { RouteComponentProps } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState, useContext } from 'react'
 import { AppContext } from '../context'
@@ -6,7 +8,7 @@ import { faPlus, faTrash, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 type IKeyPublicShortWithKey = IKeyPublicShort & {key?: string}
 
-export default function Settings() {
+export default function Settings(props: RouteComponentProps) {
 	const app = useContext(AppContext)
 	const [keys, setKeys] = useState<IKeyPublicShortWithKey[]>([])
 	const [loading, setLoading] = useState<boolean>(true)
@@ -57,7 +59,7 @@ export default function Settings() {
 		setKeys(keys.filter(k => k.name !== name))
 	}
 
-	return <main className='container'>
+	return <App {...props}><main className='container'>
 		<h1>Settings</h1>
 		<h2>API Keys</h2>
 		{loading ? <>
@@ -98,5 +100,5 @@ export default function Settings() {
 				Add new key
 			</button>
 		</>}
-	</main>
+	</main></App>
 }

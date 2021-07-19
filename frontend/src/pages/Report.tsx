@@ -1,3 +1,4 @@
+import App from '../Layout'
 //import Edit from './edit'
 import { RouteComponentProps } from 'react-router-dom'
 import { useState, useEffect, useContext } from 'react'
@@ -37,7 +38,7 @@ export default function Report(props: ReportProps) {
 	if (!data) {
 		return <h1>Error. Report not found</h1>
 	}
-	return <main>
+	return <App {...props}><main>
 		<h1>Report {props.match.params.id}</h1>
-	</main>
+	</main></App>
 }

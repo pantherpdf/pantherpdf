@@ -1,3 +1,4 @@
+import App from '../Layout'
 import { useContext } from 'react'
 import { AppContext } from '../context'
 import { Link, RouteComponentProps } from 'react-router-dom'
@@ -17,7 +18,7 @@ export default function Reports(props: ReportsProps) {
 		props.history.push(`/reports/${id}`)
 	}
 
-	return <main className='container'>
+	return <App {...props}><main className='container'>
 		<h1>Reports</h1>
 		<ul>
 			{app.reports.map(r => <li key={r._id}>
@@ -29,5 +30,5 @@ export default function Reports(props: ReportsProps) {
 			<FontAwesomeIcon icon={faPlus} className='me-2' />
 			New
 		</button>
-	</main>
+	</main></App>
 }

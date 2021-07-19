@@ -1,3 +1,4 @@
+import App from '../Layout'
 import './Login.css'
 import { AppContext, IAppContextCB } from '../context'
 import { useContext, useState } from 'react'
@@ -74,11 +75,11 @@ function ButtonAnonymous(props: LoginProps) {
 
 
 export default function Login(props: LoginProps) {
-	return <div className='form-signin'>
+	return <App {...props}><main className='form-signin'>
 		<h1 className='h2'>Kelgrand Reports</h1>
 		<h2 className='h1 mb-4'>Login</h2>
 		<button className='btn btn-primary'>Github</button>
 		<hr />
 		<ButtonAnonymous {...props} />
-	</div>
+	</main></App>
 }
