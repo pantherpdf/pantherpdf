@@ -148,7 +148,7 @@ test('buildin constants', async () => {
 	await expect(FormulaEvaluate('false')).resolves.toBe(false)
 	await expect(FormulaEvaluate('true')).resolves.toBe(true)
 	await expect(FormulaEvaluate('null')).resolves.toBe(null)
-	await expect(FormulaEvaluate('non_exsistent')).resolves.toBe(undefined)
+	await expect(() => FormulaEvaluate('non_exsistent')).rejects.toThrow()
 })
 
 test('property access', async () => {
@@ -165,11 +165,27 @@ test('hide access to buildin properties like __proto__', async () => {
 	await expect(FormulaEvaluate('{a:1}.__defineGetter__')).resolves.toBe(undefined)
 })
 
-test('custom variable', async () => {
+test('custom variable function getVar()', async () => {
 	const obj = { abc: 10 }
-	const helper: IHelpers = { getVar: async (name: string) => { if (name == 'obj') { return obj } return undefined } }
+	const helper: IHelpers = {
+		getVar: async (name: string) => {
+			if (name == 'obj') {
+				return obj
+			}
+			return undefined
+		}
+	}
 	await expect(FormulaEvaluate('obj.abc', helper)).resolves.toBe(10)
+})
 
+test('custom variable object vars', async () => {
+	const obj = { abc: 10 }
+	const helper: IHelpers = {
+		vars: {
+			obj
+		}
+	}
+	await expect(FormulaEvaluate('obj.abc', helper)).resolves.toBe(10)
 })
 
 test('resolve promise of a property', async () => {

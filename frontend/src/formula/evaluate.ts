@@ -6,7 +6,14 @@ let cacheFunctions: string[] | undefined
 let cacheConstants: string[] | undefined
 async function getVariable(name: string, helpers?: IHelpers): Promise<any> {
 	// user defined
-	if (helpers) {
+	if (helpers && helpers.vars) {
+		if (Object.keys(helpers.vars).indexOf(name) != -1) {
+			return helpers.vars[name]
+		}
+	}
+
+	// user defined
+	if (helpers && helpers.getVar) {
 		const val = await helpers.getVar(name)
 		if (val !== undefined)
 			return val
@@ -135,6 +142,9 @@ export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers)
 		}
 		else if (part.type == 'variable') {
 			value = await getVariable(part.name, helpers)
+			if (value === undefined) {
+				throw new EvaluateError(`Unknown variable ${part.name}`, part.position)
+			}
 		}
 		else if (part.type == 'parentheses') {
 			value = await evaluatePostfix(part.expr, helpers)
@@ -152,7 +162,7 @@ export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers)
 
 		// subexpr
 		for (const sub of part.subexpr) {
-			if (!value) {  // todo is this ok?
+			if (!value) {
 				throw new EvaluateError('Cant evaluate subexpr', sub.position)
 			}
 

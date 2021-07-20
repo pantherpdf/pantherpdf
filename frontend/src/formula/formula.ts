@@ -1,4 +1,4 @@
-import { IHelpers, TData } from './types'
+import { IHelpers } from './types'
 import parse from './parse'
 import toPostFix from './toPostFix'
 import evaluatePostfix from './evaluate'
