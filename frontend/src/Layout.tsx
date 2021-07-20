@@ -3,13 +3,13 @@ import { AppContext } from './context'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
 interface AppProps extends RouteComponentProps<any> {
-	children: React.ReactChild | React.ReactChild[],
+	children: React.ReactNode,
 }
 
 export default function App(props: AppProps) {
 	const app = useContext(AppContext)
 	return <>
-		<header className='border-bottom mb-3'>
+		<header className='border-bottom mb-3 fixed-top'>
 			<div className='container'>
 				<div className='d-flex py-2'>
 					<ul className='nav flex-fill'>
@@ -28,6 +28,7 @@ export default function App(props: AppProps) {
 				</div>
 			</div>
 		</header>
+		<div style={{height:'60px'}} />
 		{props.children}
 	</>
 }

@@ -23,6 +23,7 @@ export interface IReport {
 
 export interface IReportShort {
 	_id: string,
+	type: string,
 	name: string,
 }
 
