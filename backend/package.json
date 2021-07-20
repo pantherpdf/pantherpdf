@@ -9,7 +9,6 @@
 	},
 	"dependencies": {
 		"@netlify/functions": "^0.7.2",
-		"apollo-server-lambda": "^2.25.1",
 		"crypto": "^1.0.1",
 		"mongodb": "^3.6.9",
 		"mongodb-client-encryption": "^1.2.5",
