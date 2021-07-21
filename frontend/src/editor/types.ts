@@ -29,10 +29,14 @@ export interface TDataCompiled {
 	children: TDataCompiled[],
 }
 
+type TargetOption = 'pdf'|'json'|'csv-excel-utf-8'|'csv-windows-1250'
+
 export interface TReport {
 	_id: string,
-	name: TName,
-	target: 'pdf'|'json'|'csv-excel-utf-8'|'csv-windows-1250',
+	name: string,
+	email: string,
+	time: string,
+	target: TargetOption,
 	children: TData[],
 	properties: {
 		font?: TFont,
@@ -83,5 +87,5 @@ export interface Widget {
 export interface TReportShort {
 	_id: string,
 	name: string,
-	type: string,
+	target: TargetOption,
 }

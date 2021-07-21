@@ -52,8 +52,8 @@ function ShowReports(props: GeneralProps) {
 		return <>{Trans('empty')}</>
 	}
 	return <>{props.allReports.map((r,idx) => {
-		const btn = lastTp !== r.type ? <div className='text-muted font-weight-bold'>{r.type}</div> : null
-		lastTp = r.type
+		const btn = lastTp !== r.target ? <div className='text-muted font-weight-bold'>{r.target}</div> : null
+		lastTp = r.target
 		return <React.Fragment key={idx}>
 			{btn}
 			<div

@@ -23,18 +23,21 @@ const handler: Handler = async (event, context) => {
 
 	// insert
 	const time = new Date().toISOString()
+	const target = 'pdf'
 	const obj: IReport = {
 		name,
 		email,
 		time,
-		data: [],
+		target,
+		children: [],
+		properties: {},
 	}
 	const result = await db.reports.insertOne(obj)
 	const _id = result.insertedId.toHexString()
 
 	db.logEvent(event, 'reportAdd', { email, reportId: _id })
 
-	const resp: ReportNewResponse = { _id, name }
+	const resp: ReportNewResponse = { _id, name, target }
 	return {
 		statusCode: 200,
 		body: JSON.stringify(resp),

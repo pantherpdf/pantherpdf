@@ -14,16 +14,55 @@ export interface ISession {
 	sid: string,
 }
 
+export interface TData { type: string, children: TData[] }
+type TargetOption = 'pdf'|'json'|'csv-excel-utf-8'|'csv-windows-1250'
+
 export interface IReport {
 	email: string,
 	name: string,
 	time: string,
-	data: object[],
+	target: TargetOption,
+	children: TData[],
+	properties: {
+		font?: {[key: string]: string|number|boolean},
+	}
+}
+
+export function TDataTypeGuard(r: any): r is TData {
+	if (typeof r.type !== 'string' || r.type.length == 0)
+		return false
+	if (!Array.isArray(r.children))
+		return false
+	for (const ch of r.children) {
+		if (!TDataTypeGuard(ch))
+			return false
+	}
+	return true
+}
+
+export function ReportTypeGuard(r: any): r is IReport {
+	if (typeof r != 'object')
+		return false
+	if (typeof r.email !== 'string')
+		return false
+	if (typeof r.name !== 'string')
+		return false
+	if (r.target !== 'pdf' && r.target !== 'json' && r.target !== 'csv-excel-utf-8' && r.target !== 'csv-windows-1250')
+		return false
+	if (!Array.isArray(r.children))
+		return false
+	for (const ch of r.children) {
+		if (!TDataTypeGuard(ch))
+			return false
+	}
+	if (typeof r.properties !== 'object')
+		return false
+	return true
 }
 
 export interface IReportShort {
 	_id: string,
-	type: string,
+	target: TargetOption,
 	name: string,
 }
 
@@ -134,4 +173,4 @@ export function ReportRemoveRequestTypeGuard(r: any): r is ReportRemoveRequest {
 }
 export type ReportRemoveResponse = { } | ErrorResponse
 
-export type ReportResponse = { obj: IReport } | ErrorResponse
+export type ReportResponse = { obj: WithId<IReport> } | ErrorResponse
