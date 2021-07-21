@@ -46,7 +46,7 @@ export interface TReportCompiled extends Omit<TReport, 'children'> {
 
 
 
-export type TDragObj = {type:'id', id: number[]} | {type:'widget', widget: TData} | {type:'widgets', widgets: TData[]}
+export type TDragObj = {type:'wid', wid: number[]} | {type:'widget', widget: TData} | {type:'widgets', widgets: TData[]}
 
 export interface GeneralProps {
 	allReports: TReportShort[],

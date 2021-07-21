@@ -39,8 +39,8 @@ export default function Editor(props: Props) {
 
 		let toInsert: TData | TData[]
 		let report2: TReport = props.report
-		if (dragObj.current.type === 'id') {
-			const dragObj2 = dragObj.current.id
+		if (dragObj.current.type === 'wid') {
+			const dragObj2 = dragObj.current.wid
 			const copy = e.altKey || e.metaKey
 			if (copy) {
 				toInsert = findInList(report2, dragObj2)
@@ -86,7 +86,7 @@ export default function Editor(props: Props) {
 		}
 		e.stopPropagation()
 		e.preventDefault()
-		if (!Array.isArray(dragObj.current)) {
+		if (dragObj.current.type === 'wid') {
 			e.dataTransfer.dropEffect = 'copy'
 		}
 		else {
@@ -123,7 +123,7 @@ export default function Editor(props: Props) {
 			className={`${style.widgetBox} ${(selected && idCmp(selected,wid) && style.selected) || ''}`}
 			onClick={e=>widgetMouseClick(e, wid)}
 			draggable={true}
-			onDragStart={e=>dragWidgetStart(e, {type:'id',wid})}
+			onDragStart={e=>dragWidgetStart(e, {type:'wid',wid})}
 			onDragEnd={e=>dragWidgetEnd(e)}
 		>
 			<obj.Render
