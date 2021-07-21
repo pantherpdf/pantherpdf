@@ -29,9 +29,9 @@ const tr2: {[key in trKeys]: TTrans} = {
 	'upload finished': { en:'upload finished' },
 	'download': { en:'download' },
 	'upload': { en:'upload' },
-	'widgets': { en:'widgets' },
-	'predefined': { en:'predefined' },
-	'file': { en:'file' },
+	'widgets': { en:'Widgets' },
+	'predefined': { en:'Predefined' },
+	'file': { en:'File' },
 
 	'invalid value': { en:'invalid value'},
 }

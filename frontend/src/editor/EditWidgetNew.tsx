@@ -11,6 +11,7 @@ import { saveAs } from 'file-saver'
 import { Widget, GeneralProps, TReportShort } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 interface ExpandableProps {
 	name: string,
@@ -24,7 +25,7 @@ function Expandable(props: ExpandableProps) {
 		<div className={'d-flex '+style.header} onClick={() => setExpanded(!expanded)}>
 			<span className='mr-3' style={{fontSize:'110%'}}>
 				{/*expanded ? <i className='fas fa-minus fa-fw'/> : <i className='fas fa-plus fa-fw'/>*/}
-				{expanded ? '-' : '+'}
+				<small className='me-2'><FontAwesomeIcon icon={expanded ? faMinus : faPlus} fixedWidth /></small>
 			</span>
 			<strong>{props.name}</strong>
 		</div>
