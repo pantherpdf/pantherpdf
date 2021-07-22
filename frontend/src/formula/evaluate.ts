@@ -7,7 +7,7 @@ let cacheConstants: string[] | undefined
 async function getVariable(name: string, helpers?: IHelpers): Promise<any> {
 	// user defined
 	if (helpers && helpers.vars) {
-		if (Object.keys(helpers.vars).indexOf(name) != -1) {
+		if (Object.keys(helpers.vars).indexOf(name) !== -1) {
 			return helpers.vars[name]
 		}
 	}
@@ -22,13 +22,13 @@ async function getVariable(name: string, helpers?: IHelpers): Promise<any> {
 	// functions
 	if (!cacheFunctions)
 		cacheFunctions = Object.keys(functions)
-	if (cacheFunctions.indexOf(name) != -1)
+	if (cacheFunctions.indexOf(name) !== -1)
 		return functions[name]
 
 	// constants
 	if (!cacheConstants)
 		cacheConstants = Object.keys(constants)
-	if (cacheConstants.indexOf(name) != -1)
+	if (cacheConstants.indexOf(name) !== -1)
 		return constants[name]
 
 	return undefined
@@ -37,7 +37,6 @@ async function getVariable(name: string, helpers?: IHelpers): Promise<any> {
 
 // https://stackoverflow.com/a/16788517
 function objectEquals(x: any, y: any): boolean {
-    'use strict';
     if (x === null || x === undefined || y === null || y === undefined) { return x === y; }
     // after this just checking type of one would be enough
     if (x.constructor !== y.constructor) { return false; }
@@ -64,45 +63,45 @@ function objectEquals(x: any, y: any): boolean {
 
 export function evaluateOperator(op: TOperators, a: any, b: any, pos: number): any {
 	// logical operators
-	if( op == '==' )
+	if( op === '==' )
 		return objectEquals(a,b)
-	if( op == '!=' )
+	if( op === '!=' )
 		return !objectEquals(a,b)
-	if( op == '<' )
+	if( op === '<' )
 		return a < b
-	if( op == '>' )
+	if( op === '>' )
 		return a > b
-	if( op == '>=' )
+	if( op === '>=' )
 		return a >= b
-	if( op == '<=' )
+	if( op === '<=' )
 		return a <= b
-	if( op == '||' )
+	if( op === '||' )
 		return a || b
-	if( op == '&&' )
+	if( op === '&&' )
 		return a && b
 
 	// number operators
-	if (typeof a == 'number' && typeof b == 'number') {
-		if( op == '^' )
+	if (typeof a === 'number' && typeof b === 'number') {
+		if( op === '^' )
 			return Math.pow(a,b)
-		if( op == '*' )
+		if( op === '*' )
 			return a*b
-		if( op == '/' )
+		if( op === '/' )
 			return a/b
-		if( op == '+' )
+		if( op === '+' )
 			return a+b
-		if( op == '-' )
+		if( op === '-' )
 			return a-b
 	}
 
 	// string
-	if (typeof a == 'string') {
-		if (op == '+')
+	if (typeof a === 'string') {
+		if (op === '+')
 			return String(a) + String(b)
 	}
 
 	// array
-	if (Array.isArray(a) && Array.isArray(b) && op == '+') {
+	if (Array.isArray(a) && Array.isArray(b) && op === '+') {
 		return [...a, ...b]
 	}
 
@@ -112,7 +111,7 @@ export function evaluateOperator(op: TOperators, a: any, b: any, pos: number): a
 
 
 export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers): Promise<any> {
-	if (expr.length == 0) {
+	if (expr.length === 0) {
 		return undefined
 	}
 
@@ -120,7 +119,7 @@ export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers)
 
 	for (const part of expr) {
 		// operator
-		if (part.type == 'operator') {
+		if (part.type === 'operator') {
 			if (stack.length < 2) {
 				throw new EvaluateError('Need two values for an operator', part.position)
 			}
@@ -134,25 +133,25 @@ export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers)
 
 		// extract value
 		let value: any
-		if (part.type == 'number') {
+		if (part.type === 'number') {
 			value = part.number
 		}
-		else if (part.type == 'string') {
+		else if (part.type === 'string') {
 			value = part.text
 		}
-		else if (part.type == 'variable') {
+		else if (part.type === 'variable') {
 			value = await getVariable(part.name, helpers)
 			if (value === undefined) {
 				throw new EvaluateError(`Unknown variable ${part.name}`, part.position)
 			}
 		}
-		else if (part.type == 'parentheses') {
+		else if (part.type === 'parentheses') {
 			value = await evaluatePostfix(part.expr, helpers)
 		}
-		else if (part.type == 'array') {
+		else if (part.type === 'array') {
 			value = await Promise.all(part.arguments.map(expr2 => evaluatePostfix(expr2, helpers)))
 		}
-		else if (part.type == 'object') {
+		else if (part.type === 'object') {
 			value = { }
 			await Promise.all(Object.keys(part.object).map(async (k: string) => { value[k] = await evaluatePostfix(part.object[k], helpers) }))
 		}
@@ -167,7 +166,7 @@ export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers)
 			}
 
 			// function
-			if (sub.type == 'function') {
+			if (sub.type === 'function') {
 				if (!(value instanceof Function)) {
 					throw new EvaluateError('Value is not callable', sub.position)
 				}
@@ -184,14 +183,14 @@ export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers)
 			}
 
 			// variable
-			else if (sub.type == 'variable' || sub.type == 'variable_dyn') {
-				const key = sub.type=='variable' ? sub.name : await evaluatePostfix(sub.expr, helpers)
-				if (Array.isArray(value) && typeof key == 'number') {
+			else if (sub.type === 'variable' || sub.type === 'variable_dyn') {
+				const key = sub.type==='variable' ? sub.name : await evaluatePostfix(sub.expr, helpers)
+				if (Array.isArray(value) && typeof key === 'number') {
 					value = await value[key]
 				}
 				else {
 					// prevent __proto__ and other built-in
-					if (Object.keys(value).indexOf(key) != -1) {
+					if (Object.keys(value).indexOf(key) !== -1) {
 						value = await value[key]
 					}
 					else {
@@ -210,7 +209,7 @@ export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers)
 	}
 
 	// result should be on stack
-	if (stack.length == 1)
+	if (stack.length === 1)
 		return stack[0]
 
 	throw new EvaluateError('Bad formula', 0)

@@ -1,4 +1,4 @@
-import { TExpr, TExpr_string, ParseError, TExpr_variable, TSubExpr_variable_dyn, TSubExpr_variable, TExpr_array, TExpr_operator, TSubExpr_function, TExpr_parentheses, Operators, TOperators, TExpr_number, TExpr_object, TSubExpr } from './types'
+import { TExpr, ParseError, TSubExpr_variable_dyn, TSubExpr_variable, TSubExpr_function, Operators, TOperators, TSubExpr } from './types'
 
 
 /*
@@ -7,8 +7,8 @@ import { TExpr, TExpr_string, ParseError, TExpr_variable, TSubExpr_variable_dyn,
 
 
 export function isWhiteSpace(ch: string): boolean {
-	if (ch.length != 1) { throw new Error('bad params') }
-	return ch == ' ' || ch == '\n' || ch == '\t' || ch == '\r'
+	if (ch.length !== 1) { throw new Error('bad params') }
+	return ch === ' ' || ch === '\n' || ch === '\t' || ch === '\r'
 }
 
 export function skipWhitespace(str: string, i: number): number {
@@ -20,24 +20,24 @@ export function skipWhitespace(str: string, i: number): number {
 }
 
 export function isNum(ch: string): boolean {
-	if (ch.length != 1) { throw new Error('bad params') }
+	if (ch.length !== 1) { throw new Error('bad params') }
 	return ch >= '0' && ch <= '9'
 }
 
 export function isAl(ch: string): boolean {
-	if (ch.length != 1) { throw new Error('bad params') }
+	if (ch.length !== 1) { throw new Error('bad params') }
 	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
 }
 
 export function validVarChar(ch: string): boolean {
-	if (ch.length != 1) { throw new Error('bad params') }
-	return isAl(ch) || isNum(ch) || ch=='_'
+	if (ch.length !== 1) { throw new Error('bad params') }
+	return isAl(ch) || isNum(ch) || ch==='_'
 }
 
 export function isOperatorTypeGuard(r: any): r is TOperators {
-	if (typeof r != 'string')
+	if (typeof r !== 'string')
 		return false
-	return (Operators as string[]).indexOf(r) != -1
+	return (Operators as string[]).indexOf(r) !== -1
 }
 
 const oprMaxLen = Math.max(...Operators.map(o => o.length))
@@ -66,9 +66,9 @@ export function parseArgs(str: string, i: number): IParseArgsRes {
 	const startCh = str[i]
 	let endCh
 	i += 1
-	if (startCh == '(')
+	if (startCh === '(')
 		endCh = ')'
-	else if (startCh == '[')
+	else if (startCh === '[')
 		endCh = ']'
 	else
 		throw new Error('Bad params')
@@ -85,16 +85,16 @@ export function parseArgs(str: string, i: number): IParseArgsRes {
 
 	while (true) {
 		const result = parseImpl(str, i, [endCh, ','])
-		if (result.expr.length == 0)
+		if (result.expr.length === 0)
 			throw new ParseError('Missing expression', i)
 		i = result.endPos
 		args.push(result.expr)
 
-		if (str[i-1] == endCh) {
+		if (str[i-1] === endCh) {
 			return { args, endPos: i }
 		}
 		
-		// assert ch2 == ','
+		// assert ch2 === ','
 		i = skipWhitespace(str, i)
 	}
 }
@@ -105,7 +105,7 @@ interface IParseStringRes {
 	endPos: number,
 }
 export function parseString(str: string, i: number): IParseStringRes {
-	if (i >= str.length || (str[i] != '\'' && str[i] != '"')) {
+	if (i >= str.length || (str[i] !== '\'' && str[i] !== '"')) {
 		throw new ParseError('Bad string', i)
 	}
 	const endCh = str[i]
@@ -119,13 +119,13 @@ export function parseString(str: string, i: number): IParseStringRes {
 		let ch = str[i]
 
 		// end of string
-		if (ch == endCh) {
+		if (ch === endCh) {
 			i = i + 1
 			break
 		}
 
 		// escape char
-		else if (ch == '\\') {
+		else if (ch === '\\') {
 			const toEscape: {[key:string]: string} = {
 				'\'': '\'', 
 				'"': '"',
@@ -180,8 +180,8 @@ export function parseNum(str: string, i: number): IParseNumRes {
 
 	let hasDot = false
 	const i_start = i
-	while (i < str.length && (isNum(str[i]) || str[i] == '.')) {
-		if (str[i] == '.') {
+	while (i < str.length && (isNum(str[i]) || str[i] === '.')) {
+		if (str[i] === '.') {
 			if (hasDot) {
 				throw new ParseError('Second dot in number', i)
 			}
@@ -193,7 +193,7 @@ export function parseNum(str: string, i: number): IParseNumRes {
 
 	let num: number
 	if (hasDot) {
-		if (txt[txt.length-1] == '.') {
+		if (txt[txt.length-1] === '.') {
 			throw new ParseError('Dot in the end of number', i)
 		}
 		num = parseFloat(txt)
@@ -222,14 +222,14 @@ export function parsePart(str: string, i: number): IParsePartRes {
 	let part: TExpr
 
 	// string
-	if (ch == '\'' || ch == '"') {
+	if (ch === '\'' || ch === '"') {
 		const result = parseString(str, i)
 		part = { type:'string', text:result.str, subexpr:[] }
 		i = result.endPos
 	}
 
 	// array
-	else if (ch == '[') {
+	else if (ch === '[') {
 		const result = parseArgs(str, i)
 		part = { type:'array', arguments:result.args, subexpr:[] }
 		i = result.endPos
@@ -246,7 +246,7 @@ export function parsePart(str: string, i: number): IParsePartRes {
 	}
 
 	// parentheses
-	else if (ch == '(') {
+	else if (ch === '(') {
 		i += 1
 		const result = parseImpl(str, i, [')'])
 		i = result.endPos
@@ -254,21 +254,21 @@ export function parsePart(str: string, i: number): IParsePartRes {
 	}
 
 	// object
-	else if (ch == '{') {
+	else if (ch === '{') {
 		i += 1
 		i = skipWhitespace(str, i)
 		if (i >= str.length) {
 			throw new ParseError('Expecting closing }', i)
 		}
 		part = { type:'object', object:{}, subexpr:[] }
-		if (str[i] == '}') {
+		if (str[i] === '}') {
 			i += 1
 		}
 		else {
 			while (true) {
 				// parse key
 				let key: string
-				if (str[i] == '\'' || str[i] == '"') {
+				if (str[i] === '\'' || str[i] === '"') {
 					const result = parseString(str, i)
 					i = result.endPos
 					key = result.str
@@ -290,22 +290,22 @@ export function parsePart(str: string, i: number): IParsePartRes {
 				}
 
 				// has value?
-				if (str[i] == ':') {
+				if (str[i] === ':') {
 					i += 1
 					i = skipWhitespace(str, i)
 					const result2 = parseImpl(str, i, ['}',','])
-					if (result2.expr.length == 0 || result2.endPos == i) {
+					if (result2.expr.length === 0 || result2.endPos === i) {
 						throw new ParseError('Expected expression', i)
 					}
 					part.object[key] = result2.expr
 					i = result2.endPos-1
 				}
 
-				if (str[i] == '}') {
+				if (str[i] === '}') {
 					i += 1
 					break
 				}
-				if (str[i] == ',') {
+				if (str[i] === ',') {
 					i += 1
 					i = skipWhitespace(str, i)
 					if (i >= str.length) {
@@ -340,7 +340,7 @@ export function parsePart(str: string, i: number): IParsePartRes {
 	}
 
 	// sub-expr
-	if (part.type != 'operator') {
+	if (part.type !== 'operator') {
 		i = skipWhitespace(str, i)
 		const result2 = parseSubexpr(str, i)
 		part.subexpr = result2.expr
@@ -358,7 +358,7 @@ interface IParseSubexprRes {
 export function parseSubexpr(str: string, i: number): IParseSubexprRes {
 	const expr: TSubExpr[] = []
 	while (i < str.length) {
-		if (str[i] == '.') {
+		if (str[i] === '.') {
 			i += 1
 			i = skipWhitespace(str, i)
 			const part: TSubExpr_variable = { type: 'variable', name: '', position: i }
@@ -367,20 +367,20 @@ export function parseSubexpr(str: string, i: number): IParseSubexprRes {
 			part.name = result.str
 			expr.push(part)
 		}
-		else if (str[i] == '[') {
+		else if (str[i] === '[') {
 			i += 1
 			i = skipWhitespace(str, i)
 			const part: TSubExpr_variable_dyn = { type: 'variable_dyn', expr: [], position: i }
 			const result = parseImpl(str, i, [']'])
 			part.expr = result.expr
-			if (result.expr.length == 0 || i == result.endPos) {
+			if (result.expr.length === 0 || i === result.endPos) {
 				throw new ParseError('Empty sub-expr', i)
 			}
 			i = result.endPos
 			i = skipWhitespace(str, i)
 			expr.push(part)
 		}
-		else if (str[i] == '(') {
+		else if (str[i] === '(') {
 			// function
 			const result = parseArgs(str, i)
 			const part: TSubExpr_function = { type:'function', arguments:result.args, position: i }
@@ -405,7 +405,7 @@ export function parseImpl(str: string, i: number, endCh: string[]): IParseRes {
 	i = skipWhitespace(str, i)
 	
 	// add number 0 if expression starts with operator -
-	if (i < str.length && str[i] == '-') {
+	if (i < str.length && str[i] === '-') {
 		expr.push({type:'number', number:0, subexpr:[]})
 	}
 
@@ -416,7 +416,7 @@ export function parseImpl(str: string, i: number, endCh: string[]): IParseRes {
 			}
 			break
 		}
-		if (endCh.indexOf(str[i]) != -1) {
+		if (endCh.indexOf(str[i]) !== -1) {
 			i += 1
 			break
 		}

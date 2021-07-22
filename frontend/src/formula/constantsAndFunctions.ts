@@ -1,5 +1,5 @@
 function toColumnName(num: any) {
-	if (typeof num != 'number') {
+	if (typeof num !== 'number') {
 		throw new Error('Not a number')
 	}
 	let ret, a, b
@@ -12,7 +12,7 @@ function toColumnName(num: any) {
 function inArray(arr: any, val: any) {
 	if( !Array.isArray(arr) )
 		throw new Error('Not an array')
-	return arr.indexOf(val) != -1
+	return arr.indexOf(val) !== -1
 }
 
 function arrayIndexOf(arr: any, val: any) {
@@ -37,10 +37,10 @@ export const functions: {[key: string]: (...args: any[])=>any } = {
 	'substr': substr2,
 	'substring': substr2,
 	'now': () => (new Date()).toISOString(),
-	'lower': (str) => { if (typeof str != 'string') { throw new Error('not a string') } return str.toLowerCase() },
-	'toLowerCase': (str) => { if (typeof str != 'string') { throw new Error('not a string') } return str.toLowerCase() },
-	'upper': (str) => { if (typeof str != 'string') { throw new Error('not a string') } return str.toUpperCase() },
-	'toUpperCase': (str) => { if (typeof str != 'string') { throw new Error('not a string') } return str.toUpperCase() },
+	'lower': (str) => { if (typeof str !== 'string') { throw new Error('not a string') } return str.toLowerCase() },
+	'toLowerCase': (str) => { if (typeof str !== 'string') { throw new Error('not a string') } return str.toLowerCase() },
+	'upper': (str) => { if (typeof str !== 'string') { throw new Error('not a string') } return str.toUpperCase() },
+	'toUpperCase': (str) => { if (typeof str !== 'string') { throw new Error('not a string') } return str.toUpperCase() },
 }
 
 
