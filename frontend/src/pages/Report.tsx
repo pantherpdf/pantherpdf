@@ -163,7 +163,7 @@ export default function Report(props: ReportProps) {
 			const js = await r.json() as ReportResponse
 			if (!r.ok || 'msg' in js) {
 				const msg = 'msg' in js ? js.msg : 'unknown error'
-				alert(msg)
+				console.log(msg)
 			}
 			else {
 				setReport(js.obj)
