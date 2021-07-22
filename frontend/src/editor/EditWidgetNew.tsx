@@ -8,7 +8,7 @@ import React, { useState, useContext } from 'react'
 import Trans, { TransName } from '../translation'
 import style from './EditWidgets.module.css'
 import { saveAs } from 'file-saver'
-import { ReportResponse, TReportShort } from '../../../backend/shared/types'
+import { ReportResponse, TData } from '../../../backend/shared/types'
 import { Widget, GeneralProps } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -94,32 +94,22 @@ function ShowWidgets(props: GeneralProps) {
 }
 
 
-
+/*
 function ShowPredefined(props: GeneralProps) {
-	/*
-	async function dragStartPredefined(props, idx) {
-		const cmp = props.settings.predefined[idx]
-		await window.kelgrand.web.loadWidget(cmp)
-		const cmp2 = window.kelgrand.web.getWidget(cmp)
-		const obj = cmp2()
-		return props.dragStart(obj)
-	}
-	onDragStart={() => dragStartPredefined(props, idx)}
-	onDragEnd={props.dragEnd}
-	*/
-
-	const predefined: TReportShort[] = []
-
+	const predefined: {name: string, data: TData}[] = []
 	return <>{predefined.map((w,idx) => {
 		return <div
 			key={idx}
 			draggable={true}
+			onDragStart={e => props.dragWidgetStart(e, {type:'widget', widget:w.data})}
+			onDragEnd={e => props.dragWidgetEnd(e)}
 			className={style.widget}
 		>
 			{TransName(w.name)}
 		</div>
 	})}</>
 }
+*/
 
 
 function fileUpload(arr: any[], setArr: React.Dispatch<React.SetStateAction<any[]>>,) {
@@ -204,9 +194,11 @@ export default function EditWidgetNew(props: GeneralProps) {
 		<Expandable name={Trans('widgets')} defaultExpanded={true}>
 			<ShowWidgets {...props} />
 		</Expandable>
+		{/*
 		<Expandable name={Trans('predefined')}>
 			<ShowPredefined {...props} />
 		</Expandable>
+		*/}
 		<Expandable name={Trans('reports')}>
 			<ShowReports {...props} />
 		</Expandable>
