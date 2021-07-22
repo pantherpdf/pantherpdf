@@ -7,7 +7,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import type { FunctionComponent, ReactNode } from 'react'
 import type { Helper } from './compile'
-import { TReport, TReportShort, TData } from '../../../backend/shared/types'
+import { TReport, TReportShort, TData, TTransformData } from '../../../backend/shared/types'
 
 
 
@@ -42,7 +42,11 @@ export type TDragObj = {type:'wid', wid: number[]} | {type:'widget', widget: TDa
 
 export interface GeneralProps {
 	allReports: TReportShort[],
+
+	getOriginalSourceData: () => any,
 	sourceData: any,
+	sourceErrorMsg?: string | undefined,
+	refreshSourceData: (report: TReport) => void,
 
 	report: TReport,
 	setReport: (report: TReport) => Promise<void>,
@@ -71,5 +75,20 @@ export interface Widget {
 	compile: (dt: any, helper: Helper) => Promise<TDataCompiled>,
 	RenderProperties?: FunctionComponent<ItemRendeProps>,
 	Render: FunctionComponent<ItemRendeProps>,
+}
+
+
+export interface TransformRendeProps extends GeneralProps {
+	item: TTransformData,
+	setItem: (itm: TTransformData) => void,
+	index: number,
+}
+
+
+export interface TTransformWidget {
+	name: TName,
+	newItem: () => Promise<TTransformData>,
+	transform: (dt: any, item: TTransformData) => Promise<any>,
+	Editor: FunctionComponent<TransformRendeProps>,
 }
 

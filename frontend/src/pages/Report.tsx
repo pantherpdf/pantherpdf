@@ -187,6 +187,11 @@ export default function Report(props: ReportProps) {
 		return <App {...props}><main className='container'><h1>Error. Report not found</h1></main></App>
 	}
 
+	function getOriginalSourceData() {
+		// todo temp function
+		return { arr: [1,2,3,4,5,6,7,8,9] }
+	}
+
 	// show editor
 	return <>
 		<Menu
@@ -202,6 +207,7 @@ export default function Report(props: ReportProps) {
 			setReport={setReport2}
 			deleteReport={deleteReport}
 			allReports={app.reports}
+			getOriginalSourceData={getOriginalSourceData}
 		/>
 	</>
 }

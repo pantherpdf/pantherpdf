@@ -4,7 +4,7 @@
  */
 
 
-import React, { ReactNode, useRef } from 'react'
+import React, { ReactNode, useEffect, useRef } from 'react'
 import { useState } from 'react'
 import getWidget from '../widgets/allWidgets'
 import { TReport, TData, TReportShort } from '../../../backend/shared/types'
@@ -12,6 +12,7 @@ import { GeneralProps, TDragObj } from './types'
 import style from './Editor.module.css'
 import Layout from './EditorLayout'
 import { findInList, removeFromList, insertIntoList, updateDestAfterRemove, idCmp, updateItem } from './childrenMgmt'
+import { transformData } from './DataTransform'
 
 
 interface Props {
@@ -19,13 +20,48 @@ interface Props {
 	setReport: (val: TReport) => Promise<void>,
 	deleteReport: () => void,
 	allReports: TReportShort[],
+	getOriginalSourceData: () => any,
+}
+
+
+interface SourceData {
+	data: any,
+	msg: string | undefined,
 }
 
 
 export default function Editor(props: Props) {
 	const [selected, setSelected] = useState<number[]|null>(null)
-	const [source, setSource] = useState<any>({})
+	const [source, setSource] = useState<SourceData>({data: null, msg: 'loading ...'})
 	const dragObj = useRef<TDragObj|null>(null)
+
+	async function refreshSourceData(report: TReport) {
+		// get current report data because props.report may not update yet
+		let dt
+		try {
+			dt = props.getOriginalSourceData();
+		}
+		catch(e) {
+			const msg = e instanceof Error ? e.message : 'Unknown error'
+			setSource({data: null, msg})
+			return
+		}
+		let dt2
+		try {
+			dt2 = await transformData(dt, report, 'en')
+		}
+		catch(e) {
+			const msg = e instanceof Error ? e.message : 'Unknown error'
+			setSource({data: null, msg})
+			return
+		}
+		setSource({data: dt2, msg: undefined})
+	}
+
+	// load source data
+	useEffect(() => {
+		refreshSourceData(props.report)
+	}, [])
 
 	let props2: GeneralProps
 
@@ -168,7 +204,11 @@ export default function Editor(props: Props) {
 	
 	props2 = {
 		allReports: props.allReports,
-		sourceData: source,
+
+		getOriginalSourceData: props.getOriginalSourceData,
+		refreshSourceData: refreshSourceData,
+		sourceData: source.data,
+		sourceErrorMsg: source.msg,
 
 		report: props.report,
 		setReport: props.setReport,

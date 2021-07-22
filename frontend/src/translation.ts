@@ -6,6 +6,7 @@ type trKeys =
 	'invalid value' |
 	'name' | 'show more' | 'show less' | 'target' | 'fileName' | 'paperWidth' | 'paperHeight' | '0 means default' | 'margin' | 'lang' | 'lang 2 letter code' | 'users lang' | 'new name' | 'delete report' | 'delete report question' |
 	'no widgets available for target' |
+	'source data' | 'insert data transform' | 'up' | 'down' | 'delete' | 'edit' | 'comment' | 'save' | 'cancel' | 'data' | 'field' | 'condition' |
 	''
 
 export type TTrans = {en: string}
@@ -55,6 +56,19 @@ const tr2: {[key in trKeys]: TTrans} = {
 	'delete report': { en: 'Delete report' },
 	'delete report question': { en: 'Are you sure to delete this report?' },
 	'no widgets available for target': { en: 'No widgets available for target {0}.' },
+	
+	'source data': { en: 'source data' },
+	'insert data transform': { en: 'insert data transform' },
+	'up': { en:'Up' },
+	'down': { en:'Down' },
+	'delete': { en:'Delete' },
+	'edit': { en:'Edit' },
+	'comment': { en:'Comment' },
+	'save': { en:'Save' },
+	'cancel': { en:'Cancel' },
+	'data': { en:'Data' },
+	'field': { en:'Field' },
+	'condition': { en:'Condition' },
 }
 
 export function TransName(name: string|{[key:string]:string}): string {

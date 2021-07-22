@@ -35,6 +35,12 @@ export function TargetOptionTypeGuard(r: any): r is TargetOption {
 	return true
 }
 
+export interface TTransformData {
+	[key: string]: any,
+	type: string,
+	comment: string,
+}
+
 export interface TReport {
 	_id: string,
 	name: string,
@@ -42,6 +48,7 @@ export interface TReport {
 	time: string,
 	target: TargetOption,
 	children: TData[],
+	transforms: TTransformData[],
 	properties: {
 		font?: any,
 		margin?: [number, number, number, number],

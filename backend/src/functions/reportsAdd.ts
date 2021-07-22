@@ -30,6 +30,7 @@ const handler: Handler = async (event, context) => {
 		time,
 		target,
 		children: [],
+		transforms: [],
 		properties: {},
 	}
 	const result = await db.reports.insertOne(obj)
