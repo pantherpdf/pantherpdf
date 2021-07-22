@@ -80,6 +80,7 @@ export default function Report(props: ReportProps) {
 
 		// set new data locally
 		const val = cb()
+		setReport(val)
 		
 		// send to DB
 		try {
@@ -101,11 +102,13 @@ export default function Report(props: ReportProps) {
 
 		// ok
 		setLoading(false)
+
+		// update allReports
+		app.reportsUpdate(val._id, val as any)
 	}
 
 	async function setReport2(val: TReport) {
 		changeData(() => {
-			setReport(val)
 			const newUndoStack = [...undoStack]
 			newUndoStack.splice(undoNext)
 			newUndoStack.push(val)
@@ -118,7 +121,6 @@ export default function Report(props: ReportProps) {
 	async function undo() {
 		changeData(() => {
 			const report = undoStack[undoNext-2]
-			setReport(report)
 			setUndoNext(undoNext-1)
 			return report
 		})
@@ -127,7 +129,6 @@ export default function Report(props: ReportProps) {
 	async function redo() {
 		changeData(() => {
 			const report = undoStack[undoNext]
-			setReport(report)
 			setUndoNext(undoNext+1)
 			return report
 		})

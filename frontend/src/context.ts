@@ -1,5 +1,5 @@
 import React from 'react'
-import type { IReportShort, IUser, UserDataResponse, ReportNewRequest, ReportNewResponse } from '../../backend/shared/types'
+import type { IReport, IReportShort, IUser, UserDataResponse, ReportNewRequest, ReportNewResponse } from '../../backend/shared/types'
 
 
 export interface IAppContextData {
@@ -12,6 +12,7 @@ export interface IAppContextCB extends IAppContextData {
 	setSid: (sid: string) => Promise<void>,
 	logout: () => Promise<void>,
 	reportNew: (name: string) => Promise<string>,
+	reportsUpdate: (_id: string, value: IReport|null) => Promise<void>,
 }
 
 export function AppContextDefaultData(): IAppContextData {
@@ -28,6 +29,7 @@ export function AppContextDefaultCB(): IAppContextCB {
 		setSid: async (sid) => {},
 		logout: async () => {},
 		reportNew: async (name) => { throw new Error('Not implemented') },
+		reportsUpdate: async (_id, value) => { throw new Error('Not implemented') },
 	}
 }
 
@@ -72,7 +74,24 @@ export function getApp(data: IAppContextData, setData: React.Dispatch<React.SetS
 			}
 			setData({...data, reports:[...data.reports, js]})
 			return js._id
-		}
+		},
+		reportsUpdate: async (_id, value) => {
+			const idx = data.reports.findIndex(r => r._id == _id)
+			if (idx == -1)
+				return
+			const arr = [...data.reports]
+			if (value) {
+				const old = arr[idx]
+				const obj: IReportShort = { _id, name: value.name, target: value.target }
+				if (JSON.stringify(old) == JSON.stringify(obj))
+					return
+				arr[idx] = obj
+			}
+			else {
+				arr.splice(idx, 1)
+			}
+			setData({...data, reports: arr})
+		},
 	}
 	return app
 }
