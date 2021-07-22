@@ -5,6 +5,7 @@ type trKeys =
 	'upload bad file' | 'upload finished' | 'download' | 'upload' | 'widgets' | 'predefined' | 'file' |
 	'invalid value' |
 	'name' | 'show more' | 'show less' | 'target' | 'fileName' | 'paperWidth' | 'paperHeight' | '0 means default' | 'margin' | 'lang' | 'lang 2 letter code' | 'users lang' | 'new name' | 'delete report' | 'delete report question' |
+	'no widgets available for target' |
 	''
 
 export type TTrans = {en: string}
@@ -53,6 +54,7 @@ const tr2: {[key in trKeys]: TTrans} = {
 	'new name': { en:'New name' },
 	'delete report': { en: 'Delete report' },
 	'delete report question': { en: 'Are you sure to delete this report?' },
+	'no widgets available for target': { en: 'No widgets available for target {0}.' },
 }
 
 export function TransName(name: string|{[key:string]:string}): string {
@@ -67,5 +69,14 @@ export function TransName(name: string|{[key:string]:string}): string {
 }
 
 export default function Trans(key: trKeys, params?: any[]): string {
-	return TransName(tr2[key])
+	let n = TransName(tr2[key])
+	const regex = /{(\d+)}/gm;
+	const pl = params ? params.length : 0
+	n = n.replace(regex, (match, p0, p1) => {
+		const idx = parseInt(p0)
+		if (idx >= 0 && idx < pl)
+			return params?.[idx]
+		return undefined
+	})
+	return n
 }

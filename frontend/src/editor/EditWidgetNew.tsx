@@ -195,6 +195,9 @@ function ShowUpload(props: GeneralProps) {
 
 
 export default function EditWidgetNew(props: GeneralProps) {
+	if (props.report.target !== 'pdf') {
+		return <div className='text-muted'><small>{Trans('no widgets available for target', [props.report.target])}</small></div>
+	}
 	return <>
 		<Expandable name={Trans('widgets')} defaultExpanded={true}>
 			<ShowWidgets {...props} />
