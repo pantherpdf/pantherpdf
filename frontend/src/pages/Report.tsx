@@ -152,12 +152,11 @@ export default function Report(props: ReportProps) {
 
 	// load report from db
 	useEffect(() => {
-		{
-			setReport(null)
-			setLoading(true)
-			setUndoStack([])
-			setUndoNext(0)
-		}
+		setReport(null)
+		setLoading(true)
+		setUndoStack([])
+		setUndoNext(0);
+
 		(async function() {
 			const r = await fetch(`/.netlify/functions/report?id=${id}`, {headers: {Authorization: `Bearer sid:${app.sid}`}})
 			const js = await r.json() as ReportResponse

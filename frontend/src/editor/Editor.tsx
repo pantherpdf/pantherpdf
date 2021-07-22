@@ -61,6 +61,7 @@ export default function Editor(props: Props) {
 	// load source data
 	useEffect(() => {
 		refreshSourceData(props.report)
+		// eslint-disable-next-line
 	}, [])
 
 	let props2: GeneralProps

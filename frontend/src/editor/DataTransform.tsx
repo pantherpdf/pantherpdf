@@ -59,11 +59,11 @@ function TransformItem(props: TransformItemProps) {
 				<FontAwesomeIcon icon={faEdit} className='me-2' fixedWidth />
 				{Trans('edit')}
 			</Dropdown.Item>
-			<Dropdown.Item onClick={e=>{e.preventDefault(); props.up(props.index)}} disabled={props.index==0}>
+			<Dropdown.Item onClick={e=>{e.preventDefault(); props.up(props.index)}} disabled={props.index===0}>
 				<FontAwesomeIcon icon={faArrowUp} className='me-2' fixedWidth />
 				{Trans('up')}
 			</Dropdown.Item>
-			<Dropdown.Item onClick={e=>{e.preventDefault(); props.down(props.index)}} disabled={props.index+1==props.report.transforms.length}>
+			<Dropdown.Item onClick={e=>{e.preventDefault(); props.down(props.index)}} disabled={props.index+1===props.report.transforms.length}>
 				<FontAwesomeIcon icon={faArrowDown} className='me-2' fixedWidth />
 				{Trans('down')}
 			</Dropdown.Item>
@@ -216,14 +216,13 @@ export default function DataTransform(props: GeneralProps) {
 				<div className="list-group">
 					{Object.keys(allTransforms).map(key => {
 						const w = allTransforms[key]
-						return <a
-							href="#"
-							className='list-group-item list-group-item-action'
+						return <button
+							className='btn list-group-item list-group-item-action'
 							key={key}
 							onClick={()=>itemAdd(key)}
 						>
 							{TransName(w.name)}
-						</a>
+						</button>
 					})}
 				</div>
 			</Modal.Body>
