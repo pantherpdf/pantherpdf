@@ -110,7 +110,7 @@ export default function ReportSettings(props: GeneralProps) {
 			<div>
 				<label htmlFor='fileName'>{Trans('fileName')}</label>
 				<div className="input-group mb-3">
-					<span className="input-group-text">ƒ</span>
+					<span className="input-group-text fst-italic">ƒ</span>
 					<InputApplyOnEnter id='fileName' value={props.report.properties.fileName||''} onChange={val=>(typeof val==='string'&&val.length>0)?changeProperty('fileName',val):deleteProperty('fileName')} />
 				</div>
 			</div>

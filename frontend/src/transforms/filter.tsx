@@ -62,7 +62,7 @@ const filter: TTransformWidget = {
 		return <>
 			<label htmlFor='trans-edit-field'>{Trans('field')}</label>
 			<div className="input-group mb-3">
-				<span className="input-group-text">ƒ</span>
+				<span className="input-group-text fst-italic">ƒ</span>
 				<InputApplyOnEnter id='trans-edit-field' value={item.field} onChange={val=>props.setItem({...item, field: val})} />
 			</div>
 
@@ -71,7 +71,7 @@ const filter: TTransformWidget = {
 				<small><span className='ms-2 text-muted'>Use variable: <span className='font-monospace'>item</span></span></small>
 			</label>
 			<div className="input-group mb-3">
-				<span className="input-group-text">ƒ</span>
+				<span className="input-group-text fst-italic">ƒ</span>
 				<InputApplyOnEnter id='trans-edit-condition' value={item.condition} onChange={val=>props.setItem({...item, condition: val})} />
 			</div>
 		</>
