@@ -1,5 +1,10 @@
 //import type { ObjectId } from "mongodb"
 
+// helper for converting tuple into type
+type Narrowable = string | number | boolean | symbol | object | {} | void | null | undefined;
+const tuple = <T extends Narrowable[]>(...args: T)=>args;
+
+
 export type WithId<T> = T & {_id: string}
 
 export interface IUser {
@@ -14,19 +19,39 @@ export interface ISession {
 	sid: string,
 }
 
-export interface TData { type: string, children: TData[] }
-type TargetOption = 'pdf'|'json'|'csv-excel-utf-8'|'csv-windows-1250'
+export interface TData {
+	[key: string]: any,
+	type: string,
+	children: TData[],
+}
 
-export interface IReport {
-	email: string,
+export const TargetOptions = tuple('pdf', 'json', 'csv-excel-utf-8', 'csv-windows-1250');
+export type TargetOption = (typeof TargetOptions)[number];
+export function TargetOptionTypeGuard(r: any): r is TargetOption {
+	if (typeof r !== 'string')
+		return false
+	if ((TargetOptions as string[]).indexOf(r) === -1)
+		return false
+	return true
+}
+
+export interface TReport {
+	_id: string,
 	name: string,
+	email: string,
 	time: string,
 	target: TargetOption,
 	children: TData[],
 	properties: {
-		font?: {[key: string]: string|number|boolean},
+		font?: any,
+		margin?: [number, number, number, number],
+		fileName?: string,
+		paperWidth?: number,
+		paperHeight?: number,
+		lang?: string,
 	}
 }
+export type TReportWithoutId = Omit<TReport, '_id'>
 
 export function TDataTypeGuard(r: any): r is TData {
 	if (typeof r.type !== 'string' || r.type.length == 0)
@@ -40,7 +65,7 @@ export function TDataTypeGuard(r: any): r is TData {
 	return true
 }
 
-export function ReportTypeGuard(r: any): r is IReport {
+export function ReportTypeGuard(r: any): r is TReport {
 	if (typeof r != 'object')
 		return false
 	if (typeof r.email !== 'string')
@@ -60,10 +85,10 @@ export function ReportTypeGuard(r: any): r is IReport {
 	return true
 }
 
-export interface IReportShort {
+export interface TReportShort {
 	_id: string,
-	target: TargetOption,
 	name: string,
+	target: TargetOption,
 }
 
 
@@ -87,7 +112,7 @@ export type LoginAnonymousResponse = { sid: string, anonymousId: string } | Erro
 
 
 // userData
-export type UserDataResponse = { user: IUser, reports: IReportShort[] } | ErrorResponse
+export type UserDataResponse = { user: IUser, reports: TReportShort[] } | ErrorResponse
 
 
 // keys
@@ -159,7 +184,7 @@ export function ReportNewRequestTypeGuard(r: any): r is ReportNewRequest {
 		return false
 	return true
 }
-export type ReportNewResponse = IReportShort | ErrorResponse
+export type ReportNewResponse = TReportShort | ErrorResponse
 
 export interface ReportRemoveRequest {
 	id: string,
@@ -173,4 +198,4 @@ export function ReportRemoveRequestTypeGuard(r: any): r is ReportRemoveRequest {
 }
 export type ReportRemoveResponse = { } | ErrorResponse
 
-export type ReportResponse = { obj: WithId<IReport> } | ErrorResponse
+export type ReportResponse = { obj: WithId<TReport> } | ErrorResponse

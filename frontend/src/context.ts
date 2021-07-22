@@ -1,18 +1,18 @@
 import React from 'react'
-import type { IReport, IReportShort, IUser, UserDataResponse, ReportNewRequest, ReportNewResponse } from '../../backend/shared/types'
+import type { TReport, TReportShort, IUser, UserDataResponse, ReportNewRequest, ReportNewResponse } from '../../backend/shared/types'
 
 
 export interface IAppContextData {
 	user: IUser | null,
 	sid: string | null,
-	reports: IReportShort[],
+	reports: TReportShort[],
 }
 
 export interface IAppContextCB extends IAppContextData {
 	setSid: (sid: string) => Promise<void>,
 	logout: () => Promise<void>,
 	reportNew: (name: string) => Promise<string>,
-	reportsUpdate: (_id: string, value: IReport|null) => Promise<void>,
+	reportsUpdate: (_id: string, value: TReport|null) => Promise<void>,
 }
 
 export function AppContextDefaultData(): IAppContextData {
@@ -82,7 +82,7 @@ export function getApp(data: IAppContextData, setData: React.Dispatch<React.SetS
 			const arr = [...data.reports]
 			if (value) {
 				const old = arr[idx]
-				const obj: IReportShort = { _id, name: value.name, target: value.target }
+				const obj: TReportShort = { _id, name: value.name, target: value.target }
 				if (JSON.stringify(old) === JSON.stringify(obj))
 					return
 				arr[idx] = obj

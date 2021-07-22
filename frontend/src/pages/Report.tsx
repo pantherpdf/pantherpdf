@@ -2,12 +2,11 @@ import React from 'react'
 import App from '../Layout'
 import { RouteComponentProps, Link } from 'react-router-dom'
 import { useState, useEffect, useContext } from 'react'
-import { ReportResponse } from '../../../backend/shared/types'
+import { ReportResponse, TReport } from '../../../backend/shared/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPrint, faRedo, faSpinner, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { AppContext } from '../context'
 import Editor from '../editor/Editor'
-import { TReport } from '../editor/types'
 
 
 interface MenuProps extends RouteComponentProps<any> {
@@ -105,7 +104,7 @@ export default function Report(props: ReportProps) {
 		setLoading(false)
 
 		// update allReports
-		app.reportsUpdate(val._id, val as any) // todo remove any
+		app.reportsUpdate(val._id, val)
 	}
 
 	async function setReport2(val: TReport) {

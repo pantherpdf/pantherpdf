@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions'
-import { ReportNewRequestTypeGuard, ReportNewResponse, IReport } from '../../shared/types'
+import { ReportNewRequestTypeGuard, ReportNewResponse, TReportWithoutId } from '../../shared/types'
 import connectToDatabase from '../db'
 import { userEmailFromEvent } from '../users'
 
@@ -24,7 +24,7 @@ const handler: Handler = async (event, context) => {
 	// insert
 	const time = new Date().toISOString()
 	const target = 'pdf'
-	const obj: IReport = {
+	const obj: TReportWithoutId = {
 		name,
 		email,
 		time,

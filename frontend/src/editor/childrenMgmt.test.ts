@@ -7,7 +7,8 @@ import { RepeatData } from '../widgets/repeat'
 import { TextSimpleData } from '../widgets/textSimple'
 import { findInList, removeFromList, insertIntoList, updateDestAfterRemove, idCmp, updateItem } from './childrenMgmt'
 import { sampleReport } from './sampleReport'
-import { ReportForceChildren, TReport } from './types'
+import { ReportForceChildren } from './types'
+import { TReport } from '../../../backend/shared/types'
 
 
 test('findInList', () => {

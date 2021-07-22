@@ -3,9 +3,9 @@
  * Compile sourceData and report - evaluate all formulas
  */
 
-import type { TReport, TReportCompiled } from './types'
+import { TReport, TData } from '../../../backend/shared/types'
+import type { TReportCompiled, TDataCompiled } from './types'
 import FormulaEvaluate from '../formula/formula'
-import type { TData, TDataCompiled } from './types'
 import getWidget from '../widgets/allWidgets'
 
 type TOvrr = [string, any]

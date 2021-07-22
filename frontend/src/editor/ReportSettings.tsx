@@ -5,13 +5,20 @@
 
 
 import React, { useState } from 'react'
-import { GeneralProps, TargetOptions, TargetOptionTypeGuard, TReport } from './types'
+import { GeneralProps } from './types'
+import type { TargetOption, TReport } from '../../../backend/shared/types'
 import Trans, { TransName } from '../translation'
 import PropertyFont, { TFont } from '../widgets/PropertyFont'
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter'
 import Property4SideInput, { Value as Property4SideInputValue } from '../widgets/Property4SideInput'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faCaretUp, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+
+
+// hack to get array of possible values
+// because I can only import types from shared
+const TargetOptionTmpObj: {[key in TargetOption]: number} = { 'pdf': 1, 'json': 1, 'csv-excel-utf-8': 1, 'csv-windows-1250': 1, }
+const TargetOptionTmpKeys = Object.keys(TargetOptionTmpObj)
 
 
 export default function ReportSettings(props: GeneralProps) {
@@ -27,9 +34,7 @@ export default function ReportSettings(props: GeneralProps) {
 
 	async function changeTarget(e: React.ChangeEvent<HTMLSelectElement>) {
 		const value = e.currentTarget.value
-		if (!TargetOptionTypeGuard(value))
-			return
-		const obj: TReport = {...props.report, target: value}
+		const obj: TReport = {...props.report, target: value as TargetOption}
 		return props.setReport(obj)
 	}
 
@@ -99,7 +104,7 @@ export default function ReportSettings(props: GeneralProps) {
 			<div>
 				<label htmlFor='target'>{Trans('target')}</label>
 				<select className='form-select' id='target' value={props.report.target} onChange={changeTarget}>
-					{TargetOptions.map(tp => <option key={tp} value={tp}>{tp}</option>)}
+					{TargetOptionTmpKeys.map(tp => <option key={tp} value={tp}>{tp}</option>)}
 				</select>
 			</div>
 			<div>

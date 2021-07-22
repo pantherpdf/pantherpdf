@@ -4,7 +4,8 @@
 
 
 import React from 'react'
-import { TData, GeneralProps } from './types'
+import { TData } from '../../../backend/shared/types'
+import { GeneralProps } from './types'
 import Trans, { TransName } from '../translation'
 import { PropertyFontGenCss } from '../widgets/PropertyFont'
 import ObjectExplorer from './ObjectExplorer'

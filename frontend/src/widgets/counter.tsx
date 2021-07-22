@@ -4,7 +4,8 @@
 
 
 import React from 'react'
-import type { Widget, TData, TDataCompiled } from '../editor/types'
+import { TData } from '../../../backend/shared/types'
+import type { Widget, TDataCompiled } from '../editor/types'
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 

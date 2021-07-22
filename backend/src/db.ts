@@ -1,5 +1,5 @@
 import { MongoClient, Db, Collection, ObjectID } from "mongodb"
-import { IUser, IKey, ISession, IReport, IEvent } from '../shared/types'
+import { IUser, IKey, ISession, TReportWithoutId, IEvent } from '../shared/types'
 import { sidFromEvent, userEmailFromSid, keyFromEvent, userEmailFromKey } from './users'
 import type { Event } from "@netlify/functions/src/function/event"
 
@@ -13,7 +13,7 @@ interface ICache {
 	users: Collection<With_id<IUser>>,
 	keys: Collection<With_id<IKey>>,
 	sessions: Collection<With_id<ISession>>,
-	reports: Collection<With_id<IReport>>,
+	reports: Collection<With_id<TReportWithoutId>>,
 	events: Collection<With_id<IEvent>>,
 }
 let cache: ICache | undefined
@@ -68,7 +68,7 @@ export default async function connectToDatabase() {
 			users: db.collection<With_id<IUser>>('users'),
 			keys: db.collection<With_id<IKey>>('keys'),
 			sessions: db.collection<With_id<ISession>>('sessions'),
-			reports: db.collection<With_id<IReport>>('reports'),
+			reports: db.collection<With_id<TReportWithoutId>>('reports'),
 			events: db.collection<With_id<IEvent>>('events'),
 		}
 	}
