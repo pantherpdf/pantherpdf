@@ -107,7 +107,7 @@ export default function DataTransform(props: GeneralProps) {
 		
 		let dt2
 		try {
-			dt2 = await transformData(dt, props.report, 'en', len)
+			dt2 = await transformData(dt, props.report, len)
 		}
 		catch(e) {
 			const msg = e instanceof Error ? e.message : 'Unknown error'

@@ -48,7 +48,7 @@ export default function Editor(props: Props) {
 		}
 		let dt2
 		try {
-			dt2 = await transformData(dt, report, 'en')
+			dt2 = await transformData(dt, report)
 		}
 		catch(e) {
 			const msg = e instanceof Error ? e.message : 'Unknown error'
