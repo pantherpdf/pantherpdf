@@ -110,25 +110,29 @@ export default function ReportSettings(props: GeneralProps) {
 				</div>
 			</div>
 
-			<PropertyFont value={props.report.properties.font?props.report.properties.font:{}} onChange={changeFont} />
-			
-			<label htmlFor='paperWidth'>{Trans('paperWidth')} <small className='text-muted'>{Trans('0 means default')}</small></label>
-			<div className="input-group">
-				<InputApplyOnEnter id='paperWidth' min='0' max='10000' value={props.report.properties.paperWidth?props.report.properties.paperWidth:0} onChange={val=>val?changeProperty('paperWidth',val):deleteProperty('paperWidth')} />
-				<span className="input-group-text">mm</span>
-			</div>
-
-			<label htmlFor='paperHeight'>{Trans('paperHeight')} <small className='text-muted'>{Trans('0 means default')}</small></label>
-			<div className="input-group">
-				<InputApplyOnEnter id='paperHeight' min='0' max='10000' value={props.report.properties.paperHeight?props.report.properties.paperHeight:0} onChange={val=>val?changeProperty('paperHeight',val):deleteProperty('paperHeight')} />
-				<span className="input-group-text">mm</span>
-			</div>
-
-			<label>{Trans('margin')} <small className='text-muted'>mm</small></label>
-			<Property4SideInput value={margin} onChange={changeMargin} />
-
 			<label htmlFor='lang'>{Trans('lang')} <small className='text-muted'>{Trans('lang 2 letter code')}</small></label>
 			<InputApplyOnEnter id='lang' value={props.report.properties.lang?props.report.properties.lang:''} onChange={val=>(typeof val==='string'&&val.length>0)?changeProperty('lang',val):deleteProperty('lang')} />
+
+			{props.report.target === 'pdf' && <>
+				<div className='mt-2 mb-2'>
+					<PropertyFont value={props.report.properties.font?props.report.properties.font:{}} onChange={changeFont} />
+				</div>
+				
+				<label htmlFor='paperWidth'>{Trans('paperWidth')} <small className='text-muted'>{Trans('0 means default')}</small></label>
+				<div className="input-group">
+					<InputApplyOnEnter id='paperWidth' min='0' max='10000' value={props.report.properties.paperWidth?props.report.properties.paperWidth:0} onChange={val=>val?changeProperty('paperWidth',val):deleteProperty('paperWidth')} />
+					<span className="input-group-text">mm</span>
+				</div>
+
+				<label htmlFor='paperHeight'>{Trans('paperHeight')} <small className='text-muted'>{Trans('0 means default')}</small></label>
+				<div className="input-group">
+					<InputApplyOnEnter id='paperHeight' min='0' max='10000' value={props.report.properties.paperHeight?props.report.properties.paperHeight:0} onChange={val=>val?changeProperty('paperHeight',val):deleteProperty('paperHeight')} />
+					<span className="input-group-text">mm</span>
+				</div>
+
+				<label>{Trans('margin')} <small className='text-muted'>mm</small></label>
+				<Property4SideInput value={margin} onChange={changeMargin} />
+			</>}
 		</>}
 			
 	</>
