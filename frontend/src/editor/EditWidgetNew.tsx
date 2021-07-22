@@ -4,15 +4,16 @@
  */
 
 
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Trans, { TransName } from '../translation'
 import style from './EditWidgets.module.css'
 import { saveAs } from 'file-saver'
-import { TReportShort } from '../../../backend/shared/types'
+import { ReportResponse, TReportShort } from '../../../backend/shared/types'
 import { Widget, GeneralProps } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { AppContext } from '../context'
 
 interface ExpandableProps {
 	name: string,
@@ -37,35 +38,35 @@ function Expandable(props: ExpandableProps) {
 
 
 function ShowReports(props: GeneralProps) {
-	/*
-	async function dragStartReport(id: string) {
-		const collection = new window.kelgrand.backoffice.Collection('reports', 'reports')
-		const obj = await collection.findOne({_id: id})
-		return props.dragStart(obj.widgets)
+	const app = useContext(AppContext)
+
+	async function dragStartReport(e: React.DragEvent<HTMLDivElement>, id: string) {
+		const r = await fetch(`/.netlify/functions/report?id=${id}`, {headers: {Authorization: `Bearer sid:${app.sid}`}})
+		const js = await r.json() as ReportResponse
+		if (!r.ok || 'msg' in js) {
+			const msg = 'msg' in js ? js.msg : 'unknown error'
+			alert(msg)
+			return
+		}
+		return props.dragWidgetStart(e, {type:'widgets', widgets:js.obj.children})
 	}
-	onDragStart={() => dragStartReport(r._id)}
-	onDragEnd={props.dragEnd}
-	*/
 
 	
-	let lastTp: string|null = null
 	if(props.allReports.length === 0) {
 		return <>{Trans('empty')}</>
 	}
-	return <>{props.allReports.map((r,idx) => {
-		const btn = lastTp !== r.target ? <div className='text-muted font-weight-bold'>{r.target}</div> : null
-		lastTp = r.target
-		return <React.Fragment key={idx}>
-			{btn}
+	return <>{props.allReports.map((r,idx) => <React.Fragment key={idx}>
 			<div
 				key={idx}
 				draggable={true}
+				onDragStart={(e) => dragStartReport(e, r._id)}
+				onDragEnd={props.dragWidgetEnd}
 				className={style.widget}
 			>
 				{TransName(r.name)}
 			</div>
 		</React.Fragment>
-	})}</>
+	)}</>
 }
 
 
