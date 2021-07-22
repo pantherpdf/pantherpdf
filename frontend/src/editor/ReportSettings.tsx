@@ -98,7 +98,7 @@ export default function ReportSettings(props: GeneralProps) {
 		{showMore && <>
 			<div>
 				<label htmlFor='target'>{Trans('target')}</label>
-				<select className='form-control' id='target' value={props.report.target} onChange={changeTarget}>
+				<select className='form-select' id='target' value={props.report.target} onChange={changeTarget}>
 					{TargetOptions.map(tp => <option key={tp} value={tp}>{tp}</option>)}
 				</select>
 			</div>

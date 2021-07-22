@@ -119,7 +119,7 @@ export default function PropertyFont(props: Props) {
 	const popover = <Popover className='p-3' id={props.id||''}>
 		<div className="d-flex">
 			<label htmlFor="family" style={{width:'50%'}}>{Trans('font-family')}</label>
-			<select className="form-control" name="family" id="family" value={family} onChange={handleInputChange}>
+			<select className="form-select" name="family" id="family" value={family} onChange={handleInputChange}>
 				<option value=""></option>
 				{fonts.map(f => <option key={f} value={f}>{f}</option>)}
 			</select>
@@ -133,14 +133,14 @@ export default function PropertyFont(props: Props) {
 		</div>
 		<div className="d-flex">
 			<label htmlFor="weight" style={{width:'50%'}}>{Trans('font-weight')}</label>
-			<select className="form-control" name="weight" id="weight" value={weight} onChange={handleInputChange}>
+			<select className="form-select" name="weight" id="weight" value={weight} onChange={handleInputChange}>
 				<option value=""></option>
 				{WeightOptions.map(w => <option value={w} key={w}>{weightName[w]}</option>)}
 			</select>
 		</div>
 		<div className="d-flex">
 			<label htmlFor="style" style={{width:'50%'}}>{Trans('font-style')}</label>
-			<select className="form-control" name="style" id="style" value={style} onChange={handleInputChange}>
+			<select className="form-select" name="style" id="style" value={style} onChange={handleInputChange}>
 				<option value=""></option>
 				{StyleOptions.map(w => <option value={w} key={w}>{styleName[w]}</option>)}
 			</select>
