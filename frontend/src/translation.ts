@@ -3,11 +3,14 @@ type trKeys =
 	'font-weight-normal' | 'font-weight-bold' | 'font-style-normal' | 'font-style-italic' | 'font' | 'font-family' | 'font-size' | 'font-style' | 'font-weight' |
 	'color' | 'enable' | 'empty' |
 	'upload bad file' | 'upload finished' | 'download' | 'upload' | 'widgets' | 'predefined' | 'file' |
-	'invalid value'
+	'invalid value' |
+	'name' | 'show more' | 'show less' | 'target' | 'fileName' | 'paperWidth' | 'paperHeight' | '0 means default' | 'margin' | 'lang' | 'lang 2 letter code' | 'users lang' | 'new name' | 'delete report' | 'delete report question' |
+	''
 
 export type TTrans = {en: string}
 
 const tr2: {[key in trKeys]: TTrans} = {
+	'': { en: '' },
 	'report': { en:'Report' },
 	'reports': { en:'Reports' },
 
@@ -34,6 +37,22 @@ const tr2: {[key in trKeys]: TTrans} = {
 	'file': { en:'File' },
 
 	'invalid value': { en:'invalid value'},
+
+	'name': { en:'Name' },
+	'show more': { en:'Show more' },
+	'show less': { en:'Show less' },
+	'target': { en:'Target' },
+	'fileName': { en:'File Name' },
+	'paperWidth': { en:'Paper Width' },
+	'paperHeight': { en:'Paper Height' },
+	'0 means default': { en:'0 means default' },
+	'margin': { en:'Margin' },
+	'lang': { en:'Language' },
+	'lang 2 letter code': { en:'2 letter code' },
+	'users lang': { en:'User Language' },
+	'new name': { en:'New name' },
+	'delete report': { en: 'Delete report' },
+	'delete report question': { en: 'Are you sure to delete this report?' },
 }
 
 export function TransName(name: string|{[key:string]:string}): string {

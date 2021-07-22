@@ -68,6 +68,7 @@ export default function Report(props: ReportProps) {
 	const [undoNext, setUndoNext] = useState<number>(0)
 
 	const app = useContext(AppContext)
+	const id = props.match.params.id
 
 
 	async function changeData(cb: ()=>TReport): Promise<void> {
@@ -104,7 +105,7 @@ export default function Report(props: ReportProps) {
 		setLoading(false)
 
 		// update allReports
-		app.reportsUpdate(val._id, val as any)
+		app.reportsUpdate(val._id, val as any) // todo remove any
 	}
 
 	async function setReport2(val: TReport) {
@@ -134,9 +135,23 @@ export default function Report(props: ReportProps) {
 		})
 	}
 
+	async function deleteReport() {
+		// delete from db
+		const r = await fetch(`/.netlify/functions/reportDelete?id=${id}`, {method:'POST', headers: {Authorization: `Bearer sid:${app.sid}`}})
+		if (!r.ok) {
+			const js = await r.json()
+			const msg = (typeof js == 'object' && 'msg' in js && typeof js.msg == 'string') ? js.msg : 'unknown error'
+			alert(msg)
+			return Promise.reject()
+		}
+		
+		// redirect
+		app.reportsUpdate(id, null)
+		props.history.replace('/reports')
+	}
+
 
 	// load report from db
-	const id = props.match.params.id
 	useEffect(() => {
 		{
 			setReport(null)
@@ -186,6 +201,7 @@ export default function Report(props: ReportProps) {
 		<Editor
 			report={report}
 			setReport={setReport2}
+			deleteReport={deleteReport}
 			allReports={app.reports}
 		/>
 	</>

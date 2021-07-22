@@ -1,11 +1,10 @@
 import { Handler } from "@netlify/functions";
 import { ObjectID } from "mongodb";
-import { ReportResponse } from "../../shared/types";
 import connectToDatabase from "../db";
 import { sidFromEvent, userEmailFromSid } from '../users'
 
 const handler: Handler = async (event, context) => {
-	if (event.httpMethod != 'GET') {
+	if (event.httpMethod != 'POST') {
 		return { statusCode: 405, body: JSON.stringify({msg: 'Method not allowed'}) }
 	}
 	
@@ -28,11 +27,15 @@ const handler: Handler = async (event, context) => {
 	if (!obj || obj.email != email) {
 		return { statusCode: 400, body: JSON.stringify({msg: 'Not allowed or doesnt exist'}) }
 	}
+
+	const result = await db.reports.deleteOne({_id: new ObjectID(id)})
+	if (result.deletedCount !== 1) {
+		return { statusCode: 500, body: JSON.stringify({msg: 'Didnt delete. Unknown error.'}) }
+	}
 	
-	const rs: ReportResponse = { obj: obj as any }
 	return {
 		statusCode: 200,
-		body: JSON.stringify(rs),
+		body: JSON.stringify({}),
 	}
 };
 

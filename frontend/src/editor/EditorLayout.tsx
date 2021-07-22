@@ -13,13 +13,7 @@ import EditWidgetNew from './EditWidgetNew'
 import style from './Editor.module.css'
 import getWidget from '../widgets/allWidgets'
 import { findInList, removeFromList, updateItem } from './childrenMgmt'
-
-
-function ReportSettings(props: GeneralProps) {
-	return <div>
-		TODO
-	</div>
-}
+import ReportSettings from './ReportSettings'
 
 
 function Properties(props: GeneralProps) {

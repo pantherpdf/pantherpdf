@@ -14,9 +14,12 @@ type TAllowed = string | number
 interface Props {
 	value: TAllowed,
 	step?: number,
+	min?: string|number,
+	max?: string|number,
 	onChange: (val: TAllowed) => void
 	regex?: RegExp,
 	id?: string,
+	style?: React.CSSProperties,
 }
 
 interface State {
@@ -64,7 +67,9 @@ export default class InputApplyOnEnter extends Component<Props, State> {
 					return
 				}
 			}
-			this.props.onChange(this.state.currentValue)
+			if( this.state.currentValue !== this.state.originalValue ) {
+				this.props.onChange(this.state.currentValue)
+			}
 		}
 	}
 

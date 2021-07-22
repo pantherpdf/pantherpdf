@@ -16,6 +16,7 @@ import { findInList, removeFromList, insertIntoList, updateDestAfterRemove, idCm
 interface Props {
 	report: TReport,
 	setReport: (val: TReport) => Promise<void>,
+	deleteReport: () => void,
 	allReports: TReportShort[],
 }
 
@@ -170,6 +171,7 @@ export default function Editor(props: Props) {
 
 		report: props.report,
 		setReport: props.setReport,
+		deleteReport: props.deleteReport,
 		
 		selected,
 		setSelected,

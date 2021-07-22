@@ -76,14 +76,14 @@ export function getApp(data: IAppContextData, setData: React.Dispatch<React.SetS
 			return js._id
 		},
 		reportsUpdate: async (_id, value) => {
-			const idx = data.reports.findIndex(r => r._id == _id)
-			if (idx == -1)
+			const idx = data.reports.findIndex(r => r._id === _id)
+			if (idx === -1)
 				return
 			const arr = [...data.reports]
 			if (value) {
 				const old = arr[idx]
 				const obj: IReportShort = { _id, name: value.name, target: value.target }
-				if (JSON.stringify(old) == JSON.stringify(obj))
+				if (JSON.stringify(old) === JSON.stringify(obj))
 					return
 				arr[idx] = obj
 			}
