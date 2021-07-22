@@ -83,9 +83,9 @@ export default function ReportSettings(props: GeneralProps) {
 		<label>{Trans('name')}</label>
 		<div className="input-group mb-3">
 			<input type="text" className="form-control" disabled value={TransName(props.report.name)}/>
-				<button className="btn btn-sm btn-outline-secondary" onClick={changeName}>
-					<FontAwesomeIcon icon={faEdit} />
-				</button>
+			<button className="btn btn-sm btn-outline-secondary" onClick={changeName}>
+				<FontAwesomeIcon icon={faEdit} />
+			</button>
 		</div>
 
 		<div>
@@ -111,12 +111,12 @@ export default function ReportSettings(props: GeneralProps) {
 				<label htmlFor='fileName'>{Trans('fileName')}</label>
 				<div className="input-group mb-3">
 					<span className="input-group-text">ƒ</span>
-					<input type='text' id='fileName' value={props.report.properties.fileName||''} onChange={e=>e.target.value.length>0?changeProperty('fileName',e.target.value):deleteProperty('fileName')} className='form-control' />
+					<InputApplyOnEnter id='fileName' value={props.report.properties.fileName||''} onChange={val=>(typeof val==='string'&&val.length>0)?changeProperty('fileName',val):deleteProperty('fileName')} />
 				</div>
 			</div>
 
 			<label htmlFor='lang'>{Trans('lang')} <small className='text-muted'>{Trans('lang 2 letter code')}</small></label>
-			<InputApplyOnEnter id='lang' value={props.report.properties.lang?props.report.properties.lang:''} onChange={val=>(typeof val==='string'&&val.length>0)?changeProperty('lang',val):deleteProperty('lang')} />
+			<InputApplyOnEnter id='lang' value={props.report.properties.lang||''} onChange={val=>(typeof val==='string'&&val.length>0)?changeProperty('lang',val):deleteProperty('lang')} />
 
 			{props.report.target === 'pdf' && <>
 				<div className='mt-2 mb-2'>
