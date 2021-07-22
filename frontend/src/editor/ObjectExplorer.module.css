@@ -1,0 +1,16 @@
+.row {
+	display: flex;
+	min-width: 10rem;
+}
+.btnCont {
+	width: 1.4rem;
+}
+.child {
+	padding-left: 1.4rem;
+}
+.pre {
+	margin: 0;
+}
+.icon {
+	width: 1.4rem;
+}

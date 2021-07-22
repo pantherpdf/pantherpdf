@@ -116,7 +116,7 @@ export default function Layout(props: GeneralProps&{dragOver: (e: React.DragEven
 				<DataTransform {...props} />
 				<hr/>
 			</div>
-			<ObjectExplorer {...props} />
+			<ObjectExplorer data={props.sourceData} />
 		</div>
 		<div className={style.box3}>
 			<Properties {...props} />
