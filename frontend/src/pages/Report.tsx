@@ -61,7 +61,7 @@ interface ReportProps extends RouteComponentProps<ReportParams> {
 
 export default function Report(props: ReportProps) {
 	const [report, setReport] = useState<TReport | null>()
-	const [loading, setLoading] = useState<boolean>(false)
+	const [loading, setLoading] = useState<boolean>(true)
 
 	const [undoStack, setUndoStack] = useState<TReport[]>([])
 	const [undoNext, setUndoNext] = useState<number>(0)
@@ -177,7 +177,9 @@ export default function Report(props: ReportProps) {
 	// is loading?
 	if (!report && loading) {
 		return <App {...props}><main className='container'>
-			<FontAwesomeIcon icon={faSpinner} spin={true} style={{margin:'50px auto'}} /> 
+			<div className='d-flex justify-content-center'>
+				<FontAwesomeIcon icon={faSpinner} spin={true} style={{margin:'50px auto', fontSize:'2rem'}} /> 
+			</div>
 		</main></App>
 	}
 
