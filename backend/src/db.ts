@@ -36,12 +36,12 @@ export default async function connectToDatabase() {
 					time: new Date().toISOString().substring(0,19)+'Z',
 				}
 				if (!('sid' in event) && rqEvent) {
-					const sid = await sidFromEvent(rqEvent)
+					const sid = sidFromEvent(rqEvent)
 					if (sid)
 						event.sid = sid
 				}
 				if (!('key' in event) && rqEvent) {
-					const key = await keyFromEvent(rqEvent)
+					const key = keyFromEvent(rqEvent)
 					if (key)
 						event.key = key
 				}

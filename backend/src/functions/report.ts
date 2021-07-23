@@ -9,7 +9,7 @@ const handler: Handler = async (event, context) => {
 		return { statusCode: 405, body: JSON.stringify({msg: 'Method not allowed'}) }
 	}
 	
-	const sid = await sidFromEvent(event)
+	const sid = sidFromEvent(event)
 	if (!sid) {
 		return { statusCode: 403, body: JSON.stringify({msg: 'Not allowed'}) }
 	}
