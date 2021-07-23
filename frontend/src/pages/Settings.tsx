@@ -10,6 +10,7 @@ export default function Settings(props: RouteComponentProps) {
 		<h1>Settings</h1>
 		<SettingsKeys />
 		<div style={{height:'50px'}} />
+		<h2>Settings</h2>
 		<FileDialog
 			mode='link'
 		/>
