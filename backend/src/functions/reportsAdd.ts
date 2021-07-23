@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions'
-import { ReportNewRequestTypeGuard, ReportNewResponse, TReportWithoutId } from '../../shared/types'
+import { ReportNewRequestTypeGuard, ReportNewResponse, TReportWithoutId } from 'reports-shared'
 import connectToDatabase from '../db'
 import { userEmailFromEvent } from '../users'
 

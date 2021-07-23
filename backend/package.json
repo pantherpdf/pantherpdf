@@ -8,6 +8,7 @@
 		"test": "echo '\n* * * * * * * *\nTODO make tests for backend\n* * * * * * * *\n'"
 	},
 	"dependencies": {
+		"reports-shared": "file:../shared",
 		"@netlify/functions": "^0.7.2",
 		"crypto": "^1.0.1",
 		"mongodb": "^3.6.9",

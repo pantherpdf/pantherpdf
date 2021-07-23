@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions'
-import { KeyUpdateRequestTypeGuard } from '../../shared/types'
+import { KeyUpdateRequestTypeGuard } from 'reports-shared'
 import connectToDatabase from '../db'
 import { userEmailFromEvent } from '../users'
 

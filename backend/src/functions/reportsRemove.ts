@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions'
 import { ObjectID } from 'mongodb';
-import { ReportRemoveRequestTypeGuard, ReportRemoveResponse } from '../../shared/types'
+import { ReportRemoveRequestTypeGuard, ReportRemoveResponse } from 'reports-shared'
 import connectToDatabase from '../db'
 import { userEmailFromEvent } from '../users'
 

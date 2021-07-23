@@ -7,7 +7,7 @@
 import React, { ReactNode, useEffect, useRef } from 'react'
 import { useState } from 'react'
 import getWidget from '../widgets/allWidgets'
-import { TReport, TData, TReportShort } from '../../../backend/shared/types'
+import { TReport, TData, TReportShort } from 'reports-shared'
 import { GeneralProps, TDragObj } from './types'
 import style from './Editor.module.css'
 import Layout from './EditorLayout'

@@ -3,7 +3,7 @@
  * Compile sourceData and report - evaluate all formulas
  */
 
-import { TReport, TData } from '../../../backend/shared/types'
+import { TReport, TData } from 'reports-shared'
 import type { TReportCompiled, TDataCompiled } from './types'
 import FormulaEvaluate from '../formula/formula'
 import getWidget from '../widgets/allWidgets'

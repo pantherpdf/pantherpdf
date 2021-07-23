@@ -1,6 +1,6 @@
 import { Handler } from "@netlify/functions";
 import { ObjectID } from "mongodb";
-import { ReportResponse } from "../../shared/types";
+import { ReportResponse } from 'reports-shared'
 import connectToDatabase from "../db";
 import { sidFromEvent, userEmailFromSid } from '../users'
 

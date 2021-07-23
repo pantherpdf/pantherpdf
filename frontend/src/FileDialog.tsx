@@ -9,7 +9,7 @@ import { AppContext } from './context'
 import { Dropdown } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { TFileShort, FileUploadData, FilesResponse } from '../../backend/shared/types'
+import { TFileShort, FileUploadData, FilesResponse } from 'reports-shared'
 
 
 // check browser support for fetch stream upload

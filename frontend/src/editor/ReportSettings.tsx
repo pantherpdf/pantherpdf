@@ -6,7 +6,7 @@
 
 import React, { useState } from 'react'
 import { GeneralProps } from './types'
-import type { TargetOption, TReport } from '../../../backend/shared/types'
+import type { TargetOption, TReport } from 'reports-shared'
 import Trans, { TransName } from '../translation'
 import PropertyFont, { TFont } from '../widgets/PropertyFont'
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter'

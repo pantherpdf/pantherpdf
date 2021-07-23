@@ -8,7 +8,7 @@ import { TextSimpleData } from '../widgets/textSimple'
 import { findInList, removeFromList, insertIntoList, updateDestAfterRemove, idCmp, updateItem } from './childrenMgmt'
 import { sampleReport } from './sampleReport'
 import { ReportForceChildren } from './types'
-import { TReport } from '../../../backend/shared/types'
+import { TReport } from 'reports-shared'
 
 
 test('findInList', () => {

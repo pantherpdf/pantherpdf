@@ -1,0 +1,17 @@
+{
+	"name": "reports-shared",
+	"version": "1.0.0",
+	"private": true,
+	"devDependencies": {
+		"typescript": "^4.3.2"
+	},
+	"scripts": {
+		"build": "tsc",
+		"test": "echo '\n* * * * * * * *\nTODO make tests for shared\n* * * * * * * *\n'"
+	},
+	"main": "build/index.js",
+	"types": "build/index.d.ts",
+	"files": [
+		"/build"
+	]
+}

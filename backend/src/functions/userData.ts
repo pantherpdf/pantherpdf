@@ -1,5 +1,5 @@
 import { Handler } from "@netlify/functions";
-import { TReportShort, UserDataResponse } from "../../shared/types";
+import { TReportShort, UserDataResponse } from 'reports-shared'
 import connectToDatabase from "../db";
 import { userDataFromEvent } from '../users'
 

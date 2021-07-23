@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions'
 import { ObjectID } from 'mongodb';
-import { ReportTypeGuard } from '../../shared/types'
+import { ReportTypeGuard } from 'reports-shared'
 import connectToDatabase from '../db'
 import { userEmailFromEvent } from '../users'
 
