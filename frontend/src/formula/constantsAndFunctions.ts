@@ -36,7 +36,7 @@ export const functions: {[key: string]: (...args: any[])=>any } = {
 	'str': (a) => String(a),
 	'substr': substr2,
 	'substring': substr2,
-	'now': () => (new Date()).toISOString(),
+	'now': () => (new Date()).toISOString().substring(0,19)+'Z',
 	'lower': (str) => { if (typeof str !== 'string') { throw new Error('not a string') } return str.toLowerCase() },
 	'toLowerCase': (str) => { if (typeof str !== 'string') { throw new Error('not a string') } return str.toLowerCase() },
 	'upper': (str) => { if (typeof str !== 'string') { throw new Error('not a string') } return str.toUpperCase() },

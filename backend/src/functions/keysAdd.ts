@@ -41,7 +41,7 @@ const handler: Handler = async (event, context) => {
 
 	// insert
 	db.logEvent(event, 'keyAdd', {email, modifiedKey:key})
-	const time = new Date().toISOString()
+	const time = new Date().toISOString().substring(0,19)+'Z'
 	const keyObj: IKey = { key, name, email, time }
 	await db.keys.insertOne(keyObj)
 

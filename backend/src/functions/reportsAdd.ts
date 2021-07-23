@@ -22,7 +22,7 @@ const handler: Handler = async (event, context) => {
 	const db = await connectToDatabase()
 
 	// insert
-	const time = new Date().toISOString()
+	const time = new Date().toISOString().substring(0,19)+'Z'
 	const target = 'pdf'
 	const obj: TReportWithoutId = {
 		name,
