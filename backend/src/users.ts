@@ -50,6 +50,12 @@ export function keyFromEvent(event: Event): string | null {
 }
 
 
+export function sidFromParam(event: Event): string | null {
+	const sid: string | null = (event.queryStringParameters && event.queryStringParameters.sid) || null
+	return sid
+}
+
+
 export async function userEmailFromSid(sid: string): Promise<string | null> {
 	const db = await connectToDatabase()
 	const res = await db.sessions.findOne({sid})

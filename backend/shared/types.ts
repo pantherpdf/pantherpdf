@@ -99,6 +99,46 @@ export interface TReportShort {
 }
 
 
+
+
+export interface TFile {
+	email: string,
+	name: string,
+	mimeType: string,
+	uploadTime: string,
+	modifiedTime: string,
+	data: Buffer,
+	size: number,
+}
+
+export interface TFileShort {
+	name: string,
+	mimeType: string,
+	uploadTime: string,
+	modifiedTime: string,
+	size: number,
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export interface ErrorResponse { msg: string }
 
 
@@ -206,3 +246,33 @@ export function ReportRemoveRequestTypeGuard(r: any): r is ReportRemoveRequest {
 export type ReportRemoveResponse = { } | ErrorResponse
 
 export type ReportResponse = { obj: WithId<TReport> } | ErrorResponse
+
+
+
+
+
+
+export type FilesResponse = { files: TFileShort[] } | ErrorResponse
+
+export interface FileUploadData {
+	name: string,
+	modifiedTime: string,
+	mimeType: string,
+}
+
+export function FileUploadDataTypeGuard(r: any): r is FileUploadData {
+	if (typeof r !== 'object')
+		return false
+	if (!('name' in r) || typeof r.name !== 'string')
+		return false
+	if (!('modifiedTime' in r) || typeof r.modifiedTime !== 'string')
+		return false
+	const rgx = /^[\d]{4}-[\d]{2}-[\d]{2}T[\d]{2}:[\d]{2}:[\d]{2}Z$/gm
+	if (!r.modifiedTime.match(rgx))
+		return false
+	if (!('mimeType' in r) || typeof r.mimeType !== 'string')
+		return false
+	return true
+}
+
+export type FileUploadResponse = {file: TFileShort} | ErrorResponse
