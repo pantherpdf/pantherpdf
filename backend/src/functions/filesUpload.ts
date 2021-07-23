@@ -52,6 +52,15 @@ const handler: Handler = async (event, context) => {
 	if (exist_result) {
 		await db.files.deleteOne({_id: exist_result._id})
 	}
+
+	// limit number of files by user
+	const num_files = await db.files.count({email})
+	if (num_files >= 50) {
+		return { statusCode: 400, body: JSON.stringify({msg: 'Limit of 50 files is reached'}) }
+	}
+	if (email.startsWith('anonymous-') && num_files >= 3) {
+		return { statusCode: 400, body: JSON.stringify({msg: 'Limit of 3 files is reached'}) }
+	}
 	
 	// insert
 	const obj: TFile = {
