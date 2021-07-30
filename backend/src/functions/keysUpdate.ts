@@ -20,7 +20,7 @@ const handler: Handler = async (event, context) => {
 	
 	const db = await connectToDatabase()
 
-	const numSameName = await db.keys.count({name: rq.nameNew})
+	const numSameName = await db.keys.countDocuments({name: rq.nameNew})
 	if (numSameName != 0) {
 		return { statusCode: 400, body: JSON.stringify({msg: 'Key with this name already exists'}) }
 	}

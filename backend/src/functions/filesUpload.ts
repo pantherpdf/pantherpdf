@@ -54,7 +54,7 @@ const handler: Handler = async (event, context) => {
 	}
 
 	// limit number of files by user
-	const num_files = await db.files.count({email})
+	const num_files = await db.files.countDocuments({email})
 	if (num_files >= 50) {
 		return { statusCode: 400, body: JSON.stringify({msg: 'Limit of 50 files is reached'}) }
 	}

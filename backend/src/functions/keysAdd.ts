@@ -26,15 +26,15 @@ const handler: Handler = async (event, context) => {
 	const db = await connectToDatabase()
 
 	// check that it doesnt exist
-	const num = await db.keys.count({email})
+	const num = await db.keys.countDocuments({email})
 	if (num >= 50) {
 		return { statusCode: 403, body: JSON.stringify({msg: 'Too many keys'}) }
 	}
-	const numSameKey = await db.keys.count({key: key})
+	const numSameKey = await db.keys.countDocuments({key: key})
 	if (numSameKey > 0) {
 		return { statusCode: 500, body: JSON.stringify({msg: 'Same key already exists. Try again.'}) }
 	}
-	const numSameKeyUser = await db.keys.count({email, name})
+	const numSameKeyUser = await db.keys.countDocuments({email, name})
 	if (numSameKeyUser > 0) {
 		return { statusCode: 400, body: JSON.stringify({msg: 'Key with same name already exists. Try again.'}) }
 	}

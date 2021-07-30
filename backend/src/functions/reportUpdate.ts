@@ -27,7 +27,7 @@ const handler: Handler = async (event, context) => {
 
 	// get old
 	const db = await connectToDatabase()
-	const oldReport = await db.reports.count({_id, email})
+	const oldReport = await db.reports.countDocuments({_id, email})
 	if (oldReport != 1) {
 		return { statusCode: 400, body: JSON.stringify({msg: 'Report not found'}) }
 	}
