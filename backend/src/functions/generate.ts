@@ -2,9 +2,10 @@ import { Handler } from '@netlify/functions'
 import { ObjectId } from 'mongodb';
 import connectToDatabase from '../db'
 import { userEmailFromEvent } from '../users'
-import { compile, makeHtml } from 'reports-shared'
+import { compile, IReportGenerated, makeHtml } from 'reports-shared'
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
+import crypto from 'crypto'
 
 
 const handler: Handler = async (event, context) => {
@@ -44,8 +45,21 @@ const handler: Handler = async (event, context) => {
 	const el2 = React.createElement('div', {}, el1)
 	const html = ReactDOMServer.renderToStaticMarkup(el2)
 
+	// insert into db
+	const time = new Date().toISOString().substring(0,19)+'Z'
+	const accessKey = crypto.randomBytes(24).toString('hex');
+	const obj: IReportGenerated = {
+		email,
+		time,
+		html,
+		reportId,
+		accessKey,
+	}
+	await db.reportsGenerated.insertOne(obj)
+
 	const res = {
-		html
+		html,
+		accessKey,
 	}
 	return { statusCode: 200, body: JSON.stringify(res) }
 };

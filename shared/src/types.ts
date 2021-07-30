@@ -19,6 +19,14 @@ export interface ISession {
 	sid: string,
 }
 
+export interface IReportGenerated {
+	email: string,
+	time: string,
+	html: string,
+	reportId: string,
+	accessKey: string,
+}
+
 export interface TData {
 	[key: string]: any,
 	type: string,

@@ -13,7 +13,8 @@
 		"crypto": "^1.0.1",
 		"mongodb": "^3.6.9",
 		"mongodb-client-encryption": "^1.2.5",
-		"netlify-lambda": "^2.0.8"
+		"netlify-lambda": "^2.0.8",
+		"react-style-object-to-css": "^1.1.2"
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.14.5",
