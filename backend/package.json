@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"start": "netlify-lambda serve src/functions --config ./webpack.functions.js",
-		"build": "netlify-lambda build src/functions",
+		"build": "netlify-lambda build src/functions --config ./webpack.functions.js",
 		"test": "echo '\n* * * * * * * *\nTODO make tests for backend\n* * * * * * * *\n'"
 	},
 	"dependencies": {
