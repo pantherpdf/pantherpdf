@@ -4,7 +4,7 @@
  */
 
 
- import { TReport, TData } from 'reports-shared'
+ import { TReport, TData } from '../types'
 
 
 export function findArrayInList(report: TReport, wid: number[]): TData[] {

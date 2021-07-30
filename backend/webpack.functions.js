@@ -7,4 +7,12 @@ module.exports = {
       safe: '../.env.example',
     })
   ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["css-loader"],
+      },
+    ],
+  },
 }

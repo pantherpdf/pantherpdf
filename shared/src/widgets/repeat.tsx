@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { TData } from 'reports-shared'
+import { TData } from '../types'
 import type { Widget, TDataCompiled } from '../editor/types'
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'

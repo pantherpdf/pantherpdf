@@ -4,7 +4,7 @@
 
 
 import React from 'react'
-import { TData } from 'reports-shared'
+import { TData } from '../types'
 import { GeneralProps } from './types'
 import Trans, { TransName } from '../translation'
 import { PropertyFontGenCss } from '../widgets/PropertyFont'

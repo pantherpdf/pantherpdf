@@ -4,12 +4,12 @@
  */
 
 
-import React, { useState, useContext, useEffect, useRef } from 'react'
-import { AppContext } from './context'
+import React, { useState, useEffect, useRef } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { TFileShort, FileUploadData, FilesResponse } from 'reports-shared'
+import { TFileShort, FileUploadData, FilesResponse } from './types'
+import { ApiEndpoints } from './types'
 
 
 // check browser support for fetch stream upload
@@ -21,71 +21,11 @@ const supportsRequestStreams = !new Request('', {
 }).headers.has('Content-Type');
 
 
-/**
- * Upload file to a server
- */
-async function uploadFile(url: string, file: File, headers: {[key:string]: string}, cbProgress: (prc: number) => void) {
-	let r: Response
-
-	if (!supportsRequestStreams) {
-		// old way, without progress
-		r = await fetch(url, {
-			method: 'POST',
-			headers,
-			body: file
-		});
-	}
-
-	else {
-		// fetch stream upload
-		// report progress
-		let bytesConsumed = 0
-		const totalSize = file.size
-		const fileReader: ReadableStreamDefaultReader = file.stream().getReader()
-		const stream = new ReadableStream({
-			async pull(c) {
-				const r = await fileReader.read()
-				if (r.done) {
-					c.close()
-				}
-				else {
-					let prc = bytesConsumed / totalSize
-					cbProgress(prc)
-					bytesConsumed += r.value.length
-					c.enqueue(r.value)
-				}
-			}
-		})
-
-		r = await fetch(url, {
-			method: 'POST',
-			headers,
-			body: stream,
-			allowHTTP1ForStreamingUpload: true,  // non-standard, but required by Chrome for HTTP/1
-		} as any);
-	}
-
-	// error handler
-	if (!r.ok) {
-		let msg: string = ''
-		try {
-			const js = await r.json()
-			if (typeof js === 'object' && 'msg' in js && typeof js.msg === 'string') {
-				msg = js.msg
-			}
-		}
-		catch(e) { }
-		if (msg.length === 0)
-			msg = 'Unknown error'
-		throw new Error(msg)
-	}
-}
-
-
 interface Props {
 	mode: 'value' | 'link',
 	value?: string | undefined,
 	onChange?: (val: string | undefined) => void,
+	api: ApiEndpoints,
 }
 
 type TStatus = 'waiting' | 'uploading' | 'complete'
@@ -103,7 +43,6 @@ interface TFileUpload extends TFileShort {
 
 
 export default function FileDialog(props: Props) {
-	const app = useContext(AppContext)
 	const [files, setFiles] = useState<TFileUpload[]>([])
 	const [loading, setLoading] = useState<boolean>(true)
 	const selectFileElement = useRef<HTMLInputElement>(null)
@@ -239,13 +178,7 @@ export default function FileDialog(props: Props) {
 				modifiedTime: f.modifiedTime,
 				mimeType: f.mimeType,
 			}
-			const headers = {
-				Authorization: `Bearer sid:${app.sid}`,
-				'x-data': JSON.stringify(dt),
-				// use non-descriptive binary Content-Type otherwise netlify lambda not working properly with images
-				'Content-Type': 'application/octet-stream',
-			}
-			await uploadFile(`/.netlify/functions/filesUpload`, f.upload.file, headers, (prc) => {
+			await props.api.filesUpload(f.upload.file, dt, (prc) => {
 				reportStatus(f.name, 'uploading', undefined, prc)
 			})
 			reportStatus(f.name, 'complete')
@@ -265,31 +198,19 @@ export default function FileDialog(props: Props) {
 	}, [files])
 
 
-	// load keys
+	// load files
 	useEffect(() => {
-		(async function() {
-			const r = await fetch('/.netlify/functions/files', {headers: {Authorization: `Bearer sid:${app.sid}`}})
-			const js = await r.json() as FilesResponse
-			if (!r.ok || 'msg' in js) {
-				const msg = 'msg' in js ? js.msg : 'unknown error'
-				throw new Error(msg)
-			}
+		props.api.files().then(js => {
 			setFiles(js.files)
 			setLoading(false)
-		})()
-	}, [app.sid])
+		})
+	}, [])
 
 
 	async function fileDelete(name: string): Promise<void> {
 		if (!window.confirm('Are you sure to delete?'))
 			return
-		const r = await fetch(`/.netlify/functions/filesDelete?name=${name}`, {method:'POST', headers: {Authorization: `Bearer sid:${app.sid}`}})
-		const js = await r.json() as FilesResponse
-		if (!r.ok || 'msg' in js) {
-			const msg = 'msg' in js ? js.msg : 'unknown error'
-			alert(msg)
-			return
-		}
+		await props.api.filesDelete(name)
 		const arr = files.filter(f => f.name !== name)
 		setFiles(arr)
 	}
@@ -309,7 +230,7 @@ export default function FileDialog(props: Props) {
 			<tbody>
 				{files.map(f => <tr key={f.name}>
 					<td>
-						{props.mode === 'link' ? <a href={`/.netlify/functions/filesDownload?name=${f.name}&sid=${app.sid}`} target='_blank' rel='noreferrer' className='d-block'>{f.name}</a> : <button
+						{props.mode === 'link' ? <a href={props.api.filesDownloadUrl(f.name)} target='_blank' rel='noreferrer' className='d-block'>{f.name}</a> : <button
 							className='btn btn-link d-block w-100 text-start'
 							onClick={() => props.onChange && props.onChange(f.name)}
 						>

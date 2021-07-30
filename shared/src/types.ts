@@ -120,6 +120,15 @@ export interface TFileShort {
 }
 
 
+export interface ApiEndpoints {
+	reportGet: (id: string) =>  Promise<ReportResponse2>,
+	files: () =>  Promise<FilesResponse2>,
+	filesDelete: (name: string) =>  Promise<void>,
+	filesUpload: (file: File, data: FileUploadData, cbProgress: (prc: number) => void) =>  Promise<void>,
+	filesDownloadUrl: (name: string) => string,
+}
+
+
 
 
 
@@ -245,14 +254,16 @@ export function ReportRemoveRequestTypeGuard(r: any): r is ReportRemoveRequest {
 }
 export type ReportRemoveResponse = { } | ErrorResponse
 
-export type ReportResponse = { obj: WithId<TReport> } | ErrorResponse
+export type ReportResponse2 = { obj: WithId<TReport> }
+export type ReportResponse = ReportResponse2 | ErrorResponse
 
 
 
 
 
 
-export type FilesResponse = { files: TFileShort[] } | ErrorResponse
+export type FilesResponse2 = { files: TFileShort[] }
+export type FilesResponse = FilesResponse2 | ErrorResponse
 
 export interface FileUploadData {
 	name: string,

@@ -6,14 +6,14 @@ import { TextSimpleData, TextSimpleCompiled } from './textSimple'
 import { RepeatData, RepeatCompiled } from '../widgets/repeat'
 import { counter, CounterData, CounterCompiled } from '../widgets/counter'
 import { Helper } from '../editor/compile'
-import { ForceData } from '../editor/types'
+import { ForceChildren } from '../editor/types'
 
 
 
 test('text', async () => {
 	
 
-	const dt: ForceData<CounterData|RepeatData|TextSimpleData> =
+	const dt: ForceChildren<CounterData|RepeatData|TextSimpleData> =
 	{type: 'counter', varName: 'counter1', children: [
 		{type:'repeat', varName:'rp', formula:'["a","b","c"]', children:[
 			{type:'textSimple', formula:'rp + counter1', children:[]}

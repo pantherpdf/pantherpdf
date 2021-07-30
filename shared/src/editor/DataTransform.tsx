@@ -5,7 +5,7 @@
 
 
 import React, { useState } from 'react'
-import { TReport, TTransformData } from 'reports-shared'
+import { TReport, TTransformData } from '../types'
 import { GeneralProps } from './types'
 import { Dropdown, Button, ButtonGroup, Modal } from 'react-bootstrap'
 import Trans, { TransName } from '../translation'

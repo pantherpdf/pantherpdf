@@ -5,7 +5,7 @@
 
 
 import React from 'react'
-import { TTransformData } from 'reports-shared'
+import { TTransformData } from '../types'
 import { TTransformWidget } from '../editor/types'
 import { IHelpers } from '../formula/types'
 import FormulaEvaluate from '../formula/formula'

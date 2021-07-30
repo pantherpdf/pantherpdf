@@ -7,7 +7,7 @@
 import React, { ReactNode, useEffect, useRef } from 'react'
 import { useState } from 'react'
 import getWidget from '../widgets/allWidgets'
-import { TReport, TData, TReportShort } from 'reports-shared'
+import { TReport, TData, TReportShort, ApiEndpoints } from '../types'
 import { GeneralProps, TDragObj } from './types'
 import style from './Editor.module.css'
 import Layout from './EditorLayout'
@@ -21,6 +21,7 @@ interface Props {
 	deleteReport: () => void,
 	allReports: TReportShort[],
 	getOriginalSourceData: () => any,
+	api: ApiEndpoints,
 }
 
 
@@ -210,6 +211,7 @@ export default function Editor(props: Props) {
 		refreshSourceData: refreshSourceData,
 		sourceData: source.data,
 		sourceErrorMsg: source.msg,
+		api: props.api,
 
 		report: props.report,
 		setReport: props.setReport,

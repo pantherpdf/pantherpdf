@@ -6,7 +6,8 @@ import { ReportResponse, TReport } from 'reports-shared'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPrint, faRedo, faSpinner, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { AppContext } from '../context'
-import Editor from '../editor/Editor'
+import { Editor } from 'reports-shared'
+import getApi from '../api'
 
 
 interface MenuProps extends RouteComponentProps<any> {
@@ -193,6 +194,8 @@ export default function Report(props: ReportProps) {
 		return { arr: [1,2,3,4,5,6,7,8,9] }
 	}
 
+	const api = getApi(app)
+
 	// show editor
 	return <>
 		<Menu
@@ -209,6 +212,7 @@ export default function Report(props: ReportProps) {
 			deleteReport={deleteReport}
 			allReports={app.reports}
 			getOriginalSourceData={getOriginalSourceData}
+			api={api}
 		/>
 	</>
 }

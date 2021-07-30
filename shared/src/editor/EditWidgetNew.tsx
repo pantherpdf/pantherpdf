@@ -4,16 +4,15 @@
  */
 
 
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import Trans, { TransName } from '../translation'
 import style from './EditWidgets.module.css'
 import { saveAs } from 'file-saver'
-import { ReportResponse, TData } from 'reports-shared'
+import { ReportResponse2 } from '../types'
 import { Widget, GeneralProps } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { AppContext } from '../context'
 
 interface ExpandableProps {
 	name: string,
@@ -38,14 +37,14 @@ function Expandable(props: ExpandableProps) {
 
 
 function ShowReports(props: GeneralProps) {
-	const app = useContext(AppContext)
 
 	async function dragStartReport(e: React.DragEvent<HTMLDivElement>, id: string) {
-		const r = await fetch(`/.netlify/functions/report?id=${id}`, {headers: {Authorization: `Bearer sid:${app.sid}`}})
-		const js = await r.json() as ReportResponse
-		if (!r.ok || 'msg' in js) {
-			const msg = 'msg' in js ? js.msg : 'unknown error'
-			alert(msg)
+		let js: ReportResponse2
+		try {
+			js = await props.api.reportGet(id)
+		}
+		catch(e) {
+			alert(String(e))
 			return
 		}
 		return props.dragWidgetStart(e, {type:'widgets', widgets:js.obj.children})

@@ -1,0 +1,15 @@
+{
+	// This is used by `ts language service` and testing.
+	// Includes source and test files.
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"outDir": "./build",
+		"noEmit": false
+	},
+	"exclude": [
+		"node_modules",
+		"**/*.test.ts",
+		"**/*.test.tsx",
+	]
+}

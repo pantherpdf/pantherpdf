@@ -1,4 +1,4 @@
-import { TReport } from 'reports-shared'
+import { TReport } from '../types'
 
 export const sampleReport: TReport = {
 	_id: 'abc-def-123',

@@ -7,7 +7,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import type { FunctionComponent, ReactNode } from 'react'
 import type { Helper } from './compile'
-import { TReport, TReportShort, TData, TTransformData } from 'reports-shared'
+import { TReport, TReportShort, TData, TTransformData, ApiEndpoints } from '../types'
 
 
 
@@ -47,6 +47,7 @@ export interface GeneralProps {
 	sourceData: any,
 	sourceErrorMsg?: string | undefined,
 	refreshSourceData: (report: TReport) => void,
+	api: ApiEndpoints,
 
 	report: TReport,
 	setReport: (report: TReport) => Promise<void>,
