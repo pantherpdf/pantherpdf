@@ -43,7 +43,7 @@ export const counter: Widget = {
 	},
 
 	Render: function(props) {
-		return <BoxName name={counter.name} preview={false} className={''}>
+		return <BoxName name={counter.name}>
 			{props.item.children && props.renderWidgets(props.item.children, props.wid)}
 		</BoxName>
 	},

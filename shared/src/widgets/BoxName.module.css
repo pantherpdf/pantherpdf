@@ -14,5 +14,4 @@
 }
 
 .boxParent { position: relative; width: 100%; padding: 0.1rem 0.2rem; border: 1px solid #ddd; }
-.boxParentPreview { position: relative; }
 .boxParent:hover > .name { opacity: 1; }

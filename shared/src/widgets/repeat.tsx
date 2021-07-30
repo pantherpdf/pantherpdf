@@ -49,7 +49,7 @@ export const repeat: Widget = {
 	},
 
 	Render: function(props) {
-		return <BoxName name={repeat.name} preview={false} className={''}>
+		return <BoxName name={repeat.name}>
 			{props.item.children && props.renderWidgets(props.item.children, props.wid)}
 		</BoxName>
 	},

@@ -45,7 +45,7 @@ export const textSimple: Widget = {
 
 	Render: function(props) {
 		const item = props.item as TextSimpleData
-		return <BoxName name={'text'} preview={false} className={''}>
+		return <BoxName name={'text'}>
 			<div>{item.formula}</div>
 		</BoxName>
 	},
@@ -58,5 +58,5 @@ export const textSimple: Widget = {
 				onChange={val=>props.setItem({...item, formula: val})}
 			/>
 		</>
-	}
+	},
 }
