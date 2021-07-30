@@ -21,7 +21,14 @@ let cache: ICache | undefined
 
 export default async function connectToDatabase() {
 	if (!cache) {
-		const MONGODB_URI = `mongodb+srv://${encodeURIComponent(process.env.MONGODB_USER||'')}:${encodeURIComponent(process.env.MONGODB_PASSWORD||'')}@${process.env.MONGODB_URL||''}/${encodeURIComponent(process.env.MONGODB_DB||'')}?retryWrites=true&w=majority`;
+		let MONGODB_URI: string
+		if (process.env.MONGODB_USER?.length) {
+			MONGODB_URI = `mongodb+srv://${encodeURIComponent(process.env.MONGODB_USER||'')}:${encodeURIComponent(process.env.MONGODB_PASSWORD||'')}@${process.env.MONGODB_URL||''}/${encodeURIComponent(process.env.MONGODB_DB||'')}?retryWrites=true&w=majority`;
+		}
+		else {
+			MONGODB_URI = `mongodb://${process.env.MONGODB_URL||''}/?readPreference=primary&directConnection=true&ssl=false`
+		}
+		
 		const client = await MongoClient.connect(MONGODB_URI, {
 			useUnifiedTopology: true,
 			connectTimeoutMS: 3000,

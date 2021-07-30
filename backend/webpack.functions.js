@@ -4,7 +4,7 @@ module.exports = {
   plugins: [
     new Dotenv({
       path: '../.env',
-      safe: '../.env.example',
+      safe: false,
     })
   ],
   module: {
