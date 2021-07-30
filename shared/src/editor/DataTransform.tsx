@@ -201,7 +201,8 @@ export default function DataTransform(props: GeneralProps) {
 		/>)}
 		<div className=''>
 			<button className='btn btn-sm btn-outline-secondary mt-2' onClick={()=>setShownModalInsert(true)}>
-				<FontAwesomeIcon icon={faPlus} />
+				<FontAwesomeIcon icon={faPlus} className='me-2' />
+				Add transform
 			</button>
 		</div>
 
