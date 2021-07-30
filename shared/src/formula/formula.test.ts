@@ -138,10 +138,11 @@ test('built-in functions', async () => {
 test('build-in date functions', async () => {
 	const r1 = await FormulaEvaluate('now()')
 	expect(typeof r1).toBe('string')
-	expect(r1.length).toBe(24)
+	expect(r1.length).toBe(20)
 	expect(r1.toLowerCase() === r1).toBe(false)
 	expect(r1.toUpperCase() === r1).toBe(true)
-	expect(r1[r1.length-1]).toBe('Z')
+	const rgx = /^[\d]{4}-[\d]{2}-[\d]{2}T[\d]{2}:[\d]{2}:[\d]{2}Z$/gm
+	expect(r1.match(rgx)).toBeTruthy()
 })
 
 test('buildin constants', async () => {
