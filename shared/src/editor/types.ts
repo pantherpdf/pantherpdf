@@ -69,6 +69,15 @@ export interface ItemRendeProps extends GeneralProps {
 	wid: number[],
 }
 
+export interface ItemRendeFinalHelper {
+	renderItem: (item: TDataCompiled, helper: ItemRendeFinalHelper) => ReactNode,
+	renderChildren: (chs: TDataCompiled[], helper: ItemRendeFinalHelper) => ReactNode,
+}
+
+export interface ItemRendeFinalProps extends ItemRendeFinalHelper {
+	item: TDataCompiled,
+}
+
 export interface Widget {
 	name: TName,
 	icon: TFontAwesomeIcon,
@@ -76,6 +85,7 @@ export interface Widget {
 	compile: (dt: any, helper: Helper) => Promise<TDataCompiled>,
 	RenderProperties?: FunctionComponent<ItemRendeProps>,
 	Render: FunctionComponent<ItemRendeProps>,
+	RenderFinal: FunctionComponent<ItemRendeFinalProps>,
 }
 
 

@@ -47,4 +47,8 @@ export const counter: Widget = {
 			{props.item.children && props.renderWidgets(props.item.children, props.wid)}
 		</BoxName>
 	},
+
+	RenderFinal: function(props) {
+		return <div>{props.renderChildren(props.item.children, props)}</div>
+	}
 }

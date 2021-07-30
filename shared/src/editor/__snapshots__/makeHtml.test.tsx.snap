@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`text 1`] = `
+<div>
+  <div>
+    Hello World: 123
+  </div>
+</div>
+`;

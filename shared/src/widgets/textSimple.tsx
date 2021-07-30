@@ -59,4 +59,9 @@ export const textSimple: Widget = {
 			/>
 		</>
 	},
+
+	RenderFinal: function(props) {
+		const data = props.item as TextSimpleCompiled
+		return <div>{data.data}</div>
+	},
 }
