@@ -35,6 +35,9 @@ export const repeat: Widget = {
 
 	compile: async (dt: RepeatData, helper): Promise<RepeatCompiled> => {
 		const value = await helper.evalFormula(dt.formula)
+		if (!Array.isArray(value)) {
+			throw new Error('Repeating item is not array in repeat widget')
+		}
 		const children: TDataCompiled[] = []
 		for (const val2 of value) {
 			helper.push(dt.varName, val2)
