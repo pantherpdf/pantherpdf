@@ -40,7 +40,13 @@ const handler: Handler = async (event, context) => {
 
 	// convert
 	db.logEvent(event, 'generate', {email, reportId})
-	const compiled = await compile(report, data)
+	let compiled
+	try {
+		compiled = await compile(report, data)
+	}
+	catch(e) {
+		return { statusCode: 400, body: JSON.stringify({msg: String(e)}) }
+	}
 	const el1 = makeHtml(compiled)
 	const el2 = React.createElement('div', {}, el1)
 	const html = ReactDOMServer.renderToStaticMarkup(el2)
