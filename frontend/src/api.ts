@@ -5,10 +5,7 @@ import { IAppContextCB } from './context'
 // check browser support for fetch stream upload
 // it enabled upload progress bar
 // Chrome 92 requires experimental flag #enable-experimental-web-platform-features
-const supportsRequestStreams = !new Request('', {
-	body: new ReadableStream(),
-	method: 'POST',
-}).headers.has('Content-Type');
+const supportsRequestStreams: boolean = typeof window!=='undefined' && window.Request!==undefined && !new window.Request('', { body: new ReadableStream(), method: 'POST' }).headers.has('Content-Type');
 
 
 /**
