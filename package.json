@@ -7,7 +7,8 @@
   "scripts": {
     "start": "concurrently \"yarn workspace reports-backend start\" \"yarn workspace reports-frontend start\"",
     "build": "yarn workspace reports-shared build && yarn workspace reports-backend build && yarn workspace reports-frontend build",
-    "test": "yarn workspace reports-shared test && yarn workspace reports-backend test && yarn workspace reports-frontend test"
+    "test": "yarn workspace reports-shared test && yarn workspace reports-backend test && yarn workspace reports-frontend test",
+    "updateShared": "node updateShared.js"
   },
   "devDependencies": {
     "concurrently": "^6.2.0",
