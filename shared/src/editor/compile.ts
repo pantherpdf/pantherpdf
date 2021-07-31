@@ -58,7 +58,17 @@ export default async function compile(dt: TReport, obj: any): Promise<TReportCom
 	const helper = new Helper()
 	helper.push('obj', obj)
 	const dt2: TReportCompiled = {...dt}
+
+	if (dt2.properties.fileName) {
+		const res = await FormulaEvaluate(dt2.properties.fileName, helper)
+		if (typeof res !== 'string') {
+			throw new Error(`Filename should be a string, but received ${typeof res}`)
+		}
+		dt2.properties.fileName = res
+	}
+
 	dt2.children = await helper.compileChildren(dt.children)
+	
 	helper.pop()	
 	return dt2
 }
