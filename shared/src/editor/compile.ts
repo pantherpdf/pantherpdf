@@ -56,7 +56,8 @@ export class Helper {
 
 export default async function compile(dt: TReport, obj: any): Promise<TReportCompiled> {
 	const helper = new Helper()
-	helper.push('obj', obj)
+	helper.push('data', obj)
+	helper.push('report', dt)
 	const dt2: TReportCompiled = {...dt}
 
 	if (dt2.properties.fileName) {

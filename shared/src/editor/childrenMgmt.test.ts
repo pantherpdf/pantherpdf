@@ -20,18 +20,18 @@ test('findInList', () => {
 	expect(() => findInList(r, [200,1])).toThrow()
 	
 	r.children = [
-		{type:'textSimple', formula:'"Hello World: "+obj.num', children:[]},
+		{type:'textSimple', formula:'"Hello World: "+data.num', children:[]},
 	]
 	expect(() => findInList(r, [1])).toThrow()
 	expect(findInList(r, [0])).toBe(r.children[0])
 
 	r.children = [
-		{type:'repeat', varName:'rp', formula:'obj.arr + ["a","b"]', children:[
+		{type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[
 			{type:'textSimple', formula:'rp', children:[]},
 			{type:'textSimple', formula:'rp', children:[]},
 			{type:'textSimple', formula:'rp', children:[]},
 		]},
-		{type:'repeat', varName:'rp', formula:'obj.arr + ["a","b"]', children:[
+		{type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[
 			{type:'textSimple', formula:'rp', children:[]},
 			{type:'textSimple', formula:'rp', children:[]},
 			{type:'textSimple', formula:'rp', children:[]},
@@ -50,7 +50,7 @@ test('removeFromList simple', () => {
 	expect(() => removeFromList(r, [200,0])).toThrow()
 
 	r.children = [
-		{type:'textSimple', formula:'"Hello World: "+obj.num', children:[]},
+		{type:'textSimple', formula:'"Hello World: "+data.num', children:[]},
 	]
 	expect(() => removeFromList(r, [1])).toThrow()
 	r = removeFromList(r, [0])
@@ -67,8 +67,8 @@ test('removeFromList', () => {
 	const t3: TextSimpleData = {type:'textSimple', formula:'rp3', children:[]}
 	const t4: TextSimpleData = {type:'textSimple', formula:'rp4', children:[]}
 	const t5: TextSimpleData = {type:'textSimple', formula:'rp5', children:[]}
-	const c0: RepeatData = {type:'repeat', varName:'rp', formula:'obj.arr + ["a","b"]', children:[t0,t1,t2]}
-	const c1: RepeatData = {type:'repeat', varName:'rp', formula:'obj.arr + ["a","b"]', children:[t3,t4,t5]}
+	const c0: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[t0,t1,t2]}
+	const c1: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[t3,t4,t5]}
 	r.children = [c0, c1]
 	r = removeFromList(r, [1,0])
 	expect(r.children.length).toBe(2)
@@ -97,8 +97,8 @@ test('insertIntoList', () => {
 	const t4: TextSimpleData = {type:'textSimple', formula:'rp4', children:[]}
 	const t5: TextSimpleData = {type:'textSimple', formula:'rp5', children:[]}
 	const t6: TextSimpleData = {type:'textSimple', formula:'rp6', children:[]}
-	const c0: RepeatData = {type:'repeat', varName:'rp', formula:'obj.arr + ["a","b"]', children:[t0,t1,t2]}
-	const c1: RepeatData = {type:'repeat', varName:'rp', formula:'obj.arr + ["a","b"]', children:[]}
+	const c0: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[t0,t1,t2]}
+	const c1: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[]}
 	
 	expect(() => insertIntoList(r, [], t3)).toThrow()
 	r_old = r
@@ -212,8 +212,8 @@ test('updateItem', () => {
 	const t3: TextSimpleData = {type:'textSimple', formula:'rp3', children:[]}
 	const t4: TextSimpleData = {type:'textSimple', formula:'rp4', children:[]}
 	const t5: TextSimpleData = {type:'textSimple', formula:'rp5', children:[]}
-	const c0: RepeatData = {type:'repeat', varName:'rp', formula:'obj.arr + ["a","b"]', children:[t0,t1,t2]}
-	const c1: RepeatData = {type:'repeat', varName:'rp', formula:'obj.arr + ["a","b"]', children:[t3,t4,t5]}
+	const c0: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[t0,t1,t2]}
+	const c1: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[t3,t4,t5]}
 	r.children = [c0, c1]
 
 	expect(findInList(r, [1,1])).toBe(t4)

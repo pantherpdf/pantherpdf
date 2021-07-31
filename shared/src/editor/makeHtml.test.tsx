@@ -14,7 +14,7 @@ test('text', async () => {
 	const report: ReportForceChildren<TextSimpleData> = {
 		...sampleReport,
 		children: [
-			{type:'textSimple', formula:'"Hello World: "+obj.num', children:[]},
+			{type:'textSimple', formula:'"Hello World: "+data.num', children:[]},
 		]
 	}
 

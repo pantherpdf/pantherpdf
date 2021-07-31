@@ -167,41 +167,41 @@ test('hide access to buildin properties like __proto__', async () => {
 })
 
 test('custom variable function getVar()', async () => {
-	const obj = { abc: 10 }
+	const data = { abc: 10 }
 	const helper: IHelpers = {
 		getVar: async (name: string) => {
-			if (name == 'obj') {
-				return obj
+			if (name == 'data') {
+				return data
 			}
 			return undefined
 		}
 	}
-	await expect(FormulaEvaluate('obj.abc', helper)).resolves.toBe(10)
+	await expect(FormulaEvaluate('data.abc', helper)).resolves.toBe(10)
 })
 
 test('custom variable object vars', async () => {
-	const obj = { abc: 10 }
+	const data = { abc: 10 }
 	const helper: IHelpers = {
 		vars: {
-			obj
+			data
 		}
 	}
-	await expect(FormulaEvaluate('obj.abc', helper)).resolves.toBe(10)
+	await expect(FormulaEvaluate('data.abc', helper)).resolves.toBe(10)
 })
 
 test('resolve promise of a property', async () => {
 	const prms = new Promise((resolve) => { resolve({a:5}) })
-	const obj = { prms }
-	const helper: IHelpers = { getVar: async (name: string) => { if (name == 'obj') { return obj } return undefined } }
-	await expect(FormulaEvaluate('obj.prms.a', helper)).resolves.toBe(5)
+	const data = { prms }
+	const helper: IHelpers = { getVar: async (name: string) => { if (name == 'data') { return data } return undefined } }
+	await expect(FormulaEvaluate('data.prms.a', helper)).resolves.toBe(5)
 })
 
 test('custom functions', async () => {
-	const obj = {
+	const data = {
 		func: (a: any) => a*2,
 		funcErr: () => { throw new Error('my custom error') },
 	}
-	const helper: IHelpers = { getVar: async (name: string) => { if (name == 'obj') { return obj } return undefined } }
-	await expect(FormulaEvaluate('obj.func(10)', helper)).resolves.toBe(20)
-	await expect(FormulaEvaluate('obj.funcErr()', helper)).rejects.toThrowError('my custom error')
+	const helper: IHelpers = { getVar: async (name: string) => { if (name == 'data') { return data } return undefined } }
+	await expect(FormulaEvaluate('data.func(10)', helper)).resolves.toBe(20)
+	await expect(FormulaEvaluate('data.funcErr()', helper)).rejects.toThrowError('my custom error')
 })

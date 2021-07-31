@@ -15,11 +15,11 @@ import type { ReportForceChildren } from './types'
 import type { TextSimpleData, TextSimpleCompiled } from '../widgets/textSimple'
 import { sampleReport } from './sampleReport'
 
-test('text', async () => {
+test('text data', async () => {
 	const report: ReportForceChildren<TextSimpleData> = {
 		...sampleReport,
 		children: [
-			{type:'textSimple', formula:'"Hello World: "+obj.num', children:[]},
+			{type:'textSimple', formula:'"Hello World: "+data.num', children:[]},
 		]
 	}
 
@@ -30,6 +30,24 @@ test('text', async () => {
 	expect(compiled.children[0].type).toBe('textSimple')
 	const c = compiled.children[0] as TextSimpleCompiled
 	expect(c.data).toBe('Hello World: 123')
+})
+
+
+test('text report', async () => {
+	const report: ReportForceChildren<TextSimpleData> = {
+		...sampleReport,
+		children: [
+			{type:'textSimple', formula:'"Hello World: "+report.children[0].type', children:[]},
+		]
+	}
+
+	const obj = { num: 123 }
+	const compiled = await compile(report, obj)
+
+	expect(compiled.children.length).toBe(1)
+	expect(compiled.children[0].type).toBe('textSimple')
+	const c = compiled.children[0] as TextSimpleCompiled
+	expect(c.data).toBe('Hello World: textSimple')
 })
 
 
