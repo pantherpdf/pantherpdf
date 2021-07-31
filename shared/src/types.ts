@@ -305,3 +305,9 @@ export function FileUploadDataTypeGuard(r: any): r is FileUploadData {
 }
 
 export type FileUploadResponse = {file: TFileShort} | ErrorResponse
+
+
+
+
+export type GenerateResponse2 = { accessKey: string }
+export type GenerateResponse = GenerateResponse2 | ErrorResponse

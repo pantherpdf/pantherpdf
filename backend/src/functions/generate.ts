@@ -2,7 +2,7 @@ import { Handler } from '@netlify/functions'
 import { ObjectId } from 'mongodb';
 import connectToDatabase from '../db'
 import { userEmailFromEvent } from '../users'
-import { compile, IReportGenerated, makeHtml } from 'reports-shared'
+import { compile, IReportGenerated, makeHtml, GenerateResponse } from 'reports-shared'
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import crypto from 'crypto'
@@ -63,8 +63,7 @@ const handler: Handler = async (event, context) => {
 	}
 	await db.reportsGenerated.insertOne(obj)
 
-	const res = {
-		html,
+	const res: GenerateResponse = {
 		accessKey,
 	}
 	return { statusCode: 200, body: JSON.stringify(res) }

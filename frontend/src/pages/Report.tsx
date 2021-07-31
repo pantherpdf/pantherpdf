@@ -2,7 +2,7 @@ import React from 'react'
 import App from '../Layout'
 import { RouteComponentProps, Link } from 'react-router-dom'
 import { useState, useEffect, useContext } from 'react'
-import { ReportResponse, TReport } from 'reports-shared'
+import { ReportResponse, TReport, GenerateResponse, transformData } from 'reports-shared'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPrint, faRedo, faSpinner, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { AppContext } from '../context'
@@ -16,6 +16,7 @@ interface MenuProps extends RouteComponentProps<any> {
 	enableRedo: boolean,
 	undo: () => Promise<void>,
 	redo: () => Promise<void>,
+	print: () => Promise<void>,
 }
 
 function Menu(props: MenuProps) {
@@ -29,7 +30,7 @@ function Menu(props: MenuProps) {
 						<li><Link to='/reports' className='nav-link px-3 link-secondary'>Reports</Link></li>
 					</ul>
 					<div>
-						<button type='button' className='btn btn-outline-secondary me-3'>
+						<button type='button' className='btn btn-outline-secondary me-3' onClick={props.print}>
 							<FontAwesomeIcon icon={faPrint} fixedWidth />
 						</button>
 						<div className="btn-group" role="group">
@@ -150,6 +151,22 @@ export default function Report(props: ReportProps) {
 		props.history.replace('/reports')
 	}
 
+	async function print() {
+		if (!report)
+			return
+		const data = await transformData(getOriginalSourceData(), report)
+		const r = await fetch(`/.netlify/functions/generate?id=${id}`, {method: 'POST', headers: {Authorization: `Bearer sid:${app.sid}`, 'Content-Type': 'application/json'}, body: JSON.stringify(data)})
+		const js = await r.json() as GenerateResponse
+		if (!r.ok || 'msg' in js) {
+			const msg = 'msg' in js ? js.msg : 'unknown error'
+			alert(msg)
+			return
+		}
+		const accessKey = js.accessKey
+		const url = `/.netlify/functions/generateShow?key=${accessKey}`
+		window.open(url, '_blank')
+	}
+
 
 	// load report from db
 	useEffect(() => {
@@ -205,6 +222,7 @@ export default function Report(props: ReportProps) {
 			enableRedo={undoNext < undoStack.length}
 			undo={undo}
 			redo={redo}
+			print={print}
 		/>
 		<Editor
 			report={report}
