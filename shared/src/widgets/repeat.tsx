@@ -3,8 +3,8 @@
  */
 
 import React from 'react'
-import { TData } from '../types'
-import type { Widget, TDataCompiled } from '../editor/types'
+import { TData, TDataCompiled } from '../types'
+import type { Widget } from '../editor/types'
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 

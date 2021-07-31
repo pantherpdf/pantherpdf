@@ -7,7 +7,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import type { FunctionComponent, ReactNode } from 'react'
 import type { Helper } from './compile'
-import { TReport, TReportShort, TData, TTransformData, ApiEndpoints } from '../types'
+import { TReport, TReportShort, TData, TTransformData, ApiEndpoints, TDataCompiled } from '../types'
 
 
 
@@ -21,20 +21,14 @@ export interface TFontAwesomeIcon { fontawesome: IconDefinition }
 // to force specific children type
 export type ForceChildren<T> = T | {[key:string]: any, children: ForceChildren<T>[]}
 
-export interface TDataCompiled {
-	[key: string]: any,
-	type: string,
-	children: TDataCompiled[],
-}
+
 
 
 
 
 export type ReportForceChildren<T> = TReport & { children: ForceChildren<T>[] }
 
-export interface TReportCompiled extends Omit<TReport, 'children'> {
-	children: TDataCompiled[],
-}
+
 
 
 

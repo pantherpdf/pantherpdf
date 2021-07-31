@@ -68,6 +68,16 @@ export interface TReport {
 }
 export type TReportWithoutId = Omit<TReport, '_id'>
 
+export interface TDataCompiled {
+	[key: string]: any,
+	type: string,
+	children: TDataCompiled[],
+}
+
+export interface TReportCompiled extends Omit<TReport, 'children'> {
+	children: TDataCompiled[],
+}
+
 export function TDataTypeGuard(r: any): r is TData {
 	if (typeof r.type !== 'string' || r.type.length == 0)
 		return false
