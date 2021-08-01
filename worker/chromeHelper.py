@@ -19,11 +19,6 @@ import os.path
 # todo check if useful headers are used in similar project: https://github.com/danielwestendorf/breezy-pdf-lite
 
 
-defaultPaperWidth = 210
-defaultPaperHeight = 297
-
-
-
 def start_browser_get_url(debugging_port):
 	url_dbg = f'http://127.0.0.1:{debugging_port}/json'
 	try:
@@ -44,8 +39,9 @@ def start_browser_get_url(debugging_port):
 
 
 request_id = 0
+all_msgs = []
 def run_command(conn, method, **kwargs):
-	global request_id
+	global request_id, all_msgs
 	tStart = time.time()
 	request_id += 1
 	command = {'method': method, 'id': request_id, 'params': kwargs}
@@ -56,9 +52,82 @@ def run_command(conn, method, **kwargs):
 			raise ValueError('chrome method \''+method+'\' timed out')
 		xx = conn.recv()
 		msg = json.loads(xx)
+		all_msgs.append(msg)
 		if msg.get('id') == request_id:
 			return msg
 
+
+
+def wait_for_page_load(conn, parentFrameId, min_wait_time, timeout):
+	global all_msgs
+
+	tStart = time.time()
+	networkEvents = []
+	frames = [parentFrameId]
+	first_ok_time = False
+	
+	def processEvent(msg):
+		nonlocal networkEvents, first_ok_time
+
+		if 'method' not in msg:
+			return
+		m = msg['method']
+
+		if m == 'Network.requestWillBeSent':
+			fid = msg['params']['frameId']
+			if fid in frames:
+				rid = msg['params']['requestId']
+				networkEvents.append(rid)
+		elif m == 'Network.loadingFinished' or msg['method'] == 'Network.loadingFailed':
+			rid = msg['params']['requestId']
+			try:
+				networkEvents.remove(rid)
+			except ValueError:
+				pass
+		elif m == 'Page.frameAttached':
+			pfd = msg['params']['parentFrameId']
+			if pfd in frames:
+				frames.append(msg['params']['frameId'])
+
+
+	def is_ok():
+		nonlocal networkEvents
+		if len(networkEvents) != 0:
+			return False
+		return True
+
+
+	for msg in all_msgs:
+		processEvent(msg)
+
+	print('waiting ....')
+	oldTimeout = conn.timeout
+	conn.settimeout(0.2)
+
+	while True:
+		try:
+			xx = conn.recv()
+			msg = json.loads(xx)
+			all_msgs.append(msg)
+			processEvent(msg)
+		except websocket._exceptions.WebSocketTimeoutException:
+			pass
+
+		ok = is_ok()
+		if ok:
+			if first_ok_time == False:
+				first_ok_time = time.time()
+			if time.time() - first_ok_time >= min_wait_time:
+				break
+		else:
+			first_ok_time = False
+
+		if time.time() - tStart > timeout:
+			raise ValueError('waiting for page to finish loading timed out')
+
+	conn.settimeout(oldTimeout)
+
+		
 
 
 def start_browser(browser_path, debugging_port=9222):
@@ -202,8 +271,8 @@ def convertHtmlToPdf(chrome_path, data, output_pth):
 	# start and connect to chrome
 	url = data['url']
 
-	data['paperWidth'] = data['paperWidth'] if 'paperWidth' in data else defaultPaperWidth
-	data['paperHeight'] = data['paperHeight'] if 'paperHeight' in data else defaultPaperHeight
+	data['paperWidth'] = data['paperWidth'] if 'paperWidth' in data else 210
+	data['paperHeight'] = data['paperHeight'] if 'paperHeight' in data else 297
 	data['printBackground'] = data['printBackground'] if 'printBackground' in data else False
 	data['marginTop'] = data['marginTop'] if 'marginTop' in data else min(20, data['paperHeight']*0.15)
 	data['marginBottom'] = data['marginBottom'] if 'marginBottom' in data else min(20, data['paperHeight']*0.15)
@@ -219,12 +288,13 @@ def convertHtmlToPdf(chrome_path, data, output_pth):
 </p>
 '''
 
-	#print(data)
-
 	try:
+		run_command(conn, 'Network.enable')
+		run_command(conn, 'Page.enable')
 		run_command(conn, 'Network.setCacheDisabled', cacheDisabled=True)  # just to be sure. It seems that it doesnt cache either way.
-		run_command(conn, 'Page.navigate', url=url)
-		time.sleep(6) # let it load
+
+		res = run_command(conn, 'Page.navigate', url=url)
+		wait_for_page_load(conn, res['result']['frameId'], 0.5, 20)
 
 		# https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF
 		resp = run_command(conn, 'Page.printToPDF', paperWidth=mmToInch(data['paperWidth']), paperHeight=mmToInch(data['paperHeight']), printBackground=data['printBackground'], displayHeaderFooter=True, headerTemplate=data['header'], footerTemplate=data['footer'], marginTop=mmToInch(data['marginTop']), marginBottom=mmToInch(data['marginBottom']), marginLeft=mmToInch(data['marginLeft']), marginRight=mmToInch(data['marginRight']))  # , scale=1, preferCSSPageSize=True

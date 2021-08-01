@@ -17,10 +17,14 @@ import hashlib
 dotenv.load_dotenv()
 SECRET = os.getenv('WORKER_SECRET')
 assert isinstance(SECRET, str) and len(SECRET) > 0
+KEEP_FILES_SEC = os.getenv('KEEP_FILES_SEC')
+KEEP_FILES_SEC = int(KEEP_FILES_SEC) if KEEP_FILES_SEC != None else 1000
 
 
 # find chrome path
 chromePth = None
+if not chromePth:
+	chromePth = os.getenv('CHROME')
 if not chromePth:
 	chromePth = shutil.which('chromium')
 if not chromePth:
@@ -178,6 +182,23 @@ def getStatus(id2):
 
 
 
+def validateFileName(n):
+	if not isinstance(n, str):
+		return False
+	if len(n) > 200:
+		return False
+	if n.strip() != n:
+		return False
+	if not n.endswith('.pdf') and not n.endswith('.PDF'):
+		return False
+	if n.startswith('.'):
+		return False
+	if '/' in n or '\\' in n:
+		return False
+	return True
+
+
+
 @app.route('/apiv1/convert', methods=['POST'])
 def apiConvert():
 	global pthDir, mutexTmpFiles, tmpDocuments
@@ -201,9 +222,8 @@ def apiConvert():
 		return {'msg':'Bad url protocol'}, 400
 	# todo check valid url
 	# do not allow localhost or 127.0.0.1 or ::1 or ::1/128 or similar
-	if 'fileName' in rqJs:
-		# todo validate fileName
-		pass
+	if 'fileName' in rqJs and not validateFileName(rqJs['fileName']):
+		return {'msg':'Bad fileName'}, 400
 
 	print('Got request', rqJs)
 
@@ -212,7 +232,7 @@ def apiConvert():
 		'status': 'waiting',
 		'errorMsg': None,
 		'time': time.time(),
-		'keepUntil': time.time() + 60*60*15,  # keep 15 min
+		'keepUntil': time.time() + KEEP_FILES_SEC,  # keep 15 min
 		'path': None,
 	}
 
