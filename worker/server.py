@@ -15,7 +15,7 @@ import hashlib
 
 # env file
 dotenv.load_dotenv()
-SECRET = os.getenv('SECRET')
+SECRET = os.getenv('WORKER_SECRET')
 assert isinstance(SECRET, str) and len(SECRET) > 0
 
 
