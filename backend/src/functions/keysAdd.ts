@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions'
-import { IKey, KeyAddResponse, KeyAddRequestTypeGuard } from 'reports-shared'
+import { IKey, KeyAddResponse, KeyAddRequestTypeGuard } from '../types'
 import connectToDatabase from '../db'
 import { userEmailFromEvent } from '../users'
 import crypto from 'crypto'

@@ -8,7 +8,7 @@ import React, { useState } from 'react'
 import Trans, { TransName } from '../translation'
 import style from './EditWidgets.module.css'
 import { saveAs } from 'file-saver'
-import { ReportResponse2 } from '../types'
+import { ReportResponseBase } from '../types'
 import { Widget, GeneralProps } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -39,7 +39,7 @@ function Expandable(props: ExpandableProps) {
 function ShowReports(props: GeneralProps) {
 
 	async function dragStartReport(e: React.DragEvent<HTMLDivElement>, id: string) {
-		let js: ReportResponse2
+		let js: ReportResponseBase
 		try {
 			js = await props.api.reportGet(id)
 		}

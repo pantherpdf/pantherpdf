@@ -1,4 +1,5 @@
-import { ApiEndpoints, ReportResponse, FilesResponse, FileUploadData } from 'reports-shared'
+import { ApiEndpoints, FileUploadData } from 'reports-shared'
+import type { ReportResponse, FilesResponse } from '../../backend/src/types'
 import { IAppContextCB } from './context'
 
 

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState, useContext } from 'react'
 import { AppContext } from '../context'
-import { IKeyPublicShort, KeyAddRequest, KeysResponse, KeyAddResponse, KeyRemoveRequest, KeyRemoveResponse } from 'reports-shared'
+import type { IKeyPublicShort, KeyAddRequest, KeysResponse, KeyAddResponse, KeyRemoveRequest, KeyRemoveResponse } from '../../../backend/src/types'
 import { faPlus, faTrash, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 type IKeyPublicShortWithKey = IKeyPublicShort & {key?: string}

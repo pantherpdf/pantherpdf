@@ -8,7 +8,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { TFileShort, FileUploadData, FilesResponse } from './types'
+import { TFileShort, FileUploadData } from './types'
 import { ApiEndpoints } from './types'
 
 

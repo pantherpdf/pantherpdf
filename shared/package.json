@@ -1,6 +1,6 @@
 {
 	"name": "reports-shared",
-	"version": "1.0.13",
+	"version": "1.0.18",
 	"private": true,
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^5.15.3",

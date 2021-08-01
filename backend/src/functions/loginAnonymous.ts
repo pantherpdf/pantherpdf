@@ -1,6 +1,6 @@
 import { Handler } from "@netlify/functions"
 import { createUser, createSession } from '../users'
-import { LoginAnonymousRequestTypeGuard, IUser, LoginAnonymousResponse } from 'reports-shared'
+import { LoginAnonymousRequestTypeGuard, IUser, LoginAnonymousResponse } from '../types'
 import crypto from 'crypto'
 import connectToDatabase from '../db'
 

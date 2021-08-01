@@ -1,5 +1,5 @@
 import { MongoClient, Db, Collection, ObjectID } from "mongodb"
-import { IUser, IKey, ISession, TReportWithoutId, IEvent, TFile, IReportGenerated } from 'reports-shared'
+import { IUser, IKey, ISession, TReportWithoutId, IEvent, TFile, IReportGenerated } from './types'
 import { sidFromEvent, userEmailFromSid, keyFromEvent, userEmailFromKey } from './users'
 import type { Event } from "@netlify/functions/src/function/event"
 

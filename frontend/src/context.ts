@@ -1,5 +1,6 @@
 import React from 'react'
-import type { TReport, TReportShort, IUser, UserDataResponse, ReportNewRequest, ReportNewResponse } from 'reports-shared'
+import type { TReport, TReportShort } from 'reports-shared'
+import type { IUser, UserDataResponse, ReportNewRequest, ReportNewResponse } from '../../backend/src/types'
 
 
 export interface IAppContextData {

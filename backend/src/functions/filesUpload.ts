@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions'
-import { FileUploadDataTypeGuard, TFile, FileUploadResponse } from 'reports-shared'
+import { FileUploadDataTypeGuard, TFile, FileUploadResponse } from '../types'
 import connectToDatabase from '../db'
 import { userEmailFromEvent } from '../users'
 

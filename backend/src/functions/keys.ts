@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions'
-import { KeysResponse } from 'reports-shared'
+import { KeysResponse } from '../types'
 import connectToDatabase from '../db'
 import { userEmailFromEvent } from '../users'
 
