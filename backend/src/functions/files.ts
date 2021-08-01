@@ -14,20 +14,17 @@ const handler: Handler = async (event, context) => {
 	}
 
 	const db = await connectToDatabase()
-	const files1 = await db.files.find({email}).project({_id:1, name:1, mimeType:1, uploadTime:1, modifiedTime:1, size:1}).toArray()
-	const files2: TFileShort[] = files1.map(f => {
-		const file: TFileShort = {
-			name: f.name,
-			mimeType: f.mimeType,
-			uploadTime: f.uploadTime,
-			modifiedTime: f.modifiedTime,
-			size: f.size,
-		}
-		return file
-	})
+	const projection: {[key in (keyof TFileShort)]: 1} = {
+		name: 1,
+		mimeType: 1,
+		uploadTime: 1,
+		modifiedTime: 1,
+		size: 1,
+	}
+	const files = (await db.files.find({email}).project(projection).toArray()) as any as TFileShort[]
 
 	const obj: FilesResponse = {
-		files: files2
+		files
 	}
 	return {
 		statusCode: 200,

@@ -11,7 +11,13 @@ const handler: Handler = async (event, context) => {
 	const user = await userDataFromEvent(event)
 	if (user) {
 		const db = await connectToDatabase()
-		const reports = await db.reports.find({email: user.email}).project({name:1}).toArray() as any as TReportShort[]
+		const projection: {[key in (keyof TReportShort)]: 1} = {
+			_id: 1,
+			name: 1,
+			target: 1,
+		}
+		const reportsTmp = (await db.reports.find({email: user.email}).project(projection).toArray()) as any
+		const reports = reportsTmp.map((x: any) => x._id = x._id.toHexString()) as TReportShort[]
 
 		delete (user as any)._id
 		const dt: UserDataResponse = {
