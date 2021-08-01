@@ -20,7 +20,7 @@ export default function makeHtml(report: TReportCompiled) {
 			return <div>{chs.map((item, idx) => {
 				const w = getWidget(item.type)
 				return <w.RenderFinal {...helper} item={item} key={idx} />
-			})}</div>  // todo key
+			})}</div>
 		},
 	}
 
