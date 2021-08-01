@@ -48,3 +48,5 @@ CMD sh /app/start.sh
 
 # TODO:
 # pip install via requirements
+# pip install python-dotenv
+# deploy on production grade server https://flask.palletsprojects.com/en/2.0.x/tutorial/deploy/
