@@ -162,9 +162,7 @@ export default function Report(props: ReportProps) {
 			alert(msg)
 			return
 		}
-		const accessKey = js.accessKey
-		const url = `/.netlify/functions/generateShow?key=${accessKey}`
-		window.open(url, '_blank')
+		window.open(`/reportsPreview/${js.accessKey}`, '_blank')
 	}
 
 
