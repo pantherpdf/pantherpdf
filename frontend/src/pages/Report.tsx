@@ -155,15 +155,19 @@ export default function Report(props: ReportProps) {
 	async function print() {
 		if (!report)
 			return
+		const w = window.open('', '_blank')
+		if (!w)
+			return
 		const data = await transformData(getOriginalSourceData(), report)
 		const r = await fetch(`/.netlify/functions/generate?id=${id}`, {method: 'POST', headers: {Authorization: `Bearer sid:${app.sid}`, 'Content-Type': 'application/json'}, body: JSON.stringify(data)})
 		const js = await r.json() as GenerateResponse
 		if (!r.ok || 'msg' in js) {
+			w.close()
 			const msg = 'msg' in js ? js.msg : 'unknown error'
 			alert(msg)
 			return
 		}
-		window.open(`/reportsPreview/${js.accessKey}`, '_blank')
+		w.location.href = `${window.location.origin}/reportsPreview/${js.accessKey}`
 	}
 
 

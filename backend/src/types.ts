@@ -188,3 +188,9 @@ export type FileUploadResponse = {file: TFileShort} | ErrorResponse
 
 export type GenerateResponseBase = { accessKey: string }
 export type GenerateResponse = GenerateResponseBase | ErrorResponse
+
+
+
+
+export type GeneratePdfResponseBase = { id: string, status: 'waiting'|'working'|'finished', errorMsg?: string }
+export type GeneratePdfResponse = GeneratePdfResponseBase | ErrorResponse

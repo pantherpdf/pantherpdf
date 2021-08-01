@@ -74,11 +74,11 @@ def convertThrd(data, id2):
 		if x:
 			print('html-pdf adding watermark')
 			txt = x['text']
-			os.replace(targetPath, targetPath+'-old')
-			watermark.addWatermark(targetPath+'-old', targetPath, txt)
+			os.replace(targetPath, targetPath+'.old.pdf')
+			watermark.addWatermark(targetPath+'.old.pdf', targetPath, txt)
 			assert os.path.isfile(targetPath)
 			try:
-				os.remove(targetPath+'-old')
+				os.remove(targetPath+'.old.pdf')
 			except FileNotFoundError:
 				pass
 			
@@ -100,7 +100,7 @@ def convertThrd(data, id2):
 def deleteOldPdfs():
 	global pthDir
 	oldPdfFiles = [f for f in os.listdir(pthDir) if os.path.isfile(os.path.join(pthDir, f))]
-	oldPdfFiles = [f for f in oldPdfFiles if f.startswith('kelgrand-html-pdf-') and f.endswith('.pdf')]
+	oldPdfFiles = [f for f in oldPdfFiles if f.endswith('.pdf')]
 	for f in oldPdfFiles:
 		print('Deleting old PDF file '+f)
 		try:
@@ -163,6 +163,21 @@ def verify(msg, secret_key, signature_verify):
 
 
 
+def getStatus(id2):
+	global mutexTmpFiles, tmpDocuments
+	assert mutexTmpFiles.locked()
+	# caller should encolse this function inside try / except
+	obj = tmpDocuments[id2]
+	res = {
+		'id': id2,
+		'status': obj['status'],
+	}
+	if obj['errorMsg']:
+		res['errorMsg'] = obj['errorMsg']
+	return res
+
+
+
 @app.route('/apiv1/convert', methods=['POST'])
 def apiConvert():
 	global pthDir, mutexTmpFiles, tmpDocuments
@@ -210,11 +225,11 @@ def apiConvert():
 		js['path'] = os.path.join(pthDir, f'{id2}.pdf')
 		tmpDocuments[id2] = js
 
-	t = threading.Thread(target=convertThrd, args=(js, id2))
-	t.daemon = True
-	t.start()
+		t = threading.Thread(target=convertThrd, args=(js, id2))
+		t.daemon = True
+		t.start()
 
-	return {'id':id2}, 200
+		return getStatus(id2), 200
 
 
 
@@ -223,14 +238,9 @@ def apiStatus(id2):
 	global mutexTmpFiles, tmpDocuments
 	with mutexTmpFiles:
 		try:
-			obj = tmpDocuments[id2]
+			return getStatus(id2), 200
 		except KeyError:
 			return {'msg':'id doesnt exist'}, 404
-		res = {}
-		res['status'] = obj['status']
-		if obj['errorMsg']:
-			res['errorMsg'] = obj['errorMsg']
-		return res, 200
 
 
 
@@ -246,8 +256,10 @@ def apiDownload(id2):
 			return {'msg':'document is not finished yet.'}, 400
 		if obj['errorMsg']:
 			return {'msg':'Document is not available due to error: '+obj['errorMsg']}, 400
-		fileName = obj['properties']['fileName'] if 'fileName' in obj['properties'] else f'{id2}.pdf'
-		return flask.send_file(obj['path'], mimetype='application/pdf', as_attachment=False, download_name=fileName), 200
+		docTimeStr = str(round(obj['time'], 0))
+		fileName = obj['properties']['fileName'] if 'fileName' in obj['properties'] else f'report-{docTimeStr}.pdf'
+		do_download = flask.request.args.get('download') != None
+		return flask.send_file(obj['path'], mimetype='application/pdf', as_attachment=do_download, download_name=fileName), 200
 
 
 

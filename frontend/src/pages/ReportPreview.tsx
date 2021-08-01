@@ -9,6 +9,12 @@ import { RouteComponentProps } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPrint, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { AppContext } from '../context'
+import type { GeneratePdfResponse } from '../../../backend/src/types'
+
+
+function sleep(ms: number) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 
 type RouteParams = { accessKey: string }
@@ -21,7 +27,53 @@ export default function ReportPreview(props: RouteComponentProps<RouteParams>) {
 	async function doPrint() {
 		if (!app.sid)
 			return
-		// todo
+
+		const w = window.open('', '_blank')
+		if (!w)
+			return
+		
+		setLoading(true)
+
+		let js: GeneratePdfResponse
+		
+		// send request
+		const r = await fetch(`/.netlify/functions/generatePdf?key=${encodeURIComponent(accessKey)}`, {method: 'POST', headers: {Authorization: `Bearer sid:${app.sid}`}})
+		js = await r.json() as GeneratePdfResponse
+		if (!r.ok || 'msg' in js) {
+			const msg = 'msg' in js ? js.msg : 'unknown error'
+			setLoading(false)
+			w.close()
+			alert(msg)
+			return
+		}
+
+		while (js.status !== 'finished') {
+			// sleep
+			await sleep(800)
+
+			// request status update
+			const r = await fetch(`/.netlify/functions/generatePdfStatus?pdfId=${encodeURIComponent(js.id)}`, {method: 'POST', headers: {Authorization: `Bearer sid:${app.sid}`}})
+			js = await r.json() as GeneratePdfResponse
+			if (!r.ok || 'msg' in js) {
+				const msg = 'msg' in js ? js.msg : 'unknown error'
+				setLoading(false)
+				w.close()
+				alert(msg)
+				return
+			}
+		}
+
+		// error?
+		if (js.errorMsg) {
+			setLoading(false)
+			w.close()
+			alert(js.errorMsg)
+			return
+		}
+
+		// ok
+		setLoading(false)
+		w.location.href = `${window.location.origin}/.netlify/functions/generatePdfDownload?pdfId=${encodeURIComponent(js.id)}`
 	}
 
 	return <>
@@ -45,6 +97,7 @@ export default function ReportPreview(props: RouteComponentProps<RouteParams>) {
 		</header>
 		<iframe
 			src={`/.netlify/functions/generateShow?key=${accessKey}`}
+			title='report'
 			width="100%"
 			height="100%"
 			frameBorder="0"
