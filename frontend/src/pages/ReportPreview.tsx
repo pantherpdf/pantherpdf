@@ -27,10 +27,6 @@ export default function ReportPreview(props: RouteComponentProps<RouteParams>) {
 	async function doPrint() {
 		if (!app.sid)
 			return
-
-		const w = window.open('', '_blank')
-		if (!w)
-			return
 		
 		setLoading(true)
 
@@ -42,7 +38,6 @@ export default function ReportPreview(props: RouteComponentProps<RouteParams>) {
 		if (!r.ok || 'msg' in js) {
 			const msg = 'msg' in js ? js.msg : 'unknown error'
 			setLoading(false)
-			w.close()
 			alert(msg)
 			return
 		}
@@ -57,7 +52,6 @@ export default function ReportPreview(props: RouteComponentProps<RouteParams>) {
 			if (!r.ok || 'msg' in js) {
 				const msg = 'msg' in js ? js.msg : 'unknown error'
 				setLoading(false)
-				w.close()
 				alert(msg)
 				return
 			}
@@ -66,14 +60,13 @@ export default function ReportPreview(props: RouteComponentProps<RouteParams>) {
 		// error?
 		if (js.errorMsg) {
 			setLoading(false)
-			w.close()
 			alert(js.errorMsg)
 			return
 		}
 
 		// ok
 		setLoading(false)
-		w.location.href = `${window.location.origin}/.netlify/functions/generatePdfDownload?pdfId=${encodeURIComponent(js.id)}`
+		window.location.href = `${window.location.origin}/.netlify/functions/generatePdfDownload?pdfId=${encodeURIComponent(js.id)}`
 	}
 
 	return <>
