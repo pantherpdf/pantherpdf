@@ -18,7 +18,7 @@ const handler: Handler = async (event, context) => {
 			target: 1,
 		}
 		const reportsTmp = (await db.reports.find({email: user.email}).project(projection).toArray()) as any
-		const reports = reportsTmp.map((x: any) => x._id = x._id.toHexString()) as TReportShort[]
+		const reports = reportsTmp.map((x: any) => { x._id = x._id.toHexString(); return x; }) as TReportShort[]
 
 		delete (user as any)._id
 		const dt: UserDataResponse = {
