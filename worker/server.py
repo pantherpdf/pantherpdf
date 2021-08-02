@@ -19,6 +19,8 @@ SECRET = os.getenv('WORKER_SECRET')
 assert isinstance(SECRET, str) and len(SECRET) > 0
 KEEP_FILES_SEC = os.getenv('KEEP_FILES_SEC')
 KEEP_FILES_SEC = int(KEEP_FILES_SEC) if KEEP_FILES_SEC != None else 1000
+MAX_SIMULTANEOUS_WORKERS = os.getenv('MAX_SIMULTANEOUS_WORKERS')
+MAX_SIMULTANEOUS_WORKERS = int(MAX_SIMULTANEOUS_WORKERS) if MAX_SIMULTANEOUS_WORKERS != None else 20
 
 
 # find chrome path
@@ -40,8 +42,8 @@ chromeHelper.testChrome(chromePth)
 
 
 # list of tmp documents
-# id -> { url, status, errorMsg, time, keepUntil, path }
-tmpDocuments = {}
+# { id, url, status, errorMsg, time, keepUntil, path }[]
+tmpDocuments = []
 mutexTmpFiles = threading.Lock()
 
 
@@ -60,7 +62,7 @@ except FileExistsError:
 
 
 # thread for converting
-def convertThrd(data, id2):
+def convertThrd(data):
 	global mutexTmpFiles, tmpDocuments
 
 	with mutexTmpFiles:
@@ -97,6 +99,8 @@ def convertThrd(data, id2):
 			data['status'] = 'finished'
 			data['errorMsg'] = str(ex)
 			print(data['errorMsg'])
+
+	tryToStartNextJob()
 		
 
 
@@ -118,17 +122,15 @@ def doClean():
 	global tmpDocuments
 	tm = time.time()
 	with mutexTmpFiles:
-		toDelete = [id2 for id2 in tmpDocuments.keys() if tmpDocuments[id2]['keepUntil'] < tm]
-		for id2 in toDelete:
-			# delete pdf file
-			pth = tmpDocuments[id2]['path']
-			print(f'Delete {pth}')
-			try:
-				os.remove(pth)
-			except FileNotFoundError:
-				pass
-			# delete entry
-			del tmpDocuments[id2]
+		toDelete = [x['path'] for x in tmpDocuments if x['keepUntil'] <= tm]
+		tmpDocuments = [x for x in tmpDocuments if x['keepUntil'] > tm] if len(toDelete) > 0 else tmpDocuments
+	for pth in toDelete:
+		# delete pdf file
+		print(f'Delete {pth}')
+		try:
+			os.remove(pth)
+		except FileNotFoundError:
+			pass
 
 
 
@@ -171,7 +173,9 @@ def getStatus(id2):
 	global mutexTmpFiles, tmpDocuments
 	assert mutexTmpFiles.locked()
 	# caller should encolse this function inside try / except
-	obj = tmpDocuments[id2]
+	obj = next((x for x in tmpDocuments if x['id'] == id2), None)
+	if not obj:
+		raise ValueError('Missing obj')
 	res = {
 		'id': id2,
 		'status': obj['status'],
@@ -240,22 +244,41 @@ def apiConvert():
 	with mutexTmpFiles:
 		while True:
 			id2 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=128))
-			if id2 not in tmpDocuments:
+			obj = next((x for x in tmpDocuments if x['id'] == id2), None)
+			if not obj:
 				break
+		js['id'] = id2
 		js['path'] = os.path.join(pthDir, f'{id2}.pdf')
-		tmpDocuments[id2] = js
+		tmpDocuments.append(js)
 
-		t = threading.Thread(target=convertThrd, args=(js, id2))
-		t.daemon = True
-		t.start()
+		res = getStatus(id2), 200
 
-		return getStatus(id2), 200
+	tryToStartNextJob()
+
+	return res
+
+
+
+def tryToStartNextJob():
+	global mutexTmpFiles, tmpDocuments, MAX_SIMULTANEOUS_WORKERS
+	with mutexTmpFiles:
+		arr2 = [x for x in tmpDocuments if x['status'] == 'working']
+		if len(arr2) >= MAX_SIMULTANEOUS_WORKERS:
+			return
+		for obj in tmpDocuments:
+			if obj['status'] != 'waiting':
+				continue
+			obj['status'] = 'working'
+			t = threading.Thread(target=convertThrd, args=(obj,))
+			t.daemon = True
+			t.start()
+			break
 
 
 
 @app.route('/apiv1/status/<id2>', methods=['GET'])
 def apiStatus(id2):
-	global mutexTmpFiles, tmpDocuments
+	global mutexTmpFiles
 	with mutexTmpFiles:
 		try:
 			return getStatus(id2), 200
@@ -268,9 +291,8 @@ def apiStatus(id2):
 def apiDownload(id2):
 	global mutexTmpFiles, tmpDocuments, app
 	with mutexTmpFiles:
-		try:
-			obj = tmpDocuments[id2]
-		except KeyError:
+		obj = next((x for x in tmpDocuments if x['id'] == id2), None)
+		if not obj:
 			return {'msg':'document doesnt exist'}, 404
 		if obj['status'] != 'finished':
 			return {'msg':'document is not finished yet.'}, 400
