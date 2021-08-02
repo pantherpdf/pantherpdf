@@ -1,6 +1,6 @@
 // helper for converting tuple into type
 type Narrowable = string | number | boolean | symbol | object | {} | void | null | undefined;
-const tuple = <T extends Narrowable[]>(...args: T)=>args;
+export const tuple = <T extends Narrowable[]>(...args: T)=>args;
 
 export type WithId<T> = T & {_id: string}
 
