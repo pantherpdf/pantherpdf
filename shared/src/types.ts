@@ -62,7 +62,7 @@ export interface TReportCompiled extends Omit<TReport, 'children'> {
 }
 
 export function TDataTypeGuard(r: any): r is TData {
-	if (typeof r.type !== 'string' || r.type.length == 0)
+	if (typeof r.type !== 'string' || r.type.length === 0)
 		return false
 	if (!Array.isArray(r.children))
 		return false
