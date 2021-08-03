@@ -9,7 +9,7 @@ import style from './PropertyColor.module.css'
 
 interface Props {
 	value: string,
-	onChange: (value: string) => Promise<void>,
+	onChange: (value: string) => void,
 }
 
 export default function PropertyColor(props: Props) {

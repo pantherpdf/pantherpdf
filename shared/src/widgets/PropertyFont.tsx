@@ -70,7 +70,7 @@ export function PropertyFontGenCss(obj: TFont): CSSProperties {
 
 interface Props {
 	value: TFont,
-	onChange: (obj: TFont) => Promise<void>,
+	onChange: (obj: TFont) => void,
 	textButton?: boolean,
 	iconButton?: boolean,
 	id?: string,
