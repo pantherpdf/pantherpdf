@@ -45,7 +45,7 @@ export const textSimple: Widget = {
 
 	Render: function(props) {
 		const item = props.item as TextSimpleData
-		return <BoxName name={'text'}>
+		return <BoxName name={textSimple.name}>
 			<div>{item.formula}</div>
 		</BoxName>
 	},
