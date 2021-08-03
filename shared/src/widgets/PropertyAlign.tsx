@@ -24,13 +24,15 @@ export default function PropertyAlign(props: AlignProps) {
 		'right': faAlignRight,
 		'justify': faAlignJustify,
 	}
-	return <div className='btn-group'>
-		{TAligns.map(x => <button
-			key={x}
-			className={`btn btn-outline-secondary ${x === props.value ? 'active' : ''}`}
-			onClick={() => props.onChange(x!==props.value ? x : undefined)}
-		>
-			<FontAwesomeIcon icon={icons[x]} fixedWidth />
-		</button>)}
+	return <div>
+		<div className='btn-group'>
+			{TAligns.map(x => <button
+				key={x}
+				className={`btn btn-outline-secondary ${x === props.value ? 'active' : ''}`}
+				onClick={() => props.onChange(x!==props.value ? x : undefined)}
+			>
+				<FontAwesomeIcon icon={icons[x]} fixedWidth />
+			</button>)}
+		</div>
 	</div>
 }
