@@ -10,6 +10,7 @@
 	"dependencies": {
 		"@netlify/functions": "^0.7.2",
 		"crypto": "^1.0.1",
+		"jsdom": "^16.7.0",
 		"mongodb": "^3.6.9",
 		"mongodb-client-encryption": "^1.2.5",
 		"netlify-lambda": "^2.0.8",

@@ -8,9 +8,11 @@ import type { Widget } from '../editor/types'
 import { textSimple } from './textSimple'
 import { repeat } from './repeat'
 import { counter } from './counter'
+import { TextHtml } from './TextHtml'
 
 export const allWidgets: {[key: string]: Widget} = {
 	textSimple,
+	TextHtml,
 	repeat,
 	counter,
 }
