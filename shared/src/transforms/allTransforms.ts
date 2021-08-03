@@ -1,5 +1,5 @@
 /**
- * allWidgets.tsx
+ * allTransforms.tsx
  * list of all widgets
  */
 
