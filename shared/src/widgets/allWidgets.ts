@@ -10,6 +10,7 @@ import { repeat } from './repeat'
 import { counter } from './counter'
 import { TextHtml } from './TextHtml'
 import { Image } from './Image'
+import { Columns, ColumnsCt } from './Columns'
 
 export const allWidgets: {[key: string]: Widget} = {
 	textSimple,
@@ -17,6 +18,8 @@ export const allWidgets: {[key: string]: Widget} = {
 	repeat,
 	counter,
 	Image,
+	Columns,
+	ColumnsCt,
 }
 
 export default function getWidget(type: string): Widget {
