@@ -9,12 +9,14 @@ import { textSimple } from './textSimple'
 import { repeat } from './repeat'
 import { counter } from './counter'
 import { TextHtml } from './TextHtml'
+import { Image } from './Image'
 
 export const allWidgets: {[key: string]: Widget} = {
 	textSimple,
 	TextHtml,
 	repeat,
 	counter,
+	Image,
 }
 
 export default function getWidget(type: string): Widget {
