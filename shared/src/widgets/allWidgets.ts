@@ -7,7 +7,7 @@
 import type { Widget } from '../editor/types'
 import { textSimple } from './textSimple'
 import { repeat } from './repeat'
-import { counter } from './counter'
+import { Counter } from './Counter'
 import { TextHtml } from './TextHtml'
 import { Image } from './Image'
 import { Columns, ColumnsCt } from './Columns'
@@ -17,7 +17,7 @@ export const allWidgets: {[key: string]: Widget} = {
 	textSimple,
 	TextHtml,
 	repeat,
-	counter,
+	Counter,
 	Image,
 	Columns,
 	ColumnsCt,

@@ -2,19 +2,18 @@
  * @jest-environment node
  */
 
-import { TextSimpleData, TextSimpleCompiled } from './textSimple'
-import { RepeatData, RepeatCompiled } from '../widgets/repeat'
-import { counter, CounterData, CounterCompiled } from '../widgets/counter'
+import { TextSimpleData } from './textSimple'
+import { RepeatData } from './repeat'
+import { Counter, CounterData } from './Counter'
 import { Helper } from '../editor/compile'
 import { ForceChildren } from '../editor/types'
-
 
 
 test('text', async () => {
 	
 
 	const dt: ForceChildren<CounterData|RepeatData|TextSimpleData> =
-	{type: 'counter', varName: 'counter1', children: [
+	{type: 'Counter', varName: 'counter1', children: [
 		{type:'repeat', varName:'rp', formula:'["a","b","c"]', children:[
 			{type:'textSimple', formula:'rp + counter1', children:[]}
 		]}
@@ -24,9 +23,9 @@ test('text', async () => {
 	const helper = new Helper()
 	helper.push('obj', obj)
  
-	const p = await counter.compile(dt, helper) as any
+	const p = await Counter.compile(dt, helper) as any
 	expect(p).toBeTruthy()
-	expect(p.type).toBe('counter')
+	expect(p.type).toBe('Counter')
 	expect(p.children[0].type).toBe('repeat')
 	expect(p.children[0].children[0].data).toBe('a0')
 	expect(p.children[0].children[1].data).toBe('b1')
