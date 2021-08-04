@@ -172,7 +172,7 @@ export default function Editor(props: Props) {
 		return <div
 			className={`${style.widgetBox} ${(selected && idCmp(selected,wid) && style.selected) || ''}`}
 			onClick={e=>widgetMouseClick(e, wid)}
-			draggable={true}
+			draggable={typeof obj.canDrag === 'undefined' || obj.canDrag}
 			onDragStart={e=>dragWidgetStart(e, {type:'wid',wid})}
 			onDragEnd={e=>dragWidgetEnd(e)}
 		>
@@ -211,7 +211,16 @@ export default function Editor(props: Props) {
 	function widgetMouseClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>, wid: number[]) {
 		e.preventDefault()
 		e.stopPropagation()
-		setSelected(wid)
+		wid = [...wid]
+		while (wid.length > 0) {
+			const item = findInList(props.report, wid)
+			const obj = getWidget(item.type)
+			if (typeof obj.canSelect === 'undefined' || obj.canSelect) {
+				setSelected(wid)
+				break
+			}
+			wid.splice(wid.length-1, 1)
+		}
 	}
 	
 	props2 = {

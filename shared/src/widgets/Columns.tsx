@@ -55,6 +55,10 @@ export const ColumnsCt: Widget = {
 	RenderProperties: function() {
 		return null
 	},
+
+	canAdd: false,
+	canSelect: false,
+	canDrag: false,
 }
 
 

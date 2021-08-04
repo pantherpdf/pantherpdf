@@ -79,6 +79,8 @@ function ShowWidgets(props: GeneralProps) {
 	}
 	
 	return <>{Object.values(allWidgets).map((w,idx) => {
+		if (typeof w.canAdd !== 'undefined' && !w.canAdd)
+			return null
 		return <div
 			key={idx}
 			draggable={true}

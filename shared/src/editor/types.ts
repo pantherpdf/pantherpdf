@@ -80,6 +80,9 @@ export interface Widget {
 	RenderProperties?: FunctionComponent<ItemRendeProps>,
 	Render: FunctionComponent<ItemRendeProps>,
 	RenderFinal: FunctionComponent<ItemRendeFinalProps>,
+	canAdd?: boolean,
+	canDrag?: boolean,
+	canSelect?: boolean,
 }
 
 
