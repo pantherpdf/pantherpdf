@@ -11,6 +11,7 @@ import { counter } from './counter'
 import { TextHtml } from './TextHtml'
 import { Image } from './Image'
 import { Columns, ColumnsCt } from './Columns'
+import { Condition } from './Condition'
 
 export const allWidgets: {[key: string]: Widget} = {
 	textSimple,
@@ -20,6 +21,7 @@ export const allWidgets: {[key: string]: Widget} = {
 	Image,
 	Columns,
 	ColumnsCt,
+	Condition,
 }
 
 export default function getWidget(type: string): Widget {
