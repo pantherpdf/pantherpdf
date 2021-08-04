@@ -8,7 +8,7 @@ import { TData, TDataCompiled } from '../types'
 import type { Widget } from '../editor/types'
 import { faColumns, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
-import InputApplyOnEnter, { WidthRegex } from './InputApplyOnEnter'
+import InputApplyOnEnter, { WidthRegex, WidthOptions } from './InputApplyOnEnter'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
@@ -85,7 +85,7 @@ function colStyle(w: string): CSSProperties {
 		}
 		else {
 			return {
-				flex: `0 0 {w}`,
+				flex: `0 0 ${w}`,
 				minWidth: w,
 				maxWidth: w,
 			}
@@ -165,6 +165,8 @@ export const Columns: Widget = {
 		return <>
 			<div>
 				<label>Width</label>
+				<br />
+				<small className='text-muted'>{WidthOptions}</small>
 			</div>
 			{item.widths.map((w, idx) => <div
 				key={idx}
