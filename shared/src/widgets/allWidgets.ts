@@ -12,6 +12,7 @@ import { TextHtml } from './TextHtml'
 import { Image } from './Image'
 import { Columns, ColumnsCt } from './Columns'
 import { Condition } from './Condition'
+import { FirstMatch } from './FirstMatch'
 
 export const allWidgets: {[key: string]: Widget} = {
 	textSimple,
@@ -22,6 +23,7 @@ export const allWidgets: {[key: string]: Widget} = {
 	Columns,
 	ColumnsCt,
 	Condition,
+	FirstMatch,
 }
 
 export default function getWidget(type: string): Widget {
