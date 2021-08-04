@@ -87,11 +87,21 @@ export default function Editor(props: Props) {
 				toInsert = JSON.parse(JSON.stringify(dragObj2))
 			}
 			else {
+				// calc destination id
+				// detect if dragging item to one of its childs
+				let dest2
+				try {
+					dest2 = updateDestAfterRemove(dest, dragObj2)
+				}
+				catch(e) {
+					dragObj.current = null
+					return
+				}
 				toInsert = findInList(report2, dragObj2)
 				// remove from list
 				report2 = removeFromList(report2, dragObj2)
 				// update destination id
-				dest = updateDestAfterRemove(dest, dragObj2)
+				dest = dest2
 			}
 		}
 		else if (dragObj.current.type === 'widget') {
