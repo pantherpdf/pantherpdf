@@ -8,7 +8,7 @@ import { Helper } from '../editor/compile'
 import { ForceChildren } from '../editor/types'
 
 test('text', async () => {
-	const dt: ForceChildren<RepeatData|TextSimpleData> = {type:'Repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[
+	const dt: ForceChildren<RepeatData|TextSimpleData> = {type:'Repeat', varName:'rp', source:'data.arr + ["a","b"]', children:[
 		{type:'TextSimple', formula:'rp', children:[]}
 	]}
 	const obj = { arr:['1','2'] }

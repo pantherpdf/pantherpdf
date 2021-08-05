@@ -14,7 +14,7 @@ test('text', async () => {
 
 	const dt: ForceChildren<CounterData|RepeatData|TextSimpleData> =
 	{type: 'Counter', varName: 'counter1', children: [
-		{type:'Repeat', varName:'rp', formula:'["a","b","c"]', children:[
+		{type:'Repeat', varName:'rp', source:'["a","b","c"]', children:[
 			{type:'TextSimple', formula:'rp + counter1', children:[]}
 		]}
 	]}

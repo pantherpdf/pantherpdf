@@ -11,7 +11,7 @@ import BoxName from './BoxName'
 
 export interface RepeatData extends TData {
 	type: 'Repeat',
-	formula: string,
+	source: string,
 	varName: string,
 }
 
@@ -28,7 +28,7 @@ export const Repeat: Widget = {
 		return {
 			type: 'Repeat',
 			children: [],
-			formula: '',
+			source: '',
 			varName: '',
 		}
 	},
