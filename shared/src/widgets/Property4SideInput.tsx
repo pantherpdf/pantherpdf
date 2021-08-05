@@ -6,8 +6,9 @@ export type Value = [number, number, number, number]
 
 interface Props {
 	value: Value,
-	onChange: (val: Value) => Promise<void>,
+	onChange: (val: Value) => void,
 
+	id?: string,
 	regex?: RegExp,
 	style?: React.CSSProperties,
 }
@@ -20,6 +21,7 @@ export default function Property4SideInput(props: Props) {
 			display: 'inline',
 		}
 		return <InputApplyOnEnter
+			id={props.id ? `${props.id}-${idx}` : undefined}
 			style={st}
 			regex={props.regex}
 			value={props.value[idx]}
