@@ -5,7 +5,7 @@
 
 import compile from './compile'
 import type { ReportForceChildren } from './types'
-import type { TextSimpleData, TextSimpleCompiled } from '../widgets/textSimple'
+import type { TextSimpleData, TextSimpleCompiled } from '../widgets/TextSimple'
 import { sampleReport } from './sampleReport'
 import makeHtml from './makeHtml'
 import renderer from 'react-test-renderer'
@@ -14,7 +14,7 @@ test('text', async () => {
 	const report: ReportForceChildren<TextSimpleData> = {
 		...sampleReport,
 		children: [
-			{type:'textSimple', formula:'"Hello World: "+data.num', children:[]},
+			{type:'TextSimple', formula:'"Hello World: "+data.num', children:[]},
 		]
 	}
 

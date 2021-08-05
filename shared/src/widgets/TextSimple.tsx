@@ -1,5 +1,5 @@
 /**
- * textSimple.tsx
+ * TextSimple.tsx
  */
 
 
@@ -12,23 +12,23 @@ import InputApplyOnEnter from './InputApplyOnEnter'
 
 
 export interface TextSimpleData extends TData {
-	type: 'textSimple',
+	type: 'TextSimple',
 	formula: string,
 }
 
 export interface TextSimpleCompiled extends TDataCompiled {
-	type: 'textSimple',
+	type: 'TextSimple',
 	data: string,
 }
 
 
-export const textSimple: Widget = {
+export const TextSimple: Widget = {
 	name: {en: 'Text Simple'},
 	icon: {fontawesome: faAlignLeft},
 
 	newItem: async (): Promise<TextSimpleData> => {
 		return {
-			type: 'textSimple',
+			type: 'TextSimple',
 			children: [],
 			formula: '',
 		}
@@ -45,7 +45,7 @@ export const textSimple: Widget = {
 
 	Render: function(props) {
 		const item = props.item as TextSimpleData
-		return <BoxName name={textSimple.name}>
+		return <BoxName name={TextSimple.name}>
 			<div>{item.formula}</div>
 		</BoxName>
 	},

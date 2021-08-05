@@ -5,7 +5,7 @@
 
 
 import type { Widget } from '../editor/types'
-import { textSimple } from './textSimple'
+import { TextSimple } from './TextSimple'
 import { repeat } from './repeat'
 import { Counter } from './Counter'
 import { TextHtml } from './TextHtml'
@@ -15,7 +15,7 @@ import { Condition } from './Condition'
 import { FirstMatch } from './FirstMatch'
 
 export const allWidgets: {[key: string]: Widget} = {
-	textSimple,
+	TextSimple,
 	TextHtml,
 	repeat,
 	Counter,

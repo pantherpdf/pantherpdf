@@ -4,7 +4,7 @@
 
 
 import { RepeatData } from '../widgets/repeat'
-import { TextSimpleData } from '../widgets/textSimple'
+import { TextSimpleData } from '../widgets/TextSimple'
 import { findInList, removeFromList, insertIntoList, updateDestAfterRemove, idCmp, updateItem } from './childrenMgmt'
 import { sampleReport } from './sampleReport'
 import { ReportForceChildren } from './types'
@@ -20,21 +20,21 @@ test('findInList', () => {
 	expect(() => findInList(r, [200,1])).toThrow()
 	
 	r.children = [
-		{type:'textSimple', formula:'"Hello World: "+data.num', children:[]},
+		{type:'TextSimple', formula:'"Hello World: "+data.num', children:[]},
 	]
 	expect(() => findInList(r, [1])).toThrow()
 	expect(findInList(r, [0])).toBe(r.children[0])
 
 	r.children = [
 		{type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[
-			{type:'textSimple', formula:'rp', children:[]},
-			{type:'textSimple', formula:'rp', children:[]},
-			{type:'textSimple', formula:'rp', children:[]},
+			{type:'TextSimple', formula:'rp', children:[]},
+			{type:'TextSimple', formula:'rp', children:[]},
+			{type:'TextSimple', formula:'rp', children:[]},
 		]},
 		{type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[
-			{type:'textSimple', formula:'rp', children:[]},
-			{type:'textSimple', formula:'rp', children:[]},
-			{type:'textSimple', formula:'rp', children:[]},
+			{type:'TextSimple', formula:'rp', children:[]},
+			{type:'TextSimple', formula:'rp', children:[]},
+			{type:'TextSimple', formula:'rp', children:[]},
 		]},
 	]
 	expect(findInList(r, [1,2])).toBe(r.children[1].children?.[2])
@@ -50,7 +50,7 @@ test('removeFromList simple', () => {
 	expect(() => removeFromList(r, [200,0])).toThrow()
 
 	r.children = [
-		{type:'textSimple', formula:'"Hello World: "+data.num', children:[]},
+		{type:'TextSimple', formula:'"Hello World: "+data.num', children:[]},
 	]
 	expect(() => removeFromList(r, [1])).toThrow()
 	r = removeFromList(r, [0])
@@ -61,12 +61,12 @@ test('removeFromList simple', () => {
 test('removeFromList', () => {
 	let r: TReport
 	r = {...sampleReport}
-	const t0: TextSimpleData = {type:'textSimple', formula:'rp0', children:[]}
-	const t1: TextSimpleData = {type:'textSimple', formula:'rp1', children:[]}
-	const t2: TextSimpleData = {type:'textSimple', formula:'rp2', children:[]}
-	const t3: TextSimpleData = {type:'textSimple', formula:'rp3', children:[]}
-	const t4: TextSimpleData = {type:'textSimple', formula:'rp4', children:[]}
-	const t5: TextSimpleData = {type:'textSimple', formula:'rp5', children:[]}
+	const t0: TextSimpleData = {type:'TextSimple', formula:'rp0', children:[]}
+	const t1: TextSimpleData = {type:'TextSimple', formula:'rp1', children:[]}
+	const t2: TextSimpleData = {type:'TextSimple', formula:'rp2', children:[]}
+	const t3: TextSimpleData = {type:'TextSimple', formula:'rp3', children:[]}
+	const t4: TextSimpleData = {type:'TextSimple', formula:'rp4', children:[]}
+	const t5: TextSimpleData = {type:'TextSimple', formula:'rp5', children:[]}
 	const c0: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[t0,t1,t2]}
 	const c1: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[t3,t4,t5]}
 	r.children = [c0, c1]
@@ -90,13 +90,13 @@ test('insertIntoList', () => {
 	let r: TReport
 	let r_old: TReport
 	r = {...sampleReport}
-	const t0: TextSimpleData = {type:'textSimple', formula:'rp0', children:[]}
-	const t1: TextSimpleData = {type:'textSimple', formula:'rp1', children:[]}
-	const t2: TextSimpleData = {type:'textSimple', formula:'rp2', children:[]}
-	const t3: TextSimpleData = {type:'textSimple', formula:'rp3', children:[]}
-	const t4: TextSimpleData = {type:'textSimple', formula:'rp4', children:[]}
-	const t5: TextSimpleData = {type:'textSimple', formula:'rp5', children:[]}
-	const t6: TextSimpleData = {type:'textSimple', formula:'rp6', children:[]}
+	const t0: TextSimpleData = {type:'TextSimple', formula:'rp0', children:[]}
+	const t1: TextSimpleData = {type:'TextSimple', formula:'rp1', children:[]}
+	const t2: TextSimpleData = {type:'TextSimple', formula:'rp2', children:[]}
+	const t3: TextSimpleData = {type:'TextSimple', formula:'rp3', children:[]}
+	const t4: TextSimpleData = {type:'TextSimple', formula:'rp4', children:[]}
+	const t5: TextSimpleData = {type:'TextSimple', formula:'rp5', children:[]}
+	const t6: TextSimpleData = {type:'TextSimple', formula:'rp6', children:[]}
 	const c0: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[t0,t1,t2]}
 	const c1: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[]}
 	
@@ -206,12 +206,12 @@ test('idCmp', () => {
 test('updateItem', () => {
 	let r: TReport
 	r = {...sampleReport}
-	const t0: TextSimpleData = {type:'textSimple', formula:'rp0', children:[]}
-	const t1: TextSimpleData = {type:'textSimple', formula:'rp1', children:[]}
-	const t2: TextSimpleData = {type:'textSimple', formula:'rp2', children:[]}
-	const t3: TextSimpleData = {type:'textSimple', formula:'rp3', children:[]}
-	const t4: TextSimpleData = {type:'textSimple', formula:'rp4', children:[]}
-	const t5: TextSimpleData = {type:'textSimple', formula:'rp5', children:[]}
+	const t0: TextSimpleData = {type:'TextSimple', formula:'rp0', children:[]}
+	const t1: TextSimpleData = {type:'TextSimple', formula:'rp1', children:[]}
+	const t2: TextSimpleData = {type:'TextSimple', formula:'rp2', children:[]}
+	const t3: TextSimpleData = {type:'TextSimple', formula:'rp3', children:[]}
+	const t4: TextSimpleData = {type:'TextSimple', formula:'rp4', children:[]}
+	const t5: TextSimpleData = {type:'TextSimple', formula:'rp5', children:[]}
 	const c0: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[t0,t1,t2]}
 	const c1: RepeatData = {type:'repeat', varName:'rp', formula:'data.arr + ["a","b"]', children:[t3,t4,t5]}
 	r.children = [c0, c1]

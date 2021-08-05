@@ -2,14 +2,14 @@
  * @jest-environment node
  */
 
-import { TextSimpleData } from './textSimple'
+import { TextSimpleData } from './TextSimple'
 import { FirstMatch, FirstMatchCompiled, FirstMatchData } from '../widgets/FirstMatch'
 import { Helper } from '../editor/compile'
 import { ForceChildren } from '../editor/types'
 
 test('FirstMatch', async () => {
 	const dt: ForceChildren<FirstMatchData|TextSimpleData> = {type:'FirstMatch', array:'[1,2,3,4,5,6]', condition:'match22 > 3', varName: 'match22', children:[
-		{type:'textSimple', formula:'"hello " + match22', children:[]}
+		{type:'TextSimple', formula:'"hello " + match22', children:[]}
 	]}
 	const data = { }
 	const helper = new Helper()

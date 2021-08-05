@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { TextSimpleData } from './textSimple'
+import { TextSimpleData } from './TextSimple'
 import { RepeatData } from './repeat'
 import { Counter, CounterData } from './Counter'
 import { Helper } from '../editor/compile'
@@ -15,7 +15,7 @@ test('text', async () => {
 	const dt: ForceChildren<CounterData|RepeatData|TextSimpleData> =
 	{type: 'Counter', varName: 'counter1', children: [
 		{type:'repeat', varName:'rp', formula:'["a","b","c"]', children:[
-			{type:'textSimple', formula:'rp + counter1', children:[]}
+			{type:'TextSimple', formula:'rp + counter1', children:[]}
 		]}
 	]}
  
