@@ -14,6 +14,7 @@ import { Columns, ColumnsCt } from './Columns'
 import { Condition } from './Condition'
 import { FirstMatch } from './FirstMatch'
 import { Html } from './Html'
+import { Separator } from './Separator'
 
 export const allWidgets: {[key: string]: Widget} = {
 	TextSimple,
@@ -26,6 +27,7 @@ export const allWidgets: {[key: string]: Widget} = {
 	Condition,
 	FirstMatch,
 	Html,
+	Separator,
 }
 
 export default function getWidget(type: string): Widget {
