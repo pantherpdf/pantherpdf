@@ -7,7 +7,7 @@
 import React from 'react'
 import { TData, TDataCompiled } from '../types'
 import type { Widget } from '../editor/types'
-import { faAlignLeft } from '@fortawesome/free-solid-svg-icons'
+import { faCode } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 import InputApplyOnEnter from './InputApplyOnEnter'
 
@@ -25,7 +25,7 @@ export interface HtmlCompiled extends TDataCompiled {
 
 export const Html: Widget = {
 	name: {en: 'Html'},
-	icon: {fontawesome: faAlignLeft},
+	icon: {fontawesome: faCode},
 
 	newItem: async (): Promise<HtmlData> => {
 		return {
