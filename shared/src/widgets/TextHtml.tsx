@@ -165,7 +165,7 @@ function Editor(props: EditorProps) {
 	}
 
 	return <div>
-		<div>
+		<div style={{outline: '1px solid #ccc'}}>
 			<div
 				contentEditable={true}
 				onInput={ch}
@@ -219,6 +219,19 @@ export const TextHtml: Widget = {
 		</BoxName>
 	},
 
+	RenderFinal: function(props) {
+		const item = props.item as TextHtmlCompiled
+		const css = PropertyFontGenCss(item.font)
+		if (item.align) {
+			css.textAlign = item.align
+		}
+		return <div
+			style={css}
+		>
+			{item.value}
+		</div>
+	},
+
 	RenderProperties: function(props) {
 		const item = props.item as TextHtmlData
 		const css1 = PropertyFontGenCss(props.report.properties.font || {})
@@ -236,24 +249,17 @@ export const TextHtml: Widget = {
 				value={item.font}
 				onChange={val => props.setItem({...props.item, font: val})}
 			/>
+			<div>
+				<small>
+					Use variable like this:
+					Hello <span className='font-monospace'>{'{data.name}'}</span>!
+				</small>
+			</div>
 			<Editor
 				value={item.value}
 				onChange={val => props.setItem({...props.item, value: val})}
 				chStyle={css}
 			/>
 		</>
-	},
-
-	RenderFinal: function(props) {
-		const item = props.item as TextHtmlCompiled
-		const css = PropertyFontGenCss(item.font)
-		if (item.align) {
-			css.textAlign = item.align
-		}
-		return <div
-			style={css}
-		>
-			{item.value}
-		</div>
 	},
 }
