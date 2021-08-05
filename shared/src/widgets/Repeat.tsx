@@ -1,5 +1,5 @@
 /**
- * repeat.tsx
+ * Repeat.tsx
  */
 
 import React from 'react'
@@ -10,23 +10,23 @@ import BoxName from './BoxName'
 
 
 export interface RepeatData extends TData {
-	type: 'repeat',
+	type: 'Repeat',
 	formula: string,
 	varName: string,
 }
 
 export interface RepeatCompiled extends TDataCompiled {
-	type: 'repeat',
+	type: 'Repeat',
 }
 
 
-export const repeat: Widget = {
+export const Repeat: Widget = {
 	name: {en: 'Repeat'},
 	icon: {fontawesome: faEllipsisV},
 
 	newItem: async (): Promise<RepeatData> => {
 		return {
-			type: 'repeat',
+			type: 'Repeat',
 			children: [],
 			formula: '',
 			varName: '',
@@ -36,7 +36,7 @@ export const repeat: Widget = {
 	compile: async (dt: RepeatData, helper): Promise<RepeatCompiled> => {
 		const value = await helper.evalFormula(dt.formula)
 		if (!Array.isArray(value)) {
-			throw new Error('Repeating item is not array in repeat widget')
+			throw new Error('Repeating item is not array in Repeat widget')
 		}
 		const children: TDataCompiled[] = []
 		for (const val2 of value) {
@@ -52,7 +52,7 @@ export const repeat: Widget = {
 	},
 
 	Render: function(props) {
-		return <BoxName name={repeat.name}>
+		return <BoxName name={Repeat.name}>
 			{props.item.children && props.renderWidgets(props.item.children, props.wid)}
 		</BoxName>
 	},
