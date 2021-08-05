@@ -21,7 +21,7 @@ test('text', async () => {
 	const obj = { num: 123 }
 	const compiled = await compile(report, obj)
 	const html = makeHtml(compiled)
-	const component = renderer.create(html)
+	const component = renderer.create(<>{html}</>)
 	const tree = component.toJSON()
   	expect(tree).toMatchSnapshot();
 })
