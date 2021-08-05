@@ -6,7 +6,7 @@
 import React from 'react'
 import { TData, TDataCompiled } from '../types'
 import type { Widget } from '../editor/types'
-import { faAlignLeft } from '@fortawesome/free-solid-svg-icons'
+import { faStopwatch } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 import { TransName } from '../translation'
 import InputApplyOnEnter from './InputApplyOnEnter'
@@ -23,7 +23,7 @@ export interface CounterCompiled extends TDataCompiled {
 
 export const Counter: Widget = {
 	name: {en: 'Counter'},
-	icon: {fontawesome: faAlignLeft},
+	icon: {fontawesome: faStopwatch},
 
 	newItem: async (): Promise<CounterData> => {
 		return {
