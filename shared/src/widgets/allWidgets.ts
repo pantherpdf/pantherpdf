@@ -15,6 +15,7 @@ import { Condition } from './Condition'
 import { FirstMatch } from './FirstMatch'
 import { Html } from './Html'
 import { Separator } from './Separator'
+import { Spacer } from './Spacer'
 
 export const allWidgets: {[key: string]: Widget} = {
 	TextSimple,
@@ -28,6 +29,7 @@ export const allWidgets: {[key: string]: Widget} = {
 	FirstMatch,
 	Html,
 	Separator,
+	Spacer,
 }
 
 export default function getWidget(type: string): Widget {
