@@ -36,7 +36,7 @@ export const Repeat: Widget = {
 	},
 
 	compile: async (dt: RepeatData, helper): Promise<RepeatCompiled> => {
-		const value = await helper.evalFormula(dt.formula)
+		const value = await helper.evalFormula(dt.source)
 		if (!Array.isArray(value)) {
 			throw new Error('Repeating item is not array in Repeat widget')
 		}

@@ -14,7 +14,7 @@ import InputApplyOnEnter from './InputApplyOnEnter'
 
 export interface HtmlData extends TData {
 	type: 'Html',
-	formula: string,
+	source: string,
 }
 
 export interface HtmlCompiled extends TDataCompiled {
@@ -31,12 +31,12 @@ export const Html: Widget = {
 		return {
 			type: 'Html',
 			children: [],
-			formula: '',
+			source: '',
 		}
 	},
 
 	compile: async (dt: HtmlData, helpers): Promise<HtmlCompiled> => {
-		const str2 = await helpers.evalFormula(dt.formula)
+		const str2 = await helpers.evalFormula(dt.source)
 		const str = (str2 !== undefined && str2 !== null && str2 !== false) ? String(str2) : ''
 		return {
 			type: dt.type,
@@ -49,7 +49,7 @@ export const Html: Widget = {
 		const item = props.item as HtmlData
 		return <BoxName name={Html.name}>
 			<div className='font-monospace'>
-				{item.formula}
+				{item.source}
 			</div>
 		</BoxName>
 	},

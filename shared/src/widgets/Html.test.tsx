@@ -11,7 +11,7 @@ import { ReportForceChildren } from '../editor/types'
 
 
 test('Html compile', async () => {
-	const dt: HtmlData = {type:'Html', formula:'data.desc', children:[]}
+	const dt: HtmlData = {type:'Html', source:'data.desc', children:[]}
 
 	const obj = { desc: '<p>Hello</p>' }
 	const helper = new Helper()
@@ -29,7 +29,7 @@ test('html render', async () => {
 	const report: ReportForceChildren<HtmlData> = {
 		...sampleReport,
 		children: [
-			{type:'Html', formula:'data.desc', children:[]},
+			{type:'Html', source:'data.desc', children:[]},
 		]
 	}
 
@@ -42,32 +42,32 @@ test('html render', async () => {
 })
 
 
-test('Html formula==null should be empty string', async () => {
-	const dt: HtmlData = {type:'Html', formula:'data.dt', children:[]}
+test('Html source==null should be empty string', async () => {
+	const dt: HtmlData = {type:'Html', source:'data.dt', children:[]}
 	const helper = new Helper()
 	helper.push('data', { dt: null })
 	const p2 = await Html.compile(dt, helper)
 	expect(p2.data).toBe('')
 })
 
-test('Html formula==false should be empty string', async () => {
-	const dt: HtmlData = {type:'Html', formula:'data.dt', children:[]}
+test('Html source==false should be empty string', async () => {
+	const dt: HtmlData = {type:'Html', source:'data.dt', children:[]}
 	const helper = new Helper()
 	helper.push('data', { dt: false })
 	const p2 = await Html.compile(dt, helper)
 	expect(p2.data).toBe('')
 })
 
-test('Html formula==undefined should be empty string', async () => {
-	const dt: HtmlData = {type:'Html', formula:'data.dt', children:[]}
+test('Html source==undefined should be empty string', async () => {
+	const dt: HtmlData = {type:'Html', source:'data.dt', children:[]}
 	const helper = new Helper()
 	helper.push('data', { dt: undefined })
 	const p2 = await Html.compile(dt, helper)
 	expect(p2.data).toBe('')
 })
 
-test('Html formula==0 should be "0"', async () => {
-	const dt: HtmlData = {type:'Html', formula:'data.dt', children:[]}
+test('Html source==0 should be "0"', async () => {
+	const dt: HtmlData = {type:'Html', source:'data.dt', children:[]}
 	const helper = new Helper()
 	helper.push('data', { dt: 0 })
 	const p2 = await Html.compile(dt, helper)

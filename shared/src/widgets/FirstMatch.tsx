@@ -14,7 +14,7 @@ import { TransName } from '../translation'
 
 export interface FirstMatchData extends TData {
 	type: 'FirstMatch',
-	array: string,
+	source: string,
 	condition: string,
 	varName: string,
 }
@@ -32,14 +32,14 @@ export const FirstMatch: Widget = {
 		return {
 			type: 'FirstMatch',
 			children: [],
-			array: '[]',
+			source: '[]',
 			condition: 'true',
 			varName: 'match1',
 		}
 	},
 
 	compile: async (dt: FirstMatchData, helpers): Promise<FirstMatchCompiled> => {
-		const arr = await helpers.evalFormula(dt.array)
+		const arr = await helpers.evalFormula(dt.source)
 		if (!Array.isArray(arr)) {
 			throw new Error(`FirstMatch: source should be array bot got ${typeof arr}`)
 		}
