@@ -17,6 +17,7 @@ import { Html } from './Html'
 import { Separator } from './Separator'
 import { Spacer } from './Spacer'
 import { Box } from './Box'
+import { SetVar } from './SetVar'
 
 export const allWidgets: {[key: string]: Widget} = {
 	TextSimple,
@@ -32,6 +33,7 @@ export const allWidgets: {[key: string]: Widget} = {
 	Separator,
 	Spacer,
 	Box,
+	SetVar,
 }
 
 export default function getWidget(type: string): Widget {
