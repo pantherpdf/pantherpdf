@@ -7,6 +7,8 @@ import { TData, TDataCompiled } from '../types'
 import type { Widget } from '../editor/types'
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
+import InputApplyOnEnter from './InputApplyOnEnter'
+import { TransName } from '../translation'
 
 
 export interface RepeatData extends TData {
@@ -52,12 +54,39 @@ export const Repeat: Widget = {
 	},
 
 	Render: function(props) {
-		return <BoxName name={Repeat.name}>
+		const item = props.item as RepeatData
+		return <BoxName name={`${TransName(Repeat.name)} - ${item.varName}`}>
 			{props.item.children && props.renderWidgets(props.item.children, props.wid)}
 		</BoxName>
 	},
 
 	RenderFinal: function(props) {
 		return <div>{props.renderChildren(props.item.children, props)}</div>
-	}
+	},
+
+	RenderProperties: function(props) {
+		const item = props.item as RepeatData
+		return <>
+			<div><label htmlFor='Repeat-source'>Source</label></div>
+			<div className="input-group mb-3">
+				<span className="input-group-text fst-italic">ƒ</span>
+				<InputApplyOnEnter
+					id='Repeat-source'
+					value={item.array}
+					onChange={val=>props.setItem({...item, array: val})}
+				/>
+			</div>
+
+			<div>
+				<label htmlFor='Repeat-varName'>Var name</label>
+				<br />
+				selected item will be in this variable
+			</div>
+			<InputApplyOnEnter
+				id='Repeat-varName'
+				value={item.varName}
+				onChange={val=>props.setItem({...item, varName: val})}
+			/>
+		</>
+	},
 }
