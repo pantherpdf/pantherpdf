@@ -35,11 +35,12 @@ export const TextSimple: Widget = {
 	},
 
 	compile: async (dt: TextSimpleData, helpers): Promise<TextSimpleCompiled> => {
+		const str2 = await helpers.evalFormula(dt.formula)
+		const str = (str2 !== undefined && str2 !== null && str2 !== false) ? String(str2) : ''
 		return {
-			data: await helpers.evalFormula(dt.formula),
-			
 			type: dt.type,
-			children: await helpers.compileChildren(dt.children),
+			children: [],
+			data: str,
 		}
 	},
 
