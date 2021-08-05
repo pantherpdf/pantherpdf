@@ -64,10 +64,13 @@ export const Html: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as HtmlData
 		return <>
-			<InputApplyOnEnter
-				value={item.formula}
-				onChange={val=>props.setItem({...item, formula: val})}
-			/>
+			<div className="input-group mb-3">
+				<span className="input-group-text fst-italic">ƒ</span>
+				<InputApplyOnEnter
+					value={item.source}
+					onChange={val=>props.setItem({...item, source: val})}
+				/>
+			</div>
 		</>
 	},
 }

@@ -58,10 +58,14 @@ export const Condition: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as ConditionData
 		return <>
-			<InputApplyOnEnter
-				value={item.formula}
-				onChange={val=>props.setItem({...item, formula: val})}
-			/>
+			<div className="input-group mb-3">
+				<span className="input-group-text fst-italic">ƒ</span>
+				<InputApplyOnEnter
+					id='Condition-formula'
+					value={item.formula}
+					onChange={val=>props.setItem({...item, formula: val})}
+				/>
+			</div>
 		</>
 	},
 }

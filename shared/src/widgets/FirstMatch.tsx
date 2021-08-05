@@ -81,22 +81,28 @@ export const FirstMatch: Widget = {
 		const item = props.item as FirstMatchData
 		return <>
 			<label htmlFor='FirstMatch-source'>Source</label>
-			<InputApplyOnEnter
-				id='FirstMatch-source'
-				value={item.array}
-				onChange={val=>props.setItem({...item, array: val})}
-			/>
+			<div className="input-group mb-3">
+				<span className="input-group-text fst-italic">ƒ</span>
+				<InputApplyOnEnter
+					id='FirstMatch-source'
+					value={item.source}
+					onChange={val=>props.setItem({...item, source: val})}
+				/>
+			</div>
 
 			<div>
 				<label htmlFor='FirstMatch-condition'>Condition</label>
 				<br />
 				current item is in variable: <span style={{fontFamily:'monospace'}}>{item.varName}</span>
 			</div>
-			<InputApplyOnEnter
-				id='FirstMatch-condition'
-				value={item.condition}
-				onChange={val=>props.setItem({...item, condition: val})}
-			/>
+			<div className="input-group mb-3">
+				<span className="input-group-text fst-italic">ƒ</span>
+				<InputApplyOnEnter
+					id='FirstMatch-condition'
+					value={item.condition}
+					onChange={val=>props.setItem({...item, condition: val})}
+				/>
+			</div>
 
 			<div>
 				<label htmlFor='FirstMatch-varName'>Var name</label>
