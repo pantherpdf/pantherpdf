@@ -16,6 +16,7 @@ import { FirstMatch } from './FirstMatch'
 import { Html } from './Html'
 import { Separator } from './Separator'
 import { Spacer } from './Spacer'
+import { Box } from './Box'
 
 export const allWidgets: {[key: string]: Widget} = {
 	TextSimple,
@@ -30,6 +31,7 @@ export const allWidgets: {[key: string]: Widget} = {
 	Html,
 	Separator,
 	Spacer,
+	Box,
 }
 
 export default function getWidget(type: string): Widget {
