@@ -8,7 +8,7 @@ import { TData, TDataCompiled, tuple } from '../types'
 import type { Widget } from '../editor/types'
 import { faMinus } from '@fortawesome/free-solid-svg-icons'
 import InputApplyOnEnter, { WidthRegex } from './InputApplyOnEnter'
-import PropertyColor from './PropertyColor'
+import PropertyBorder, { Border, genBorderCss } from './PropertyBorder'
 
 
 export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
@@ -17,9 +17,7 @@ export type TBorderStyle = (typeof TBorderStyles)[number];
 interface Properties {
 	marginTop: string,
 	marginBottom: string,
-	width: string,
-	style: TBorderStyle,
-	color: string,
+	border: Border,
 }
 export type SeparatorData = TData & Properties
 export type SeparatorCompiled = TDataCompiled & Properties
@@ -29,10 +27,10 @@ function GenStyle(item: SeparatorData | SeparatorCompiled): CSSProperties {
 	return {
 		marginTop: item.marginTop,
 		marginBottom: item.marginBottom,
-		border: 'none',
-		borderTopWidth: item.width,
-		borderTopStyle: item.style,
-		borderTopColor: item.color,
+		borderTop: genBorderCss(item.border),
+		borderRight: 'none',
+		borderBottom: 'none',
+		borderLeft: 'none',
 	}
 }
 
@@ -47,9 +45,11 @@ export const Separator: Widget = {
 			children: [],
 			marginTop: '1rem',
 			marginBottom: '1rem',
-			width: '1px',
-			style: 'solid',
-			color: '#ccc',
+			border: {
+				width: 1,
+				style: 'solid',
+				color: '#ccc',
+			},
 		}
 	},
 
@@ -72,7 +72,7 @@ export const Separator: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as SeparatorData
 		return <>
-			<label htmlFor='sep-marginTop'>Margin Top</label>
+			<div><label htmlFor='sep-marginTop'>Margin Top</label></div>
 			<InputApplyOnEnter
 				id="sep-marginTop"
 				value={item.marginTop}
@@ -80,7 +80,7 @@ export const Separator: Widget = {
 				regex={WidthRegex}
 			/>
 
-			<label htmlFor='sep-marginBottom'>Margin Bottom</label>
+			<div><label htmlFor='sep-marginBottom'>Margin Bottom</label></div>
 			<InputApplyOnEnter
 				id="sep-marginBottom"
 				value={item.marginBottom}
@@ -88,31 +88,10 @@ export const Separator: Widget = {
 				regex={WidthRegex}
 			/>
 
-			<label htmlFor='sep-width'>Width</label>
-			<InputApplyOnEnter
-				id="sep-width"
-				value={item.width}
-				onChange={val => props.setItem({...props.item, width: val})}
-				regex={WidthRegex}
-			/>
-
-			<label htmlFor='sep-style'>Style</label>
-			<select
-				className=''
-				value={item.style}
-				onChange={e => props.setItem({...props.item, style: e.currentTarget.value})}
-			>
-				{TBorderStyles.map(s => <option
-					value={s}
-					key={s}
-				>
-					{s}
-				</option>)}
-			</select>
-
-			<PropertyColor
-				value={item.color}
-				onChange={val => props.setItem({...props.item, color: val})}
+			<PropertyBorder
+				id='sep-border'
+				value={item.border}
+				onChange={val => props.setItem({...props.item, border: val})}
 			/>
 		</>
 	},
