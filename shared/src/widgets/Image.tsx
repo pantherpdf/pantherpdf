@@ -47,7 +47,14 @@ export const Image: Widget = {
 	},
 
 	compile: async (dt: ImageData, helpers): Promise<ImageCompiled> => {
-		const data = dt.url.length > 0 ? dt.url : await helpers.evalFormula(dt.formula)
+		let data = dt.url
+		if (data.length === 0) {
+			const data2 = await helpers.evalFormula(dt.formula)
+			if (typeof data2 !== 'string') {
+				throw new Error('Image from formula not a string')
+			}
+			data = data2
+		}
 		return {
 			type: dt.type,
 			children: [],

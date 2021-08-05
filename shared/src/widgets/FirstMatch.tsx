@@ -40,6 +40,9 @@ export const FirstMatch: Widget = {
 
 	compile: async (dt: FirstMatchData, helpers): Promise<FirstMatchCompiled> => {
 		const arr = await helpers.evalFormula(dt.array)
+		if (!Array.isArray(arr)) {
+			throw new Error(`FirstMatch: source should be array bot got ${typeof arr}`)
+		}
 		let obj
 		let found = false
 		for (const itm of arr) {
