@@ -227,9 +227,8 @@ export const TextHtml: Widget = {
 		}
 		return <div
 			style={css}
-		>
-			{item.value}
-		</div>
+			dangerouslySetInnerHTML={{__html: item.value}}
+		/>
 	},
 
 	RenderProperties: function(props) {
