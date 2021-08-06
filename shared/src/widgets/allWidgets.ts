@@ -18,6 +18,7 @@ import { Separator } from './Separator'
 import { Spacer } from './Spacer'
 import { Box } from './Box'
 import { SetVar } from './SetVar'
+import { Sum, VarContainer } from './Sum'
 
 export const allWidgets: {[key: string]: Widget} = {
 	TextSimple,
@@ -34,6 +35,8 @@ export const allWidgets: {[key: string]: Widget} = {
 	Spacer,
 	Box,
 	SetVar,
+	Sum,
+	VarContainer,
 }
 
 export default function getWidget(type: string): Widget {
