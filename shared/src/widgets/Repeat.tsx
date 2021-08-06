@@ -72,8 +72,8 @@ export const Repeat: Widget = {
 				<span className="input-group-text fst-italic">ƒ</span>
 				<InputApplyOnEnter
 					id='Repeat-source'
-					value={item.array}
-					onChange={val=>props.setItem({...item, array: val})}
+					value={item.source}
+					onChange={val=>props.setItem({...item, source: val})}
 				/>
 			</div>
 
