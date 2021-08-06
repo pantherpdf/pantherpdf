@@ -38,14 +38,14 @@ export const Repeat: Widget = {
 	compile: async (dt: RepeatData, helper): Promise<RepeatCompiled> => {
 		const value = await helper.evalFormula(dt.source)
 		if (!Array.isArray(value)) {
-			throw new Error('Repeating item is not array in Repeat widget')
+			throw new Error(`Repeat: expected source to be array but got ${typeof value}`)
 		}
 		const children: TDataCompiled[] = []
 		for (const val2 of value) {
-			helper.push(dt.varName, val2)
-			const ch2 = await helper.compileChildren(dt.children)
+			helper.formulaHelper.push(dt.varName, val2)
+			const ch2 = await helper.compileChildren(dt.children, helper)
 			children.splice(children.length, 0, ...ch2)
-			helper.pop()
+			helper.formulaHelper.pop()
 		}
 		return {
 			type: dt.type,

@@ -37,9 +37,9 @@ export const SetVar: Widget = {
 
 	compile: async (dt: SetVarData, helper): Promise<SetVarCompiled> => {
 		const value = await helper.evalFormula(dt.source)
-		helper.push(dt.varName, value)
-		const children = await helper.compileChildren(dt.children)
-		helper.pop()
+		helper.formulaHelper.push(dt.varName, value)
+		const children = await helper.compileChildren(dt.children, helper)
+		helper.formulaHelper.pop()
 		return {
 			type: dt.type,
 			children,

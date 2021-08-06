@@ -33,11 +33,11 @@ export const Condition: Widget = {
 		}
 	},
 
-	compile: async (dt: ConditionData, helpers): Promise<ConditionCompiled> => {
-		const ok = await helpers.evalFormula(dt.formula)
+	compile: async (dt: ConditionData, helper): Promise<ConditionCompiled> => {
+		const ok = await helper.evalFormula(dt.formula)
 		return {
 			type: dt.type,
-			children: ok ? await helpers.compileChildren(dt.children) : [],
+			children: ok ? await helper.compileChildren(dt.children, helper) : [],
 		}
 	},
 

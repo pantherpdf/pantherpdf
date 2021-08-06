@@ -3,8 +3,8 @@
  */
 
 import { TextSimpleData } from './TextSimple'
-import { FirstMatch, FirstMatchCompiled, FirstMatchData } from '../widgets/FirstMatch'
-import { Helper } from '../editor/compile'
+import { FirstMatchCompiled, FirstMatchData } from '../widgets/FirstMatch'
+import { compileComponent } from '../editor/compile'
 import { ForceChildren } from '../editor/types'
 
 test('FirstMatch', async () => {
@@ -12,10 +12,7 @@ test('FirstMatch', async () => {
 		{type:'TextSimple', formula:'"hello " + match22', children:[]}
 	]}
 	const data = { }
-	const helper = new Helper()
-	helper.push('data', data)
-
-	const p = await FirstMatch.compile(dt, helper) as FirstMatchCompiled
+	const p = await compileComponent(dt, data) as FirstMatchCompiled
 	expect(p.children.length).toBe(1)
 	expect(p.children[0].data).toBe('hello 4')
 })

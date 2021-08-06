@@ -8,13 +8,13 @@ import { TData, TDataCompiled } from '../types'
 import type { Widget } from '../editor/types'
 import BoxName from './BoxName'
 import PropertyFont, { PropertyFontGenCss, TFont } from './PropertyFont'
-import { Helper } from '../editor/compile'
 import FormulaEvaluate from '../formula/formula'
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons'
 import PropertyAlign, { TAlign } from './PropertyAlign'
+import { FormulaHelper } from '../editor/compile'
 
 
-export async function evaluateFormulaInsideHtml(html: string, helpers: Helper): Promise<string> {
+export async function evaluateFormulaInsideHtml(html: string, formulaHelper: FormulaHelper): Promise<string> {
 	// parse html
 	// on browser use createElement()
 	// on nodejs use JSDOM library
@@ -109,7 +109,7 @@ export async function evaluateFormulaInsideHtml(html: string, helpers: Helper): 
 				txt += ch
 			}
 			else if ('varValue' in ch) {
-				const result = await FormulaEvaluate(ch.varValue, helpers)
+				const result = await FormulaEvaluate(ch.varValue, formulaHelper)
 				txt += String(result)
 			}
 			else {
@@ -194,11 +194,11 @@ export const TextHtml: Widget = {
 		}
 	},
 
-	compile: async (dt: TextHtmlData, helpers): Promise<TextHtmlCompiled> => {
+	compile: async (dt: TextHtmlData, helper): Promise<TextHtmlCompiled> => {
 		return {
 			type: dt.type,
 			children: [],
-			value: await evaluateFormulaInsideHtml(dt.value, helpers),
+			value: await evaluateFormulaInsideHtml(dt.value, helper.formulaHelper),
 			font: dt.font,
 			align: dt.align,
 		}

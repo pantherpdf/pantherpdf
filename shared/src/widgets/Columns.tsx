@@ -31,10 +31,10 @@ export const ColumnsCt: Widget = {
 		}
 	},
 
-	compile: async (dt: ColumnsCtData, helpers): Promise<ColumnsCtCompiled> => {
+	compile: async (dt: ColumnsCtData, helper): Promise<ColumnsCtCompiled> => {
 		return {
 			type: dt.type,
-			children: await helpers.compileChildren(dt.children),
+			children: await helper.compileChildren(dt.children, helper),
 		}
 	},
 
@@ -116,10 +116,10 @@ export const Columns: Widget = {
 		}
 	},
 
-	compile: async (dt: ColumnsData, helpers): Promise<ColumnsCompiled> => {
+	compile: async (dt: ColumnsData, helper): Promise<ColumnsCompiled> => {
 		return {
 			type: dt.type,
-			children: await helpers.compileChildren(dt.children),
+			children: await helper.compileChildren(dt.children, helper),
 			widths: dt.widths,
 		}
 	},

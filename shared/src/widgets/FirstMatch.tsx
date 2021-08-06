@@ -38,28 +38,29 @@ export const FirstMatch: Widget = {
 		}
 	},
 
-	compile: async (dt: FirstMatchData, helpers): Promise<FirstMatchCompiled> => {
-		const arr = await helpers.evalFormula(dt.source)
+	compile: async (dt: FirstMatchData, helper): Promise<FirstMatchCompiled> => {
+		const arr = await helper.evalFormula(dt.source)
 		if (!Array.isArray(arr)) {
 			throw new Error(`FirstMatch: source should be array bot got ${typeof arr}`)
 		}
 		let obj
 		let found = false
 		for (const itm of arr) {
-			helpers.push(dt.varName, itm)
-			const xx = await helpers.evalFormula(dt.condition)
+			helper.formulaHelper.push(dt.varName, itm)
+			const xx = await helper.evalFormula(dt.condition)
+			helper.formulaHelper.pop()
 			if (xx) {
 				obj = itm
 				found = true
 				break
 			}
 		}
-		helpers.push(dt.varName, obj)
+		helper.formulaHelper.push(dt.varName, obj)
 		const result: FirstMatchCompiled = {
 			type: dt.type,
-			children: found ? await helpers.compileChildren(dt.children) : [],
+			children: found ? await helper.compileChildren(dt.children, helper) : [],
 		}
-		helpers.pop()
+		helper.formulaHelper.pop()
 		return result
 	},
 

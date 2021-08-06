@@ -6,7 +6,7 @@
 
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import type { FunctionComponent, ReactNode } from 'react'
-import type { Helper } from './compile'
+import type { FormulaHelper } from './compile'
 import { TReport, TReportShort, TData, TTransformData, ApiEndpoints, TDataCompiled } from '../types'
 
 
@@ -72,11 +72,19 @@ export interface ItemRendeFinalProps extends ItemRendeFinalHelper {
 	item: TDataCompiled,
 }
 
+export interface CompileHelper {
+	formulaHelper: FormulaHelper,
+	evalFormula: (txt: string) => Promise<any>,
+	compileChildren: (arr1: TData[], helper: CompileHelper) => Promise<TDataCompiled[]>,
+	wid: number[],
+	report: TReport,
+}
+
 export interface Widget {
 	name: TName,
 	icon: TFontAwesomeIcon,
 	newItem: () => Promise<TData>,
-	compile: (dt: any, helper: Helper) => Promise<TDataCompiled>,
+	compile: (dt: any, helper: CompileHelper) => Promise<TDataCompiled>,
 	RenderProperties?: FunctionComponent<ItemRendeProps>,
 	Render: FunctionComponent<ItemRendeProps>,
 	RenderFinal: FunctionComponent<ItemRendeFinalProps>,

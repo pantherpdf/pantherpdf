@@ -33,11 +33,11 @@ export const Counter: Widget = {
 		}
 	},
 
-	compile: async (dt: CounterData, helpers): Promise<CounterCompiled> => {
+	compile: async (dt: CounterData, helper): Promise<CounterCompiled> => {
 		let id = 0
-		helpers.push(dt.varName, () => { return id++ })
-		const children = await helpers.compileChildren(dt.children)
-		helpers.pop()
+		helper.formulaHelper.push(dt.varName, () => { return id++ })
+		const children = await helper.compileChildren(dt.children, helper)
+		helper.formulaHelper.pop()
 		return {
 			type: dt.type,
 			children,

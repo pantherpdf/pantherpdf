@@ -5,7 +5,7 @@
 import { TextSimpleData } from './TextSimple'
 import { RepeatData } from './Repeat'
 import { Counter, CounterData } from './Counter'
-import { Helper } from '../editor/compile'
+import { compileComponent } from '../editor/compile'
 import { ForceChildren } from '../editor/types'
 
 
@@ -20,10 +20,8 @@ test('text', async () => {
 	]}
  
 	const obj = { }
-	const helper = new Helper()
-	helper.push('obj', obj)
  
-	const p = await Counter.compile(dt, helper) as any
+	const p = await compileComponent(dt, obj)
 	expect(p).toBeTruthy()
 	expect(p.type).toBe('Counter')
 	expect(p.children[0].type).toBe('Repeat')
