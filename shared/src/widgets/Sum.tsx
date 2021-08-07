@@ -3,12 +3,13 @@
  */
 
 import React from 'react'
-import { TData, TDataCompiled } from '../types'
+import { TData, TDataCompiled, TReport } from '../types'
 import type { Widget } from '../editor/types'
 import { faDatabase, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 import InputApplyOnEnter from './InputApplyOnEnter'
 import { findInList } from '../editor/childrenMgmt'
+import { TransName } from '../translation'
 
 
 export interface VarContainerData extends TData {
@@ -22,14 +23,14 @@ export interface VarContainerCompiled extends TDataCompiled {
 
 
 export const VarContainer: Widget = {
-	name: {en: 'VarContainer SUM'},
+	name: {en: 'VarContainer'},
 	icon: {fontawesome: faDatabase},
 
 	newItem: async (): Promise<VarContainerData> => {
 		return {
 			type: 'VarContainer',
 			children: [],
-			vars: [],
+			vars: {'var1': 0},
 		}
 	},
 
@@ -50,7 +51,8 @@ export const VarContainer: Widget = {
 	},
 
 	Render: function(props) {
-		return <BoxName name={VarContainer.name}>
+		const item = props.item as VarContainerData
+		return <BoxName name={`${TransName(VarContainer.name)} - ${Object.keys(item.vars).join(', ')}`}>
 			{props.renderWidgets(props.item.children, props.wid)}
 		</BoxName>
 	},
@@ -62,11 +64,11 @@ export const VarContainer: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as VarContainerData
 		return <>
-			<div><label htmlFor='VarContainer-source'>
+			<div><label htmlFor='VarContainer-vars'>
 				Variables <span className='ms-2 text-muted'>comma separated</span>
 			</label></div>
 			<InputApplyOnEnter
-				id='VarContainer-source'
+				id='VarContainer-vars'
 				value={Object.keys(item.vars).join(', ')}
 				onChange={val => {
 					val = String(val)
@@ -87,6 +89,25 @@ export const VarContainer: Widget = {
 
 
 
+
+
+function getParentContainers(report: TReport, wid: number[]): VarContainerData[] {
+	if (wid.length === 0) {
+		return []
+	}
+	wid = [...wid]
+	wid.splice(wid.length-1, 1)
+	const arr: VarContainerData[] = []
+	while (wid.length > 0) {
+		const parent1 = findInList(report, wid)
+		if (parent1.type === 'VarContainer') {
+			const parent2 = parent1 as VarContainerData
+			arr.push(parent2)
+		}
+		wid.splice(wid.length-1, 1)
+	}
+	return arr
+}
 
 
 
@@ -121,17 +142,13 @@ export const Sum: Widget = {
 		const wid2 = [...helper.wid]
 		wid2.splice(wid2.length-1, 1)
 		let found = false
-		while (wid2.length > 0) {
-			const parent1 = findInList(helper.report, wid2)
-			if (parent1.type === 'VarContainer') {
-				const parent2 = parent1 as VarContainerData
-				if (dt.varName in parent2.vars) {
-					parent2.vars[dt.varName] += value
-					found = true
-					break
-				}
+		const parents = getParentContainers(helper.report, helper.wid)
+		for (const prnt of parents) {
+			if (dt.varName in prnt.vars) {
+				prnt.vars[dt.varName] += value
+				found = true
+				break
 			}
-			wid2.splice(wid2.length-1, 1)
 		}
 		if (!found) {
 			throw new Error(`sum: variable (${dt.varName}) not found`)
@@ -144,10 +161,33 @@ export const Sum: Widget = {
 
 	Render: function(props) {
 		const item = props.item as SumData
+		function Impl() {
+			const parents = getParentContainers(props.report, props.wid)
+			if (parents.length === 0) {
+				return <span className='text-danger'>
+					Error: Missing VarContainer
+				</span>
+			}
+			if (item.varName.length === 0) {
+				return <span className='text-danger'>
+					Error: variable not selected
+				</span>
+			}
+			const varExists = !!parents.find(x => item.varName in x.vars)
+			if (!varExists) {
+				return <span className='text-danger'>
+					Error: variable does not exist in parent VarContainer(s)
+				</span>
+			}
+			return (
+				<span className='text-muted fst-italic font-monospace' style={{fontSize: '9px'}}>
+					{item.varName} += {item.formula}
+				</span>
+			)
+		}
+
 		return <BoxName name={Sum.name}>
-			<span className='text-muted'>
-				{item.varName} += {item.formula}
-			</span>
+			<Impl />
 		</BoxName>
 	},
 
@@ -158,29 +198,26 @@ export const Sum: Widget = {
 	RenderProperties: function(props) {
 		//
 		const vars: string[] = []
-		const wid2 = [...props.wid]
-		wid2.splice(wid2.length-1, 1)
-		while (wid2.length > 0) {
-			const parent1 = findInList(props.report, wid2)
-			if (parent1.type === 'VarContainer') {
-				const parent2 = parent1 as VarContainerData
-				const vars2 = Object.keys(parent2.vars)
-				for (const name of vars2) {
-					if (vars.indexOf(name) === -1) {
-						vars.push(name)
-					}
+		const parents = getParentContainers(props.report, props.wid)
+		for (const prt of parents) {
+			const vars2 = Object.keys(prt.vars)
+			for (const name of vars2) {
+				if (vars.indexOf(name) === -1) {
+					vars.push(name)
 				}
 			}
-			wid2.splice(wid2.length-1, 1)
 		}
 		//
 		const item = props.item as SumData
 		return <>
-			<div><label htmlFor='Sum-source'>Source</label></div>
+			<div>
+				<label htmlFor='Sum-varName'>Variable Name</label>
+			</div>
 			<select
 				className='form-select'
 				value={item.varName}
 				onChange={e => props.setItem({...item, varName: e.currentTarget.value})}
+				id='Sum-varName'
 			>
 				{vars.indexOf(item.varName) === -1 && <option value={item.varName}></option>}
 				{vars.map(name => <option
