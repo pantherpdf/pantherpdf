@@ -47,7 +47,7 @@ export const Html: Widget = {
 
 	Render: function(props) {
 		const item = props.item as HtmlData
-		return <BoxName name={Html.name}>
+		return <BoxName {...props} name={Html.name}>
 			<div className='font-monospace'>
 				{item.source}
 			</div>

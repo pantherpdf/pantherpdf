@@ -211,7 +211,8 @@ export const TextHtml: Widget = {
 			css.textAlign = item.align
 		}
 		css.minHeight = '20px'
-		return <BoxName name={TextHtml.name}>
+		
+		return <BoxName {...props} name={TextHtml.name}>
 			<div
 				style={css}
 				dangerouslySetInnerHTML={{__html: item.value}}

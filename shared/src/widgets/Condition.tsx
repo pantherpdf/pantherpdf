@@ -43,7 +43,7 @@ export const Condition: Widget = {
 
 	Render: function(props) {
 		const item = props.item as ConditionData
-		return <BoxName name={Condition.name}>
+		return <BoxName {...props} name={Condition.name}>
 			{props.renderWidgets(item.children, props.wid)}
 		</BoxName>
 	},

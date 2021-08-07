@@ -6,10 +6,10 @@
 
 import React from 'react'
 import { TransName } from '../translation'
-import { TName } from '../editor/types'
+import { ItemRendeProps, TName } from '../editor/types'
 import style from './BoxName.module.css'
 
-interface Props {
+interface Props extends ItemRendeProps {
 	className?: string,
 	name: TName,
 	children: React.ReactNode,
@@ -24,6 +24,9 @@ export default function BoxName(props: Props) {
 	>
 		<div
 			className={`${style.name} text-nowrap overflow-hidden`}
+			draggable={true} /* allways true to allow dragging TextHtml */
+			onDragStart={e => props.dragWidgetStart(e, {type:'wid', wid:props.wid})}
+			onDragEnd={e => props.dragWidgetEnd(e)}
 		>
 			{TransName(props.name)}
 		</div>

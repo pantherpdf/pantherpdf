@@ -48,7 +48,7 @@ export const SetVar: Widget = {
 
 	Render: function(props) {
 		const item = props.item as SetVarData
-		return <BoxName name={`${TransName(SetVar.name)} - ${item.varName}`}>
+		return <BoxName {...props} name={`${TransName(SetVar.name)} - ${item.varName}`}>
 			{props.renderWidgets(props.item.children, props.wid)}
 		</BoxName>
 	},

@@ -46,7 +46,7 @@ export const Counter: Widget = {
 
 	Render: function(props) {
 		const item = props.item as CounterData
-		return <BoxName name={`${TransName(Counter.name)}: ${item.varName}`}>
+		return <BoxName {...props} name={`${TransName(Counter.name)}: ${item.varName}`}>
 			{props.renderWidgets(props.item.children, props.wid)}
 		</BoxName>
 	},

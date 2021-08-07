@@ -125,7 +125,7 @@ export const Columns: Widget = {
 		const baseStyle: CSSProperties = {
 			border: '1px solid #ccc',
 		}
-		return <BoxName name={Columns.name}>
+		return <BoxName {...props} name={Columns.name}>
 			<div
 				style={{
 					display: 'flex',

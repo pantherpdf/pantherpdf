@@ -55,7 +55,7 @@ export const Repeat: Widget = {
 
 	Render: function(props) {
 		const item = props.item as RepeatData
-		return <BoxName name={`${TransName(Repeat.name)} - ${item.varName}`}>
+		return <BoxName {...props} name={`${TransName(Repeat.name)} - ${item.varName}`}>
 			{props.item.children && props.renderWidgets(props.item.children, props.wid)}
 		</BoxName>
 	},

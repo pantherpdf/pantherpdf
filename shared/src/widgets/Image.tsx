@@ -81,7 +81,7 @@ export const Image: Widget = {
 		if (item.align) {
 			cssContainer.textAlign = item.align
 		}
-		return <BoxName name={Image.name}>
+		return <BoxName {...props} name={Image.name}>
 			<div style={cssContainer}>
 				{item.url.length >  0 && <img src={item.url} alt='' style={cssImg} />}
 				{item.url.length === 0 && <div style={cssImg} />}
@@ -186,10 +186,8 @@ export const Image: Widget = {
 			img = <div>Bad img</div>
 		}
 
-		return <BoxName name={Image.name}>
-			<div style={cssContainer}>
-				{img}
-			</div>
-		</BoxName>
+		return <div style={cssContainer}>
+			{img}
+		</div>
 	},
 }

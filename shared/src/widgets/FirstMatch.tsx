@@ -66,7 +66,7 @@ export const FirstMatch: Widget = {
 
 	Render: function(props) {
 		const item = props.item as FirstMatchData
-		return <BoxName name={`${TransName(FirstMatch.name)}: ${item.varName}`}>
+		return <BoxName {...props} name={`${TransName(FirstMatch.name)}: ${item.varName}`}>
 			{props.renderWidgets(item.children, props.wid)}
 		</BoxName>
 	},

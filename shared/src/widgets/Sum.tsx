@@ -52,7 +52,7 @@ export const VarContainer: Widget = {
 
 	Render: function(props) {
 		const item = props.item as VarContainerData
-		return <BoxName name={`${TransName(VarContainer.name)} - ${Object.keys(item.vars).join(', ')}`}>
+		return <BoxName {...props} name={`${TransName(VarContainer.name)} - ${Object.keys(item.vars).join(', ')}`}>
 			{props.renderWidgets(props.item.children, props.wid)}
 		</BoxName>
 	},
@@ -188,7 +188,7 @@ export const Sum: Widget = {
 			)
 		}
 
-		return <BoxName name={Sum.name}>
+		return <BoxName {...props} name={Sum.name}>
 			<Impl />
 		</BoxName>
 	},
