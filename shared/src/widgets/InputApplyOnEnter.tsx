@@ -3,7 +3,7 @@
  * Helper form input that calls onChange only when focus is lost or when user presses enter.
  */
 
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import Trans from '../translation'
 
 export const WidthRegex = /^(?:|\d+(?:\.\d+)?(?:mm|cm|px|%|rem|em|vw|vh|))$/
@@ -22,73 +22,77 @@ interface Props {
 	style?: React.CSSProperties,
 }
 
-interface State {
-	originalValue: TAllowed,
-	currentValue: string,
-}
+export default function InputApplyOnEnter(props: Props) {
+	const [value, setValue] = useState<string>(String(props.value))
+	const [origValue, setOrigValue] = useState<TAllowed>(props.value)
 
-export default class InputApplyOnEnter extends Component<Props, State> {
-	constructor(props: Props) {
-		super(props)
+	useEffect(() => {
+		setValue(String(props.value))
+		setOrigValue(props.value)
+	}, [props.value])
 
-		this.state = {
-			originalValue: props.value,
-			currentValue: (typeof props.value === 'number' ? props.value.toString() : (props.value || '')),
+
+	function applyValue(): boolean {
+		let value2: TAllowed
+
+		// number
+		if (typeof props.value === 'number') {
+			const num = (Number.isInteger(props.step) && props.step !== 0) ? parseInt(value) : parseFloat(value)
+			if (!isFinite(num) || isNaN(num)) {
+				return false
+			}
+			if (String(num) !== value) {
+				return false
+			}
+			value2 = num
 		}
-	}
-
-	static getDerivedStateFromProps(props: Props, prevState: State) {
-		if( props.value !== prevState.originalValue )
-			return {
-				originalValue: props.value,
-				currentValue: (props.value!==undefined) ? (typeof props.value === 'number' ? props.value.toString() : props.value) : '',
+		
+		// regex
+		else if (props.regex) {
+			const regexOk = props.regex.test(value)
+			if (value !== origValue && !regexOk) {
+				return false
 			}
-		return null
-	}
-
-	applyValue() {
-		if ( typeof this.props.value === 'number' ) {
-			const val = (Number.isInteger(this.props.step) && this.props.step !== 0) ? parseInt(this.state.currentValue) : parseFloat(this.state.currentValue)
-			if( isFinite(val) && !isNaN(val) ) {
-				if( val !== this.state.originalValue ) {
-					this.props.onChange(val)
-				}
-			}
-			else {
-				alert(Trans('invalid value'))
-				this.setState(prevState=>({currentValue:String(prevState.originalValue)}))
-			}
+			value2 = value
 		}
+		
+		// string
 		else {
-			if( this.props.regex ) {
-				const regexOk = this.props.regex.test(this.state.currentValue)
-				if( this.state.currentValue !== this.state.originalValue && !regexOk ) {
-					alert(Trans('invalid value')+' '+JSON.stringify(this.state.currentValue))
-					return
-				}
-			}
-			if( this.state.currentValue !== this.state.originalValue ) {
-				this.props.onChange(this.state.currentValue)
-			}
+			value2 = value
 		}
+
+		// apply
+		if (value2 !== origValue) {
+			props.onChange(value2)
+		}
+		return true
 	}
 
-	render() {
-		return <input
-			{...this.props}
-			type={typeof this.props.value}
-			value={this.state.currentValue}
-			onChange={e=>this.setState({currentValue:e.target.value})}
-			onKeyDown={e => {
-				if (e.key==='Enter') {
-					this.applyValue();
+	return <input
+		{...props}
+		type={typeof props.value}
+		value={value}
+		onChange={e => setValue(e.currentTarget.value)}
+		onKeyDown={e => {
+			if (e.key==='Enter') {
+				e.preventDefault()
+				e.stopPropagation()
+				if (!applyValue()) {
+					alert(Trans('invalid value'))
 				}
-				if(e.key==='Escape') {
-					this.setState(prevState=>({currentValue:String(prevState.originalValue)}))
-				}
-			}}
-			onBlur={()=>this.applyValue()}
-			className="form-control"
-		/>
-	}
+			}
+			if(e.key==='Escape') {
+				e.preventDefault()
+				e.stopPropagation()
+				setValue(String(origValue))
+			}
+		}}
+		onBlur={() => {
+			if (!applyValue()) {
+				alert(Trans('invalid value'))
+				setValue(String(origValue))
+			}
+		}}
+		className="form-control"
+	/>
 }
