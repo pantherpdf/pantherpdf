@@ -71,4 +71,6 @@ export const TextSimple: Widget = {
 			</div>
 		</>
 	},
+
+	canAdd: false,
 }
