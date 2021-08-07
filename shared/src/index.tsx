@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Editor from './editor/Editor';
 import { sampleReport } from './editor/sampleReport';
 import { ApiEndpoints, TReport } from './types';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
 	const [report, setReport] = useState<TReport>(sampleReport)
