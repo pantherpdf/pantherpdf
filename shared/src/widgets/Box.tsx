@@ -168,10 +168,13 @@ export const Box: Widget = {
 				onChange={val => props.setItem({...props.item, padding: val})}
 			/>
 
+			<hr />
+
 			<div className="form-check">
 				<input
 					type='checkbox'
 					id='box-border-single'
+					className='form-check-input'
 					checked={Array.isArray(item.border)}
 					onChange={e => {
 						const obj: BoxData = {...item}
@@ -189,6 +192,7 @@ export const Box: Widget = {
 					Border different sides
 				</label>
 			</div>
+			
 			{Array.isArray(item.border) && ['top','right','bottom','left'].map((side, idx) => {
 				const val2 = Array.isArray(item.border) ? item.border : [item.border, item.border, item.border, item.border]
 				return <React.Fragment key={side}>
@@ -207,12 +211,13 @@ export const Box: Widget = {
 				value={item.border}
 				onChange={val => props.setItem({...item, border: val})}
 			/>}
-			
+			<hr />
 
 			<div className="form-check">
 				<input
 					type='checkbox'
 					id='box-backgroundColor-enable'
+					className='form-check-input'
 					checked={!!item.backgroundColor}
 					onChange={e => {
 						const obj: BoxData = {...item}
