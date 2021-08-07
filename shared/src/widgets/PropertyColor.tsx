@@ -3,8 +3,11 @@
  */
 
 
+import { faEllipsisH } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { HexColorPicker } from 'react-colorful'
+import InputApplyOnEnter from './InputApplyOnEnter'
 import style from './PropertyColor.module.css'
 
 interface Props {
@@ -34,9 +37,27 @@ export default function PropertyColor(props: Props) {
 		}
 	}
 
-	return <div>
-		<div className={ style.swatch } onClick={() => setShow(!show)}>
-			<div className={ style.color } style={{backgroundColor:value}} />
+	// calc if color is light or dark
+	const r = parseInt(value.substring(1,3), 16) / 255
+	const g = parseInt(value.substring(3,5), 16) / 255
+	const b = parseInt(value.substring(5,7), 16) / 255
+	const lum = 0.2126*r + 0.7152*g + 0.0722*b
+	const isColorDark = lum < 0.5
+
+	return <>
+		<div className="input-group mb-3">
+			<button
+				className="btn btn-outline-secondary"
+				style={{backgroundColor: value}}
+				onClick={() => setShow(!show)}
+			>
+				<FontAwesomeIcon icon={faEllipsisH} style={{color: isColorDark ? 'white' : 'black'}} />
+			</button>
+			<InputApplyOnEnter
+				value={props.value}
+				onChange={val2 => { const val = String(val2); setValue(val); props.onChange(value); }}
+				regex={/^#[0-9a-fA-F]{6}$/}
+			/>
 		</div>
 		{show && <div className={ style.popover }>
 			<div className={ style.cover } onClick={() => setShow(false)} />
@@ -45,5 +66,5 @@ export default function PropertyColor(props: Props) {
 				onChange={setValue}
 			/>
 		</div>}
-	</div>
+	</>
 }
