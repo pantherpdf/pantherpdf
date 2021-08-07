@@ -29,7 +29,14 @@ interface BorderEditorProps {
 }
 export default function BorderEditor(props: BorderEditorProps) {
 	return <>
-		<div><label htmlFor='sep-width'>Width</label></div>
+		<div>
+			<label htmlFor={props.id ? `${props.id}-width`: undefined}>
+				Width
+			</label>
+			<span className='ms-2 text-muted'>
+				[px]
+			</span>
+		</div>
 		<InputApplyOnEnter
 			id={props.id ? `${props.id}-width`: undefined}
 			value={props.value.width}
@@ -38,9 +45,14 @@ export default function BorderEditor(props: BorderEditorProps) {
 			onChange={val => props.onChange({...props.value, width: (typeof val === 'number' ? val : 0)})}
 		/>
 
-		<div><label htmlFor='sep-style'>Style</label></div>
+		<div>
+			<label htmlFor={props.id ? `${props.id}-style`: undefined}>
+				Style
+			</label>
+		</div>
 		<select
-			className=''
+			className='form-select'
+			id={props.id ? `${props.id}-width`: undefined}
 			value={props.value.style}
 			onChange={e => props.onChange({...props.value, style: e.currentTarget.value as TBorderStyle})}
 		>
