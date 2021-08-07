@@ -88,7 +88,7 @@ function ShowWidgets(props: GeneralProps) {
 			onDragEnd={e => props.dragWidgetEnd(e)}
 			className={style.widget}
 		>
-			<FontAwesomeIcon icon={w.icon.fontawesome} fixedWidth />
+			<FontAwesomeIcon icon={w.icon.fontawesome} fixedWidth className='me-2' />
 			{TransName(w.name)}
 		</div>
 	})}</>
