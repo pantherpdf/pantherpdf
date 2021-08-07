@@ -31,6 +31,7 @@ function GenStyle(item: SeparatorData | SeparatorCompiled): CSSProperties {
 		borderRight: 'none',
 		borderBottom: 'none',
 		borderLeft: 'none',
+		opacity: '1',
 	}
 }
 
@@ -48,7 +49,7 @@ export const Separator: Widget = {
 			border: {
 				width: 1,
 				style: 'solid',
-				color: '#ccc',
+				color: '#999999',
 			},
 		}
 	},
