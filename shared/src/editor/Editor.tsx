@@ -31,6 +31,63 @@ interface SourceData {
 }
 
 
+export function dropImpl(report: TReport, current: TDragObj, dest: number[], copy: boolean): TReport | null {
+	//console.log('dest',dest)
+	//console.log('source',JSON.stringify(current))
+	if (dest.length === 0) {
+		throw new Error('dest does not exist')
+	}
+
+	let toInsert: TData | TData[]
+	let report2: TReport = report
+	if (current.type === 'wid') {
+		const dragObj3 = current.wid
+		if (copy) {
+			toInsert = findInList(report2, dragObj3)
+			toInsert = JSON.parse(JSON.stringify(toInsert))
+		}
+		else {
+			// calc destination id
+			// detect if dragging item to one of its childs
+			let dest2
+			try {
+				dest2 = updateDestAfterRemove(dest, dragObj3)
+			}
+			catch(e) {
+				return null
+			}
+			toInsert = findInList(report2, dragObj3)
+			// remove from list
+			report2 = removeFromList(report2, dragObj3)
+			// update destination id
+			dest = dest2
+		}
+	}
+	else if (current.type === 'widget') {
+		toInsert = current.widget
+	}
+	else if (current.type === 'widgets') {
+		toInsert = current.widgets
+	}
+	else {
+		throw new Error('unknown dragObj2 type')
+	}
+
+	// insert
+	if (!Array.isArray(toInsert)) {
+		report2 = insertIntoList(report2, dest, toInsert)
+	}
+	else {
+		for (const toInsert2 of toInsert) {
+			report2 = insertIntoList(report2, dest, toInsert2)
+			dest[dest.length-1] += 1
+		}
+	}
+
+	return report2
+}
+
+
 export default function Editor(props: Props) {
 	const [selected, setSelected] = useState<number[]|null>(null)
 	const [source, setSource] = useState<SourceData>({data: null, msg: 'loading ...'})
@@ -71,62 +128,17 @@ export default function Editor(props: Props) {
 		e.preventDefault()
 		e.stopPropagation()
 		e.currentTarget.classList.remove(style.dragging)
+		const copy = e.altKey || e.metaKey
 
-		if (!dragObj.current) {
-			// happens when you drag-drop some other element like logo, menu ...
-			return
-		}
-
-		let toInsert: TData | TData[]
-		let report2: TReport = props.report
-		if (dragObj.current.type === 'wid') {
-			const dragObj2 = dragObj.current.wid
-			const copy = e.altKey || e.metaKey
-			if (copy) {
-				toInsert = findInList(report2, dragObj2)
-				toInsert = JSON.parse(JSON.stringify(dragObj2))
-			}
-			else {
-				// calc destination id
-				// detect if dragging item to one of its childs
-				let dest2
-				try {
-					dest2 = updateDestAfterRemove(dest, dragObj2)
-				}
-				catch(e) {
-					dragObj.current = null
-					return
-				}
-				toInsert = findInList(report2, dragObj2)
-				// remove from list
-				report2 = removeFromList(report2, dragObj2)
-				// update destination id
-				dest = dest2
-			}
-		}
-		else if (dragObj.current.type === 'widget') {
-			toInsert = dragObj.current.widget
-		}
-		else if (dragObj.current.type === 'widgets') {
-			toInsert = dragObj.current.widgets
-		}
-		else {
-			throw new Error('unknown dragObj type')
-		}
-
-		// insert
-		if (!Array.isArray(toInsert)) {
-			report2 = insertIntoList(report2, dest, toInsert)
-		}
-		else {
-			for (const toInsert2 of toInsert) {
-				report2 = insertIntoList(report2, dest, toInsert2)
-				dest[dest.length-1] += 1
+		if (dragObj.current) {
+			// dragObj.current is empty when you drag-drop some other element like logo, menu ...
+			const report2 = dropImpl(props.report, dragObj.current, dest, copy)
+			if (report2) {
+				props.setReport(report2)
+				setSelected(null)
 			}
 		}
 
-		props.setReport(report2)
-		setSelected(null)
 		dragObj.current = null
 	}
 
