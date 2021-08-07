@@ -17,10 +17,13 @@ export default function makeHtml(report: TReportCompiled) {
 			return <w.RenderFinal {...helper} item={item} />
 		},
 		renderChildren: (chs, helper) => {
-			return <div>{chs.map((item, idx) => {
+			if (!Array.isArray(chs)) {
+				throw new Error('Bad childs array')
+			}
+			return <>{chs.map((item, idx) => {
 				const w = getWidget(item.type)
 				return <w.RenderFinal {...helper} item={item} key={idx} />
-			})}</div>
+			})}</>
 		},
 	}
 

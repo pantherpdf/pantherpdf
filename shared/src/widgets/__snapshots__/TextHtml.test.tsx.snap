@@ -1,18 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TextHtml should render html 1`] = `
-<div>
-  <div
-    dangerouslySetInnerHTML={
-      Object {
-        "__html": "Hello <b>world</b>",
-      }
+<div
+  dangerouslySetInnerHTML={
+    Object {
+      "__html": "Hello <b>world</b>",
     }
-    style={
-      Object {
-        "textAlign": "right",
-      }
+  }
+  style={
+    Object {
+      "textAlign": "right",
     }
-  />
-</div>
+  }
+/>
 `;
