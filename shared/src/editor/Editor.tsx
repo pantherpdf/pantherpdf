@@ -201,13 +201,13 @@ export default function Editor(props: Props) {
 	}
 
 	function renderWidgets(children: TData[], parents: number[]): ReactNode {
-		return <div>
+		return <>
 			{renderSpacer([...parents, 0])}
 			{children.map((c,idx) => <React.Fragment key={idx}>
 				{renderWidget(c, [...parents, idx])}
 				{renderSpacer([...parents, (idx+1)])}
 			</React.Fragment>)}
-		</div>
+		</>
 	}
 
 	function dragWidgetStart(e: React.DragEvent<HTMLDivElement>, dragObj2: TDragObj): void {

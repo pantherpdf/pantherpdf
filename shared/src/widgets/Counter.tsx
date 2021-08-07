@@ -52,9 +52,9 @@ export const Counter: Widget = {
 	},
 
 	RenderFinal: function(props) {
-		return <div>
+		return <>
 			{props.renderChildren(props.item.children, props)}
-		</div>
+		</>
 	},
 
 	RenderProperties: function(props) {

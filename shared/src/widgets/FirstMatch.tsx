@@ -73,9 +73,9 @@ export const FirstMatch: Widget = {
 
 	RenderFinal: function(props) {
 		const item = props.item as FirstMatchCompiled
-		return <div>
+		return <>
 			{props.renderChildren(item.children, props)}
-		</div>
+		</>
 	},
 
 	RenderProperties: function(props) {

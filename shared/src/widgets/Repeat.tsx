@@ -61,7 +61,9 @@ export const Repeat: Widget = {
 	},
 
 	RenderFinal: function(props) {
-		return <div>{props.renderChildren(props.item.children, props)}</div>
+		return <>
+			{props.renderChildren(props.item.children, props)}
+		</>
 	},
 
 	RenderProperties: function(props) {

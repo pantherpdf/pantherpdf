@@ -39,17 +39,13 @@ export const ColumnsCt: Widget = {
 	},
 
 	Render: function(props) {
-		const item = props.item as ColumnsCtData
-		return <div>
-			{props.renderWidgets(item.children, props.wid)}
-		</div>
+		// handled by Columns
+		return null
 	},
 
 	RenderFinal: function(props) {
-		const item = props.item as ColumnsCtCompiled
-		return <div>
-			{props.renderChildren(item.children, props)}
-		</div>
+		// handled by Columns
+		return null
 	},
 
 	RenderProperties: function() {
@@ -126,6 +122,9 @@ export const Columns: Widget = {
 
 	Render: function(props) {
 		const item = props.item as ColumnsData
+		const baseStyle: CSSProperties = {
+			border: '1px solid #ccc',
+		}
 		return <BoxName name={Columns.name}>
 			<div
 				style={{
@@ -135,9 +134,9 @@ export const Columns: Widget = {
 			>
 				{item.children.map((ch, idx) => <div
 					key={idx}
-					style={colStyle(item.widths[idx])}
+					style={{...baseStyle, ...colStyle(item.widths[idx])}}
 				>
-					{props.renderWidget(ch, [...props.wid, idx])}
+					{props.renderWidgets(ch.children, [...props.wid, idx])}
 				</div>)}
 			</div>
 		</BoxName>
@@ -148,14 +147,13 @@ export const Columns: Widget = {
 		return <div
 			style={{
 				display: 'flex',
-				alignItems: 'stretch',
 			}}
 		>
 			{item.children.map((ch, idx) => <div
 				key={idx}
 				style={colStyle(item.widths[idx])}
 			>
-				{props.renderItem(ch, props)}
+				{props.renderChildren(ch.children, {...props})}
 			</div>)}
 		</div>
 	},

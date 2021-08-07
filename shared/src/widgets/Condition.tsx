@@ -50,9 +50,9 @@ export const Condition: Widget = {
 
 	RenderFinal: function(props) {
 		const item = props.item as ConditionCompiled
-		return <div>
+		return <>
 			{props.renderChildren(item.children, props)}
-		</div>
+		</>
 	},
 
 	RenderProperties: function(props) {
