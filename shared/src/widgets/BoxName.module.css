@@ -11,7 +11,15 @@
 	letter-spacing: 0;
 	padding: 0.05rem 0.2rem 0.1rem 0.2rem;
 	opacity: 0.3;
+	max-width: 70%;
 }
 
-.boxParent { position: relative; width: 100%; padding: 0.1rem 0.2rem; border: 1px solid #ddd; }
-.boxParent:hover > .name { opacity: 1; }
+.boxParent {
+	position: relative;
+	width: 100%;
+	padding: 0.1rem 0.2rem;
+	border: 1px solid #ddd;
+}
+.boxParent:hover > .name {
+	opacity: 1;
+}

@@ -18,8 +18,15 @@ interface Props {
 
 export default function BoxName(props: Props) {
 	const cls = style.boxParent + ' ' + (props.className || '')
-	return <div className={cls} style={props.style}>
-		<div className={style.name}>{TransName(props.name)}</div>
+	return <div
+		className={cls}
+		style={props.style}
+	>
+		<div
+			className={`${style.name} text-nowrap overflow-hidden`}
+		>
+			{TransName(props.name)}
+		</div>
 		{props.children}
 	</div>
 }
