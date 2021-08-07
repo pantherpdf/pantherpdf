@@ -137,11 +137,11 @@ export default function Editor(props: Props) {
 		e.stopPropagation()
 		e.preventDefault()
 		if (dragObj.current.type === 'wid') {
-			e.dataTransfer.dropEffect = 'copy'
-		}
-		else {
 			const copy = e.altKey || e.metaKey
 			e.dataTransfer.dropEffect = copy ? 'copy' : 'move'
+		}
+		else {
+			e.dataTransfer.dropEffect = 'copy'
 		}
 	}
 
