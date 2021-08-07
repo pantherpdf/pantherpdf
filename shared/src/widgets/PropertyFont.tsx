@@ -148,7 +148,18 @@ export default function PropertyFont(props: Props) {
 		<div className="d-flex">
 			<label htmlFor="color" style={{width:'50%'}}>{Trans('color')}</label>
 			<div style={{width:'100%'}}>
-				<label><input type='checkbox' className="form-control" checked={color.length>0} onChange={e=>{if(e.target.checked){props.onChange({...props.value, color:'#000000'})}else{const obj={...props.value};delete obj.color; props.onChange(obj)}}} /> {Trans('enable')}</label>
+				<div className="form-check">
+					<input
+						type='checkbox'
+						id='font-enable'
+						className="form-check-input"
+						checked={color.length>0}
+						onChange={e=>{if(e.target.checked){props.onChange({...props.value, color:'#000000'})}else{const obj={...props.value};delete obj.color; props.onChange(obj)}}}
+					/>
+					<label className="form-check-label" htmlFor="font-enable">
+						{Trans('enable')}
+					</label>
+				</div>
 				{color.length>0 && <PropertyColor value={color} onChange={val=>props.onChange({...props.value, color:val})} />}
 			</div>
 		</div>
