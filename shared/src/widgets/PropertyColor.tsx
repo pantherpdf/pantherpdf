@@ -32,8 +32,8 @@ export default function PropertyColor(props: Props) {
 		}
 	})
 	const mouseup = () => {
-		if (value !== props.value) {
-			props.onChange(value)
+		if (value.toUpperCase() !== props.value) {
+			props.onChange(value.toUpperCase())
 		}
 	}
 
@@ -55,7 +55,7 @@ export default function PropertyColor(props: Props) {
 			</button>
 			<InputApplyOnEnter
 				value={props.value}
-				onChange={val2 => { const val = String(val2); setValue(val); props.onChange(value); }}
+				onChange={val2 => { const val = String(val2).toUpperCase(); setValue(val); props.onChange(val); }}
 				regex={/^#[0-9a-fA-F]{6}$/}
 			/>
 		</div>
