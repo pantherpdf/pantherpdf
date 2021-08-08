@@ -71,9 +71,11 @@ const tr2: {[key in trKeys]: TTrans} = {
 	'condition': { en:'Condition' },
 }
 
-export function TransName(name: string|{[key:string]:string}): string {
+export function TransName(name: string|{[key:string]:string}, lang?: string): string {
 	if (typeof name == 'string')
 		return name
+	if (lang && lang in name)
+		return name[lang]
 	if ('en' in name)
 		return name.en
 	const keys = Object.keys(name)
