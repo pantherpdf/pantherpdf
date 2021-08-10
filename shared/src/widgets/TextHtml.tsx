@@ -3,126 +3,469 @@
  */
 
 
-import React, { CSSProperties } from 'react'
+import React, { useEffect, useState, useRef, CSSProperties } from 'react'
 import { TData, TDataCompiled } from '../types'
-import type { Widget } from '../editor/types'
+import type { ItemRendeProps, Widget } from '../editor/types'
 import BoxName from './BoxName'
 import PropertyFont, { PropertyFontGenCss, TFont } from './PropertyFont'
 import FormulaEvaluate from '../formula/formula'
-import { faAlignLeft } from '@fortawesome/free-solid-svg-icons'
-import PropertyAlign, { TAlign } from './PropertyAlign'
+import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight, faBold, faItalic, faTag, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { FormulaHelper } from '../editor/compile'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { listOfFilters } from './formulaFilter'
+import { TransName } from '../translation'
 
 
+// returns <div> element of editor
+function getEditor(wid: number[]): HTMLElement | null {
+	return document.querySelector(`[data-wid='${wid.join(',')}']`)
+}
+
+
+// return first parent button
+// node is usualy text
+function getButtonFromSelection(node: Node, editor: HTMLElement): HTMLButtonElement | null {
+	if (node === editor) {
+		return null
+	}
+	if (node.nodeName === 'BUTTON') {
+		return node as HTMLButtonElement
+	}
+	if (node.parentNode) {
+		return getButtonFromSelection(node.parentNode, editor)
+	}
+	return null
+}
+
+
+// make number path from editor to child node
+function getPidFromNode(node: Node, editor: HTMLElement): number[] {
+	const arr: number[] = []
+	while (true) {
+		if (node === editor) {
+			break
+		}
+		const parent = node.parentNode
+		if (!parent) {
+			throw new Error('Cant find pid 1')
+		}
+		let found = false
+		for (let i=0; i<parent.childNodes.length; ++i) {
+			if (parent.childNodes[i] === node) {
+				arr.push(i)
+				found = true
+			}
+		}
+		if (!found) {
+			throw new Error('Cant find pid 2')
+		}
+		node = parent
+	}
+	arr.reverse()
+	return arr
+}
+
+
+// return nth child of editor
+function getNodeFromPid(ids: number[], editor: HTMLElement): Node | null {
+	let base: Node = editor
+	for (const idx of ids) {
+		if (idx >= base.childNodes.length) {
+			return null
+		}
+		base = base.childNodes[idx]
+	}
+	return base
+}
+
+
+// Properties editor for tag <button>
+function TagEditor(props: ItemRendeProps) {
+	const [btn, setBtn] = useState<HTMLButtonElement|null>(null)
+
+	// 
+	useEffect(() => {
+		function doit() {
+			function getBtn(): HTMLButtonElement | null {
+				const editor = getEditor(props.wid)
+				if (!editor) {
+					return null
+				}
+				const x = editorDetailsGet(props.wid)
+				if (!x) {
+					return null
+				}
+				const selected = getNodeFromPid(x.node, editor)
+				if (!selected) {
+					return null
+				}
+				return getButtonFromSelection(selected, editor)
+			}
+			const btn2 = getBtn()
+			if (btn !== btn2) {
+				setBtn(btn2)
+			}
+		}
+
+		editorDetailsCbRegister(props.wid, doit)
+		
+		return () => {
+			editorDetailsCbUnregister(props.wid, doit)
+		}
+		// eslint-disable-next-line
+	}, [props.wid])
+
+	if (!btn)
+		return null
+
+	const arr = [...listOfFilters].sort((a,b) => a.category <= b.category ? -1 : 1)
+	
+	return <>
+		<h3>Tag</h3>
+
+		{/*
+		Doesnt work because when editing selection changes and btn becomes null
+		<div>
+			<label htmlFor='tag-filter'>
+				Filter
+			</label>
+		</div>
+		<InputApplyOnEnter
+			value={btn.innerText}
+			onChange={val => {
+				btn.innerText = String(val)
+				setSt(st+1)
+			}}
+		/>
+		*/}
+
+		<div>
+			<label htmlFor='tag-filter'>
+				Filter
+			</label>
+		</div>
+		<select
+			className='form-select'
+			value={btn.getAttribute('data-filter') || ''}
+			onChange={e => {
+				btn.setAttribute('data-filter', e.currentTarget.value)
+			}}
+		>
+			<option value=''></option>
+			{arr.map((x, idx) => <React.Fragment key={x.id}>
+				{idx !== 0 && x.category !== arr[idx-1].category && <option disabled>──────────</option>}
+				<option
+					value={x.id}
+				>
+					{x.name ? TransName(x.name) : x.id}
+				</option>
+			</React.Fragment>)}
+		</select>
+	</>
+}
+
+
+// evaluate during compile
+// replace <button> with value of formula inside <button>
 export async function evaluateFormulaInsideHtml(html: string, formulaHelper: FormulaHelper): Promise<string> {
 	// parse html
 	// on browser use createElement()
 	// on nodejs use JSDOM library
 	let parentEl: HTMLElement
+	let doc2: Document
 	if (typeof window === 'undefined') {
 		const JSDOM__ = await import('jsdom');
 		const JSDOM_ = JSDOM__.JSDOM
 		const dom = new JSDOM_(html)
 		parentEl = dom.window.document.body
+		doc2 = dom.window.document
 	}
 	else {
 		parentEl = document.createElement('div')
+		doc2 = window.document
 	}
 
-	interface THtmlVar { varValue: string }
-	interface THtml { type: string, attr: string, childs: (string | THtmlVar | THtml)[] }
-	let isVar: null | THtmlVar = null
-	
-	function process(el: HTMLElement, elOut: THtml) {
-		for (let i=0; i<el.childNodes.length; ++i) {
-			const el2 = el.childNodes[i]
-			if (el2.nodeName === '#text') {
-				const txt = el2.textContent || ''
-
-				let start = 0
-				if (!isVar) {
-					const start2 = txt.indexOf('{', start)
-					if (start2 !== -1) {
-						if (start2 !== start) {
-							const txt2 = txt.substring(start, start2)
-							elOut.childs.push(txt2)
-						}
-						start = start2 + 1
-						const v2: THtmlVar = { varValue: '' }
-						elOut.childs.push(v2)
-						isVar = v2
-					}
-				}
-				if (isVar) {
-					const start2 = txt.indexOf('}', start)
-					if (start2 !== -1) {
-						if (start2 !== start) {
-							const txt2 = txt.substring(start, start2)
-							isVar.varValue += txt2
-						}
-						start = start2 + 1
-						isVar = null
-					}
-					else {
-						isVar.varValue += txt.substring(start)
-						start = txt.length
-					}
-				}
-				if (start < txt.length) {
-					const txt2 = txt.substring(start)
-					elOut.childs.push(txt2)
-				}
-			}
-			else if (el2.nodeName.startsWith('#')) {
-				// ignore
-			}
-			else {
-				const el4 = el2 as HTMLElement
-				function atts(arr: NamedNodeMap) {
-					let txt = ''
-					for (let i=0; i<arr.length; ++i) {
-						txt += ` ${arr[i].name}="${arr[i].value.replace('"', '&quot;')}"`
-					}
-					return txt
-				}
-				const el3: THtml = {
-					type: el2.nodeName.toLowerCase(),
-					attr: atts(el4.attributes),
-					childs:[],
-				}
-				elOut.childs.push(el3)
-				process(el4, el3)
+	function processBtn(el: Node, value: string): Node | null {
+		if (el.nodeName === '#text') {
+			return doc2.createTextNode(value)
+		}
+		if (el.childNodes.length === 0) {
+			return null
+		}
+		// b, i, ...
+		const el2 = el.cloneNode(false)
+		while (el2.lastChild) {
+			el2.removeChild(el2.lastChild)
+		}
+		for (let i = 0; i < el.childNodes.length; ++i) {
+			const el3 = processBtn(el.childNodes[i], value)
+			if (el3) {
+				el2.appendChild(el3)
+				return el2
 			}
 		}
+		return null
 	}
-	
-	const out: THtml = { type: 'body', attr: '', childs:[] }
-	process(parentEl, out)
 
-	const noCloseTag = (t: string) => t==='br' || t==='hr'
-	async function toStr(el: THtml): Promise<string> {
-		let txt = `<${el.type}${el.attr}>`
-		if (noCloseTag(el.type) && el.childs.length === 0)
-			return txt
-		for (const ch of el.childs) {
-			if (typeof ch === 'string') {
-				txt += ch
+	async function process(el: Node): Promise<Node> {
+		if (el.nodeName === 'BUTTON') {
+			const btn = (el as HTMLButtonElement)
+			const formula = btn.textContent
+			if (formula === null) {
+				return doc2.createTextNode('')
 			}
-			else if ('varValue' in ch) {
-				const result = await FormulaEvaluate(ch.varValue, formulaHelper)
-				txt += String(result)
+			if (typeof formula !== 'string') {
+				return doc2.createTextNode('ERROR')
 			}
-			else {
-				txt += await toStr(ch)
+			let value = await FormulaEvaluate(formula, formulaHelper)
+			// filter
+			const filterName = btn.getAttribute('data-filter')
+			if (filterName) {
+				const filter = listOfFilters.find(x => x.id === filterName)
+				if (!filter) {
+					throw new Error(`Unknown filter ${filterName}`)
+				}
+				value = filter.func(value, [])
+			}
+			//
+			const el2 = processBtn(el, value)
+			return el2 ? el2.childNodes[0] : doc2.createTextNode(value)
+		}
+
+		// string
+		if (el.nodeType !== 1) {
+			return el.cloneNode(true)
+		}
+
+		// div, span, p ...
+		const el2 = el.cloneNode(false)
+		while (el2.lastChild) {
+			el2.removeChild(el2.lastChild)
+		}
+		for (let i = 0; i < el.childNodes.length; ++i) {
+			const el3 = await process(el.childNodes[i])
+			el2.appendChild(el3)
+		}
+		return el2
+	}
+
+	const parentEl2 = await process(parentEl)
+	return (parentEl2 as HTMLElement).innerHTML
+}
+
+
+// is node an indirect child of parent
+function isNodeInside(node: Node, parent: Node): boolean {
+	if (node === parent) {
+		return true
+	}
+	if (node.parentNode && isNodeInside(node.parentNode, parent)) {
+		return true
+	}
+	return false
+}
+
+
+// EditorDetails
+// used for current caret position
+// must save as indexes because browser changes nodes and otherwise we would be left with invalid node
+interface EditorDetails {
+	wid: number[],
+	node: number[],
+	offset: number,
+	cbs: (() => void)[],
+}
+const _editorDetails: EditorDetails[] = []
+function editorDetailsGet(wid: number[]): EditorDetails | null {
+	const wid2 = wid.join(',')
+	for (const obj of _editorDetails) {
+		if (obj.wid.join(',') === wid2) {
+			return obj
+		}
+	}
+	return null
+}
+function editorDetailsGetOrInsert(wid: number[]): EditorDetails {
+	const obj = editorDetailsGet(wid)
+	if (obj) {
+		return obj
+	}
+	const obj2 = { wid: wid, node:[], offset:0, cbs: [] }
+	_editorDetails.push(obj2)
+	return obj2
+}
+function editorDetailsRemove(wid: number[]): void {
+	const wid2 = wid.join(',')
+	const idx = _editorDetails.findIndex(x => x.wid.join(',') === wid2)
+	if (idx !== -1) {
+		_editorDetails.splice(idx, 1)
+	}
+}
+function editorDetailsCbRegister(wid: number[], cb: ()=>void) {
+	const obj = editorDetailsGetOrInsert(wid)
+	obj.cbs.push(cb)
+}
+function editorDetailsCbUnregister(wid: number[], cb: ()=>void) {
+	const obj = editorDetailsGet(wid)
+	if (!obj) {
+		return
+	}
+	const idx = obj.cbs.indexOf(cb)
+	if (idx !== -1) {
+		obj.cbs.splice(idx, 1)
+	}
+}
+
+
+
+interface EditorProps {
+	style?: CSSProperties,
+	wid: number[],
+	value: string,
+	onChange: (val: string) => void,
+}
+function Editor(props: EditorProps) {
+	const detailRef = useRef<EditorDetails|null>(null)
+	const timeoutRef = useRef<number>(0)
+	const tmpSelectionRef = useRef<EditorDetails|null>(null)
+
+	function saveCaret(c: EditorDetails, node: Node|null, off: number): void {
+		const editor = getEditor(c.wid)
+		c.node = (node && editor) ? getPidFromNode(node, editor) : []
+		c.offset = off
+		for (const cb of c.cbs) {
+			cb()
+		}
+	}
+	function selectionchange() {
+		if (!detailRef.current) {
+			return
+		}
+		const s = window.getSelection()
+		const editor = getEditor(props.wid)
+		if (s && s.anchorNode && editor && isNodeInside(s.anchorNode, editor)) {
+			saveCaret(detailRef.current, s.anchorNode, s.anchorOffset)
+		}
+		else {
+			saveCaret(detailRef.current, null, 0)
+		}
+	}
+	const wid2 = props.wid.join(',')
+	useEffect(() => {
+		detailRef.current = editorDetailsGetOrInsert(props.wid)
+		saveCaret(detailRef.current, null, 0)
+		if (tmpSelectionRef.current && wid2 === tmpSelectionRef.current.wid.join(',')) {
+			// reuse
+			const editor = getEditor(props.wid)
+			if (editor) {
+				const el = getNodeFromPid(tmpSelectionRef.current.node, editor)
+				if (el) {
+					saveCaret(detailRef.current, el, tmpSelectionRef.current.offset)
+					const range = document.createRange()
+					range.setStart(el, tmpSelectionRef.current.offset)
+					range.setEnd(el, tmpSelectionRef.current.offset)
+					range.collapse(true)
+					const s = window.getSelection()
+					if (s) {
+						s.removeAllRanges()
+						s.addRange(range)
+					}
+				}
 			}
 		}
-		txt += `</${el.type}>`
-		return txt
-	}
-	const html2 = await toStr(out)
-	const html3 = html2.substring(6, html2.length-7)
+		tmpSelectionRef.current = null
 
-	return html3
+		document.addEventListener('selectionchange', selectionchange)
+		return () => {
+			detailRef.current = null
+			editorDetailsRemove(props.wid)
+			document.removeEventListener('selectionchange', selectionchange)
+		}
+		// eslint-disable-next-line
+	}, [wid2, props.value])
+
+
+	// wait 2sec and then update
+	function change() {
+		if (timeoutRef.current > 0) {
+			clearTimeout(timeoutRef.current)
+			timeoutRef.current = 0
+		}
+		function doUpdate() {
+			timeoutRef.current = 0
+			const editor = getEditor(props.wid)
+			if (!editor) {
+				return
+			}
+			// save selection
+			const old = editorDetailsGet(props.wid)
+			if (old) {
+				tmpSelectionRef.current = {...old, cbs: []}
+			}
+			else {
+				tmpSelectionRef.current = null
+			}
+			// change
+			const val = editor.innerHTML
+			props.onChange(val)
+		}
+		timeoutRef.current = window.setTimeout(doUpdate, 3000)
+	}
+
+
+	return <div
+		style={props.style}
+		draggable={false}
+		dangerouslySetInnerHTML={{__html: props.value}}
+		data-wid={props.wid.join(',')}
+		
+		contentEditable={true}
+		onKeyDown={e => {
+			e.stopPropagation()
+			// when user presses enter, manually add new line to prevent adding new line inside button
+			if (e.key === 'Enter') {
+				const editor = getEditor(props.wid)
+				const dt = editorDetailsGet(props.wid)
+				if (!dt || !editor) {
+					return
+				}
+				const node = getNodeFromPid(dt.node, editor)
+				if (!node) {
+					return
+				}
+				const btn = getButtonFromSelection(node, editor)
+				if (!btn || !btn.parentElement) {
+					return
+				}
+				// add new line after <button>
+				e.preventDefault()
+				const el = document.createElement('div')
+				el.innerHTML = ''
+				btn.parentElement.insertBefore(el, btn.nextSibling)
+				// move caret
+				const range = document.createRange()
+				range.setStart(el, 0)
+				range.setEnd(el, 1)
+				range.collapse(true)
+				const s = window.getSelection()
+				if (s) {
+					s.removeAllRanges()
+					s.addRange(range)
+				}
+			}
+		}}
+		onInput={e => {
+			e.stopPropagation()
+			change()
+		}}
+		onBlur={e => {
+			if (timeoutRef.current > 0) {
+				clearTimeout(timeoutRef.current)
+				timeoutRef.current = 0
+			}
+			props.onChange(e.currentTarget.innerHTML)
+		}}
+	/>
 }
 
 
@@ -131,7 +474,6 @@ export interface TextHtmlData extends TData {
 	type: 'TextHtml',
 	value: string,
 	font: TFont,
-	align?: TAlign,
 }
 
 
@@ -140,49 +482,11 @@ export interface TextHtmlCompiled extends TDataCompiled {
 	type: 'TextHtml',
 	value: string,
 	font: TFont,
-	align?: TAlign,
 }
-
-
-
-interface EditorProps {
-	value: string,
-	onChange: (value: string) => void,
-	chStyle: CSSProperties,
-}
-
-function Editor(props: EditorProps) {
-	// todo make better styling
-	// todo strip unsafe tags
-	// todo strip unsafe tags in backend
-
-	function ch(e: React.FormEvent<HTMLParagraphElement>) {
-		//
-	}
-
-	function bl(e: React.FocusEvent<HTMLParagraphElement>) {
-		props.onChange(e.currentTarget.innerHTML)
-	}
-
-	return <div>
-		<div style={{outline: '1px solid #ccc'}}>
-			<div
-				contentEditable={true}
-				onInput={ch}
-				onBlur={bl}
-				dangerouslySetInnerHTML={{__html: props.value}}
-				style={props.chStyle}
-			/>
-		</div>
-		<button onClick={() => document.execCommand('bold')}>Bold</button>
-		<button onClick={() => document.execCommand('italic')}>italic</button>
-	</div>
-}
-
 
 
 export const TextHtml: Widget = {
-	name: {en: 'Text Html'},
+	name: {en: 'Text'},
 	icon: {fontawesome: faAlignLeft},
 
 	newItem: async (): Promise<TextHtmlData> => {
@@ -200,32 +504,37 @@ export const TextHtml: Widget = {
 			children: [],
 			value: await evaluateFormulaInsideHtml(dt.value, helper.formulaHelper),
 			font: dt.font,
-			align: dt.align,
 		}
 	},
 
 	Render: function(props) {
 		const item = props.item as TextHtmlData
 		const css = PropertyFontGenCss(item.font)
-		if (item.align) {
-			css.textAlign = item.align
-		}
 		css.minHeight = '20px'
 		
 		return <BoxName {...props} name={TextHtml.name}>
 			<div
-				style={css}
-				dangerouslySetInnerHTML={{__html: item.value}}
-			/>
+				onClick={e => {
+					e.stopPropagation()
+					const isSelected = JSON.stringify(props.selected) === JSON.stringify(props.wid)
+						if (!isSelected) {
+							props.setSelected(props.wid)
+						}
+				}}
+			>
+				<Editor
+					wid={props.wid}
+					value={item.value}
+					onChange={val => props.setItem({...item, value: val})}
+					style={css}
+				/>
+			</div>
 		</BoxName>
 	},
 
 	RenderFinal: function(props) {
 		const item = props.item as TextHtmlCompiled
 		const css = PropertyFontGenCss(item.font)
-		if (item.align) {
-			css.textAlign = item.align
-		}
 		return <div
 			style={css}
 			dangerouslySetInnerHTML={{__html: item.value}}
@@ -234,32 +543,94 @@ export const TextHtml: Widget = {
 
 	RenderProperties: function(props) {
 		const item = props.item as TextHtmlData
-		const css1 = PropertyFontGenCss(props.report.properties.font || {})
-		const css2 = PropertyFontGenCss(item.font)
-		const css = {...css1, ...css2}
-		if (item.align) {
-			css.textAlign = item.align
-		}
+		const alignOpt: [string, string, IconDefinition][] = [
+			['left', 'justifyLeft', faAlignLeft],
+			['center', 'justifyCenter', faAlignCenter],
+			['right', 'justifyRight', faAlignRight],
+			['justify', 'justifyFull', faAlignJustify],
+		]
 		return <>
-			<PropertyAlign
-				value={item.align}
-				onChange={val => props.setItem({...props.item, align: val})}
-			/>
 			<PropertyFont
 				value={item.font}
 				onChange={val => props.setItem({...props.item, font: val})}
 			/>
+			<hr />
 			<div>
-				<small>
-					Use variable like this:
-					Hello <span className='font-monospace'>{'{data.name}'}</span>!
-				</small>
+				<div className='btn-group'>
+					{alignOpt.map(x => <button
+						key={x[0]}
+						className={`btn btn-outline-secondary`}
+						onClick={() => document.execCommand(x[1])}
+					>
+						<FontAwesomeIcon icon={x[2]} fixedWidth />
+					</button>)}
+				</div>
 			</div>
-			<Editor
-				value={item.value}
-				onChange={val => props.setItem({...props.item, value: val})}
-				chStyle={css}
-			/>
+			<div className='d-flex mt-2'>
+				<div className="btn-group">
+					<button
+						className='btn btn-outline-secondary'
+						onClick={() => document.execCommand('bold')}
+					>
+						<FontAwesomeIcon icon={faBold} />
+					</button>
+					<button
+						className='btn btn-outline-secondary'
+						onClick={() => document.execCommand('italic')}
+					>
+						<FontAwesomeIcon icon={faItalic} />
+					</button>
+				</div>
+				<button
+					className='btn btn-outline-secondary ms-2'
+					onClick={() => {
+						const node = document.createElement('button')
+						node.setAttribute('class', 'btn btn-outline-secondary')
+						node.setAttribute('data-filter', '')
+						node.innerText = 'data'
+						node.style.padding = '0 0.2rem'
+
+						const x = editorDetailsGet(props.wid)
+						if (x) {
+							const editor = getEditor(props.wid)
+							if (!editor) {
+								throw new Error('cant find editor')
+							}
+							let base: Node = editor
+							for (const idx of x.node) {
+								base = base.childNodes[idx]
+							}
+							const parent = base.parentNode
+							if (parent) {
+								if (base.nodeName === '#text') {
+									const txtBefore = base.nodeValue?.substring(0, x.offset) || ''
+									const txtAfter = (base.nodeValue?.substring(x.offset) || '') + '\u00a0'
+									const nextSib = base.nextSibling
+									if (parent) {
+										base.nodeValue = txtBefore
+										parent.insertBefore(node, nextSib)
+										parent.insertBefore(document.createTextNode(txtAfter), nextSib)
+										return
+									}
+								}
+								// div
+								// insert at front
+								const nextSib = base.childNodes.length>0 ? base.childNodes[0] : null
+								base.insertBefore(node, nextSib)
+								base.insertBefore(document.createTextNode('\u00a0'), nextSib)
+								return
+							}
+						}
+						console.log('caret is null')
+					}}
+				>
+					<FontAwesomeIcon icon={faTag} />
+				</button>
+			</div>
+			<hr />
+			<TagEditor {...props} />
 		</>
 	},
+
+	canDrag: false,
 }

@@ -12,12 +12,12 @@ import { sampleReport } from '../editor/sampleReport'
 test('parse TextHtml formula', async () => {
 const html = `aaa
 <div>a<b style="color:white">b</b>c</div>
-d<b id="&quot;">ef \{da<i>ta.d</i></b><i>ef\}*</i><br>
+d<b id="&quot;">ef</b> <button><i></i><b>d</b>ata.def</button><br/>
 <div>ghi</div>
 <p></p>`
 const htmlExpected = `aaa
 <div>a<b style="color:white">b</b>c</div>
-d<b id="&quot;">ef 123<i></i></b><i>*</i><br>
+d<b id="&quot;">ef</b> <b>123</b><br>
 <div>ghi</div>
 <p></p>`
 	const data = { def: '123' }
@@ -28,8 +28,8 @@ d<b id="&quot;">ef 123<i></i></b><i>*</i><br>
 })
 
 
-test('TextHtml', async () => {
-	const dt: TextHtmlData = {type:'TextHtml', value:'Hello <b>{data.txt}</b>', children:[], font:{}}
+test('TextHtml 2', async () => {
+	const dt: TextHtmlData = {type:'TextHtml', value:'Hello <button><i></i><b>data.txt</b></button>', children:[], font:{}}
 	const data = { txt: '123' }
 	const p2 = await compileComponent(dt, data)
 	expect(p2).toBeTruthy()
@@ -39,16 +39,25 @@ test('TextHtml', async () => {
 })
 
 
+test('TextHtml Filter', async () => {
+	const dt: TextHtmlData = {type:'TextHtml', value:'Hello <button data-filter="num, 2 dec">data.num</button>', children:[], font:{}}
+	const data = { num: 123.123456789 }
+	const p2 = await compileComponent(dt, data)
+	expect(p2).toBeTruthy()
+	expect(p2.type).toBe('TextHtml')
+	const p = p2 as TextHtmlCompiled
+	expect(p.value).toBe('Hello 123.12')
+})
+
+
 test('TextHtml should render html', async () => {
 	const report: ReportForceChildren<TextHtmlData> = {
 		...sampleReport,
 		children: [
-			{type:'TextHtml', value:'Hello <b>{data.txt}</b>', align:'right', children:[], font:{}}
+			{type:'TextHtml', value:'Hello <b>world</b>', children:[], font:{size: '20px'}}
 		]
 	}
-
-	const data = { txt: 'world' }
-	const compiled = await compile(report, data)
+	const compiled = await compile(report, {})
 	const html = makeHtml(compiled)
 	const component = renderer.create(<>{html}</>)
 	const tree = component.toJSON()

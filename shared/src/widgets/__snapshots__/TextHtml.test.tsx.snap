@@ -9,7 +9,7 @@ exports[`TextHtml should render html 1`] = `
   }
   style={
     Object {
-      "textAlign": "right",
+      "fontSize": "20px",
     }
   }
 />
