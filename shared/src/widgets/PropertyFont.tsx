@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties } from 'react'
+import React, { useState, useEffect, CSSProperties } from 'react'
 import Trans from '../translation'
 import { Popover, OverlayTrigger } from 'react-bootstrap'
 import PropertyColor from './PropertyColor'
@@ -74,9 +74,14 @@ interface Props {
 	textButton?: boolean,
 	iconButton?: boolean,
 	id?: string,
+	loadFonts: () => Promise<string[]>,
 }
 export default function PropertyFont(props: Props) {
-	const [fonts, setFonts] = useState<string[]>(['arial','times new roman'])
+	const [fonts, setFonts] = useState<string[]>([])
+
+	useEffect(() => {
+		props.loadFonts().then(arr => setFonts(arr))
+	}, [])
 
 	function handleInputChange(event: React.FormEvent<HTMLSelectElement|HTMLInputElement>) {
 		const target = event.target as any;

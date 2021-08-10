@@ -553,6 +553,7 @@ export const TextHtml: Widget = {
 			<PropertyFont
 				value={item.font}
 				onChange={val => props.setItem({...props.item, font: val})}
+				loadFonts={props.api.fonts}
 			/>
 			<hr />
 			<div>

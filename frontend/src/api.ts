@@ -116,6 +116,10 @@ export default function getApi(app: IAppContextCB): ApiEndpoints {
 		filesDownloadUrl: (name: string) => {
 			return `/.netlify/functions/filesDownload?name=${encodeURIComponent(name)}&sid=${encodeURIComponent(app.sid||'')}`
 		},
+
+		fonts: async function() {
+			return ['arial','times new roman']
+		},
 	}
 	return api
 }

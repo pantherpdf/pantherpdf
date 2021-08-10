@@ -17,6 +17,7 @@ function App() {
 		filesDelete: async (name) => { },
 		filesUpload: async (file, data, cbProgress) => { },
 		filesDownloadUrl: (name) => { throw new Error('') },
+		fonts: async () => { return ['arial','times new roman'] },
 	}
 
 	return <Editor
