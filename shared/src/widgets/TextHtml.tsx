@@ -9,11 +9,12 @@ import type { ItemRendeProps, Widget } from '../editor/types'
 import BoxName from './BoxName'
 import PropertyFont, { PropertyFontGenCss, TFont } from './PropertyFont'
 import FormulaEvaluate from '../formula/formula'
-import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight, faBold, faItalic, faTag, IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight, faBold, faItalic, faTag, faTrash, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { FormulaHelper } from '../editor/compile'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { listOfFilters } from './formulaFilter'
 import { TransName } from '../translation'
+import { removeFromList } from '../editor/childrenMgmt'
 
 
 // returns <div> element of editor
@@ -550,11 +551,23 @@ export const TextHtml: Widget = {
 			['justify', 'justifyFull', faAlignJustify],
 		]
 		return <>
-			<PropertyFont
-				value={item.font}
-				onChange={val => props.setItem({...props.item, font: val})}
-				loadFonts={props.api.fonts}
-			/>
+			<div className='d-flex'>
+				<PropertyFont
+					value={item.font}
+					onChange={val => props.setItem({...props.item, font: val})}
+					loadFonts={props.api.fonts}
+				/>
+				<button
+					className='btn btn-sm btn-outline-danger ms-2'
+					onClick={() => {
+						const report = removeFromList(props.report, props.wid)
+						props.setReport(report)
+						props.setSelected(null)
+					}}
+				>
+					<FontAwesomeIcon icon={faTrash} className='me-2' /> Remove
+				</button>
+			</div>
 			<hr />
 			<div>
 				<div className='btn-group'>
