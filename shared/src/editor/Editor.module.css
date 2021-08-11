@@ -1,25 +1,78 @@
-.boxMain { position: absolute; left: 20%; top: 0; right: 20%; min-height: 100vh; padding: 4rem 1rem 0 1rem; }
-.boxMain:focus { outline: none; }
-.box1, .box2, .box3, .box4 { position: fixed; overflow-y: auto; }
+.boxMain {
+	position: absolute;
+	left: 20%;
+	top: 0; /* keep 0, to prevent scroll bar from appearing when content is smaller than window */
+	right: 20%;
+	min-height: 100vh;
+	padding: 4rem 1rem 0 1rem;
+}
+.boxMain:focus {
+	outline: none;
+}
+.box1, .box2, .box3, .box4 {
+	position: fixed;
+	overflow-y: auto;
+}
 .box1 {
 	left: 0;
 	top: 4rem;
 	bottom: calc(50% + 10px);
 	width: 20%;
 	border-bottom: 2px solid #999;
-	padding-bottom: 10px;
+	border-right: 1px solid #ddd;
+	padding: 0 0.5rem 10px 0.5rem;
 }
-.box2 { left: 0; top: 50%; bottom: 0; width: 20%; }
-.box3 { right: 0; top: 4rem; bottom: 0; width: 20%; }
+.box2 {
+	left: 0;
+	top: 50%;
+	bottom: 0;
+	width: 20%;
+	border-right: 1px solid #ddd;
+	padding: 0 0.5rem;
+}
+.box3 {
+	right: 0;
+	top: 4rem;
+	bottom: 0;
+	width: 20%;
+	border-left: 1px solid #ddd;
+	padding: 0 0.5rem;
+}
 
 
+@media screen and (max-width: 560px) {
+	.box1, .box2, .box3 {
+		display: none;
+	}
+	.boxMain {
+		left: 0;
+		right: 0;
+	}
+}
 
 
-.spacer { height: 0.5rem; width: 100%; }
-.dragging { background-color: red; }
+.spacer {
+	height: 0.5rem;
+	width: 100%;
+}
+.dragging {
+	background-color: red;
+}
 
-.widgetBox { border: 1px dotted #ccc; }
-.hover { border-color: #ff0000; }
-.selected { border-color: #ff0000; border-style: solid; }
+.widgetBox {
+	border: 1px dotted #ccc;
+}
+.hover {
+	border-color: #ff0000;
+}
+.selected {
+	border-color: #ff0000;
+	border-style: solid;
+}
 
-.nameContainer { background-color: rgba(0,0,0,0.03); box-shadow: 0px 4px 5px 0px rgba(0,0,0,0.1); padding: 0.5rem 0.7rem; margin-bottom: 1rem; }
+.nameContainer {
+	background-color: rgba(0,0,0,0.03);
+	box-shadow: 0px 4px 5px 0px rgba(0,0,0,0.1);
+	padding: 0.5rem 0.7rem;
+	margin-bottom: 1rem;
+}

@@ -21,7 +21,9 @@ import { extractFiles } from '../FileSelect'
 function Properties(props: GeneralProps) {
 	if (!props.selected) {
 		return <>
-			<div className='h3 border-bottom'>{Trans('report')}</div>
+			<div className='h5 border-bottom'>
+				{Trans('report')}
+			</div>
 			<ReportSettings {...props} />
 		</>
 	}
@@ -32,7 +34,9 @@ function Properties(props: GeneralProps) {
 	if (!comp.RenderProperties)
 		return <><div className='h3 border-bottom'>{TransName(comp.name)}</div></>
 	return <>
-		<div className='h3 border-bottom'>{TransName(comp.name)}</div>
+		<div className='h5 border-bottom mb-3'>
+			{TransName(comp.name)}
+		</div>
 		<comp.RenderProperties
 			{...props}
 			item={selected}
@@ -52,6 +56,9 @@ function RenderContent(props: GeneralProps) {
 		const style = props.report.properties.font ? PropertyFontGenCss(props.report.properties.font) : undefined
 		return <div style={style}>
 			{props.renderWidgets(props.report.children, [])}
+			{props.report.children.length === 0 && <div className='text-muted text-center'>
+				Drag &amp; Drop widgets here
+			</div>}
 		</div>
 	}
 	
@@ -142,10 +149,8 @@ export default function Layout(props: GeneralProps&{dragOver: (e: React.DragEven
 			onDragOver={onDragOver}
 			onDrop={onDrop}
 		>
-			<div style={{paddingLeft:'1rem'}}>
-				<DataTransform {...props} />
-				<hr/>
-			</div>
+			<DataTransform {...props} />
+			<hr/>
 			{props.sourceErrorMsg ? <div>{props.sourceErrorMsg}</div> : <ObjectExplorer data={props.sourceData} />}
 		</div>
 		<div className={style.box3}>

@@ -95,7 +95,7 @@ export default function ReportSettings(props: GeneralProps) {
 		</div>
 		
 		<div className='mt-3'>
-			<button className='btn btn-sm btn-outline-primary mr-4' onClick={() => setShowMore(!showMore)}>
+			<button className='btn btn-sm btn-outline-primary mr-4 mb-1' onClick={() => setShowMore(!showMore)}>
 				{Trans(showMore ? 'show less' : 'show more')} <FontAwesomeIcon icon={showMore ? faCaretUp : faCaretDown} />
 			</button>
 		</div>

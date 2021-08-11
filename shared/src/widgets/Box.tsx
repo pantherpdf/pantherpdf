@@ -9,6 +9,7 @@ import type { Widget } from '../editor/types'
 import { faBorderStyle } from '@fortawesome/free-solid-svg-icons'
 import PropertyColor from './PropertyColor'
 import PropertyBorder, { Border, genBorderCss } from './PropertyBorder'
+import BoxName from './BoxName'
 
 
 interface Properties {
@@ -135,9 +136,9 @@ export const Box: Widget = {
 
 	Render: function(props) {
 		const item = props.item as BoxData
-		return <div style={genStyle(item)}>
+		return <BoxName {...props} style={genStyle(item)} name={Box.name}>
 			{props.renderWidgets(item.children, props.wid)}
-		</div>
+		</BoxName>
 	},
 
 	RenderFinal: function(props) {
@@ -158,6 +159,8 @@ export const Box: Widget = {
 				value={item.margin}
 				onChange={val => props.setItem({...props.item, margin: val})}
 			/>
+
+			<hr />
 			
 			<label htmlFor='box-padding'>Padding</label>
 			<Property4SideRange
@@ -222,7 +225,7 @@ export const Box: Widget = {
 					onChange={e => {
 						const obj: BoxData = {...item}
 						if (e.currentTarget.checked) {
-							obj.backgroundColor = '#ff0000'
+							obj.backgroundColor = '#FFCCCC'
 						}
 						else {
 							delete obj.backgroundColor

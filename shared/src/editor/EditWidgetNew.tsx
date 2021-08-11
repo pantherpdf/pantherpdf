@@ -52,7 +52,11 @@ function ShowReports(props: GeneralProps) {
 
 	
 	if(props.allReports.length === 0) {
-		return <>{Trans('empty')}</>
+		return <>
+			<span className='text-muted'>
+				{Trans('empty')}
+			</span>
+		</>
 	}
 	return <>{props.allReports.map((r,idx) => <React.Fragment key={idx}>
 			<div
@@ -165,14 +169,16 @@ function ShowUpload(props: GeneralProps) {
 	}
 
 	return <>
-		<div><button className='btn btn-primary m-1' onClick={fileDownload}>
-			<i className='fas fa-download fa-fw mr-2'/>
-			{Trans('download')}
-		</button></div>
-		<div><button className='btn btn-secondary m-1' onClick={() => fileUpload(arr, setArr)}>
-			<i className='fas fa-upload fa-fw mr-2'/>
-			{Trans('upload')}
-		</button></div>
+		<div className="btn-group" role="group">
+			<button className='btn btn-primary' onClick={fileDownload}>
+				<i className='fas fa-download fa-fw mr-2'/>
+				{Trans('download')}
+			</button>
+			<button className='btn btn-outline-primary' onClick={() => fileUpload(arr, setArr)}>
+				<i className='fas fa-upload fa-fw mr-2'/>
+				{Trans('upload')}
+			</button>
+		</div>
 		<hr />
 		{arr.map((r,idx) => <div
 			key={idx}

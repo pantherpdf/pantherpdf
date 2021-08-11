@@ -87,7 +87,9 @@ export default class ObjectExplorer extends Component<Props, State> {
 					{canExpand &&  this.isExpanded(key) && <button className='btn btn-sm pt-0' onClick={e=>{e.preventDefault(); this.collapse(key, dt)}}>-</button>}
 				</div>
 				<div className={style.icon}>
-					{this.renderIcon(key, dt)}
+					<span className='text-muted'>
+						{this.renderIcon(key, dt)}
+					</span>
 				</div>
 				<div style={{flex:'1'}} onClick={e=>{e.preventDefault(); if(this.state.expanded[key]){this.collapse(key,dt)}else{this.expand(key,dt)}}}>
 					{name}
