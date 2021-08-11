@@ -9,7 +9,7 @@ import type { ItemRendeProps, Widget } from '../editor/types'
 import BoxName from './BoxName'
 import PropertyFont, { PropertyFontGenCss, TFont } from './PropertyFont'
 import FormulaEvaluate from '../formula/formula'
-import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight, faBold, faItalic, faTag, faTrash, IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight, faBold, faItalic, faTag, faTrash, faUnderline, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { FormulaHelper } from '../editor/compile'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { listOfFilters } from './formulaFilter'
@@ -594,6 +594,12 @@ export const TextHtml: Widget = {
 					>
 						<FontAwesomeIcon icon={faItalic} />
 					</button>
+					<button
+						className='btn btn-outline-secondary'
+						onClick={() => document.execCommand('underline')}
+					>
+						<FontAwesomeIcon icon={faUnderline} />
+					</button>
 				</div>
 				<button
 					className='btn btn-outline-secondary ms-2'
@@ -641,6 +647,43 @@ export const TextHtml: Widget = {
 					<FontAwesomeIcon icon={faTag} />
 				</button>
 			</div>
+
+			<div className='mt-2'>
+				<select
+					className="form-select"
+					value=''
+					onChange={e => {
+						const val = e.currentTarget.value
+						const editor = getEditor(props.wid)
+						if (val.length === 0 || !editor) {
+							return
+						}
+						document.execCommand('fontSize', false, '7')
+						var fontElements = document.getElementsByTagName('font')
+						for (let i = 0, len = fontElements.length; i < len; ++i) {
+							const el = fontElements[i]
+							if (!isNodeInside(el, editor)) {
+								continue
+							}
+							if (el.size === '7') {
+								el.removeAttribute('size')
+								el.style.fontSize = val
+							}
+						}
+					}}
+					style={{maxWidth: '5rem'}}
+				>
+					<option value=''></option>
+					{['8pt','10pt','12pt','14pt','16pt','18pt','24pt','36pt'].map(x => <option
+							key={x}
+							value={x}
+						>
+							{x}
+						</option>
+					)}
+				</select>
+			</div>
+
 			<hr />
 			<TagEditor {...props} />
 		</>
