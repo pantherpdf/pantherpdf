@@ -38,6 +38,8 @@ export interface GeneralProps {
 	allReports: TReportShort[],
 
 	getOriginalSourceData: () => any,
+	overrideSourceData: (obj: any) => void,
+	indexOverridenSourceData: number,
 	sourceData: any,
 	sourceErrorMsg?: string | undefined,
 	refreshSourceData: (report: TReport) => void,

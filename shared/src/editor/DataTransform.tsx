@@ -11,8 +11,9 @@ import { Dropdown, Button, ButtonGroup, Modal } from 'react-bootstrap'
 import Trans, { TransName } from '../translation'
 import getTransform, { allTransforms } from '../transforms/allTransforms'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowDown, faArrowUp, faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faArrowDown, faArrowUp, faCompressAlt, faEdit, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons'
 import ObjectExplorer from './ObjectExplorer'
+import FileSelect from '../FileSelect'
 
 
 /**
@@ -93,6 +94,8 @@ export default function DataTransform(props: GeneralProps) {
 	const [shownModalInsert, setShownModalInsert] = useState<boolean>(false)
 	const [showEdit, setShowEdit] = useState<TEdit | null>(null)
 	const [showData, setShowData] = useState<TSourceDataShow | null>(null)
+	const [shownModalUpload, setShownModalUpload] = useState<boolean>(false)
+	const [uploadUrl, setUploadUrl] = useState<string>('')
 
 	async function doShowData(len: number) {
 		let dt
@@ -182,9 +185,24 @@ export default function DataTransform(props: GeneralProps) {
 			className='d-flex'
 			size='sm'
 		>
-			<button className='btn btn-sm btn-outline-secondary text-left flex-fill' onClick={()=>doShowData(0)}>
+			<button className='btn btn-sm btn-outline-secondary flex-fill text-left' onClick={()=>doShowData(0)}>
 				{Trans('source data')}
 			</button>
+			<Dropdown.Toggle style={{maxWidth:'3rem'}} split variant="outline-secondary" id="dropdown-custom-2" />
+			<Dropdown.Menu>
+				<Dropdown.Item onClick={() => {
+					setShownModalUpload(true)
+				}}>
+					<FontAwesomeIcon icon={faCompressAlt} className='me-2' fixedWidth />
+					{Trans('edit')}
+				</Dropdown.Item>
+				{props.indexOverridenSourceData>0 && <Dropdown.Item onClick={() => {
+					props.overrideSourceData(null)
+				}}>
+					<FontAwesomeIcon icon={faTimes} className='me-2' fixedWidth />
+					Reset
+				</Dropdown.Item>}
+			</Dropdown.Menu>
 		</Dropdown>
 
 
@@ -205,6 +223,90 @@ export default function DataTransform(props: GeneralProps) {
 				Add transform
 			</button>
 		</div>
+
+		{/* UPLOAD JSON */}
+		<Modal show={shownModalUpload} onHide={() => setShownModalUpload(false)}>
+			<Modal.Header closeButton>
+				<Modal.Title>
+					Upload JSON data
+				</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<div className="mb-3">
+					<label htmlFor="uploadUrl" className="form-label">
+						Url
+					</label>
+					<input
+						type="text"
+						placeholder='https://www.example.com/file.json'
+						className="form-control"
+						id="uploadUrl"
+						value={uploadUrl}
+						onChange={e => setUploadUrl(e.currentTarget.value)}
+					/>
+				</div>
+				
+				<hr />
+
+				<FileSelect
+					onSelect={async fls => {
+						if (fls.length === 0) {
+							return
+						}
+						const f = fls[0]
+						try {
+							const reader = new FileReader()
+							reader.onload = (e2) => {
+								if (!e2.target || typeof e2.target.result !== 'string') {
+									return
+								}
+								const dt = JSON.parse(e2.target.result)
+								props.overrideSourceData(dt)
+							}
+							reader.readAsText(f)
+						}
+						catch(e) {
+							alert(`Error: ${String(e)}`)
+							return
+						}
+						setShownModalUpload(false)
+					}}
+				/>
+			</Modal.Body>
+			<Modal.Footer>
+				<Button
+					variant="secondary"
+					onClick={() => {
+						setShownModalUpload(false)
+					}}
+				>
+					{Trans('cancel')}
+				</Button>
+				<Button
+					variant="primary"
+					onClick={async () => {
+						let js: any
+						try {
+							const r = await fetch(uploadUrl)
+							if (!r.ok) {
+								alert('Bad response from url')
+								return
+							}
+							js = await r.json()
+						}
+						catch(e) {
+							alert(`Error: ${String(e)}`)
+							return
+						}
+						setShownModalUpload(false)
+						props.overrideSourceData(js)
+					}}
+					disabled={uploadUrl.length === 0}
+				>
+					Upload
+				</Button>
+			</Modal.Footer>
+		</Modal>
 
 		{/* ADD NEW */}
 		<Modal show={shownModalInsert} onHide={() => setShownModalInsert(false)}>

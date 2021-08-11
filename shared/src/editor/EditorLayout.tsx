@@ -15,6 +15,7 @@ import style from './Editor.module.css'
 import getWidget from '../widgets/allWidgets'
 import { findInList, removeFromList, updateItem } from './childrenMgmt'
 import ReportSettings from './ReportSettings'
+import { extractFiles } from '../FileSelect'
 
 
 function Properties(props: GeneralProps) {
@@ -101,12 +102,46 @@ export default function Layout(props: GeneralProps&{dragOver: (e: React.DragEven
 			props.setReport(r)
 		}
 	}
+
+	// drag-drop source data
+	function onDragOver(e: React.DragEvent<HTMLDivElement>) {
+		e.preventDefault()
+		e.stopPropagation()
+	}
+	function onDrop(e: React.DragEvent<HTMLDivElement>) {
+		e.preventDefault()
+		e.stopPropagation()
+		const arr = extractFiles(e.dataTransfer)
+		if (arr.length === 0) {
+			return
+		}
+		const f = arr[0]
+		try {
+			const reader = new FileReader()
+			reader.onload = (e2) => {
+				if (!e2.target || typeof e2.target.result !== 'string') {
+					return
+				}
+				const dt = JSON.parse(e2.target.result)
+				props.overrideSourceData(dt)
+			}
+			reader.readAsText(f)
+		}
+		catch(e) {
+			alert(`Error: ${String(e)}`)
+			return
+		}
+	}
 	
 	return <>
 		<div className={style.box1}>
 			<EditWidgetNew {...props} />
 		</div>
-		<div className={style.box2}>
+		<div
+			className={style.box2}
+			onDragOver={onDragOver}
+			onDrop={onDrop}
+		>
 			<div style={{paddingLeft:'1rem'}}>
 				<DataTransform {...props} />
 				<hr/>

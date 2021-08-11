@@ -92,17 +92,41 @@ export default function Editor(props: Props) {
 	const [selected, setSelected] = useState<number[]|null>(null)
 	const [source, setSource] = useState<SourceData>({data: null, msg: 'loading ...'})
 	const dragObj = useRef<TDragObj|null>(null)
+	const [overrideSourceData, setOverrideSourceData] = useState<string | null>(null)
+	const [indexOverridenSourceData, setIndexOverridenSourceData] = useState<number>(0)
 
-	async function refreshSourceData(report: TReport) {
-		// get current report data because props.report may not update yet
-		let dt
-		try {
-			dt = props.getOriginalSourceData();
+	async function getOriginalSourceData(): Promise<any> {
+		if (overrideSourceData) {
+			return JSON.parse(overrideSourceData)
 		}
-		catch(e) {
-			const msg = e instanceof Error ? e.message : 'Unknown error'
-			setSource({data: null, msg})
-			return
+		return props.getOriginalSourceData()
+	}
+
+	async function setOverrideSourceData2(obj: any) {
+		if (obj) {
+			setOverrideSourceData(JSON.stringify(obj))
+			setIndexOverridenSourceData(indexOverridenSourceData+1)
+			refreshSourceData(props.report, JSON.parse(JSON.stringify(obj)))
+		}
+		else {
+			setOverrideSourceData(null)
+			setIndexOverridenSourceData(0)
+			const dt = await props.getOriginalSourceData()
+			refreshSourceData(props.report, dt)
+		}
+	}
+
+	async function refreshSourceData(report: TReport, dt?: any) {
+		// get current report data because props.report may not update yet
+		if (!dt) {
+			try {
+				dt = await getOriginalSourceData();
+			}
+			catch(e) {
+				const msg = e instanceof Error ? e.message : 'Unknown error'
+				setSource({data: null, msg})
+				return
+			}
 		}
 		let dt2
 		try {
@@ -238,7 +262,9 @@ export default function Editor(props: Props) {
 	props2 = {
 		allReports: props.allReports,
 
-		getOriginalSourceData: props.getOriginalSourceData,
+		getOriginalSourceData: getOriginalSourceData,
+		overrideSourceData: setOverrideSourceData2,
+		indexOverridenSourceData: indexOverridenSourceData,
 		refreshSourceData: refreshSourceData,
 		sourceData: source.data,
 		sourceErrorMsg: source.msg,

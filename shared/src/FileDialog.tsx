@@ -4,12 +4,13 @@
  */
 
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { TFileShort, FileUploadData } from './types'
 import { ApiEndpoints } from './types'
+import FileSelect from './FileSelect'
 
 
 // check browser support for fetch stream upload
@@ -42,57 +43,6 @@ interface TFileUpload extends TFileShort {
 export default function FileDialog(props: Props) {
 	const [files, setFiles] = useState<TFileUpload[]>([])
 	const [loading, setLoading] = useState<boolean>(true)
-	const selectFileElement = useRef<HTMLInputElement>(null)
-
-	
-	// click to browse files
-	function selectFileClick() {
-		if (!selectFileElement.current) {
-			return
-		}
-		selectFileElement.current.click()
-	}
-
-	function selectFileElementChange(e: React.ChangeEvent<HTMLInputElement>) {
-		if (!e.target.files)
-			return
-		const arr: File[] = []
-		for (let i=0; i<e.target.files.length; ++i) {
-			arr.push(e.target.files[i])
-		}
-		e.target.value = ''
-		prepareUpload(arr)
-	}
-
-	
-	// drag-drop
-	function onDragOver(e: React.DragEvent<HTMLDivElement>) {
-		e.preventDefault()
-		e.stopPropagation()
-	}
-
-	function onDrop(e: React.DragEvent<HTMLDivElement>) {
-		e.preventDefault()
-		e.stopPropagation()
-	
-		let fileUpload: File[] = []
-		if (e.dataTransfer.items) {
-			for (let i = 0; i < e.dataTransfer.items.length; i++) {
-				if (e.dataTransfer.items[i].kind === 'file') {
-					const file = e.dataTransfer.items[i].getAsFile()
-					if (file) {
-						fileUpload.push(file)
-					}
-				}
-			}
-		} else {
-			for (let i = 0; i < e.dataTransfer.files.length; i++) {
-				const file = e.dataTransfer.files[i]
-				fileUpload.push(file)
-			}
-		}
-		prepareUpload(fileUpload)
-	}
 
 
 	// shared upload code
@@ -201,7 +151,7 @@ export default function FileDialog(props: Props) {
 			setFiles(js.files)
 			setLoading(false)
 		})
-	}, [])
+	}, [props.api])
 
 
 	async function fileDelete(name: string): Promise<void> {
@@ -278,15 +228,8 @@ export default function FileDialog(props: Props) {
 
 		{loading && <FontAwesomeIcon icon={faSpinner} spin={true} className='ms-2' />}
 
-		<div
-			className='mt-4 mb-4 d-flex flex-column p-4' style={{border:'3px dashed rgba(0,50,160,0.2)'}}
-			onDragOver={onDragOver}
-			onDrop={onDrop}
-		>
-			<div className='text-center'>Drop files here</div>
-			<div className='text-center mt-2 text-muted'>or</div>
-			<div className='text-center mt-2'><button className='btn btn-sm btn-outline-primary' onClick={selectFileClick}>Select files</button></div>
-		</div>
-		<input type='file' className='d-none' ref={selectFileElement} onChange={selectFileElementChange} />
+		<FileSelect
+			onSelect={fls => prepareUpload(fls)}
+		/>
 	</>
 }
