@@ -85,6 +85,32 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+
+/* modifications */
+b, strong {
+	font-weight: bold;
+}
+cite, em, i {
+	font-style: italic;
+}
+big {
+	font-size: larger;
+}
+small {
+	font-size: smaller;
+}
+mark {
+	background-color: yellow;
+}
+sub {
+    vertical-align: sub;
+    font-size: smaller;
+}
+sup {
+    vertical-align: super;
+    font-size: smaller;
+}
 </style>
 <style>
 body {
