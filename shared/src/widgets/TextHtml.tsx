@@ -329,6 +329,15 @@ function Editor(props: EditorProps) {
 	const detailRef = useRef<EditorDetails|null>(null)
 	const timeoutRef = useRef<number>(0)
 	const tmpSelectionRef = useRef<EditorDetails|null>(null)
+	const elementRef = useRef<HTMLDivElement>(null)
+	const timeRef = useRef<number>(Date.now())
+	const prevValue = useRef<string>('<<<<<<<<<')
+
+	// only update when value from outside has changed and current html is different
+	// this prevents race condition. When you deselect widget, setSelected() is called before onChange() and thus forces old value
+	const tm2 = (props.value === prevValue.current || (elementRef.current && props.value === elementRef.current.innerHTML)) ? timeRef.current : Date.now()
+	timeRef.current = tm2
+	prevValue.current = props.value
 
 	function saveCaret(c: EditorDetails, node: Node|null, off: number): void {
 		const editor = getEditor(c.wid)
@@ -383,7 +392,7 @@ function Editor(props: EditorProps) {
 			document.removeEventListener('selectionchange', selectionchange)
 		}
 		// eslint-disable-next-line
-	}, [wid2, props.value])
+	}, [wid2, timeRef.current])
 
 
 	// wait 2sec and then update
@@ -415,6 +424,7 @@ function Editor(props: EditorProps) {
 
 
 	return <div
+		ref={elementRef}
 		style={props.style}
 		draggable={false}
 		dangerouslySetInnerHTML={{__html: props.value}}
@@ -446,7 +456,7 @@ function Editor(props: EditorProps) {
 				// move caret
 				const range = document.createRange()
 				range.setStart(el, 0)
-				range.setEnd(el, 1)
+				range.setEnd(el, 0)
 				range.collapse(true)
 				const s = window.getSelection()
 				if (s) {
@@ -464,7 +474,12 @@ function Editor(props: EditorProps) {
 				clearTimeout(timeoutRef.current)
 				timeoutRef.current = 0
 			}
-			props.onChange(e.currentTarget.innerHTML)
+			const editor = getEditor(props.wid)
+			if (!editor) {
+				return
+			}
+			const val = editor.innerHTML
+			props.onChange(val)
 		}}
 	/>
 }
