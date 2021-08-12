@@ -668,7 +668,7 @@ export const TextHtml: Widget = {
 					className="form-select"
 					value=''
 					onChange={e => {
-						const val = e.currentTarget.value
+						const val = `${e.currentTarget.value}pt`
 						const editor = getEditor(props.wid)
 						if (val.length === 0 || !editor) {
 							return
@@ -689,7 +689,7 @@ export const TextHtml: Widget = {
 					style={{maxWidth: '5rem'}}
 				>
 					<option value=''></option>
-					{['8pt','10pt','12pt','14pt','16pt','18pt','24pt','36pt'].map(x => <option
+					{['8','10','12','14','16','18','24','36'].map(x => <option
 							key={x}
 							value={x}
 						>
