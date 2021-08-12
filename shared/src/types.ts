@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 // helper for converting tuple into type
 type Narrowable = string | number | boolean | symbol | object | {} | void | null | undefined;
 export const tuple = <T extends Narrowable[]>(...args: T)=>args;
@@ -118,4 +120,12 @@ export interface ApiEndpoints {
 	filesUpload: (file: File, data: FileUploadData, cbProgress: (prc: number) => void) =>  Promise<void>,
 	filesDownloadUrl: (name: string) => string,
 	fonts: () => Promise<string[]>,
+}
+
+
+
+export const defaultReportCss: CSSProperties = {
+	fontFamily: 'arial, serif',
+	fontSize: '12pt',
+	color: '#000000',
 }

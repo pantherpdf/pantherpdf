@@ -1,7 +1,7 @@
 import { Handler } from '@netlify/functions'
 import { ObjectId } from 'mongodb';
 import connectToDatabase from '../db'
-import { PropertyFontGenCss } from 'reports-shared'
+import { PropertyFontGenCss, defaultReportCss } from 'reports-shared'
 import styleToCssString from 'react-style-object-to-css'
 
 const handler: Handler = async (event, context) => {
@@ -26,7 +26,7 @@ const handler: Handler = async (event, context) => {
 	}
 	let css = ''
 	if (report.properties.font) {
-		const obj = PropertyFontGenCss(report.properties.font)
+		const obj = PropertyFontGenCss({...defaultReportCss, ...(report.properties.font || {})})
 		css = styleToCssString(obj)
 	}
 

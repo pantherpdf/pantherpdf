@@ -4,7 +4,7 @@
 
 
 import React from 'react'
-import { TData } from '../types'
+import { defaultReportCss, TData } from '../types'
 import { GeneralProps } from './types'
 import Trans, { TransName } from '../translation'
 import { PropertyFontGenCss } from '../widgets/PropertyFont'
@@ -53,7 +53,7 @@ function Properties(props: GeneralProps) {
 function RenderContent(props: GeneralProps) {
 	const t = props.report.target
 	if (t === 'pdf') {
-		const style = props.report.properties.font ? PropertyFontGenCss(props.report.properties.font) : undefined
+		const style = {...defaultReportCss, ...PropertyFontGenCss(props.report.properties.font || {})}
 		return <div style={style}>
 			{props.renderWidgets(props.report.children, [])}
 			{props.report.children.length === 0 && <div className='text-muted text-center'>
