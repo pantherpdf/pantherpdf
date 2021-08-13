@@ -10,6 +10,7 @@ import type { Widget } from '../editor/types'
 import { faCode } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 import InputApplyOnEnter from './InputApplyOnEnter'
+import Trans from '../translation'
 
 
 export interface HtmlData extends TData {
@@ -24,7 +25,7 @@ export interface HtmlCompiled extends TDataCompiled {
 
 
 export const Html: Widget = {
-	name: {en: 'Html'},
+	name: {en: 'Html', sl: 'Html'},
 	icon: {fontawesome: faCode},
 
 	newItem: async (): Promise<HtmlData> => {
@@ -64,9 +65,13 @@ export const Html: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as HtmlData
 		return <>
+			<label htmlFor='Html-source' className='d-block'>
+				{Trans('source data')}
+			</label>
 			<div className="input-group mb-3">
 				<span className="input-group-text fst-italic">ƒ</span>
 				<InputApplyOnEnter
+					id='Html-source'
 					value={item.source}
 					onChange={val=>props.setItem({...item, source: val})}
 				/>

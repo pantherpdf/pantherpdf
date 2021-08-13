@@ -9,6 +9,7 @@ interface TFilter {
 }
 
 const lang = 'en'  // todo
+// todo translate names
 
 const n1: TFilter = { id: 'num, 0 dec, local', category: 'number', func: (val: any) => { return val.toLocaleString(lang, {maximumFractionDigits:0})} }
 const n2: TFilter = { id: 'num, 2 dec, local', category: 'number', func: (val: any) => { return val.toLocaleString(lang, {maximumFractionDigits:2, minimumFractionDigits:2}) } }

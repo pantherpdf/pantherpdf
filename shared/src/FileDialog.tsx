@@ -11,6 +11,7 @@ import { faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { TFileShort, FileUploadData } from './types'
 import { ApiEndpoints } from './types'
 import FileSelect from './FileSelect'
+import Trans from './translation'
 
 
 // check browser support for fetch stream upload
@@ -50,7 +51,7 @@ export default function FileDialog(props: Props) {
 		// remove big files
 		fileUpload = fileUpload.filter((f, idx) => {
 			if (f.size > 5000000) {
-				alert(`File ${f.name} too big`)
+				alert(Trans('file -name- too big', [f.name]))
 				return false
 			}
 			return true
@@ -155,7 +156,7 @@ export default function FileDialog(props: Props) {
 
 
 	async function fileDelete(name: string): Promise<void> {
-		if (!window.confirm('Are you sure to delete?'))
+		if (!window.confirm(Trans('delete confirm', [name])))
 			return
 		await props.api.filesDelete(name)
 		const arr = files.filter(f => f.name !== name)
@@ -167,10 +168,10 @@ export default function FileDialog(props: Props) {
 		<table className="table table-striped">
 			<thead>
 				<tr>
-					<th>Name</th>
-					<th style={{width:'220px'}}>Uploaded</th>
-					<th style={{width:'220px'}}>Modified</th>
-					<th style={{width:'100px'}}>Size</th>
+					<th>{Trans('name')}</th>
+					<th style={{width:'220px'}}>{Trans('uploaded')}</th>
+					<th style={{width:'220px'}}>{Trans('modified')}</th>
+					<th style={{width:'100px'}}>{Trans('size')}</th>
 					<td style={{width:'100px'}}></td>
 				</tr>
 			</thead>
@@ -184,12 +185,12 @@ export default function FileDialog(props: Props) {
 							{f.name}
 						</button>}
 						{f.upload && <>
-							{f.upload.status === 'waiting' && <div>waiting</div>}
+							{f.upload.status === 'waiting' && <div>{Trans('waiting')}</div>}
 							{f.upload.status === 'complete' && <>
-								{f.upload.errorMsg ? <div className='text-danger'>{f.upload.errorMsg}</div> : <div className='text-success'>Upload complete</div>}
+								{f.upload.errorMsg ? <div className='text-danger'>{f.upload.errorMsg}</div> : <div className='text-success'>{Trans('upload complete')}</div>}
 							</>}
 							{f.upload.status === 'uploading' && <>
-								<div>Uploading ... <FontAwesomeIcon icon={faSpinner} spin={true} className='ms-2' /></div>
+								<div>{Trans('uploading...')} <FontAwesomeIcon icon={faSpinner} spin={true} className='ms-2' /></div>
 								{supportsRequestStreams && <div className="progress">
 									<div className="progress-bar" role="progressbar" style={{width:((f.upload.progress||0)*100).toString()+'%'}}></div>
 								</div>}
@@ -211,7 +212,7 @@ export default function FileDialog(props: Props) {
 							<Dropdown.Menu>
 								<Dropdown.Item onClick={()=>fileDelete(f.name)}>
 									<FontAwesomeIcon icon={faTrash} className='me-2' fixedWidth />
-									Delete
+									{Trans('delete')}
 								</Dropdown.Item>
 								{/*
 								<Dropdown.Item onClick={()=>{}}>

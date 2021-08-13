@@ -13,7 +13,7 @@ import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight, faBold, faIta
 import { FormulaHelper } from '../editor/compile'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { listOfFilters } from './formulaFilter'
-import { TransName } from '../translation'
+import Trans, { TransName, trKeys } from '../translation'
 import { removeFromList } from '../editor/childrenMgmt'
 
 
@@ -140,11 +140,9 @@ function TagEditor(props: ItemRendeProps) {
 		/>
 		*/}
 
-		<div>
-			<label htmlFor='tag-filter'>
-				Filter
-			</label>
-		</div>
+		<label htmlFor='tag-filter' className='d-block'>
+			{Trans('filter')}
+		</label>
 		<select
 			className='form-select'
 			value={btn.getAttribute('data-filter') || ''}
@@ -502,7 +500,7 @@ export interface TextHtmlCompiled extends TDataCompiled {
 
 
 export const TextHtml: Widget = {
-	name: {en: 'Text'},
+	name: {en: 'Text', sl: 'Besedilo'},
 	icon: {fontawesome: faAlignLeft},
 
 	newItem: async (): Promise<TextHtmlData> => {
@@ -559,11 +557,11 @@ export const TextHtml: Widget = {
 
 	RenderProperties: function(props) {
 		const item = props.item as TextHtmlData
-		const alignOpt: [string, string, IconDefinition][] = [
-			['left', 'justifyLeft', faAlignLeft],
-			['center', 'justifyCenter', faAlignCenter],
-			['right', 'justifyRight', faAlignRight],
-			['justify', 'justifyFull', faAlignJustify],
+		const alignOpt: [string, string, IconDefinition, trKeys][] = [
+			['left', 'justifyLeft', faAlignLeft, 'align-left'],
+			['center', 'justifyCenter', faAlignCenter, 'align-center'],
+			['right', 'justifyRight', faAlignRight, 'align-right'],
+			['justify', 'justifyFull', faAlignJustify, 'align-justify'],
 		]
 		return <>
 			<div className='d-flex'>
@@ -580,7 +578,8 @@ export const TextHtml: Widget = {
 						props.setSelected(null)
 					}}
 				>
-					<FontAwesomeIcon icon={faTrash} className='me-2' /> Remove
+					<FontAwesomeIcon icon={faTrash} className='me-2' />
+					{Trans('remove')}
 				</button>
 			</div>
 			<hr />
@@ -590,6 +589,7 @@ export const TextHtml: Widget = {
 						key={x[0]}
 						className={`btn btn-outline-secondary`}
 						onClick={() => document.execCommand(x[1])}
+						title={Trans(x[3])}
 					>
 						<FontAwesomeIcon icon={x[2]} fixedWidth />
 					</button>)}
@@ -600,18 +600,21 @@ export const TextHtml: Widget = {
 					<button
 						className='btn btn-outline-secondary'
 						onClick={() => document.execCommand('bold')}
+						title={Trans('font-weight-bold')}
 					>
 						<FontAwesomeIcon icon={faBold} />
 					</button>
 					<button
 						className='btn btn-outline-secondary'
 						onClick={() => document.execCommand('italic')}
+						title={Trans('font-style-italic')}
 					>
 						<FontAwesomeIcon icon={faItalic} />
 					</button>
 					<button
 						className='btn btn-outline-secondary'
 						onClick={() => document.execCommand('underline')}
+						title={Trans('font-decoration-underline')}
 					>
 						<FontAwesomeIcon icon={faUnderline} />
 					</button>
@@ -658,6 +661,7 @@ export const TextHtml: Widget = {
 						}
 						console.log('caret is null')
 					}}
+					title={Trans('tag insert')}
 				>
 					<FontAwesomeIcon icon={faTag} />
 				</button>
@@ -686,6 +690,7 @@ export const TextHtml: Widget = {
 							}
 						}
 					}}
+					title={Trans('font-size')}
 					style={{maxWidth: '5rem'}}
 				>
 					<option value=''></option>

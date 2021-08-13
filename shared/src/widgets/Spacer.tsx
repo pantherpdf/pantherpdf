@@ -8,6 +8,7 @@ import { TData, TDataCompiled, tuple } from '../types'
 import type { Widget } from '../editor/types'
 import { faArrowsAltV } from '@fortawesome/free-solid-svg-icons'
 import PropertySlider from './PropertySlider';
+import Trans from '../translation';
 
 
 export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
@@ -21,7 +22,7 @@ export type SpacerCompiled = TDataCompiled & Properties
 
 
 export const Spacer: Widget = {
-	name: {en: 'Spacer'},
+	name: {en: 'Spacer', sl: 'Presledek'},
 	icon: {fontawesome: faArrowsAltV},
 
 	newItem: async (): Promise<SpacerData> => {
@@ -51,9 +52,9 @@ export const Spacer: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as SpacerData
 		return <>
-			<div>
-				<label htmlFor='spacer-height'>Height</label>
-			</div>
+			<label htmlFor='spacer-height' className='d-block'>
+				{Trans('height')}
+			</label>
 			<PropertySlider
 				min={3}
 				max={300}

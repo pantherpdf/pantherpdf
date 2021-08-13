@@ -31,8 +31,11 @@ function Properties(props: GeneralProps) {
 	const wid = props.selected
 	const selected = findInList(props.report, wid)
 	const comp = getWidget(selected.type)
-	if (!comp.RenderProperties)
-		return <><div className='h3 border-bottom'>{TransName(comp.name)}</div></>
+	if (!comp.RenderProperties) {
+		return <div className='h3 border-bottom'>
+			{TransName(comp.name)}
+		</div>
+	}
 	return <>
 		<div className='h5 border-bottom mb-3'>
 			{TransName(comp.name)}
@@ -57,7 +60,7 @@ function RenderContent(props: GeneralProps) {
 		return <div style={style}>
 			{props.renderWidgets(props.report.children, [])}
 			{props.report.children.length === 0 && <div className='text-muted text-center'>
-				Drag &amp; Drop widgets here
+				{Trans('drag drop widgets here')}
 			</div>}
 		</div>
 	}
@@ -68,14 +71,18 @@ function RenderContent(props: GeneralProps) {
 			return <pre>{content}</pre>
 		}
 		catch(e) {
-			return <div className="alert alert-danger">{String(e)}</div>
+			return <div className="alert alert-danger">
+				{String(e)}
+			</div>
 		}
 	}
 
 	if (t === 'csv-excel-utf-8' || t === 'csv-windows-1250') {
 		const dt = props.sourceData
 		if( !Array.isArray(dt) ) {
-			return <div className="alert alert-danger">Data must be 2D array</div>
+			return <div className="alert alert-danger">
+				{Trans('data must be 2D array')}
+			</div>
 		}
 		return <table className='table'>
 			<tbody>

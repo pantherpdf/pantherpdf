@@ -1,5 +1,5 @@
 /**
- * Box.tsx
+ * Frame.tsx
  */
 
 
@@ -10,6 +10,7 @@ import { faBorderStyle } from '@fortawesome/free-solid-svg-icons'
 import PropertyColor from './PropertyColor'
 import PropertyBorder, { Border, genBorderCss } from './PropertyBorder'
 import BoxName from './BoxName'
+import Trans from '../translation'
 
 
 interface Properties {
@@ -18,11 +19,11 @@ interface Properties {
 	border: Border | [Border, Border, Border, Border],
 	backgroundColor?: string,
 }
-export type BoxData = TData & Properties
-export type BoxCompiled = TDataCompiled & Properties
+export type FrameData = TData & Properties
+export type FrameCompiled = TDataCompiled & Properties
 
 
-function genStyle(item: BoxData | BoxCompiled): CSSProperties {
+function genStyle(item: FrameData | FrameCompiled): CSSProperties {
 	const css: CSSProperties = {
 		margin: `${item.margin[0]}px ${item.margin[1]}px ${item.margin[2]}px ${item.margin[3]}px`,
 		padding: `${item.padding[0]}px ${item.padding[1]}px ${item.padding[2]}px ${item.padding[3]}px`,
@@ -110,13 +111,13 @@ function Property4SideRange(props: Property4SideRangeProps) {
 
 
 
-export const Box: Widget = {
-	name: {en: 'Box'},
+export const Frame: Widget = {
+	name: {en: 'Frame', sl: 'Okvir'},
 	icon: {fontawesome: faBorderStyle},
 
-	newItem: async (): Promise<BoxData> => {
+	newItem: async (): Promise<FrameData> => {
 		return {
-			type: 'Box',
+			type: 'Frame',
 			children: [],
 			margin: [0, 0, 0, 0],
 			padding: [0, 0, 0, 0],
@@ -128,32 +129,34 @@ export const Box: Widget = {
 		}
 	},
 
-	compile: async (dt: BoxData, helpers): Promise<BoxCompiled> => {
+	compile: async (dt: FrameData, helpers): Promise<FrameCompiled> => {
 		return {
 			...dt,
 		}
 	},
 
 	Render: function(props) {
-		const item = props.item as BoxData
-		return <BoxName {...props} style={genStyle(item)} name={Box.name}>
+		const item = props.item as FrameData
+		return <BoxName {...props} style={genStyle(item)} name={Frame.name}>
 			{props.renderWidgets(item.children, props.wid)}
 		</BoxName>
 	},
 
 	RenderFinal: function(props) {
-		const item = props.item as BoxCompiled
+		const item = props.item as FrameCompiled
 		return <div style={genStyle(item)}>
 			{props.renderChildren(item.children, props)}
 		</div>
 	},
 
 	RenderProperties: function(props) {
-		const item = props.item as BoxData
+		const item = props.item as FrameData
 		return <>
-			<label htmlFor='box-margin'>Margin</label>
+			<label htmlFor='Frame-margin'>
+				{Trans('margin')}
+			</label>
 			<Property4SideRange
-				id='box-margin'
+				id='Frame-margin'
 				min={0}
 				max={80}
 				value={item.margin}
@@ -162,9 +165,11 @@ export const Box: Widget = {
 
 			<hr />
 			
-			<label htmlFor='box-padding'>Padding</label>
+			<label htmlFor='Frame-padding'>
+				{Trans('padding')}
+			</label>
 			<Property4SideRange
-				id='box-padding'
+				id='Frame-padding'
 				min={0}
 				max={80}
 				value={item.padding}
@@ -176,11 +181,11 @@ export const Box: Widget = {
 			<div className="form-check">
 				<input
 					type='checkbox'
-					id='box-border-single'
+					id='Frame-border-single'
 					className='form-check-input'
 					checked={Array.isArray(item.border)}
 					onChange={e => {
-						const obj: BoxData = {...item}
+						const obj: FrameData = {...item}
 						if (e.currentTarget.checked) {
 							const brd: Border = !Array.isArray(item.border) ? item.border : {width:1, color: '#cccccc', style:'solid'}
 							obj.border = [{...brd}, {...brd}, {...brd}, {...brd}]
@@ -191,8 +196,8 @@ export const Box: Widget = {
 						props.setItem(obj)
 					}}
 				/>
-				<label className="form-check-label" htmlFor='box-border-single'>
-					Border different sides
+				<label className="form-check-label" htmlFor='Frame-border-single'>
+					{Trans('border different sides')}
 				</label>
 			</div>
 			
@@ -219,11 +224,11 @@ export const Box: Widget = {
 			<div className="form-check">
 				<input
 					type='checkbox'
-					id='box-backgroundColor-enable'
+					id='Frame-backgroundColor-enable'
 					className='form-check-input'
 					checked={!!item.backgroundColor}
 					onChange={e => {
-						const obj: BoxData = {...item}
+						const obj: FrameData = {...item}
 						if (e.currentTarget.checked) {
 							obj.backgroundColor = '#FFCCCC'
 						}
@@ -233,8 +238,8 @@ export const Box: Widget = {
 						props.setItem(obj)
 					}}
 				/>
-				<label className="form-check-label" htmlFor='box-backgroundColor-enable'>
-					Background
+				<label className="form-check-label" htmlFor='Frame-backgroundColor-enable'>
+					{Trans('background')}
 				</label>
 			</div>
 			{!!item.backgroundColor && <PropertyColor

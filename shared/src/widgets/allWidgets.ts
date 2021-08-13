@@ -16,7 +16,7 @@ import { FirstMatch } from './FirstMatch'
 import { Html } from './Html'
 import { Separator } from './Separator'
 import { Spacer } from './Spacer'
-import { Box } from './Box'
+import { Frame } from './Frame'
 import { SetVar } from './SetVar'
 import { Sum, VarContainer } from './Sum'
 
@@ -33,7 +33,7 @@ export const allWidgets: {[key: string]: Widget} = {
 	Html,
 	Separator,
 	Spacer,
-	Box,
+	Frame,
 	SetVar,
 	Sum,
 	VarContainer,

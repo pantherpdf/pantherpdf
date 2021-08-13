@@ -9,6 +9,7 @@ import type { Widget } from '../editor/types'
 import { faMinus } from '@fortawesome/free-solid-svg-icons'
 import InputApplyOnEnter, { WidthRegex } from './InputApplyOnEnter'
 import PropertyBorder, { Border, genBorderCss } from './PropertyBorder'
+import Trans from '../translation'
 
 
 export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
@@ -37,7 +38,7 @@ function GenStyle(item: SeparatorData | SeparatorCompiled): CSSProperties {
 
 
 export const Separator: Widget = {
-	name: {en: 'Separator'},
+	name: {en: 'Separator', sl: 'Črta'},
 	icon: {fontawesome: faMinus},
 
 	newItem: async (): Promise<SeparatorData> => {
@@ -73,7 +74,9 @@ export const Separator: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as SeparatorData
 		return <>
-			<div><label htmlFor='sep-marginTop'>Margin Top</label></div>
+			<label htmlFor='sep-marginTop' className='d-block'>
+				{Trans('margin top')}
+			</label>
 			<InputApplyOnEnter
 				id="sep-marginTop"
 				value={item.marginTop}
@@ -81,7 +84,9 @@ export const Separator: Widget = {
 				regex={WidthRegex}
 			/>
 
-			<div><label htmlFor='sep-marginBottom'>Margin Bottom</label></div>
+			<label htmlFor='sep-marginBottom' className='d-block'>
+				{Trans('margin bottom')}
+			</label>
 			<InputApplyOnEnter
 				id="sep-marginBottom"
 				value={item.marginBottom}

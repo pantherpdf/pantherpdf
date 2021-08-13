@@ -68,7 +68,9 @@ const filter: TTransformWidget = {
 
 			<label htmlFor='trans-edit-condition'>
 				{Trans('condition')}
-				<small><span className='ms-2 text-muted'>Use variable: <span className='font-monospace'>item</span></span></small>
+				<small className='ms-2 text-muted'>
+					{Trans('current item is in var -name-', ['item'])}
+				</small>
 			</label>
 			<div className="input-group mb-3">
 				<span className="input-group-text fst-italic">ƒ</span>

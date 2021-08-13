@@ -1,83 +1,129 @@
-type trKeys =
-	'report' | 'reports' |
-	'font-weight-normal' | 'font-weight-bold' | 'font-style-normal' | 'font-style-italic' | 'font' | 'font-family' | 'font-size' | 'font-style' | 'font-weight' |
-	'color' | 'enable' | 'empty' |
-	'upload bad file' | 'upload finished' | 'download' | 'upload' | 'widgets' | 'predefined' | 'file' |
-	'invalid value' |
-	'name' | 'show more' | 'show less' | 'target' | 'fileName' | 'paperWidth' | 'paperHeight' | '0 means default' | 'margin' | 'lang' | 'lang 2 letter code' | 'users lang' | 'new name' | 'delete report' | 'delete report question' |
-	'no widgets available for target' |
-	'source data' | 'insert data transform' | 'up' | 'down' | 'delete' | 'edit' | 'comment' | 'save' | 'cancel' | 'data' | 'field' | 'condition' |
-	''
+// cannot enforce type
+// otherwise its not object literal anymore and key type would be lost (it would be generic string)
+const tr2 = {
+	'': { en: '', sl:'' },
+	'report': { en:'Report', sl:'Poročilo' },
+	'reports': { en:'Reports', sl:'Poročila' },
 
-export type TTrans = {en: string}
+	'font-weight-normal': { en:'Normal', sl:'Navadno' },
+	'font-weight-bold': { en:'Bold', sl:'Krepko' },
+	'font-style-normal': { en:'Normal', sl:'Navadno' },
+	'font-style-italic': { en:'Italic', sl:'Ležeče' },
+	'font-decoration-underline': { en:'Underline', sl:'Podčrtaj' },
+	'font': { en:'Font', sl:'Pisava' },
+	'font-family': { en:'Family', sl:'Vrsta' },
+	'font-size': { en:'Size', sl:'Velikost' },
+	'font-style': { en:'Style', sl:'Stil' },
+	'font-weight': { en:'Weight', sl:'Debelina' },
+	'border-style': { en:'Style', sl:'Stil' },
+	'border-solid': { en:'Solid', sl:'Polna' },
+	'border-dashed': { en:'Dashed', sl:'Črtkano' },
+	'border-dotted': { en:'Dotted', sl:'Pike' },
 
-const tr2: {[key in trKeys]: TTrans} = {
-	'': { en: '' },
-	'report': { en:'Report' },
-	'reports': { en:'Reports' },
+	'align-left': { en:'Align Left', sl:'Poravnaj Levo' },
+	'align-center': { en:'Align Center', sl:'Poravnaj na Sredino' },
+	'align-right': { en:'Align Right', sl:'Poravnaj Desno' },
+	'align-justify': { en:'Justify', sl:'Razporedi' },
 
-	'font-weight-normal': { en:'Normal' },
-	'font-weight-bold': { en:'Bold' },
-	'font-style-normal': { en:'Normal' },
-	'font-style-italic': { en:'Italic' },
-	'font': { en:'Font' },
-	'font-family': { en:'Family' },
-	'font-size': { en:'Size' },
-	'font-style': { en:'Style' },
-	'font-weight': { en:'Weight' },
+	'color': { en:'Color', sl:'Barva' },
+	'enable': { en:'Enable', sl:'Omogoči' },
+	'empty': { en:'Empty', sl:'Prazno' },
 
-	'color': { en:'Color' },
-	'enable': { en:'Enable' },
-	'empty': { en:'Empty' },
+	'upload bad file': { en:'Uploaded bad file', sl:'Naložena datoteka ni primerna' },
+	'upload finished': { en:'Upload finished', sl:'Nalaganje končano' },
+	'download': { en:'Download', sl:'Prenesi' },
+	'upload': { en:'Upload', sl:'Naloži' },
+	'widgets': { en:'Widgets', sl:'Gradniki' },
+	'predefined': { en:'Predefined', sl:'Predefinirano' },
+	'file': { en:'File', sl:'Datoteka' },
 
-	'upload bad file': { en:'Upload bad file' },
-	'upload finished': { en:'Upload finished' },
-	'download': { en:'Download' },
-	'upload': { en:'Upload' },
-	'widgets': { en:'Widgets' },
-	'predefined': { en:'Predefined' },
-	'file': { en:'File' },
+	'invalid value': { en:'invalid value', sl:'Neveljavna vrednost' },
 
-	'invalid value': { en:'invalid value'},
-
-	'name': { en:'Name' },
-	'show more': { en:'Show more' },
-	'show less': { en:'Show less' },
-	'target': { en:'Target' },
-	'fileName': { en:'File Name' },
-	'paperWidth': { en:'Paper Width' },
-	'paperHeight': { en:'Paper Height' },
-	'0 means default': { en:'0 means default' },
-	'margin': { en:'Margin' },
-	'lang': { en:'Language' },
-	'lang 2 letter code': { en:'2 letter code' },
-	'users lang': { en:'User Language' },
-	'new name': { en:'New name' },
-	'delete report': { en: 'Delete report' },
-	'delete report question': { en: 'Are you sure to delete this report?' },
-	'no widgets available for target': { en: 'No widgets available for target {0}.' },
+	'name': { en:'Name', sl:'Ime' },
+	'show more': { en:'Show more', sl:'Pokaži več' },
+	'show less': { en:'Show less', sl:'Pokaži manj' },
+	'target': { en:'Target', sl:'Cilj' },
+	'fileName': { en:'File Name', sl:'Ime datoteke' },
+	'paperWidth': { en:'Paper Width', sl:'Papir širina' },
+	'paperHeight': { en:'Paper Height', sl:'Papir višina' },
+	'0 means default': { en:'0 means default', sl:'0 pomeni standardno' },
+	'margin': { en:'Margin', sl:'Odmik zunaj' },
+	'margin top': { en:'Margin Top', sl:'Odmik Zgoraj' },
+	'margin bottom': { en:'Margin Bottom', sl:'Odmik Spodaj' },
+	'padding': { en:'Padding', sl:'Odmik noter' },
+	'lang': { en:'Language', sl:'Jezik' },
+	'lang 2 letter code': { en:'2 letter code', sl:'koda 2 črke' },
+	'users lang': { en:'User Language', sl:'Uporabnikov jezik' },
+	'new name': { en:'New name', sl:'Novo ime' },
+	'delete report': { en: 'Delete report', sl:'Izbriši poročilo' },
+	'delete report question': { en: 'Are you sure to delete this report?', sl:'Ali si prepričan da želiš izbrisati to poročilo?' },
+	'no widgets available for target -name-': { en: 'No widgets available for target {0}.', sl:'Gradniki niso na voljo za cilj {0}' },
 	
-	'source data': { en: 'Source data' },
-	'insert data transform': { en: 'Insert data transform' },
-	'up': { en:'Up' },
-	'down': { en:'Down' },
-	'delete': { en:'Delete' },
-	'edit': { en:'Edit' },
-	'comment': { en:'Comment' },
-	'save': { en:'Save' },
-	'cancel': { en:'Cancel' },
-	'data': { en:'Data' },
-	'field': { en:'Field' },
-	'condition': { en:'Condition' },
+	'source data': { en: 'Source data', sl:'Izvorni podatki' },
+	'transform': { en: 'Transform', sl: 'Transformacija' },
+	'insert data transform': { en: 'Insert data transform', sl:'Vstavi transformacijo' },
+	'up': { en:'Up', sl:'Gor' },
+	'down': { en:'Down', sl:'Dol' },
+	'delete': { en:'Delete', sl:'Izbriši' },
+	'remove': { en:'Remove', sl:'Odstrani' },
+	'edit': { en:'Edit', sl:'Uredi' },
+	'comment': { en:'Comment', sl:'Komentar' },
+	'save': { en:'Save', sl:'Shrani' },
+	'cancel': { en:'Cancel', sl:'Prekliči' },
+	'data': { en:'Data', sl:'Podatki' },
+	'field': { en:'Field', sl:'Polje' },
+	'condition': { en:'Condition', sl:'Pogoj' },
+
+	'replace': { en: 'Replace', sl: 'Zamenjaj' },
+	'reset': { en: 'Reset', sl: 'Ponastavi' },
+	'drag drop widgets here': { en: 'Drag & Drop widgets here', sl: 'Prenesi gradnike sem' },
+
+	'width': { en: 'Width', sl: 'Širina' },
+	'height': { en: 'Height', sl: 'Višina' },
+	'url': { en: 'Url', sl: 'Povezava' },
+	'formula': { en: 'Formula', sl: 'Formula' },
+
+	'uploaded': { en: 'Uploaded', sl: 'Naloženo' },
+	'modified': { en: 'Modified', sl: 'Spremenjeno' },
+	'size': { en: 'Size', sl: 'Velikost' },
+	'waiting': { en: 'Waiting', sl: 'Čakam' },
+	'uploading...': { en: 'Uploading ...', sl: 'Nalagam ...' },
+	'upload complete': { en: 'Upload complete', sl: 'Nalaganje končano' },
+	'drop-files here': { en: 'Drop files here', sl: 'Prenesi datoteke sem' },
+	'drop-or': { en: 'or', sl: 'ali' },
+	'drop-select files': { en: 'Select files', sl: 'Izberi datoteke' },
+	'file -name- too big': { en: 'File {0} too big', sl: 'Datoteka {0} je prevelika' },
+	'delete confirm': { en: 'Are you sure to delete {0}?', sl: 'Ali si prepričan da želiš izbrisati {0}?' },
+
+	'tag insert': { en: 'Insert tag', sl: 'Vstavi podatek' },
+
+	'varName': { en: 'Var Name', sl: 'Ime Spremenljivke' },
+	'repeat - current item is this var': { en: 'Current item will be accessible with this variable', sl: 'Trenutni element bo dostopen s to spremenljivko' },
+
+	'counter - current count var': { en: 'where current count is saved', sl: 'tukaj je shranjena vrednost števca' },
+	'counter - var increment access': { en: 'var will be incremented each time it is accessed', sl: 'spremenljivka bo povečana vsakič ko bo prebrana' },
+	'columns add': { en: 'Add column', sl: 'Dodaj stolpec' },
+	'current item is in var -name-': { en: 'current item is in variable {0}', sl: 'trenutni element je v spremenljivki {0}' },
+	'variables': { en: 'Variables', sl: 'Spremenljivke' },
+	'sum - comma separated': { en: 'Comma separated', sl: 'Ločeno z vejico' },
+	'filter': { en: 'Filter', sl: 'Filter' },
+	'border different sides': { en: 'Border different sides', sl: 'Okvir različne strani'},
+	'background': { en: 'Background', sl: 'Ozadje' },
+	'sum error missing parent': { en: 'Error: Missing VarContainer', sl: 'Napaka: manjka Spremen.Kontejner' },
+	'sum error variable not selected': { en: 'Error: variable not selected', sl: 'Napaka: Spremenljivka ni nastavljena' },
+	'sum error variable doesnt exist': { en: 'Error: variable does not exist', sl: 'Napaka: Spremenljivka ne obstaja' },
+	'data must be 2D array': { en: 'Data must be 2D array. Add transform CSV.', sl: 'Podatki morajo biti v obliki 2D tabele. Dodaj transformacijo CSV.' },
 }
+
+export type trKeys = keyof typeof tr2
 
 export function TransName(name: string|{[key:string]:string}, lang?: string): string {
 	if (typeof name == 'string')
 		return name
 	if (lang && lang in name)
 		return name[lang]
-	if ('en' in name)
-		return name.en
+	if ('sl' in name)  // todo
+		return name.sl
 	const keys = Object.keys(name)
 	if (keys.length > 0)
 		return name[keys[0]]

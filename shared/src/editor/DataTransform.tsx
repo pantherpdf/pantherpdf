@@ -194,13 +194,13 @@ export default function DataTransform(props: GeneralProps) {
 					setShownModalUpload(true)
 				}}>
 					<FontAwesomeIcon icon={faRetweet} className='me-2' fixedWidth />
-					Replace
+					{Trans('replace')}
 				</Dropdown.Item>
 				{props.indexOverridenSourceData>0 && <Dropdown.Item onClick={() => {
 					props.overrideSourceData(null)
 				}}>
 					<FontAwesomeIcon icon={faTimes} className='me-2' fixedWidth />
-					Reset
+					{Trans('reset')}
 				</Dropdown.Item>}
 			</Dropdown.Menu>
 		</Dropdown>
@@ -220,7 +220,7 @@ export default function DataTransform(props: GeneralProps) {
 		<div className=''>
 			<button className='btn btn-sm btn-outline-secondary mt-2' onClick={()=>setShownModalInsert(true)}>
 				<FontAwesomeIcon icon={faPlus} className='me-2' />
-				Add transform
+				{Trans('transform')}
 			</button>
 		</div>
 

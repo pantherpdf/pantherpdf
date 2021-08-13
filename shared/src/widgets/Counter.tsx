@@ -8,7 +8,7 @@ import { TData, TDataCompiled } from '../types'
 import type { Widget } from '../editor/types'
 import { faStopwatch } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
-import { TransName } from '../translation'
+import Trans, { TransName } from '../translation'
 import InputApplyOnEnter from './InputApplyOnEnter'
 
 
@@ -22,7 +22,7 @@ export interface CounterCompiled extends TDataCompiled {
 
 
 export const Counter: Widget = {
-	name: {en: 'Counter'},
+	name: {en: 'Counter', sl: 'Števec'},
 	icon: {fontawesome: faStopwatch},
 
 	newItem: async (): Promise<CounterData> => {
@@ -60,15 +60,14 @@ export const Counter: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as CounterData
 		return <>
-			<div>
-				<label htmlFor='counter-varName'>Variable name</label>
+			<label htmlFor='counter-varName' className='d-block'>
+				{Trans('varName')}
+			</label>
+			<small className='text-muted d-block'>
+				{Trans('counter - current count var')}
 				<br />
-				<small className='text-muted'>
-					where current count will be saved
-					<br />
-					variable will be incremented each time it is accessed
-				</small>
-			</div>
+				{Trans('counter - var increment access')}
+			</small>
 			<InputApplyOnEnter
 				value={item.varName}
 				id='counter-varName'

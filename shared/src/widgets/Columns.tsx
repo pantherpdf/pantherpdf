@@ -10,6 +10,7 @@ import { faColumns, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 import InputApplyOnEnter, { WidthRegex, WidthOptions } from './InputApplyOnEnter'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Trans from '../translation'
 
 
 export interface ColumnsCtData extends TData {
@@ -21,7 +22,7 @@ export interface ColumnsCtCompiled extends TDataCompiled {
 }
 
 export const ColumnsCt: Widget = {
-	name: {en: 'ColumnsCt'},
+	name: {en: 'ColumnsCt', sl: 'StolpciCt'},
 	icon: {fontawesome: faColumns},
 
 	newItem: async (): Promise<ColumnsCtData> => {
@@ -93,7 +94,7 @@ function colStyle(w: string): CSSProperties {
 }
 
 export const Columns: Widget = {
-	name: {en: 'Columns'},
+	name: {en: 'Columns', sl: 'Stolpci'},
 	icon: {fontawesome: faColumns},
 
 	newItem: async (): Promise<ColumnsData> => {
@@ -161,17 +162,18 @@ export const Columns: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as ColumnsData
 		return <>
-			<div>
-				<label>Width</label>
-				<br />
-				<small className='text-muted'>{WidthOptions}</small>
-			</div>
+			<label htmlFor='Columns-width' className='d-block'>
+				{Trans('width')}
+			</label>
+			<small className='text-muted d-block'>
+				{WidthOptions}
+			</small>
 			{item.widths.map((w, idx) => <div
 				key={idx}
 				className='input-group'
 			>
 				<InputApplyOnEnter
-					id="width"
+					id={`Columns-width-${idx}`}
 					value={w}
 					onChange={val => {
 						const arr = [...item.widths]
@@ -182,7 +184,7 @@ export const Columns: Widget = {
 					style={{flex: '1'}}
 				/>
 				<button
-					className='btn btn-outline-secondary'
+					className='btn btn-outline-secondary mt-2'
 					onClick={() => {
 						const ws = [...item.widths]
 						const chs = [...item.children]
@@ -190,6 +192,7 @@ export const Columns: Widget = {
 						chs.splice(idx, 1)
 						props.setItem({...item, widths: ws, children: chs})
 					}}
+					title={Trans('remove')}
 				>
 					<FontAwesomeIcon icon={faTimes} />
 				</button>
@@ -204,7 +207,7 @@ export const Columns: Widget = {
 					}}
 				>
 					<FontAwesomeIcon icon={faPlus} className='me-2' />
-					Add column
+					{Trans('columns add')}
 				</button>
 			</div>
 		</>
