@@ -5,10 +5,10 @@
 
 
 import type { TTransformWidget } from '../editor/types'
-import { filter } from './filter'
+import { Filter } from './Filter'
 
 export const allTransforms: {[key: string]: TTransformWidget} = {
-	filter,
+	Filter,
 }
 
 export default function getTransform(type: string): TTransformWidget {

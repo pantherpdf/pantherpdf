@@ -1,5 +1,5 @@
 /**
- * filter.tsx
+ * Filter.tsx
  * filter array's items based on a condition
  */
 
@@ -13,16 +13,16 @@ import InputApplyOnEnter from '../widgets/InputApplyOnEnter'
 import Trans from '../translation'
 
 export interface FilterData extends TTransformData {
-	type: 'filter',
+	type: 'Filter',
 	field: string,
 }
 
-const filter: TTransformWidget = {
+const Filter: TTransformWidget = {
 	name: 'Filter',
 
 	newItem: async () => {
 		const obj: FilterData = {
-			type: 'filter',
+			type: 'Filter',
 			comment: '',
 			field: '',
 			condition: '',
@@ -80,4 +80,4 @@ const filter: TTransformWidget = {
 	},
 }
 
-export { filter }
+export { Filter }
