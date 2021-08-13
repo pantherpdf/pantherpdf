@@ -15,6 +15,7 @@ import Trans from '../translation'
 export interface FilterData extends TTransformData {
 	type: 'Filter',
 	field: string,
+	condition: string,
 }
 
 const Filter: TTransformWidget = {
