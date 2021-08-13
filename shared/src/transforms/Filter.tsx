@@ -37,7 +37,7 @@ const Filter: TTransformWidget = {
 			return dt
 		const helper: IHelpers & {vars: {}} = {
 			vars: {
-				'_': dt,
+				'data': dt,
 			}
 		}
 		const result = await FormulaEvaluate(item.field, helper)
