@@ -113,6 +113,8 @@ const tr2 = {
 	'sum error variable not selected': { en: 'Error: variable not selected', sl: 'Napaka: Spremenljivka ni nastavljena' },
 	'sum error variable doesnt exist': { en: 'Error: variable does not exist', sl: 'Napaka: Spremenljivka ne obstaja' },
 	'data must be 2D array': { en: 'Data must be 2D array. Add transform CSV.', sl: 'Podatki morajo biti v obliki 2D tabele. Dodaj transformacijo CSV.' },
+	'add row': { en: 'Add Row', sl: 'Dodaj Vrstico' },
+	'add col': { en: 'Add Column', sl: 'Dodaj Stolpec' },
 }
 
 export type trKeys = keyof typeof tr2
