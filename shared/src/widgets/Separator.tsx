@@ -16,8 +16,8 @@ export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
 export type TBorderStyle = (typeof TBorderStyles)[number];
 
 interface Properties {
-	marginTop: string,
-	marginBottom: string,
+	marginTop: number,
+	marginBottom: number,
 	border: Border,
 }
 export type SeparatorData = TData & Properties
@@ -26,13 +26,14 @@ export type SeparatorCompiled = TDataCompiled & Properties
 
 function GenStyle(item: SeparatorData | SeparatorCompiled): CSSProperties {
 	return {
-		marginTop: item.marginTop,
-		marginBottom: item.marginBottom,
+		marginTop: `${item.marginTop}px`,
+		marginBottom: `${item.marginBottom}px`,
 		borderTop: genBorderCss(item.border),
 		borderRight: 'none',
 		borderBottom: 'none',
 		borderLeft: 'none',
 		opacity: '1',
+		color: 'transparent',
 	}
 }
 
@@ -45,8 +46,8 @@ export const Separator: Widget = {
 		return {
 			type: 'Separator',
 			children: [],
-			marginTop: '1rem',
-			marginBottom: '1rem',
+			marginTop: 20,
+			marginBottom: 20,
 			border: {
 				width: 1,
 				style: 'solid',
@@ -77,21 +78,27 @@ export const Separator: Widget = {
 			<label htmlFor='sep-marginTop' className='d-block'>
 				{Trans('margin top')}
 			</label>
-			<InputApplyOnEnter
-				id="sep-marginTop"
+			<input
+				type='range'
+				id='sep-marginTop'
+				min={0}
+				max={40}
 				value={item.marginTop}
-				onChange={val => props.setItem({...props.item, marginTop: val})}
-				regex={WidthRegex}
+				onChange={e => props.setItem({...props.item, marginTop: parseFloat(e.currentTarget.value)})}
+				className='form-range'
 			/>
 
 			<label htmlFor='sep-marginBottom' className='d-block'>
 				{Trans('margin bottom')}
 			</label>
-			<InputApplyOnEnter
-				id="sep-marginBottom"
+			<input
+				type='range'
+				id='sep-marginBottom'
+				min={0}
+				max={40}
 				value={item.marginBottom}
-				onChange={val => props.setItem({...props.item, marginBottom: val})}
-				regex={WidthRegex}
+				onChange={e => props.setItem({...props.item, marginBottom: parseFloat(e.currentTarget.value)})}
+				className='form-range'
 			/>
 
 			<PropertyBorder
