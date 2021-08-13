@@ -7,6 +7,7 @@ import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight } from '@forta
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { tuple } from '../types'
+import Trans, { trKeys } from '../translation';
 
 
 export const TAligns = tuple('left', 'center', 'right', 'justify');
@@ -18,20 +19,21 @@ interface AlignProps {
 }
 
 export default function PropertyAlign(props: AlignProps) {
-	const icons: {[key in TAlign]: IconDefinition} = {
-		'left': faAlignLeft,
-		'center': faAlignCenter,
-		'right': faAlignRight,
-		'justify': faAlignJustify,
-	}
+	const dt: {value: TAlign, icon: IconDefinition, transKey: trKeys}[] = [
+		{ value: 'left', icon: faAlignLeft, transKey: 'align-left' },
+		{ value: 'center', icon: faAlignCenter, transKey: 'align-center' },
+		{ value: 'right', icon: faAlignRight, transKey: 'align-right' },
+		{ value: 'justify', icon: faAlignJustify, transKey: 'align-justify' },
+	]
 	return <div>
 		<div className='btn-group'>
-			{TAligns.map(x => <button
-				key={x}
-				className={`btn btn-outline-secondary ${x === props.value ? 'active' : ''}`}
-				onClick={() => props.onChange(x!==props.value ? x : undefined)}
+			{dt.map(x => <button
+				key={x.value}
+				className={`btn btn-outline-secondary ${x.value === props.value ? 'active' : ''}`}
+				onClick={() => props.onChange(x.value!==props.value ? x.value : undefined)}
+				title={Trans(x.transKey)}
 			>
-				<FontAwesomeIcon icon={icons[x]} fixedWidth />
+				<FontAwesomeIcon icon={x.icon} fixedWidth />
 			</button>)}
 		</div>
 	</div>

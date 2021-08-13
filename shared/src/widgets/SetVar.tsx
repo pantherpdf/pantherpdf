@@ -8,7 +8,7 @@ import type { Widget } from '../editor/types'
 import { faHammer } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 import InputApplyOnEnter from './InputApplyOnEnter'
-import { TransName } from '../translation'
+import Trans, { TransName } from '../translation'
 
 
 export interface SetVarData extends TData {
@@ -23,7 +23,7 @@ export interface SetVarCompiled extends TDataCompiled {
 
 
 export const SetVar: Widget = {
-	name: {en: 'SetVar'},
+	name: {en: 'SetVar', sl: 'Spremenljivka'},
 	icon: {fontawesome: faHammer},
 
 	newItem: async (): Promise<SetVarData> => {
@@ -62,21 +62,24 @@ export const SetVar: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as SetVarData
 		return <>
-			<div><label htmlFor='SetVar-source'>Source</label></div>
+			<label htmlFor='SetVar-source' className='d-block'>
+				{Trans('source data')}
+			</label>
 			<div className="input-group mb-3">
 				<span className="input-group-text fst-italic">ƒ</span>
 				<InputApplyOnEnter
 					id='SetVar-source'
-					value={item.array}
-					onChange={val=>props.setItem({...item, array: val})}
+					value={item.source}
+					onChange={val=>props.setItem({...item, source: val})}
 				/>
 			</div>
 
-			<div>
-				<label htmlFor='SetVar-varName'>Var name</label>
-				<br />
-				selected item will be in this variable
-			</div>
+			<label htmlFor='SetVar-varName' className='d-block'>
+				{Trans('varName')}
+			</label>
+			<small className='text-muted d-block'>
+				{Trans('repeat - current item is this var')}
+			</small>
 			<InputApplyOnEnter
 				id='SetVar-varName'
 				value={item.varName}

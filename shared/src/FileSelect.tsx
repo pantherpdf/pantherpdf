@@ -1,4 +1,5 @@
 import React, { useRef } from 'react'
+import Trans from './translation'
 
 interface Props {
 	onSelect: (files: File[]) => void,
@@ -64,10 +65,26 @@ export default function FileSelect(props: Props) {
 			onDragOver={onDragOver}
 			onDrop={onDrop}
 		>
-			<div className='text-center'>Drop files here</div>
-			<div className='text-center mt-2 text-muted'>or</div>
-			<div className='text-center mt-2'><button className='btn btn-sm btn-outline-primary' onClick={selectFileClick}>Select files</button></div>
+			<div className='text-center'>
+				{Trans('drop-files here')}
+			</div>
+			<div className='text-center mt-2 text-muted'>
+				{Trans('drop-or')}
+			</div>
+			<div className='text-center mt-2'>
+				<button
+					className='btn btn-sm btn-outline-primary'
+					onClick={selectFileClick}
+				>
+					{Trans('drop-select files')}
+				</button>
+			</div>
 		</div>
-		<input type='file' className='d-none' ref={selectFileElement} onChange={selectFileElementChange} />
+		<input
+			type='file'
+			className='d-none'
+			ref={selectFileElement}
+			onChange={selectFileElementChange}
+		/>
 	</>
 }

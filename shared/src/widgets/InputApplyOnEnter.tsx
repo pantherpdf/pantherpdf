@@ -20,6 +20,7 @@ interface Props {
 	regex?: RegExp,
 	id?: string,
 	style?: React.CSSProperties,
+	placeholder?: string,
 }
 
 export default function InputApplyOnEnter(props: Props) {

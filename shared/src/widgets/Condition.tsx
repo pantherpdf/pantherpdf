@@ -9,6 +9,7 @@ import type { Widget } from '../editor/types'
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 import InputApplyOnEnter from './InputApplyOnEnter'
+import Trans from '../translation'
 
 
 export interface ConditionData extends TData {
@@ -22,7 +23,7 @@ export interface ConditionCompiled extends TDataCompiled {
 
 
 export const Condition: Widget = {
-	name: {en: 'Condition'},
+	name: {en: 'Condition', sl: 'Pogoj'},
 	icon: {fontawesome: faCodeBranch},
 
 	newItem: async (): Promise<ConditionData> => {
@@ -58,6 +59,9 @@ export const Condition: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as ConditionData
 		return <>
+			<label htmlFor='Condition-formula'>
+				{Trans('formula')}
+			</label>
 			<div className="input-group mb-3">
 				<span className="input-group-text fst-italic">ƒ</span>
 				<InputApplyOnEnter

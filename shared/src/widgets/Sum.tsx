@@ -9,7 +9,7 @@ import { faDatabase, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 import InputApplyOnEnter from './InputApplyOnEnter'
 import { findInList } from '../editor/childrenMgmt'
-import { TransName } from '../translation'
+import Trans, { TransName } from '../translation'
 
 
 export interface VarContainerData extends TData {
@@ -23,7 +23,7 @@ export interface VarContainerCompiled extends TDataCompiled {
 
 
 export const VarContainer: Widget = {
-	name: {en: 'VarContainer'},
+	name: {en: 'VarContainer', sl: 'Spremen.Kontejner'},
 	icon: {fontawesome: faDatabase},
 
 	newItem: async (): Promise<VarContainerData> => {
@@ -66,9 +66,12 @@ export const VarContainer: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as VarContainerData
 		return <>
-			<div><label htmlFor='VarContainer-vars'>
-				Variables <span className='ms-2 text-muted'>comma separated</span>
-			</label></div>
+			<label htmlFor='VarContainer-vars' className='d-block'>
+				{Trans('variables')}
+			</label>
+			<small className='d-block'>
+				{Trans('sum - comma separated')}
+			</small>
 			<InputApplyOnEnter
 				id='VarContainer-vars'
 				value={Object.keys(item.vars).join(', ')}
@@ -126,7 +129,7 @@ export interface SumCompiled extends TDataCompiled {
 
 
 export const Sum: Widget = {
-	name: {en: 'Sum'},
+	name: {en: 'Sum', sl: 'Seštevek'},
 	icon: {fontawesome: faPlusSquare},
 
 	newItem: async (): Promise<SumData> => {
@@ -167,18 +170,18 @@ export const Sum: Widget = {
 			const parents = getParentContainers(props.report, props.wid)
 			if (parents.length === 0) {
 				return <span className='text-danger'>
-					Error: Missing VarContainer
+					{Trans('sum error missing parent')}
 				</span>
 			}
 			if (item.varName.length === 0) {
 				return <span className='text-danger'>
-					Error: variable not selected
+					{Trans('sum error variable not selected')}
 				</span>
 			}
 			const varExists = !!parents.find(x => item.varName in x.vars)
 			if (!varExists) {
 				return <span className='text-danger'>
-					Error: variable does not exist in parent VarContainer(s)
+					{Trans('sum error variable doesnt exist')}
 				</span>
 			}
 			return (
@@ -212,9 +215,9 @@ export const Sum: Widget = {
 		//
 		const item = props.item as SumData
 		return <>
-			<div>
-				<label htmlFor='Sum-varName'>Variable Name</label>
-			</div>
+			<label htmlFor='Sum-varName' className='d-block'>
+				{Trans('varName')}
+			</label>
 			<select
 				className='form-select'
 				value={item.varName}
@@ -230,7 +233,9 @@ export const Sum: Widget = {
 				</option>)}
 			</select>
 
-			<div><label htmlFor='Sum-Formula'>Formula</label></div>
+			<label htmlFor='Sum-Formula' className='d-block'>
+				{Trans('formula')}
+			</label>
 			<div className="input-group mb-3">
 				<span className="input-group-text fst-italic">ƒ</span>
 				<InputApplyOnEnter

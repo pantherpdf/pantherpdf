@@ -12,7 +12,7 @@ import { ReportResponseBase } from '../types'
 import { Widget, GeneralProps } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faMinus, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
 
 interface ExpandableProps {
 	name: string,
@@ -25,8 +25,9 @@ function Expandable(props: ExpandableProps) {
 	return <div>
 		<div className={'d-flex '+style.header} onClick={() => setExpanded(!expanded)}>
 			<span className='mr-3' style={{fontSize:'110%'}}>
-				{/*expanded ? <i className='fas fa-minus fa-fw'/> : <i className='fas fa-plus fa-fw'/>*/}
-				<small className='me-2'><FontAwesomeIcon icon={expanded ? faMinus : faPlus} fixedWidth /></small>
+				<small className='me-2'>
+					<FontAwesomeIcon icon={expanded ? faMinus : faPlus} fixedWidth />
+				</small>
 			</span>
 			<strong>{props.name}</strong>
 		</div>
@@ -171,11 +172,11 @@ function ShowUpload(props: GeneralProps) {
 	return <>
 		<div className="btn-group" role="group">
 			<button className='btn btn-primary' onClick={fileDownload}>
-				<i className='fas fa-download fa-fw mr-2'/>
+				<FontAwesomeIcon icon={faDownload} fixedWidth className='me-2' />
 				{Trans('download')}
 			</button>
 			<button className='btn btn-outline-primary' onClick={() => fileUpload(arr, setArr)}>
-				<i className='fas fa-upload fa-fw mr-2'/>
+				<FontAwesomeIcon icon={faUpload} fixedWidth className='me-2' />
 				{Trans('upload')}
 			</button>
 		</div>
@@ -195,7 +196,7 @@ function ShowUpload(props: GeneralProps) {
 
 export default function EditWidgetNew(props: GeneralProps) {
 	if (props.report.target !== 'pdf') {
-		return <div className='text-muted'><small>{Trans('no widgets available for target', [props.report.target])}</small></div>
+		return <div className='text-muted'><small>{Trans('no widgets available for target -name-', [props.report.target])}</small></div>
 	}
 	return <>
 		<Expandable name={Trans('widgets')} defaultExpanded={true}>

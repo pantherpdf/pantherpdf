@@ -104,15 +104,31 @@ export default function PropertyFont(props: Props) {
 	}
 
 	function renderBtn() {
-		if(props.textButton)
-			return <button className='btn link' onClick={e=>{e.preventDefault()}}>{Trans('font')}</button>
+		if(props.textButton) {
+			return <button
+				className='btn link'
+				onClick={e=>{e.preventDefault()}}
+			>
+				{Trans('font')}
+			</button>
+		}
 
-		if(props.iconButton)
-			return <button className='btn link' onClick={e=>{e.preventDefault()}} title={Trans('font')}>
+		if(props.iconButton) {
+			return <button
+				className='btn link'
+				onClick={e=>{e.preventDefault()}}
+				title={Trans('font')}
+			>
 				<FontAwesomeIcon icon={faFont} fixedWidth />
 			</button>
+		}
 		
-		return <button className="btn btn-sm btn-primary">{Trans('font')}</button>
+		return <button
+			className="btn btn-sm btn-primary"
+		>
+			<FontAwesomeIcon icon={faFont} className='me-2' />
+			{Trans('font')}
+		</button>
 	}
 
 

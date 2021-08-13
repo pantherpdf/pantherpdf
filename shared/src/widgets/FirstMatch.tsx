@@ -9,7 +9,7 @@ import type { Widget } from '../editor/types'
 import { faHandRock } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 import InputApplyOnEnter from './InputApplyOnEnter'
-import { TransName } from '../translation'
+import Trans, { TransName } from '../translation'
 
 
 export interface FirstMatchData extends TData {
@@ -25,7 +25,7 @@ export interface FirstMatchCompiled extends TDataCompiled {
 
 
 export const FirstMatch: Widget = {
-	name: {en: 'FirstMatch'},
+	name: {en: 'FirstMatch', sl: 'Prvi ustrezen'},
 	icon: {fontawesome: faHandRock},
 
 	newItem: async (): Promise<FirstMatchData> => {
@@ -81,7 +81,9 @@ export const FirstMatch: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as FirstMatchData
 		return <>
-			<label htmlFor='FirstMatch-source'>Source</label>
+			<label htmlFor='FirstMatch-source' className='d-block'>
+				{Trans('source data')}
+			</label>
 			<div className="input-group mb-3">
 				<span className="input-group-text fst-italic">ƒ</span>
 				<InputApplyOnEnter
@@ -91,11 +93,12 @@ export const FirstMatch: Widget = {
 				/>
 			</div>
 
-			<div>
-				<label htmlFor='FirstMatch-condition'>Condition</label>
-				<br />
-				current item is in variable: <span style={{fontFamily:'monospace'}}>{item.varName}</span>
-			</div>
+			<label htmlFor='FirstMatch-condition' className='d-block'>
+				{Trans('condition')}
+			</label>
+			<small className='text-muted d-block'>
+				{Trans('current item is in var -name-', [item.varName])}
+			</small>
 			<div className="input-group mb-3">
 				<span className="input-group-text fst-italic">ƒ</span>
 				<InputApplyOnEnter
@@ -105,11 +108,12 @@ export const FirstMatch: Widget = {
 				/>
 			</div>
 
-			<div>
-				<label htmlFor='FirstMatch-varName'>Var name</label>
-				<br />
-				selected item will be in this variable
-			</div>
+			<label htmlFor='FirstMatch-varName' className='d-block'>
+				{Trans('varName')}
+			</label>
+			<small className='text-muted d-block'>
+				{Trans('repeat - current item is this var')}
+			</small>
 			<InputApplyOnEnter
 				id='FirstMatch-varName'
 				value={item.varName}

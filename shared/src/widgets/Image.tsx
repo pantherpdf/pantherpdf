@@ -13,6 +13,7 @@ import PropertyAlign, { TAlign } from './PropertyAlign'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Modal } from 'react-bootstrap'
 import FileDialog from '../FileDialog'
+import Trans from '../translation'
 
 
 export interface ImageData extends TData {
@@ -33,7 +34,7 @@ export interface ImageCompiled extends TDataCompiled {
 
 
 export const Image: Widget = {
-	name: {en: 'Image'},
+	name: {en: 'Image', sl: 'Slika'},
 	icon: {fontawesome: faImage},
 
 	newItem: async (): Promise<ImageData> => {
@@ -93,8 +94,8 @@ export const Image: Widget = {
 		const item = props.item as ImageData
 		const [showModal, setShowModal] = useState<boolean>(false)
 		return <>
-			<label htmlFor='img-formula'>
-				Formula
+			<label htmlFor='img-formula' className='d-block'>
+				{Trans('formula')}
 			</label>
 			<div className="input-group mb-3">
 				<span className="input-group-text fst-italic">ƒ</span>
@@ -105,14 +106,15 @@ export const Image: Widget = {
 				/>
 			</div>
 
-			<label htmlFor='img-url'>
-				Url
+			<label htmlFor='img-url' className='d-block'>
+				{Trans('url')}
 			</label>
 			<div className="input-group mb-3">
 				<InputApplyOnEnter
 					id='img-url'
 					value={item.url}
 					onChange={val => props.setItem({...item, url: val})}
+					placeholder='https://www.example.com/image.jpg'
 				/>
 				<button
 					className="btn btn-outline-secondary"
@@ -123,7 +125,7 @@ export const Image: Widget = {
 			</div>
 
 			<label htmlFor="width">
-				Width <span className="text-muted">{WidthOptions}</span>
+				{Trans('width')} <span className="text-muted">{WidthOptions}</span>
 			</label>
 			<InputApplyOnEnter
 				id="width"
@@ -132,6 +134,7 @@ export const Image: Widget = {
 				regex={WidthRegex}
 			/>
 
+			<div className='mt-3' />
 			<PropertyAlign
 				value={item.align}
 				onChange={val => props.setItem({...item, align: val})}
