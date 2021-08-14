@@ -35,6 +35,7 @@ export interface TReport {
 	email: string,
 	time: string,
 	target: TargetOption,
+	version: string,
 	children: TData[],
 	transforms: TTransformData[],
 	properties: {
@@ -51,6 +52,7 @@ export interface TReportShort {
 	_id: string,
 	name: string,
 	target: TargetOption,
+	version: string,
 }
 
 export interface TDataCompiled {

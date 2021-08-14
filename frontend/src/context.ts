@@ -83,7 +83,12 @@ export function getApp(data: IAppContextData, setData: React.Dispatch<React.SetS
 			const arr = [...data.reports]
 			if (value) {
 				const old = arr[idx]
-				const obj: TReportShort = { _id, name: value.name, target: value.target }
+				const obj: TReportShort = {
+					_id,
+					name: value.name,
+					target: value.target,
+					version: value.version,
+				}
 				if (JSON.stringify(old) === JSON.stringify(obj))
 					return
 				arr[idx] = obj

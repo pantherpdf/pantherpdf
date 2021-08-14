@@ -24,11 +24,13 @@ const handler: Handler = async (event, context) => {
 	// insert
 	const time = new Date().toISOString().substring(0,19)+'Z'
 	const target = 'pdf'
+	const version = '1.0.0'
 	const obj: TReportWithoutId = {
 		name,
 		email,
 		time,
 		target,
+		version,
 		children: [],
 		transforms: [],
 		properties: {},
@@ -38,7 +40,7 @@ const handler: Handler = async (event, context) => {
 
 	db.logEvent(event, 'reportAdd', { email, reportId: _id })
 
-	const resp: ReportNewResponse = { _id, name, target }
+	const resp: ReportNewResponse = { _id, name, target, version }
 	return {
 		statusCode: 200,
 		body: JSON.stringify(resp),

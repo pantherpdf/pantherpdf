@@ -16,6 +16,7 @@ const handler: Handler = async (event, context) => {
 			_id: 1,
 			name: 1,
 			target: 1,
+			version: 1,
 		}
 		const reportsTmp = (await db.reports.find({email: user.email}).project(projection).toArray()) as any
 		const reports = reportsTmp.map((x: any) => { x._id = x._id.toHexString(); return x; }) as TReportShort[]

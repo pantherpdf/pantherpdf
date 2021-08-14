@@ -93,6 +93,7 @@ export async function compileComponent(cmpData: object, obj: any): Promise<TData
 	const dt: TReport = {
 		_id: '',
 		target: 'pdf',
+		version: '1.0.0',
 		name: 'John Johnny',
 		email: 'admin@admin.com',
 		time: '2020-01-01T01:01:01Z',
