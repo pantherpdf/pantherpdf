@@ -12,7 +12,7 @@ const handler: Handler = async (event, context) => {
 
 	const WORKER_URL = process.env.WORKER_URL || ''
 
-	return { statusCode: 301, headers: { Location: `${WORKER_URL}/apiv1/download/${encodeURIComponent(pdfId)}` }}
+	return { statusCode: 301, body: '', headers: { Location: `${WORKER_URL}/apiv1/download/${encodeURIComponent(pdfId)}` }}
 };
 
 export { handler };
