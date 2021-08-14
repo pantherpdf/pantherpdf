@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import connectToDatabase from '../db'
 import { PropertyFontGenCss, defaultReportCss } from 'reports-shared'
 import styleToCssString from 'react-style-object-to-css'
+import type { CSSProperties } from 'react'
 
 const handler: Handler = async (event, context) => {
 	if (event.httpMethod != 'GET') {
@@ -24,11 +25,8 @@ const handler: Handler = async (event, context) => {
 	if (!report) {
 		return { statusCode: 400, body: JSON.stringify({msg: 'Missing report doc'}) }
 	}
-	let css = ''
-	if (report.properties.font) {
-		const obj = PropertyFontGenCss({...defaultReportCss, ...(report.properties.font || {})})
-		css = styleToCssString(obj)
-	}
+	const cssObj: CSSProperties = {...defaultReportCss, ...PropertyFontGenCss(report.properties.font || {})}
+	const css = styleToCssString(cssObj)
 
 	const html = `<!DOCTYPE html>
 <html lang="en-US">
