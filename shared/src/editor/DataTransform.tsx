@@ -52,7 +52,12 @@ function TransformItem(props: TransformItemProps) {
 		size='sm'
 	>
 		<button className='btn btn-sm btn-outline-secondary flex-fill text-left' onClick={()=>props.showData(props.index+1)}>
-			{TransName(comp.name)} <small className='text-truncate d-inline-block ml-3 text-muted' style={{maxWidth:'5rem', position:'relative', top:'0.25rem'}}>{props.item.comment}</small>
+			<span className='d-block'>
+				{TransName(comp.name)}
+			</span>
+			<small className='d-block text-truncate text-nowrap text-muted' style={{maxWidth:'10rem'}}>
+				{props.item.comment}
+			</small>
 		</button>
 		<Dropdown.Toggle style={{maxWidth:'3rem'}} split variant="outline-secondary" id="dropdown-custom-2" />
 		<Dropdown.Menu>
