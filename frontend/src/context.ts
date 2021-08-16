@@ -40,8 +40,17 @@ export function getApp(data: IAppContextData, setData: React.Dispatch<React.SetS
 	const app: IAppContextCB = {
 		...data,
 		setSid: async (sid: string) => {
-			const r = await fetch('/.netlify/functions/userData', {headers: {Authorization: `Bearer sid:${sid}`}})
-			const js = await r.json() as UserDataResponse
+			let r: Response
+			let js: UserDataResponse
+			try {
+				r = await fetch('/.netlify/functions/userData', {headers: {Authorization: `Bearer sid:${sid}`}})
+				js = await r.json()
+			}
+			catch(e) {
+				window.localStorage.removeItem('sid')
+				setData({...data, user: null})
+				return
+			}
 			if (!r.ok) {
 				window.localStorage.removeItem('sid')
 				setData({...data, user: null})
