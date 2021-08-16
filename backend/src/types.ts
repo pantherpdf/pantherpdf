@@ -194,3 +194,24 @@ export type GenerateResponse = GenerateResponseBase | ErrorResponse
 
 export type GeneratePdfResponseBase = { id: string, status: 'waiting'|'working'|'finished', errorMsg?: string }
 export type GeneratePdfResponse = GeneratePdfResponseBase | ErrorResponse
+
+
+
+
+
+
+export type ContactSendMessageRequest = { email: string, message: string, captchaToken: string }
+export function ContactSendMessageRequestTypeGuard(r: any): r is ContactSendMessageRequest {
+	if (typeof r != 'object')
+		return false
+	if (Object.keys(r).length !== 3)
+		return false
+	if (!('email' in r) || typeof r.email != 'string')
+		return false
+	if (!('message' in r) || typeof r.message != 'string')
+		return false
+	if (!('captchaToken' in r) || typeof r.captchaToken != 'string')
+		return false
+	return true
+}
+export type ContactSendMessageResponse = {} | ErrorResponse

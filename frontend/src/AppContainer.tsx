@@ -9,6 +9,8 @@ import Reports from './pages/Reports'
 import Report from './pages/Report'
 import NotFound from './pages/NotFound'
 import ReportPreview from './pages/ReportPreview'
+import Pricing from './pages/Pricing'
+import Contact from './pages/Contact'
 
 
 function PrivateRoute (props1: RouteProps) {
@@ -69,6 +71,8 @@ function AppContainer() {
 		<BrowserRouter>
 			<Switch>
 				<PublicRoute exact path='/' component={Home} />
+				<PublicRoute exact path='/pricing' component={Pricing} />
+				<PublicRoute exact path='/contact' component={Contact} />
 				<PublicRoute exact path='/login' component={Login} />
 				<PrivateRoute exact path='/reports' component={Reports} />
 				<PrivateRoute exact path='/reports/:id' component={Report} />

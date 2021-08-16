@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "reports-shared": "file:../shared",
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
@@ -12,7 +11,9 @@
     "bootstrap": "^5.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-router-dom": "^5.2.0"
+    "react-image-lightbox": "^5.1.4",
+    "react-router-dom": "^5.2.0",
+    "reports-shared": "file:../shared"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.4",
