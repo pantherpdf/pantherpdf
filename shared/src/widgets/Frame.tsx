@@ -11,19 +11,22 @@ import PropertyColor from './PropertyColor'
 import PropertyBorder, { Border, genBorderCss } from './PropertyBorder'
 import BoxName from './BoxName'
 import Trans from '../translation'
+import InputApplyOnEnter, { WidthOptions, WidthRegex } from './InputApplyOnEnter'
 
 
 interface Properties {
 	margin: [number, number, number, number],
 	padding: [number, number, number, number],
 	border: Border | [Border, Border, Border, Border],
+	width: string,
+	height: string,
 	backgroundColor?: string,
 }
 export type FrameData = TData & Properties
 export type FrameCompiled = TDataCompiled & Properties
 
 
-function genStyle(item: FrameData | FrameCompiled): CSSProperties {
+function genStyle(item: FrameData | FrameCompiled, final: boolean): CSSProperties {
 	const css: CSSProperties = {
 		margin: `${item.margin[0]}px ${item.margin[1]}px ${item.margin[2]}px ${item.margin[3]}px`,
 		padding: `${item.padding[0]}px ${item.padding[1]}px ${item.padding[2]}px ${item.padding[3]}px`,
@@ -40,6 +43,26 @@ function genStyle(item: FrameData | FrameCompiled): CSSProperties {
 	}
 	if (item.backgroundColor) {
 		css.backgroundColor = item.backgroundColor
+	}
+
+	if (final) {
+		if (item.width.length > 0) {
+			css.width = item.width
+			css.flex = `0 0 ${item.width}`
+			css.overflowX = 'hidden'
+		}
+		if (item.height.length > 0) {
+			css.height = item.height
+			css.overflowY = 'hidden'
+		}
+	}
+	else {
+		if (item.width.length > 0) {
+			css.width = item.width
+		}
+		if (item.height.length > 0) {
+			css.minHeight = item.height
+		}
 	}
 	return css
 }
@@ -125,26 +148,28 @@ export const Frame: Widget = {
 				width: 1,
 				style: 'solid',
 				color: '#333333',
-			}
+			},
+			width: '',
+			height: '',
 		}
 	},
 
 	compile: async (dt: FrameData, helpers): Promise<FrameCompiled> => {
-		return {
-			...dt,
-		}
+		const dt2: FrameCompiled = JSON.parse(JSON.stringify({...dt, children: []}))
+		dt2.children = await helpers.compileChildren(dt.children, helpers)
+		return dt2
 	},
 
 	Render: function(props) {
 		const item = props.item as FrameData
-		return <BoxName {...props} style={genStyle(item)} name={Frame.name}>
+		return <BoxName {...props} style={genStyle(item, false)} name={Frame.name}>
 			{props.renderWidgets(item.children, props.wid)}
 		</BoxName>
 	},
 
 	RenderFinal: function(props) {
 		const item = props.item as FrameCompiled
-		return <div style={genStyle(item)}>
+		return <div style={genStyle(item, true)}>
 			{props.renderChildren(item.children, props)}
 		</div>
 	},
@@ -220,6 +245,33 @@ export const Frame: Widget = {
 				onChange={val => props.setItem({...item, border: val})}
 			/>}
 			<hr />
+
+
+			<label htmlFor='Frame-width' className='d-block'>
+				{Trans('width')}
+				<small className='text-muted ms-1'>
+					[{WidthOptions}]
+				</small>
+			</label>
+			<InputApplyOnEnter
+				id='Frame-width'
+				value={item.width || ''}
+				onChange={val => props.setItem({...item, width: String(val)})}
+				regex={WidthRegex}
+			/>
+
+			<label htmlFor='Frame-height' className='d-block'>
+				{Trans('height')}
+				<small className='text-muted ms-1'>
+					[{WidthOptions}]
+				</small>
+			</label>
+			<InputApplyOnEnter
+				id='Frame-height'
+				value={item.height || ''}
+				onChange={val => props.setItem({...item, height: String(val)})}
+				regex={WidthRegex}
+			/>
 
 			<div className="form-check">
 				<input

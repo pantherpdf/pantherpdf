@@ -2,23 +2,34 @@
  * Repeat.tsx
  */
 
-import React from 'react'
-import { TData, TDataCompiled } from '../types'
+import React, { CSSProperties } from 'react'
+import { TData, TDataCompiled, tuple } from '../types'
 import type { Widget } from '../editor/types'
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 import InputApplyOnEnter from './InputApplyOnEnter'
-import Trans, { TransName } from '../translation'
+import Trans, { TransName, trKeys } from '../translation'
 
+
+const RepeatDirections = tuple('rows', 'columns', 'grid');
+type RepeatDirection = (typeof RepeatDirections)[number];
+const RepeatDirectionTrans: {[key in RepeatDirection]: trKeys} = {
+	rows: 'repeat - direction rows',
+	columns: 'repeat - direction columns',
+	grid: 'repeat - direction grid',
+}
 
 export interface RepeatData extends TData {
 	type: 'Repeat',
 	source: string,
 	varName: string,
+	direction: RepeatDirection,
 }
 
 export interface RepeatCompiled extends TDataCompiled {
 	type: 'Repeat',
+	children: TDataCompiled[][],
+	direction: RepeatDirection,
 }
 
 
@@ -32,6 +43,7 @@ export const Repeat: Widget = {
 			children: [],
 			source: '',
 			varName: 'item',
+			direction: 'rows',
 		}
 	},
 
@@ -40,16 +52,17 @@ export const Repeat: Widget = {
 		if (!Array.isArray(value)) {
 			throw new Error(`Repeat: expected source to be array but got ${typeof value}`)
 		}
-		const children: TDataCompiled[] = []
+		const children: TDataCompiled[][] = []
 		for (const val2 of value) {
 			helper.formulaHelper.push(dt.varName, val2)
 			const ch2 = await helper.compileChildren(dt.children, helper)
-			children.splice(children.length, 0, ...ch2)
+			children.push(ch2)
 			helper.formulaHelper.pop()
 		}
 		return {
 			type: dt.type,
 			children,
+			direction: dt.direction,
 		}
 	},
 
@@ -61,9 +74,34 @@ export const Repeat: Widget = {
 	},
 
 	RenderFinal: function(props) {
-		return <>
-			{props.renderChildren(props.item.children, props)}
-		</>
+		const item = props.item as RepeatCompiled
+		if (item.direction === 'rows') {
+			// maybe add to cssItem:
+			// pageBreakInside: 'avoid',  // must be present otherwise item in quotes gets breaked up
+			return <>
+				{props.renderChildren(props.item.children, props)}
+			</>
+		}
+		const cssParent: CSSProperties = {}
+		const cssItem: CSSProperties = {}
+		if (item.direction === 'columns') {
+			cssParent.display = 'flex'
+			const w = item.children.length > 0 ? 1 / item.children.length : 1
+			cssItem.flex = `0 0 ${w.toFixed(1)}%`
+		}
+		if (item.direction === 'grid') {
+			cssParent.display = 'flex'
+			cssParent.flexWrap = 'wrap'
+		}
+		// maybe remove <div> when only one child and this child is frame?
+		return <div style={cssParent}>
+			{item.children.map((item, idx) => <div
+				key={idx}
+				style={cssItem}
+			>
+				{props.renderChildren(item, props)}
+			</div>)}
+		</div>
 	},
 
 	RenderProperties: function(props) {
@@ -92,6 +130,23 @@ export const Repeat: Widget = {
 				value={item.varName}
 				onChange={val=>props.setItem({...item, varName: val})}
 			/>
+
+			<label htmlFor='Repeat-direction' className='d-block'>
+				{Trans('repeat - direction')}
+			</label>
+			<select
+				className='form-select'
+				value={item.direction}
+				onChange={e => props.setItem({...item, direction: e.currentTarget.value})}
+				id='Repeat-direction'
+			>
+				{RepeatDirections.map(m => <option
+					key={m}
+					value={m}
+				>
+					{Trans(RepeatDirectionTrans[m])}
+				</option>)}
+			</select>
 		</>
 	},
 }
