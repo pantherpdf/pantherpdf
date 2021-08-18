@@ -15,8 +15,8 @@ test('text', async () => {
 	const p = await compileComponent(dt, data) as any
 	expect(p).toBeTruthy()
 	expect(p.type).toBe('Repeat')
-	expect(p.children[0].data).toBe('1')
-	expect(p.children[1].data).toBe('2')
-	expect(p.children[2].data).toBe('a')
-	expect(p.children[3].data).toBe('b')
+	expect(p.children[0][0].data).toBe('1')
+	expect(p.children[1][0].data).toBe('2')
+	expect(p.children[2][0].data).toBe('a')
+	expect(p.children[3][0].data).toBe('b')
 })

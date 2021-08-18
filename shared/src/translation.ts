@@ -115,6 +115,11 @@ const tr2 = {
 	'data must be 2D array': { en: 'Data must be 2D array. Add transform CSV.', sl: 'Podatki morajo biti v obliki 2D tabele. Dodaj transformacijo CSV.' },
 	'add row': { en: 'Add Row', sl: 'Dodaj Vrstico' },
 	'add col': { en: 'Add Column', sl: 'Dodaj Stolpec' },
+
+	'repeat - direction': { en: 'Direction', sl: 'Smer' },
+	'repeat - direction rows': { en: 'Rows', sl: 'Vrstice' },
+	'repeat - direction columns': { en: 'Columns', sl: 'Stolpci' },
+	'repeat - direction grid': { en: 'Grid', sl: 'Mreža' },
 }
 
 export type trKeys = keyof typeof tr2

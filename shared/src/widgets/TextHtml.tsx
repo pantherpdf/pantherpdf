@@ -149,6 +149,7 @@ function TagEditor(props: ItemRendeProps) {
 			onChange={e => {
 				btn.setAttribute('data-filter', e.currentTarget.value)
 			}}
+			id='tag-filter'
 		>
 			<option value=''></option>
 			{arr.map((x, idx) => <React.Fragment key={x.id}>
