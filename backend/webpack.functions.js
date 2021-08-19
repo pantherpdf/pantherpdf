@@ -1,10 +1,11 @@
 const Dotenv = require('dotenv-webpack')
 const webpack = require('webpack')
+const fs = require('fs')
 
 module.exports = {
   plugins: [
     new Dotenv({
-      path: '../.env',
+      path: (fs.existsSync('./.env') ? './.env' : '../.env'),
       safe: false,
     }),
 
