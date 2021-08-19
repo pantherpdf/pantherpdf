@@ -1,7 +1,7 @@
 import connectToDatabase from './db'
 import crypto from 'crypto'
 import type { Event } from "@netlify/functions/src/function/event"
-import type { IUser, ISession } from 'reports-shared'
+import type { IUser, ISession } from './types'
 
 
 export async function createUser(user: IUser): Promise<string> {

@@ -3,7 +3,7 @@
 		"module": "commonjs",
 		"target": "ES2018",
 		"jsx": "preserve",
-		"lib": ["es2018"],
+		"lib": ["es2018", "DOM"],
 		"strict": true,
 		"noEmit": true,
 		"isolatedModules": true,
