@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import App from '../Layout'
 import { RouteComponentProps, Link } from 'react-router-dom'
 import { useState, useEffect, useContext } from 'react'
@@ -7,7 +7,6 @@ import type { ReportResponse, GenerateResponse } from '../../../backend/src/type
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPrint, faRedo, faSpinner, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { AppContext } from '../context'
-import type { Editor } from 'reports-shared'
 import getApi from '../api'
 
 
@@ -58,6 +57,8 @@ function Menu(props: MenuProps) {
 
 
 
+const Editor = React.lazy(() => import('reports-shared').then(({Editor}) => ({default: Editor})));
+
 type ReportParams = { id: string }
 interface ReportProps extends RouteComponentProps<ReportParams> {
 }
@@ -69,14 +70,8 @@ export default function Report(props: ReportProps) {
 	const [undoStack, setUndoStack] = useState<TReport[]>([])
 	const [undoNext, setUndoNext] = useState<number>(0)
 
-	const [Editor2, setEditor2] = useState<typeof Editor | undefined>(undefined)
-
 	const app = useContext(AppContext)
 	const id = props.match.params.id
-
-	useEffect(() => {
-		import('reports-shared').then(x => setEditor2(x.Editor))
-	}, [])
 
 
 	async function changeData(cb: ()=>TReport): Promise<void> {
@@ -233,13 +228,15 @@ export default function Report(props: ReportProps) {
 			redo={redo}
 			print={print}
 		/>
-		{Editor2 && <Editor2
-			report={report}
-			setReport={setReport2}
-			deleteReport={deleteReport}
-			allReports={app.reports}
-			getOriginalSourceData={getOriginalSourceData}
-			api={api}
-		/>}
+		<Suspense fallback={<div>Loading...</div>}>
+			<Editor
+				report={report}
+				setReport={setReport2}
+				deleteReport={deleteReport}
+				allReports={app.reports}
+				getOriginalSourceData={getOriginalSourceData}
+				api={api}
+			/>
+		</Suspense>
 	</>
 }
