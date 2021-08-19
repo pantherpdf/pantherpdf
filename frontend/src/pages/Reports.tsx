@@ -4,7 +4,7 @@ import { AppContext } from '../context'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFile, faFileCsv, faFilePdf, faPlus, IconDefinition } from '@fortawesome/free-solid-svg-icons'
-import { TargetOption } from 'reports-shared'
+import type { TargetOption } from 'reports-shared'
 
 interface ReportsProps extends RouteComponentProps { }
 

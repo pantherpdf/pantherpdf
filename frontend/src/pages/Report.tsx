@@ -7,7 +7,7 @@ import type { ReportResponse, GenerateResponse } from '../../../backend/src/type
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPrint, faRedo, faSpinner, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { AppContext } from '../context'
-import { Editor } from 'reports-shared'
+import type { Editor } from 'reports-shared'
 import getApi from '../api'
 
 
@@ -69,8 +69,14 @@ export default function Report(props: ReportProps) {
 	const [undoStack, setUndoStack] = useState<TReport[]>([])
 	const [undoNext, setUndoNext] = useState<number>(0)
 
+	const [Editor2, setEditor2] = useState<typeof Editor | undefined>(undefined)
+
 	const app = useContext(AppContext)
 	const id = props.match.params.id
+
+	useEffect(() => {
+		import('reports-shared').then(x => setEditor2(x.Editor))
+	}, [])
 
 
 	async function changeData(cb: ()=>TReport): Promise<void> {
@@ -227,13 +233,13 @@ export default function Report(props: ReportProps) {
 			redo={redo}
 			print={print}
 		/>
-		<Editor
+		{Editor2 && <Editor2
 			report={report}
 			setReport={setReport2}
 			deleteReport={deleteReport}
 			allReports={app.reports}
 			getOriginalSourceData={getOriginalSourceData}
 			api={api}
-		/>
+		/>}
 	</>
 }
