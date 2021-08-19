@@ -9,7 +9,9 @@ export default function Pricing(props: RouteComponentProps) {
 
 			{/* Heading */}
 			<div className="pricing-header p-3 pb-md-4 mx-auto text-center">
-				<h1 className="display-4 fw-normal">Pricing</h1>
+				<h1 className="display-4 fw-normal">
+					Pricing
+				</h1>
 				<p className="fs-5 text-muted">
 					Do you have any question about licensing or you need custom package? <Link to='/contact'>Contact us.</Link>
 				</p>
@@ -143,14 +145,39 @@ export default function Pricing(props: RouteComponentProps) {
 
 
 			{/* Services */}
-			<div className="pricing-header p-3 pb-md-4 mx-auto text-center mt-5">
+			{/*<div className="pricing-header p-3 pb-md-4 mx-auto text-center mt-5">
 				<h1 className="display-4 fw-normal">
 					Serives
 				</h1>
 				<p className="fs-5 text-muted">
 					We can help with integration and with designing reports.
 				</p>
-			</div>
+			</div>*/}
+			
+
+			{/* Guarantees */}
+			<h2 className="h1 mt-5">
+				Guarantees
+			</h2>
+			
+			<p>
+				We offer 30 days money back guatantee in case you are not satesfied (applies only when no support was requested).
+			</p>
+
+
+			{/* Support */}
+			<h2 className="h1 mt-5">
+				Support
+			</h2>
+
+			<p>
+				We can help you set up and integrate into your app.
+				Email and phone support are available.
+			</p>
+
+			
+			{/* Spacing */}
+			<div style={{height: '30px'}} />
 
 		</main>
 	</App>

@@ -255,21 +255,8 @@ export default function Home(props: RouteComponentProps) {
 					className='me-3'
 				/>)}
 			</div>
-			<p className='mt-3'>
-				Simple frontend integration via <span className='font-monospace'>&lt;iframe&gt;</span>
-			</p>
 			<p>
 				Generating reports is supported via REST api.
-			</p>
-			
-
-			{/* Guarantees */}
-			<h2 className='h1 border-bottom pb-2 mt-5'>
-				Guarantees
-			</h2>
-			
-			<p>
-				We offer 30 days money back in case you are not satesfied (applies only when no support was requested).
 			</p>
 
 
