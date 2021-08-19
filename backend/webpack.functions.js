@@ -5,7 +5,7 @@ const fs = require('fs')
 module.exports = {
   plugins: [
     new Dotenv({
-      path: (fs.existsSync('./.env') ? './.env' : '../.env'),
+      path: (fs.existsSync('../.env') ? '../.env' : undefined),
       safe: false,
     }),
 
