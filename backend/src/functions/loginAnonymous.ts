@@ -28,7 +28,7 @@ const handler: Handler = async (event, context) => {
 	if (!sid || !anonymousId) {
 		anonymousId = crypto.randomBytes(12).toString('hex');
 		const user: IUser = {
-			name: `Anonymous ${anonymousId}`,
+			name: `Anonymous`,
 			email: `anonymous-${anonymousId}`,
 			anonymousId,
 		}

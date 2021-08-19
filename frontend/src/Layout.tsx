@@ -22,7 +22,7 @@ export default function App(props: AppProps) {
 					<ul className='nav'>
 						{app.user ? <>
 							<li><Link to='/reports' className='nav-link px-3 link-secondary'>My Reports</Link></li>
-							<li><Link to='/settings' className='nav-link px-3 link-secondary'><FontAwesomeIcon icon={faUser} className='me-2' />{app.user.name.split(' ')[0]}</Link></li>
+							<li><Link to='/settings' className='nav-link px-3 link-secondary'><FontAwesomeIcon icon={faUser} className='me-2' />{app.user.name}</Link></li>
 							<li><button className='btn nav-link px-3 link-secondary' onClick={async () => { await app.logout(); props.history.push('/login')}}>Logout</button></li>
 						</> : <>
 							<li><Link to='/login' className='btn btn-primary'>Login</Link></li>
