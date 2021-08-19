@@ -70,17 +70,17 @@ export default function Home(props: RouteComponentProps) {
 	const [imgIndex, setImgIndex] = useState<number>(0)
 
 	const useCase: [string, string, string][] = [
-		['Generate invoice', 'Design beautiful looking invoices and offers.', img1],
-		['Financial services', '', img2],
+		['Generate invoice', 'Design beautiful looking invoices to your customers in seconds. Send invoices whenever you want from any device. With one click turn your quotation to invoice once the customer accepts it.', img1],
+		['Financial services', 'In just a few steps create easy-to-read reports. Simple way to turn raw data into eye-catching and easy-to-understand charts and graphs.', img2],
 		['Manufacturing', 'Perfect solution for developers of manufacturing apps. With one tool you can prepare work orders, print labels and export CSV for CNC machine.', img3],
-		['Employee time atendance report', '', ''],
-		['Export to Excel, ERP, CSV', '', ''],
-		['Generate Labels', '', ''],
+		['Employee time atendance report', 'The best way to analyze time and attendance data and for visualizing them as detailed reports. Completely customisable.', ''],
+		['Export to Excel, ERP, CSV', 'Data will be provided as CSV/Excel file format for effortless posting back to most accounting and ERP systems.', ''],
+		['Generate Labels', 'Create custom printed labels, stickers, or cards quickly and simply. No trying to figure out margins and placement - it\'s so easy to do.', ''],
 	]
 
 	const featuresBig: [string, string, IconDefinition][] = [
 		['Async functions', 'Report builder is completley asynchronous. That means you can easily query database on demand from within report editor.', faSyncAlt],
-		['Integrates with app & db', 'Allow your customers to self-serive and extract data they need. Complete white-label solution that seamlesly integrates into you application.', faRocket],
+		['Integrate into App', 'Allow your customers to self-serive and extract data they need. Complete white-label solution that seamlesly integrates into you application.', faRocket],
 		['Custom widgets', 'There is no one measure fits all. We can help you develop custom display widgets for your needs. See example for manufacturing.', faTools],
 	]
 
@@ -214,7 +214,7 @@ export default function Home(props: RouteComponentProps) {
 							{x[0]}
 						</h2>
 						<p>
-							x[1]
+							{x[1]}
 						</p>
 					</div>
 				</div>)}
