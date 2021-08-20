@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { listOfFilters } from './formulaFilter'
 import Trans, { TransName, trKeys } from '../translation'
 import { removeFromList } from '../editor/childrenMgmt'
+import { JSDOM } from 'jsdom'
 
 
 // returns <div> element of editor
@@ -174,9 +175,9 @@ export async function evaluateFormulaInsideHtml(html: string, formulaHelper: For
 	let parentEl: HTMLElement
 	let doc2: Document
 	if (typeof window === 'undefined') {
-		const JSDOM__ = await import('jsdom');
-		const JSDOM_ = JSDOM__.JSDOM
-		const dom = new JSDOM_(html)
+		//const JSDOM__ = await import('jsdom');
+		//const JSDOM_ = JSDOM__.JSDOM
+		const dom = new JSDOM(html)
 		parentEl = dom.window.document.body
 		doc2 = dom.window.document
 	}

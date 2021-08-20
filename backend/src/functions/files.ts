@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions'
-import { TFileShort } from 'reports-shared'
+import type { TFileShort } from 'reports-shared'
 import { FilesResponse } from '../types'
 import connectToDatabase from '../db'
 import { userEmailFromEvent } from '../users'

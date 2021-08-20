@@ -1,4 +1,4 @@
-import { TReport, TReportShort, FilesResponseBase, ReportResponseBase, FileUploadData, TFileShort } from 'reports-shared'
+import type { TReport, TReportShort, FilesResponseBase, ReportResponseBase, FileUploadData, TFileShort } from 'reports-shared'
 
 
 export type WithId<T> = T & {_id: string}
