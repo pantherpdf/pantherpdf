@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import App from '../Layout'
 import { RouteComponentProps, Link } from 'react-router-dom'
 import { useState, useEffect, useContext } from 'react'
-import { TReport, transformData } from 'reports-shared'
+import type { TReport } from 'reports-shared'
 import type { ReportResponse, GenerateResponse } from '../../../backend/src/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPrint, faRedo, faSpinner, faUndo } from '@fortawesome/free-solid-svg-icons'
@@ -159,6 +159,7 @@ export default function Report(props: ReportProps) {
 		const w = window.open('', '_blank')
 		if (!w)
 			return
+		const { transformData } = await import('reports-shared')
 		const data = await transformData(getOriginalSourceData(), report)
 		const r = await fetch(`/.netlify/functions/generate?id=${id}`, {method: 'POST', headers: {Authorization: `Bearer sid:${app.sid}`, 'Content-Type': 'application/json'}, body: JSON.stringify(data)})
 		const js = await r.json() as GenerateResponse
