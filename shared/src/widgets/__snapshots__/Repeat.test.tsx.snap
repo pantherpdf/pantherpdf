@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`complete grid 1`] = `
+<div
+  style={
+    Object {
+      "display": "flex",
+      "flexWrap": "wrap",
+    }
+  }
+>
+  <div
+    style={Object {}}
+  >
+    <div
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "1",
+        }
+      }
+      style={Object {}}
+    />
+  </div>
+  <div
+    style={Object {}}
+  >
+    <div
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "2",
+        }
+      }
+      style={Object {}}
+    />
+  </div>
+  <div
+    style={Object {}}
+  >
+    <div
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "3",
+        }
+      }
+      style={Object {}}
+    />
+  </div>
+  <div
+    style={Object {}}
+  >
+    <div
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "4",
+        }
+      }
+      style={Object {}}
+    />
+  </div>
+  <div
+    style={Object {}}
+  >
+    <div
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "5",
+        }
+      }
+      style={Object {}}
+    />
+  </div>
+</div>
+`;
+
+exports[`complete rows 1`] = `
+Array [
+  <div
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "1",
+      }
+    }
+    style={Object {}}
+  />,
+  <div
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "2",
+      }
+    }
+    style={Object {}}
+  />,
+  <div
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "3",
+      }
+    }
+    style={Object {}}
+  />,
+  <div
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "4",
+      }
+    }
+    style={Object {}}
+  />,
+  <div
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "5",
+      }
+    }
+    style={Object {}}
+  />,
+]
+`;

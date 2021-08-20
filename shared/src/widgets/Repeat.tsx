@@ -79,7 +79,9 @@ export const Repeat: Widget = {
 			// maybe add to cssItem:
 			// pageBreakInside: 'avoid',  // must be present otherwise item in quotes gets breaked up
 			return <>
-				{props.renderChildren(props.item.children, props)}
+				{item.children.map((item, idx) => <React.Fragment key={idx}>
+					{props.renderChildren(item, props)}
+				</React.Fragment>)}
 			</>
 		}
 		const cssParent: CSSProperties = {}

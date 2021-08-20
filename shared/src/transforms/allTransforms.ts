@@ -17,5 +17,5 @@ export default function getTransform(type: string): TTransformWidget {
 	const c = allTransforms[type]
 	if (c !== undefined)
 		return c
-	throw new Error(`Missing widget ${type}`)
+	throw new Error(`Missing transform ${type}`)
 }
