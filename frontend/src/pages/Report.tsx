@@ -112,6 +112,8 @@ export default function Report(props: ReportProps) {
 	}
 
 	async function setReport2(val: TReport) {
+		// setReport() as soon as possible, otherwise TextHtml changes caret
+		setReport(val)
 		changeData(() => {
 			const newUndoStack = [...undoStack]
 			newUndoStack.splice(undoNext)
