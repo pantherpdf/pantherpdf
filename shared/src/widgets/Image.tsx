@@ -48,13 +48,22 @@ export const Image: Widget = {
 	},
 
 	compile: async (dt: ImageData, helpers): Promise<ImageCompiled> => {
-		let data = dt.url
-		if (data.length === 0) {
+		let data
+		if (dt.url.length > 0) {
+			data = dt.url
+			if (data.startsWith('local/')) {
+				data = helpers.api.filesDownloadUrl(data.substring(6))
+			}
+		}
+		else if (dt.formula.length > 0) {
 			const data2 = await helpers.evalFormula(dt.formula)
 			if (typeof data2 !== 'string') {
 				throw new Error('Image from formula not a string')
 			}
 			data = data2
+		}
+		else {
+			data = ''
 		}
 		return {
 			type: dt.type,
@@ -67,27 +76,85 @@ export const Image: Widget = {
 
 	Render: function(props) {
 		const item = props.item as ImageData
+
+		const cssImg: CSSProperties = {
+			display: 'block',
+		}
+		if (item.width.length > 0) {
+			cssImg.width = item.width
+		}
+		else {
+			cssImg.maxWidth = '100%'
+		}
+
+		let img
+		if (item.url.length >  0) {
+			let url = item.url
+			if (url.startsWith('local/')) {
+				url = props.api.filesDownloadUrl(url.substring(6))
+			}
+			img = <img src={url} alt='' style={cssImg} />
+		}
+		else if (item.formula.length > 0) {
+			cssImg.minHeight = '50px'
+			cssImg.backgroundColor = '#ddd'
+			cssImg.display = 'flex'
+			cssImg.justifyContent = 'center'
+			cssImg.alignItems = 'center'
+			img = <div style={cssImg}>
+				<small className='text-muted font-monospace'>
+					{item.formula}
+				</small>
+			</div>
+		}
+		else {
+			img = <small className='d-block text-muted'>
+				{Trans('no image selected')}
+			</small>
+		}
+
+		const cssContainer: CSSProperties = { }
+		if (item.align) {
+			cssContainer.textAlign = item.align
+		}
+
+		return <BoxName {...props} name={Image.name}>
+			<div style={cssContainer}>
+				{img}
+			</div>
+		</BoxName>
+	},
+
+	RenderFinal: function(props) {
+		const item = props.item as ImageCompiled
 		const cssImg: CSSProperties = {
 			display: 'inline-block',
 		}
 		if (item.width.length > 0) {
 			cssImg.width = item.width
 		}
-		if (item.url.length === 0) {
-			// div
-			cssImg.minHeight = '50px'
-			cssImg.backgroundColor = '#ddd'
-		}
 		const cssContainer: CSSProperties = { }
 		if (item.align) {
 			cssContainer.textAlign = item.align
 		}
-		return <BoxName {...props} name={Image.name}>
-			<div style={cssContainer}>
-				{item.url.length >  0 && <img src={item.url} alt='' style={cssImg} />}
-				{item.url.length === 0 && <div style={cssImg} />}
-			</div>
-		</BoxName>
+
+		let img
+		if (item.data === '') {
+			return null
+		}
+		else if (item.data.trimStart().startsWith('<svg')) {
+			img = <div style={cssImg} dangerouslySetInnerHTML={{__html: item.data}}></div>
+		}
+		else if (item.data.startsWith('data:image/') || item.data.startsWith('http://') || item.data.startsWith('https://')) {
+			img = <img src={item.data} alt='' style={cssImg} />
+		}
+		else {
+			img = <div>Bad img</div>
+		}
+
+		return <div style={cssContainer}>
+			{img}
+		</div>
 	},
 
 	RenderProperties: function(props) {
@@ -157,40 +224,5 @@ export const Image: Widget = {
 				</Modal.Body>
 			</Modal>
 		</>
-	},
-
-	RenderFinal: function(props) {
-		const item = props.item as ImageCompiled
-		const cssImg: CSSProperties = {
-			display: 'inline-block',
-		}
-		if (item.width.length > 0) {
-			cssImg.width = item.width
-		}
-		const cssContainer: CSSProperties = { }
-		if (item.align) {
-			cssContainer.textAlign = item.align
-		}
-
-		let img
-		if (item.data === '') {
-			return null
-		}
-		else if (item.data.trimStart().startsWith('<svg')) {
-			img = <div style={cssImg} dangerouslySetInnerHTML={{__html: item.data}}></div>
-		}
-		else if (item.data.startsWith('local/')) {
-			img = <div>TODO</div>
-		}
-		else if (item.data.startsWith('data:image/') || item.data.startsWith('http://') || item.data.startsWith('https://')) {
-			img = <img src={item.data} alt='' style={cssImg} />
-		}
-		else {
-			img = <div>Bad img</div>
-		}
-
-		return <div style={cssContainer}>
-			{img}
-		</div>
 	},
 }

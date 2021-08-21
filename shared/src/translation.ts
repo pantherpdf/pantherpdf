@@ -121,6 +121,8 @@ const tr2 = {
 	'repeat - direction rows': { en: 'Rows', sl: 'Vrstice' },
 	'repeat - direction columns': { en: 'Columns', sl: 'Stolpci' },
 	'repeat - direction grid': { en: 'Grid', sl: 'Mreža' },
+
+	'no image selected': { en: 'No image selected', sl: 'Slika ni izbrana' },
 }
 
 export type trKeys = keyof typeof tr2
