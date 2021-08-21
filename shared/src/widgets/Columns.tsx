@@ -161,6 +161,9 @@ export const Columns: Widget = {
 
 	RenderProperties: function(props) {
 		const item = props.item as ColumnsData
+		if (item.children.length !== item.widths.length) {
+			throw new Error(`Columns: property children and widths have different length ${item.children.length} vs ${item.widths.length}`)
+		}
 		return <>
 			<label htmlFor='Columns-width' className='d-block'>
 				{Trans('width')}
@@ -184,7 +187,7 @@ export const Columns: Widget = {
 					style={{flex: '1'}}
 				/>
 				<button
-					className='btn btn-outline-secondary mt-2'
+					className='btn btn-outline-secondary'
 					onClick={() => {
 						const ws = [...item.widths]
 						const chs = [...item.children]
@@ -201,7 +204,7 @@ export const Columns: Widget = {
 				<button
 					className='btn btn-secondary'
 					onClick={async () => {
-						const ws = [...item.widths]
+						const ws = [...item.widths, '']
 						const chs = [...item.children, await ColumnsCt.newItem()]
 						props.setItem({...item, widths: ws, children: chs})
 					}}
