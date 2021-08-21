@@ -180,6 +180,9 @@ export const Frame: Widget = {
 		return <>
 			<label htmlFor='Frame-margin'>
 				{Trans('margin')}
+				<small className='ms-2 text-muted'>
+					{item.margin[0]},{item.margin[1]},{item.margin[2]},{item.margin[3]}px
+				</small>
 			</label>
 			<Property4SideRange
 				id='Frame-margin'
@@ -193,6 +196,9 @@ export const Frame: Widget = {
 			
 			<label htmlFor='Frame-padding'>
 				{Trans('padding')}
+				<small className='ms-2 text-muted'>
+					{item.padding[0]},{item.padding[1]},{item.padding[2]},{item.padding[3]}px
+				</small>
 			</label>
 			<Property4SideRange
 				id='Frame-padding'

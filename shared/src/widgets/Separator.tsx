@@ -76,6 +76,9 @@ export const Separator: Widget = {
 		return <>
 			<label htmlFor='sep-marginTop' className='d-block'>
 				{Trans('margin top')}
+				<small className='ms-2 text-muted'>
+					{item.marginTop}px
+				</small>
 			</label>
 			<input
 				type='range'
@@ -89,6 +92,9 @@ export const Separator: Widget = {
 
 			<label htmlFor='sep-marginBottom' className='d-block'>
 				{Trans('margin bottom')}
+				<small className='ms-2 text-muted'>
+					{item.marginBottom}px
+				</small>
 			</label>
 			<input
 				type='range'

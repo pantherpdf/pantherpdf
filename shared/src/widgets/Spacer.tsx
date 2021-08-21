@@ -54,6 +54,9 @@ export const Spacer: Widget = {
 		return <>
 			<label htmlFor='spacer-height' className='d-block'>
 				{Trans('height')}
+				<small className='ms-2 text-muted'>
+					{item.height}px
+				</small>
 			</label>
 			<PropertySlider
 				min={3}
