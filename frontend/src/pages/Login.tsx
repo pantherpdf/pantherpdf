@@ -78,8 +78,10 @@ export default function Login(props: LoginProps) {
 	return <App {...props}><main className='form-signin'>
 		<h1 className='h2'>Kelgrand Reports</h1>
 		<h2 className='h1 mb-4'>Login</h2>
+		{/*
 		<button className='btn btn-primary'>Github</button>
 		<hr />
+		*/}
 		<ButtonAnonymous {...props} />
 	</main></App>
 }
