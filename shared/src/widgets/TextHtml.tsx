@@ -424,7 +424,11 @@ function Editor(props: EditorProps) {
 	return <div
 		ref={elementRef}
 		style={props.style}
-		draggable={false}
+		draggable={true}
+		onDragStart={e => {
+			e.preventDefault()
+			e.stopPropagation()
+		}}
 		dangerouslySetInnerHTML={{__html: props.value}}
 		data-wid={props.wid.join(',')}
 		
