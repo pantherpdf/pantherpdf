@@ -52,7 +52,7 @@ export const Image: Widget = {
 		if (dt.url.length > 0) {
 			data = dt.url
 			if (data.startsWith('local/')) {
-				data = helpers.api.filesDownloadUrl(data.substring(6))
+				data = helpers.api ? helpers.api.filesDownloadUrl(data.substring(6)) : ''
 			}
 		}
 		else if (dt.formula.length > 0) {

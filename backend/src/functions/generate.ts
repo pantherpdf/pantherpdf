@@ -1,8 +1,8 @@
 import { Handler } from '@netlify/functions'
 import { ObjectId } from 'mongodb';
 import connectToDatabase from '../db'
-import { userEmailFromEvent } from '../users'
-import { compile, makeHtml } from 'reports-shared'
+import { sidFromEvent, userEmailFromEvent } from '../users'
+import { ApiEndpoints, compile, FileUploadData, makeHtml } from 'reports-shared'
 import { GenerateResponse, IReportGenerated } from '../types'
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
@@ -15,9 +15,13 @@ const handler: Handler = async (event, context) => {
 	}
 
 	// auth
+	const sid = sidFromEvent(event)
 	const email = await userEmailFromEvent(event)
 	if (!email) {
 		return { statusCode: 403, body: JSON.stringify({msg: 'Not allowed'}) }
+	}
+	if (!sid) {
+		return { statusCode: 403, body: JSON.stringify({msg: 'Need to use sid'}) }
 	}
 
 	// uploaded data
@@ -39,11 +43,24 @@ const handler: Handler = async (event, context) => {
 	// change _id
 	const report = {...report2, _id: report2._id?.toHexString() || ''}
 
+	// api
+	const api: ApiEndpoints = {
+		reportGet: (id: string) => { throw new Error('not implemented')},
+		files: () => { throw new Error('not implemented')},
+		filesDelete: (name: string) => { throw new Error('not implemented')},
+		filesUpload: (file: File, data: FileUploadData, cbProgress: (prc: number) => void) => { throw new Error('not implemented')},
+		filesDownloadUrl: (name: string) => {
+			const PUBLIC_URL = process.env.PUBLIC_URL || ''
+			return `${PUBLIC_URL}/.netlify/functions/filesDownload?name=${encodeURIComponent(name)}&sid=${encodeURIComponent(sid)}`
+		},
+		fonts: () => { throw new Error('not implemented')},
+	}
+
 	// convert
 	db.logEvent(event, 'generate', {email, reportId})
 	let compiled
 	try {
-		compiled = await compile(report, data)
+		compiled = await compile(report, data, api)
 	}
 	catch(e) {
 		return { statusCode: 400, body: JSON.stringify({msg: String(e)}) }

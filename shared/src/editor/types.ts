@@ -80,6 +80,7 @@ export interface CompileHelper {
 	compileChildren: (arr1: TData[], helper: CompileHelper) => Promise<TDataCompiled[]>,
 	wid: number[],
 	report: TReport,
+	api?: ApiEndpoints,
 }
 
 export interface Widget {

@@ -3,7 +3,7 @@
  * Compile sourceData and report - evaluate all formulas
  */
 
-import { TReport, TData } from '../types'
+import { TReport, TData, ApiEndpoints } from '../types'
 import type { TReportCompiled, TDataCompiled } from '../types'
 import FormulaEvaluate from '../formula/formula'
 import getWidget from '../widgets/allWidgets'
@@ -41,12 +41,12 @@ export class FormulaHelper {
 }
 
 
-export default async function compile(dt: TReport, obj: any): Promise<TReportCompiled> {
+export default async function compile(report: TReport, data: any, api?: ApiEndpoints): Promise<TReportCompiled> {
 	const formulaHelper = new FormulaHelper()
 	const getVar = formulaHelper.getVar.bind(formulaHelper)
-	formulaHelper.push('data', obj)
-	formulaHelper.push('report', dt)
-	const dt2: TReportCompiled = {...dt}
+	formulaHelper.push('data', data)
+	formulaHelper.push('report', report)
+	const dt2: TReportCompiled = {...report}
 
 	if (dt2.properties.fileName) {
 		const res = await FormulaEvaluate(dt2.properties.fileName, {getVar})
@@ -58,8 +58,9 @@ export default async function compile(dt: TReport, obj: any): Promise<TReportCom
 	
 	const helper: CompileHelper = {
 		wid: [],
-		report: dt,
+		report: report,
 		formulaHelper,
+		api,
 		
 		evalFormula: async (txt: string) => {
 			return FormulaEvaluate(txt, {getVar})
@@ -78,7 +79,7 @@ export default async function compile(dt: TReport, obj: any): Promise<TReportCom
 		},
 	}
 
-	dt2.children = await helper.compileChildren(dt.children, helper)
+	dt2.children = await helper.compileChildren(report.children, helper)
 	
 	formulaHelper.pop()
 	formulaHelper.pop()
@@ -89,7 +90,7 @@ export default async function compile(dt: TReport, obj: any): Promise<TReportCom
 }
 
 
-export async function compileComponent(cmpData: object, obj: any): Promise<TDataCompiled> {
+export async function compileComponent(cmpData: object, data: any, api?: ApiEndpoints): Promise<TDataCompiled> {
 	const dt: TReport = {
 		_id: '',
 		target: 'pdf',
@@ -103,6 +104,6 @@ export async function compileComponent(cmpData: object, obj: any): Promise<TData
 		transforms: [],
 		properties: { },
 	}
-	const reportCompiled = await compile(dt, obj)
+	const reportCompiled = await compile(dt, data, api)
 	return reportCompiled.children[0]
 }
