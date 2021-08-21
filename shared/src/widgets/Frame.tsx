@@ -31,6 +31,7 @@ function genStyle(item: FrameData | FrameCompiled, final: boolean): CSSPropertie
 		margin: `${item.margin[0]}px ${item.margin[1]}px ${item.margin[2]}px ${item.margin[3]}px`,
 		padding: `${item.padding[0]}px ${item.padding[1]}px ${item.padding[2]}px ${item.padding[3]}px`,
 		boxSizing: 'border-box',
+		width: 'auto',  // in preview, to override width:100%
 	}
 	
 	if (Array.isArray(item.border)) {
