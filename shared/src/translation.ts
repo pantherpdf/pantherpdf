@@ -107,6 +107,7 @@ const tr2 = {
 	'variables': { en: 'Variables', sl: 'Spremenljivke' },
 	'sum - comma separated': { en: 'Comma separated', sl: 'Ločeno z vejico' },
 	'filter': { en: 'Filter', sl: 'Filter' },
+	'adjust': { en: 'Adjust', sl: 'Prilagodi' },
 	'border different sides': { en: 'Border different sides', sl: 'Okvir različne strani'},
 	'background': { en: 'Background', sl: 'Ozadje' },
 	'sum error missing parent': { en: 'Error: Missing VarContainer', sl: 'Napaka: manjka Spremen.Kontejner' },

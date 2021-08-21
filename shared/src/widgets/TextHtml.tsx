@@ -3,7 +3,13 @@
  */
 
 
-import React, { useEffect, useState, useRef, CSSProperties } from 'react'
+// manual tests:
+// - widget not selected, try to drag it. It should not be draggable, however it should select text
+// - type some text, then wait few sec to periodicaly save, the cursor should stay on same place
+// - insert tag, delete nbsp space after button and press enter
+
+
+import React, { useEffect, useState, CSSProperties } from 'react'
 import { TData, TDataCompiled } from '../types'
 import type { ItemRendeProps, Widget } from '../editor/types'
 import BoxName from './BoxName'
@@ -12,15 +18,54 @@ import FormulaEvaluate from '../formula/formula'
 import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight, faBold, faItalic, faTag, faTrash, faUnderline, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { FormulaHelper } from '../editor/compile'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { listOfFilters } from './formulaFilter'
+import { listOfAdjusts } from './formulaAdjust'
 import Trans, { TransName, trKeys } from '../translation'
 import { idCmp, removeFromList } from '../editor/childrenMgmt'
+import InputApplyOnEnter from './InputApplyOnEnter'
 
 
-// returns <div> element of editor
-function getEditor(wid: number[]): HTMLElement | null {
-	return document.querySelector(`[data-wid='${wid.join(',')}']`)
+const listOfEditors: Editor[] = []
+const listOfSelectionCallbacks: (() => void)[] = []
+
+
+function editorGet(wid: number[]): Editor | undefined {
+	return listOfEditors.find(edt => idCmp(edt.props.wid, wid))
 }
+
+if (typeof window !== 'undefined' && window.document) {
+	window.document.addEventListener('selectionchange', () => {
+		const s = window.getSelection()
+		const anchorNode = s ? s.anchorNode : null
+		const anchorOffset = s ? s.anchorOffset : 0
+		function getEditorByEditor(node: Node) {
+			// keep function outside of loop
+			// https://eslint.org/docs/rules/no-loop-func
+			return listOfEditors.find(edt => edt.elementRef === node)
+		}
+		let editor: Editor | undefined = undefined
+		let node = anchorNode
+		while (node) {
+			// check if editor
+			editor = getEditorByEditor(node)
+			if (editor) {
+				break
+			}
+			// next parent
+			node = node.parentNode
+		}
+		// reset all
+		for (const edt of listOfEditors) {
+			if (edt === editor) {
+				edt.saveCaret(anchorNode, anchorOffset)
+			}
+		}
+		// callbacks
+		for (const cb of listOfSelectionCallbacks) {
+			cb()
+		}
+	})
+}
+
 
 
 // return first parent button
@@ -80,84 +125,108 @@ function getNodeFromPid(ids: number[], editor: HTMLElement): Node | null {
 }
 
 
+// is node an indirect child of parent
+function isNodeInside(node: Node, parent: Node): boolean {
+	if (node === parent) {
+		return true
+	}
+	if (node.parentNode && isNodeInside(node.parentNode, parent)) {
+		return true
+	}
+	return false
+}
+
+
 // Properties editor for tag <button>
+function getSelectedButtonPid(wid: number[]): number[] | null {
+	const x = editorGet(wid)
+	if (!x || !x.elementRef) {
+		return null
+	}
+	const selected = getNodeFromPid(x.selectedNode, x.elementRef)
+	if (!selected) {
+		return null
+	}
+	const btn = getButtonFromSelection(selected, x.elementRef)
+	if (!btn) {
+		return null
+	}
+	return getPidFromNode(btn, x.elementRef)
+}
+
+
 function TagEditor(props: ItemRendeProps) {
-	const [btn, setBtn] = useState<HTMLButtonElement|null>(null)
+	const [btnId, setBtnId] = useState<number[] | null>(null)
 
-	// 
+	// subscribe to selection change
 	useEffect(() => {
-		function doit() {
-			function getBtn(): HTMLButtonElement | null {
-				const editor = getEditor(props.wid)
-				if (!editor) {
-					return null
-				}
-				const x = editorDetailsGet(props.wid)
-				if (!x) {
-					return null
-				}
-				const selected = getNodeFromPid(x.node, editor)
-				if (!selected) {
-					return null
-				}
-				return getButtonFromSelection(selected, editor)
-			}
-			const btn2 = getBtn()
-			if (btn !== btn2) {
-				setBtn(btn2)
-			}
+		function selectionChanged() {
+			setBtnId(getSelectedButtonPid(props.wid))
 		}
-
-		editorDetailsCbRegister(props.wid, doit)
-		
+		selectionChanged()
+		listOfSelectionCallbacks.push(selectionChanged)
 		return () => {
-			editorDetailsCbUnregister(props.wid, doit)
+			const idx = listOfSelectionCallbacks.indexOf(selectionChanged)
+			if (idx !== -1) {
+				listOfSelectionCallbacks.splice(idx, 1)
+			}
 		}
-		// eslint-disable-next-line
 	}, [props.wid])
 
-	if (!btn)
+	// get <button>
+	const editor = editorGet(props.wid)
+	if (!btnId || !editor || !editor.elementRef) {
 		return null
+	}
+	const btnTmp = getNodeFromPid(btnId, editor.elementRef)
+	if (!btnTmp || btnTmp.nodeName !== 'BUTTON') {
+		return null
+	}
+	const btn = btnTmp as HTMLButtonElement
 
-	const arr = [...listOfFilters].sort((a,b) => a.category <= b.category ? -1 : 1)
+	const arrAdjusts = [...listOfAdjusts].sort((a,b) => a.category <= b.category ? -1 : 1)
 	
 	return <>
 		<h3>Tag</h3>
 
-		{/*
-		Doesnt work because when editing selection changes and btn becomes null
+		{/* FORMULA */}
 		<div>
-			<label htmlFor='tag-filter'>
-				Filter
+			<label htmlFor='tag-value'>
+				{Trans('source data')}
 			</label>
 		</div>
-		<InputApplyOnEnter
-			value={btn.innerText}
-			onChange={val => {
-				btn.innerText = String(val)
-				setSt(st+1)
-			}}
-		/>
-		*/}
+		<div className="input-group mb-3">
+			<span className="input-group-text fst-italic">ƒ</span>
+			<InputApplyOnEnter
+				id='tag-value'
+				value={btn.innerText}
+				onChange={val => {
+					btn.innerText = String(val)
+					editor.sendChanges(true)
+				}}
+			/>
+		</div>
 
-		<label htmlFor='tag-filter' className='d-block'>
-			{Trans('filter')}
+		{/* ADJUST */}
+		<label htmlFor='tag-adjust' className='d-block'>
+			{Trans('adjust')}
 		</label>
 		<select
 			className='form-select'
-			value={btn.getAttribute('data-filter') || ''}
+			value={btn.getAttribute('data-adjust') || ''}
 			onChange={e => {
-				btn.setAttribute('data-filter', e.currentTarget.value)
+				btn.setAttribute('data-adjust', e.currentTarget.value)
+				editor.sendChanges(true)
 			}}
-			id='tag-filter'
+			id='tag-adjust'
 		>
 			<option value=''></option>
-			{arr.map((x, idx) => <React.Fragment key={x.id}>
-				{idx !== 0 && x.category !== arr[idx-1].category && <option disabled>──────────</option>}
+			{arrAdjusts.map((flt, idx) => <React.Fragment key={flt.id}>
+				{idx !== 0 && flt.category !== arrAdjusts[idx-1].category && <option disabled>──────────</option>}
 				<option
-					value={x.id}
+					value={flt.id}
 				>
-					{x.name ? TransName(x.name) : x.id}
+					{flt.name ? TransName(flt.name) : flt.id}
 				</option>
 			</React.Fragment>)}
 		</select>
@@ -217,14 +286,14 @@ export async function evaluateFormulaInsideHtml(html: string, formulaHelper: For
 				return doc2.createTextNode('ERROR')
 			}
 			let value = await FormulaEvaluate(formula, formulaHelper)
-			// filter
-			const filterName = btn.getAttribute('data-filter')
-			if (filterName) {
-				const filter = listOfFilters.find(x => x.id === filterName)
-				if (!filter) {
-					throw new Error(`Unknown filter ${filterName}`)
+			// adjust
+			const adjustName = btn.getAttribute('data-adjust')
+			if (adjustName) {
+				const adjust = listOfAdjusts.find(x => x.id === adjustName)
+				if (!adjust) {
+					throw new Error(`Unknown adjust ${adjustName}`)
 				}
-				value = filter.func(value, [])
+				value = adjust.func(value, [])
 			}
 			//
 			const el2 = processBtn(el, value)
@@ -253,67 +322,10 @@ export async function evaluateFormulaInsideHtml(html: string, formulaHelper: For
 }
 
 
-// is node an indirect child of parent
-function isNodeInside(node: Node, parent: Node): boolean {
-	if (node === parent) {
-		return true
-	}
-	if (node.parentNode && isNodeInside(node.parentNode, parent)) {
-		return true
-	}
-	return false
-}
 
 
-// EditorDetails
-// used for current caret position
-// must save as indexes because browser changes nodes and otherwise we would be left with invalid node
-interface EditorDetails {
-	wid: number[],
-	node: number[],
-	offset: number,
-	cbs: (() => void)[],
-}
-const _editorDetails: EditorDetails[] = []
-function editorDetailsGet(wid: number[]): EditorDetails | null {
-	const wid2 = wid.join(',')
-	for (const obj of _editorDetails) {
-		if (obj.wid.join(',') === wid2) {
-			return obj
-		}
-	}
-	return null
-}
-function editorDetailsGetOrInsert(wid: number[]): EditorDetails {
-	const obj = editorDetailsGet(wid)
-	if (obj) {
-		return obj
-	}
-	const obj2 = { wid: wid, node:[], offset:0, cbs: [] }
-	_editorDetails.push(obj2)
-	return obj2
-}
-function editorDetailsRemove(wid: number[]): void {
-	const wid2 = wid.join(',')
-	const idx = _editorDetails.findIndex(x => x.wid.join(',') === wid2)
-	if (idx !== -1) {
-		_editorDetails.splice(idx, 1)
-	}
-}
-function editorDetailsCbRegister(wid: number[], cb: ()=>void) {
-	const obj = editorDetailsGetOrInsert(wid)
-	obj.cbs.push(cb)
-}
-function editorDetailsCbUnregister(wid: number[], cb: ()=>void) {
-	const obj = editorDetailsGet(wid)
-	if (!obj) {
-		return
-	}
-	const idx = obj.cbs.indexOf(cb)
-	if (idx !== -1) {
-		obj.cbs.splice(idx, 1)
-	}
-}
+
+
 
 
 
@@ -322,168 +334,189 @@ interface EditorProps {
 	wid: number[],
 	value: string,
 	onChange: (val: string) => void,
+	active: boolean,
 }
-function Editor(props: EditorProps) {
-	const detailRef = useRef<EditorDetails|null>(null)
-	const timeoutRef = useRef<number>(0)
-	const tmpSelectionRef = useRef<EditorDetails|null>(null)
-	const elementRef = useRef<HTMLDivElement>(null)
-	const timeRef = useRef<number>(Date.now())
-	const prevValue = useRef<string>('<<<<<<<<<')
+interface EditorState {
+}
 
-	// only update when value from outside has changed and current html is different
-	// this prevents race condition. When you deselect widget, setSelected() is called before onChange() and thus forces old value
-	const tm2 = (props.value === prevValue.current || (elementRef.current && props.value === elementRef.current.innerHTML)) ? timeRef.current : Date.now()
-	timeRef.current = tm2
-	prevValue.current = props.value
+// use class component instead of function - cleaner design
+//  * no need to use useRef()
+//  * access to shouldComponentUpdate()
+class Editor extends React.Component<EditorProps, EditorState> {
+	// reference to <div>
+	elementRef: HTMLDivElement | null
+	// to know when change is comming from here and when from outside
+	currentValueFromProps: string
+	// timeout for callback to save changes
+	timerUpdate: number
+	// selection - caret position
+	selectedNode: number[]
+	selectedOffset: number
 
-	function saveCaret(c: EditorDetails, node: Node|null, off: number): void {
-		const editor = getEditor(c.wid)
-		c.node = (node && editor) ? getPidFromNode(node, editor) : []
-		c.offset = off
-		for (const cb of c.cbs) {
+	constructor(props: EditorProps) {
+		super(props)
+		this.state = { }
+
+		this.elementRef = null
+		this.currentValueFromProps = props.value
+		this.timerUpdate = 0
+
+		this.selectedNode = []
+		this.selectedOffset = 0
+	}
+
+	componentDidMount() {
+		listOfEditors.push(this)
+	}
+
+	componentWillUnmount() {
+		if (this.timerUpdate) {
+			this.sendChanges(true)
+		}
+		const idx = listOfEditors.indexOf(this)
+		if (idx !== -1) {
+			listOfEditors.splice(idx, 1)
+		}
+	}
+
+	applyUpdates(el: HTMLDivElement, props: EditorProps, force: boolean) {
+		// data-wid
+		const widStr = props.wid.map(x => String(x)).join(',')
+		el.setAttribute('data-wid', widStr)
+
+		// style
+		el.removeAttribute('style')
+		if (props.style) {
+			Object.assign(el.style, props.style)
+		}
+
+		// html
+		if (props.value !== this.currentValueFromProps || force) {
+			el.innerHTML = props.value
+			this.currentValueFromProps = props.value
+			this.saveCaret(null, 0)
+		}
+	}
+
+	setElementRef(el: HTMLDivElement | null) {
+		if (el === this.elementRef) {
+			return
+		}
+		if (el) {
+			// update <div>
+			this.applyUpdates(el, this.props, true)
+		}
+		this.elementRef = el
+	}
+
+	shouldComponentUpdate(nextProps: EditorProps): boolean {
+		if (this.elementRef) {
+			this.applyUpdates(this.elementRef, nextProps, false)
+		}
+		// never re-render
+		return false
+	}
+
+	saveCaret(node: Node|null, offset: number): void {
+		const newNode = (node && this.elementRef) ? getPidFromNode(node, this.elementRef) : []
+		// is same?
+		if (this.selectedNode === newNode && this.selectedOffset === offset) {
+			return
+		}
+		// update
+		this.selectedNode = newNode
+		this.selectedOffset = offset
+		for (const cb of listOfSelectionCallbacks) {
 			cb()
 		}
 	}
-	function selectionchange() {
-		if (!detailRef.current) {
+
+	editorInput(e: React.FormEvent<HTMLDivElement>) {
+		e.stopPropagation()
+		// set timer to update after few seconds
+		if (this.timerUpdate > 0) {
+			clearTimeout(this.timerUpdate)
+			this.timerUpdate = 0
+		}
+		const tm = window.setTimeout(this.sendChanges.bind(this), 3000, false)
+		this.timerUpdate = tm
+	}
+
+	sendChanges(cleanHtml: boolean) {
+		// callback from timer
+		if (this.timerUpdate) {
+			clearTimeout(this.timerUpdate)
+			this.timerUpdate = 0
+		}
+		if (!this.elementRef) {
 			return
 		}
+		// change
+		let val = this.elementRef.innerHTML
+		if (val === this.currentValueFromProps) {
+			return
+		}
+		if (cleanHtml) {
+			// todo sanitize
+			// todo remove empty button
+			// todo remove nbsp at end of line
+			if (val === this.currentValueFromProps) {
+				return
+			}
+		}
+		this.currentValueFromProps = val
+		this.props.onChange(val)
+	}
+
+	editorKeyDown(e: React.KeyboardEvent<HTMLDivElement>): void {
+		e.stopPropagation()
+		// when user presses enter, manually add new line to prevent adding new line inside button
+		if (e.key !== 'Enter') {
+			return
+		}
+		if (!this.elementRef) {
+			return
+		}
+		const node = getNodeFromPid(this.selectedNode, this.elementRef)
+		if (!node) {
+			return
+		}
+		const btn = getButtonFromSelection(node, this.elementRef)
+		if (!btn || !btn.parentElement) {
+			return
+		}
+		// add new line after <button>
+		e.preventDefault()
+		const el = document.createElement('div')
+		const nodeTxt = document.createTextNode('\u00a0')
+		el.appendChild(nodeTxt)
+		btn.parentElement.insertBefore(el, btn.nextSibling)
+		// move caret
+		const range = document.createRange()
+		range.setStart(nodeTxt, 0)
+		range.setEnd(nodeTxt, 1)
+		range.collapse(true)
 		const s = window.getSelection()
-		const editor = getEditor(props.wid)
-		if (s && s.anchorNode && editor && isNodeInside(s.anchorNode, editor)) {
-			saveCaret(detailRef.current, s.anchorNode, s.anchorOffset)
-		}
-		else {
-			saveCaret(detailRef.current, null, 0)
+		if (s) {
+			s.removeAllRanges()
+			s.addRange(range)
 		}
 	}
-	const wid2 = props.wid.join(',')
-	useEffect(() => {
-		detailRef.current = editorDetailsGetOrInsert(props.wid)
-		saveCaret(detailRef.current, null, 0)
-		if (tmpSelectionRef.current && wid2 === tmpSelectionRef.current.wid.join(',')) {
-			// reuse
-			const editor = getEditor(props.wid)
-			if (editor) {
-				const el = getNodeFromPid(tmpSelectionRef.current.node, editor)
-				if (el) {
-					saveCaret(detailRef.current, el, tmpSelectionRef.current.offset)
-					const range = document.createRange()
-					range.setStart(el, tmpSelectionRef.current.offset)
-					range.setEnd(el, tmpSelectionRef.current.offset)
-					range.collapse(true)
-					const s = window.getSelection()
-					if (s) {
-						s.removeAllRanges()
-						s.addRange(range)
-					}
-				}
-			}
-		}
-		tmpSelectionRef.current = null
 
-		document.addEventListener('selectionchange', selectionchange)
-		return () => {
-			detailRef.current = null
-			editorDetailsRemove(props.wid)
-			document.removeEventListener('selectionchange', selectionchange)
-		}
-		// eslint-disable-next-line
-	}, [wid2, timeRef.current])
-
-
-	// wait 2sec and then update
-	function change() {
-		if (timeoutRef.current > 0) {
-			clearTimeout(timeoutRef.current)
-			timeoutRef.current = 0
-		}
-		function doUpdate() {
-			timeoutRef.current = 0
-			const editor = getEditor(props.wid)
-			if (!editor) {
-				return
-			}
-			// save selection
-			const old = editorDetailsGet(props.wid)
-			if (old) {
-				tmpSelectionRef.current = {...old, cbs: []}
-			}
-			else {
-				tmpSelectionRef.current = null
-			}
-			// change
-			const val = editor.innerHTML
-			props.onChange(val)
-		}
-		timeoutRef.current = window.setTimeout(doUpdate, 3000)
-	}
-
-
-	return <div
-		ref={elementRef}
-		style={props.style}
-		draggable={true}
-		onDragStart={e => {
-			e.preventDefault()
-			e.stopPropagation()
-		}}
-		dangerouslySetInnerHTML={{__html: props.value}}
-		data-wid={props.wid.join(',')}
-		
-		contentEditable={true}
-		onKeyDown={e => {
-			e.stopPropagation()
-			// when user presses enter, manually add new line to prevent adding new line inside button
-			if (e.key === 'Enter') {
-				const editor = getEditor(props.wid)
-				const dt = editorDetailsGet(props.wid)
-				if (!dt || !editor) {
-					return
-				}
-				const node = getNodeFromPid(dt.node, editor)
-				if (!node) {
-					return
-				}
-				const btn = getButtonFromSelection(node, editor)
-				if (!btn || !btn.parentElement) {
-					return
-				}
-				// add new line after <button>
+	render() {
+		return <div
+			ref={this.setElementRef.bind(this)}
+			contentEditable={true}
+			draggable={true}
+			onDragStart={e => {
 				e.preventDefault()
-				const el = document.createElement('div')
-				el.innerHTML = ''
-				btn.parentElement.insertBefore(el, btn.nextSibling)
-				// move caret
-				const range = document.createRange()
-				range.setStart(el, 0)
-				range.setEnd(el, 0)
-				range.collapse(true)
-				const s = window.getSelection()
-				if (s) {
-					s.removeAllRanges()
-					s.addRange(range)
-				}
-			}
-		}}
-		onInput={e => {
-			e.stopPropagation()
-			change()
-		}}
-		onBlur={e => {
-			if (timeoutRef.current > 0) {
-				clearTimeout(timeoutRef.current)
-				timeoutRef.current = 0
-			}
-			const editor = getEditor(props.wid)
-			if (!editor) {
-				return
-			}
-			const val = editor.innerHTML
-			props.onChange(val)
-		}}
-	/>
+				e.stopPropagation()
+			}}
+			onKeyDown={this.editorKeyDown.bind(this)}
+			onInput={this.editorInput.bind(this)}
+			onBlur={() => this.sendChanges(true)}
+		/>
+	}
 }
 
 
@@ -549,6 +582,7 @@ export const TextHtml: Widget = {
 					value={item.value}
 					onChange={val => props.setItem({...item, value: val})}
 					style={css}
+					active={!!props.selected && idCmp(props.wid, props.selected)}
 				/>
 			</div>
 		</BoxName>
@@ -630,44 +664,52 @@ export const TextHtml: Widget = {
 				<button
 					className='btn btn-outline-secondary ms-2'
 					onClick={() => {
-						const node = document.createElement('button')
-						node.setAttribute('class', 'btn btn-outline-secondary')
-						node.setAttribute('data-filter', '')
-						node.innerText = 'data'
-						node.style.padding = '0 0.2rem'
-
-						const x = editorDetailsGet(props.wid)
-						if (x) {
-							const editor = getEditor(props.wid)
-							if (!editor) {
-								throw new Error('cant find editor')
-							}
-							let base: Node = editor
-							for (const idx of x.node) {
-								base = base.childNodes[idx]
-							}
-							const parent = base.parentNode
-							if (parent) {
-								if (base.nodeName === '#text') {
-									const txtBefore = base.nodeValue?.substring(0, x.offset) || ''
-									const txtAfter = (base.nodeValue?.substring(x.offset) || '') + '\u00a0'
-									const nextSib = base.nextSibling
-									if (parent) {
-										base.nodeValue = txtBefore
-										parent.insertBefore(node, nextSib)
-										parent.insertBefore(document.createTextNode(txtAfter), nextSib)
-										return
-									}
-								}
-								// div
-								// insert at front
-								const nextSib = base.childNodes.length>0 ? base.childNodes[0] : null
-								base.insertBefore(node, nextSib)
-								base.insertBefore(document.createTextNode('\u00a0'), nextSib)
-								return
-							}
+						const editor = editorGet(props.wid)
+						if (!editor || !editor.elementRef) {
+							return
 						}
-						console.log('caret is null')
+						const selectedNode = getNodeFromPid(editor.selectedNode, editor.elementRef)
+						if (!selectedNode || !selectedNode.parentNode) {
+							return
+						}
+						const parentNode = selectedNode.parentNode
+
+						const btn = document.createElement('button')
+						btn.setAttribute('class', 'btn btn-outline-secondary')
+						btn.setAttribute('data-adjust', '')
+						btn.style.padding = '0 0.2rem'
+						const btnValue = 'data'
+						const btnTextNode = document.createTextNode(btnValue)
+						btn.appendChild(btnTextNode)
+						
+						if (selectedNode.nodeName === '#text') {
+							const txtBefore = selectedNode.nodeValue?.substring(0, editor.selectedOffset) || ''
+							const txtAfter = (selectedNode.nodeValue?.substring(editor.selectedOffset) || '') + '\u00a0'  // &nbsp;
+							const nextSib = selectedNode.nextSibling
+							selectedNode.nodeValue = txtBefore
+							parentNode.insertBefore(btn, nextSib)
+							parentNode.insertBefore(document.createTextNode(txtAfter), nextSib)
+						}
+						else if (selectedNode === editor.elementRef) {
+							selectedNode.appendChild(btn)
+							selectedNode.appendChild(document.createTextNode('\u00a0'))
+						}
+						else {
+							const nextSib = selectedNode.nextSibling
+							parentNode.insertBefore(btn, nextSib)
+							parentNode.insertBefore(document.createTextNode('\u00a0'), nextSib)
+						}
+
+						// select
+						const range = document.createRange()
+						range.setStart(btnTextNode, 0)
+						range.setEnd(btnTextNode, btnValue.length)
+						range.collapse(true)
+						const s = window.getSelection()
+						if (s) {
+							s.removeAllRanges()
+							s.addRange(range)
+						}
 					}}
 					title={Trans('tag insert')}
 				>
@@ -681,15 +723,15 @@ export const TextHtml: Widget = {
 					value=''
 					onChange={e => {
 						const val = `${e.currentTarget.value}pt`
-						const editor = getEditor(props.wid)
-						if (val.length === 0 || !editor) {
+						const editor = editorGet(props.wid)
+						if (val.length === 0 || !editor || !editor.elementRef) {
 							return
 						}
 						document.execCommand('fontSize', false, '7')
 						var fontElements = document.getElementsByTagName('font')
 						for (let i = 0, len = fontElements.length; i < len; ++i) {
 							const el = fontElements[i]
-							if (!isNodeInside(el, editor)) {
+							if (!isNodeInside(el, editor.elementRef)) {
 								continue
 							}
 							if (el.size === '7') {
@@ -703,12 +745,11 @@ export const TextHtml: Widget = {
 				>
 					<option value=''></option>
 					{['8','10','12','14','16','18','24','36'].map(x => <option
-							key={x}
-							value={x}
-						>
-							{x}
-						</option>
-					)}
+						key={x}
+						value={x}
+					>
+						{x}
+					</option>)}
 				</select>
 			</div>
 

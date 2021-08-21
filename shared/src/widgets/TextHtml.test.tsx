@@ -40,7 +40,7 @@ test('TextHtml 2', async () => {
 
 
 test('TextHtml Filter', async () => {
-	const dt: TextHtmlData = {type:'TextHtml', value:'Hello <button data-filter="num, 2 dec">data.num</button>', children:[], font:{}}
+	const dt: TextHtmlData = {type:'TextHtml', value:'Hello <button data-adjust="num, 2 dec">data.num</button>', children:[], font:{}}
 	const data = { num: 123.123456789 }
 	const p2 = await compileComponent(dt, data)
 	expect(p2).toBeTruthy()
