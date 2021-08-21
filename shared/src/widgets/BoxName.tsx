@@ -14,6 +14,7 @@ interface Props extends ItemRendeProps {
 	name: TName,
 	children: React.ReactNode,
 	style?: React.CSSProperties,
+	visible?: boolean,
 }
 
 export default function BoxName(props: Props) {
@@ -23,7 +24,7 @@ export default function BoxName(props: Props) {
 		style={props.style}
 	>
 		<div
-			className={`${style.name} text-nowrap overflow-hidden`}
+			className={`${style.name} text-nowrap overflow-hidden ${typeof props.visible === 'boolean' && !props.visible ? 'd-none' : ''}`}
 			draggable={true} /* allways true to allow dragging TextHtml */
 			onDragStart={e => props.dragWidgetStart(e, {type:'wid', wid:props.wid})}
 			onDragEnd={e => props.dragWidgetEnd(e)}

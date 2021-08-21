@@ -14,7 +14,7 @@ import { FormulaHelper } from '../editor/compile'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { listOfFilters } from './formulaFilter'
 import Trans, { TransName, trKeys } from '../translation'
-import { removeFromList } from '../editor/childrenMgmt'
+import { idCmp, removeFromList } from '../editor/childrenMgmt'
 
 
 // returns <div> element of editor
@@ -530,7 +530,11 @@ export const TextHtml: Widget = {
 		const css = PropertyFontGenCss(item.font)
 		css.minHeight = '20px'
 		
-		return <BoxName {...props} name={TextHtml.name}>
+		return <BoxName
+			{...props}
+			name={TextHtml.name}
+			visible={!props.selected || !idCmp(props.selected, props.wid)}
+		>
 			<div
 				onClick={e => {
 					e.stopPropagation()
