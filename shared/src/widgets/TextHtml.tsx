@@ -389,6 +389,8 @@ class Editor extends React.Component<EditorProps, EditorState> {
 		if (props.style) {
 			Object.assign(el.style, props.style)
 		}
+		// padding to separate content from outline (when it has focus), to show cursor
+		el.style.padding = '1px 3px'
 
 		// html
 		if (props.value !== this.currentValueFromProps || force) {
