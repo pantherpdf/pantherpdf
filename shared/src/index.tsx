@@ -7,9 +7,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
 	const [report, setReport] = useState<TReport>(sampleReport)
-	const orgiData = {
-		abc: 123,
-	}
 
 	const api: ApiEndpoints = {
 		reportGet: (id) => { throw new Error('') },
@@ -25,7 +22,6 @@ function App() {
 		setReport={async (r) => setReport(r)}
 		deleteReport={() => {}}
 		allReports={[]}
-		getOriginalSourceData={() => orgiData}
 		api={api}
 	/>
 }

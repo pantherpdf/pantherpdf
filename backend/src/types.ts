@@ -186,6 +186,23 @@ export type FileUploadResponse = {file: TFileShort} | ErrorResponse
 
 
 
+export type GenerateRequest = { dataUrl?: string, data?: any }
+export function GenerateRequestTypeGuard(r: any): r is GenerateRequest {
+	if (typeof r != 'object')
+		return false
+	let numKeys = 0;
+	if ('dataUrl' in r) {
+		numKeys++
+		if (typeof r.dataUrl !== 'string')
+			return false
+	}
+	if ('data' in r) {
+		numKeys++
+	}
+	if (Object.keys(r).length !== numKeys)
+		return false
+	return true
+}
 export type GenerateResponseBase = { accessKey: string }
 export type GenerateResponse = GenerateResponseBase | ErrorResponse
 

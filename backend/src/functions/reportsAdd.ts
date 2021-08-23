@@ -34,6 +34,7 @@ const handler: Handler = async (event, context) => {
 		children: [],
 		transforms: [],
 		properties: {},
+		dataUrl: '',
 	}
 	const result = await db.reports.insertOne(obj)
 	const _id = result.insertedId.toHexString()

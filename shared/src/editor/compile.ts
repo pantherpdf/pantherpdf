@@ -103,6 +103,7 @@ export async function compileComponent(cmpData: object, data: any, api?: ApiEndp
 		],
 		transforms: [],
 		properties: { },
+		dataUrl: '',
 	}
 	const reportCompiled = await compile(dt, data, api)
 	return reportCompiled.children[0]

@@ -11,9 +11,9 @@ import { Dropdown, Button, ButtonGroup, Modal } from 'react-bootstrap'
 import Trans, { TransName } from '../translation'
 import getTransform, { allTransforms } from '../transforms/allTransforms'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowDown, faArrowUp, faEdit, faPlus, faTimes, faTrash, faRetweet } from '@fortawesome/free-solid-svg-icons'
+import { faArrowDown, faArrowUp, faEdit, faEllipsisH, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons'
 import ObjectExplorer from './ObjectExplorer'
-import FileSelect from '../FileSelect'
+import InputApplyOnEnter from '../widgets/InputApplyOnEnter'
 
 
 /**
@@ -83,6 +83,39 @@ function TransformItem(props: TransformItemProps) {
 }
 
 
+async function uploadOverrideSourceData(): Promise<any> {
+	return new Promise((resolve) => {
+		let el = document.createElement('INPUT') as HTMLInputElement
+		el.type = 'file'
+		el.accept = 'application/json'
+		el.multiple = false
+		el.addEventListener('change', function(ev2) {
+			const f = (el.files && el.files.length > 0) ? el.files[0] : undefined
+			console.log(f)
+			if (!f) {
+				return resolve(undefined)
+			}
+			try {
+				const reader = new FileReader()
+				reader.onload = (e2) => {
+					if (!e2.target || typeof e2.target.result !== 'string') {
+						return
+					}
+					const dt = JSON.parse(e2.target.result)
+					resolve(dt)
+				}
+				reader.readAsText(f)
+			}
+			catch(e) {
+				alert(`Error: ${String(e)}`)
+				return resolve(undefined)
+			}
+		})
+		el.click()
+	})
+}
+
+
 
 interface TEdit {
 	index: number,
@@ -99,13 +132,11 @@ export default function DataTransform(props: GeneralProps) {
 	const [shownModalInsert, setShownModalInsert] = useState<boolean>(false)
 	const [showEdit, setShowEdit] = useState<TEdit | null>(null)
 	const [showData, setShowData] = useState<TSourceDataShow | null>(null)
-	const [shownModalUpload, setShownModalUpload] = useState<boolean>(false)
-	const [uploadUrl, setUploadUrl] = useState<string>('')
 
 	async function doShowData(len: number) {
 		let dt
 		try {
-			dt = props.getOriginalSourceData();
+			dt = props.getOriginalSourceData(props.report);
 		}
 		catch(e) {
 			const msg = e instanceof Error ? e.message : 'Unknown error'
@@ -174,7 +205,6 @@ export default function DataTransform(props: GeneralProps) {
 		report2.transforms[showEdit.index] = showEdit.data
 		await props.setReport(report2)
 		setShowEdit(null)
-		props.refreshSourceData(report2)
 	}
 
 	function editChange(data: TTransformData) {
@@ -185,30 +215,39 @@ export default function DataTransform(props: GeneralProps) {
 	const editCmp = showEdit ? getTransform(showEdit.data.type) : null
 
 	return <>
-		<Dropdown
-			as={ButtonGroup}
-			className='d-flex'
-			size='sm'
-		>
-			<button className='btn btn-sm btn-outline-secondary flex-fill text-left' onClick={()=>doShowData(0)}>
+		<div className='d-flex'>
+			<label htmlFor='source-url' className='flex-fill'>
 				{Trans('source data')}
+			</label>
+			<button
+				className='btn btn-link py-0'
+				onClick={async () => {
+					if (props.isOverridenSourceData) {
+						// remove
+						props.overrideSourceData(undefined)
+					}
+					else {
+						// select file and replace
+						const dt = await uploadOverrideSourceData()
+						if (dt) {
+							props.overrideSourceData(dt)
+						}
+					}
+				}}
+				title={Trans('load local json file')}
+			>
+				<FontAwesomeIcon icon={props.isOverridenSourceData ? faTimes : faEllipsisH} />
 			</button>
-			<Dropdown.Toggle style={{maxWidth:'3rem'}} split variant="outline-secondary" id="dropdown-custom-2" />
-			<Dropdown.Menu>
-				<Dropdown.Item onClick={() => {
-					setShownModalUpload(true)
-				}}>
-					<FontAwesomeIcon icon={faRetweet} className='me-2' fixedWidth />
-					{Trans('replace')}
-				</Dropdown.Item>
-				{props.indexOverridenSourceData>0 && <Dropdown.Item onClick={() => {
-					props.overrideSourceData(null)
-				}}>
-					<FontAwesomeIcon icon={faTimes} className='me-2' fixedWidth />
-					{Trans('reset')}
-				</Dropdown.Item>}
-			</Dropdown.Menu>
-		</Dropdown>
+		</div>
+		<InputApplyOnEnter
+			id='source-url'
+			value={props.report.dataUrl}
+			onChange={val => {
+				const report2: TReport = {...props.report, dataUrl: String(val)}
+				props.setReport(report2)
+			}}
+			placeholder='https://www.example.com/data.js(on)'
+		/>
 
 
 		{props.report.transforms.map((item, idx) => <TransformItem
@@ -228,90 +267,6 @@ export default function DataTransform(props: GeneralProps) {
 				{Trans('transform')}
 			</button>
 		</div>
-
-		{/* UPLOAD JSON */}
-		<Modal show={shownModalUpload} onHide={() => setShownModalUpload(false)}>
-			<Modal.Header closeButton>
-				<Modal.Title>
-					Upload JSON data
-				</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				<div className="mb-3">
-					<label htmlFor="uploadUrl" className="form-label">
-						Url
-					</label>
-					<input
-						type="text"
-						placeholder='https://www.example.com/file.json'
-						className="form-control"
-						id="uploadUrl"
-						value={uploadUrl}
-						onChange={e => setUploadUrl(e.currentTarget.value)}
-					/>
-				</div>
-				
-				<hr />
-
-				<FileSelect
-					onSelect={async fls => {
-						if (fls.length === 0) {
-							return
-						}
-						const f = fls[0]
-						try {
-							const reader = new FileReader()
-							reader.onload = (e2) => {
-								if (!e2.target || typeof e2.target.result !== 'string') {
-									return
-								}
-								const dt = JSON.parse(e2.target.result)
-								props.overrideSourceData(dt)
-							}
-							reader.readAsText(f)
-						}
-						catch(e) {
-							alert(`Error: ${String(e)}`)
-							return
-						}
-						setShownModalUpload(false)
-					}}
-				/>
-			</Modal.Body>
-			<Modal.Footer>
-				<Button
-					variant="secondary"
-					onClick={() => {
-						setShownModalUpload(false)
-					}}
-				>
-					{Trans('cancel')}
-				</Button>
-				<Button
-					variant="primary"
-					onClick={async () => {
-						let js: any
-						try {
-							const r = await fetch(uploadUrl)
-							if (!r.ok) {
-								alert('Bad response from url')
-								return
-							}
-							js = await r.json()
-						}
-						catch(e) {
-							alert(`Error: ${String(e)}`)
-							return
-						}
-						setShownModalUpload(false)
-						props.overrideSourceData(js)
-					}}
-					disabled={uploadUrl.length === 0}
-				>
-					Upload
-				</Button>
-			</Modal.Footer>
-		</Modal>
 
 		{/* ADD NEW */}
 		<Modal show={shownModalInsert} onHide={() => setShownModalInsert(false)}>

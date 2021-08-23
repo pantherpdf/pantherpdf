@@ -3,7 +3,7 @@ import App from '../Layout'
 import { RouteComponentProps, Link } from 'react-router-dom'
 import { useState, useEffect, useContext } from 'react'
 import type { TReport } from 'reports-shared'
-import type { ReportResponse, GenerateResponse } from '../../../backend/src/types'
+import type { ReportResponse, GenerateResponse, GenerateRequest } from '../../../backend/src/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPrint, faRedo, faSpinner, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { AppContext } from '../context'
@@ -156,14 +156,15 @@ export default function Report(props: ReportProps) {
 	}
 
 	async function print() {
-		if (!report)
+		if (!report) {
 			return
+		}
 		const w = window.open('', '_blank')
-		if (!w)
+		if (!w) {
 			return
-		const { transformData } = await import('reports-shared')
-		const data = await transformData(getOriginalSourceData(), report)
-		const r = await fetch(`/.netlify/functions/generate?id=${id}`, {method: 'POST', headers: {Authorization: `Bearer sid:${app.sid}`, 'Content-Type': 'application/json'}, body: JSON.stringify(data)})
+		}
+		const rqData: GenerateRequest = { }
+		const r = await fetch(`/.netlify/functions/generate?id=${id}`, {method: 'POST', headers: {Authorization: `Bearer sid:${app.sid}`, 'Content-Type': 'application/json'}, body: JSON.stringify(rqData)})
 		const js = await r.json() as GenerateResponse
 		if (!r.ok || 'msg' in js) {
 			w.close()
@@ -213,11 +214,6 @@ export default function Report(props: ReportProps) {
 		return <App {...props}><main className='container'><h1>Error. Report not found</h1></main></App>
 	}
 
-	function getOriginalSourceData() {
-		// todo temp function
-		return { arr: [1,2,3,4,5,6,7,8,9] }
-	}
-
 	const api = getApi(app)
 
 	// show editor
@@ -237,7 +233,6 @@ export default function Report(props: ReportProps) {
 				setReport={setReport2}
 				deleteReport={deleteReport}
 				allReports={app.reports}
-				getOriginalSourceData={getOriginalSourceData}
 				api={api}
 			/>
 		</Suspense>

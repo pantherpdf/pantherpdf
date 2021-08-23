@@ -15,12 +15,11 @@ import { findInList, removeFromList, insertIntoList, updateDestAfterRemove, idCm
 import { transformData } from './DataTransform'
 
 
-interface Props {
+interface EditorProps {
 	report: TReport,
 	setReport: (val: TReport) => Promise<void>,
 	deleteReport: () => void,
 	allReports: TReportShort[],
-	getOriginalSourceData: () => any,
 	api: ApiEndpoints,
 }
 
@@ -88,63 +87,77 @@ export function dropImpl(report: TReport, current: TDragObj, dest: number[], cop
 }
 
 
-export default function Editor(props: Props) {
+export default function Editor(props: EditorProps) {
 	const [selected, setSelected] = useState<number[]|null>(null)
 	const [source, setSource] = useState<SourceData>({data: null, msg: 'loading ...'})
 	const dragObj = useRef<TDragObj|null>(null)
 	const [overrideSourceData, setOverrideSourceData] = useState<string | null>(null)
-	const [indexOverridenSourceData, setIndexOverridenSourceData] = useState<number>(0)
 
-	async function getOriginalSourceData(): Promise<any> {
+	useEffect(() => {
+		refreshSourceData(props.report)
+		// eslint-disable-next-line
+	}, [overrideSourceData, props.report.dataUrl, props.report.transforms])
+
+	async function getOriginalSourceData(report: TReport): Promise<any> {
 		if (overrideSourceData) {
 			return JSON.parse(overrideSourceData)
 		}
-		return props.getOriginalSourceData()
+		if (report.dataUrl.length > 0) {
+			let url = report.dataUrl
+			if (url.startsWith('local/')) {
+				url = props.api.filesDownloadUrl(url.substring(6))
+			}
+			const r = await fetch(url, {
+				headers: {
+					Accept: 'text/javascript, application/json'
+				},
+			})
+			if (r.status !== 200) {
+				throw new Error(`Bad response status: ${r.status}`)
+			}
+			const ct = (r.headers.get('Content-Type') || '').split(';')[0].trim()
+			if (ct === 'text/javascript' || ct === 'application/javascript') {
+				// cannot import module because import() gets transformed into something else
+				//const module = await import(url)
+				
+				// cannot eval and import because nodejs doesnt support importing from http://
+				//const enc = encodeURIComponent(url)
+				//const prms = eval(`import("${decodeURIComponent(enc)}")`)
+				//const module = await prms
+				//const getData = module.default
+				//return getData()
+
+				//
+				const code = await r.text()
+				const a = eval(code+';;;;{getData();}')
+				const data = await a
+				return data
+			}
+			if (ct === 'application/json') {
+				return r.json()
+			}
+			throw new Error(`Invalid response. Content-Type: ${ct}`)
+		}
 	}
 
-	async function setOverrideSourceData2(obj: any) {
-		if (obj) {
-			setOverrideSourceData(JSON.stringify(obj))
-			setIndexOverridenSourceData(indexOverridenSourceData+1)
-			refreshSourceData(props.report, JSON.parse(JSON.stringify(obj)))
-		}
-		else {
-			setOverrideSourceData(null)
-			setIndexOverridenSourceData(0)
-			const dt = await props.getOriginalSourceData()
-			refreshSourceData(props.report, dt)
-		}
+	async function setOverrideSourceData2(data: any) {
+		setOverrideSourceData(JSON.stringify(data))
 	}
 
-	async function refreshSourceData(report: TReport, dt?: any) {
+	async function refreshSourceData(report: TReport) {
 		// get current report data because props.report may not update yet
-		if (!dt) {
-			try {
-				dt = await getOriginalSourceData();
-			}
-			catch(e) {
-				const msg = e instanceof Error ? e.message : 'Unknown error'
-				setSource({data: null, msg})
-				return
-			}
-		}
-		let dt2
+		let data
 		try {
-			dt2 = await transformData(dt, report)
+			data = await getOriginalSourceData(report);
+			data = await transformData(data, report)
 		}
 		catch(e) {
 			const msg = e instanceof Error ? e.message : 'Unknown error'
 			setSource({data: null, msg})
 			return
 		}
-		setSource({data: dt2, msg: undefined})
+		setSource({data: data, msg: undefined})
 	}
-
-	// load source data
-	useEffect(() => {
-		refreshSourceData(props.report)
-		// eslint-disable-next-line
-	}, [])
 
 	let props2: GeneralProps
 
@@ -264,7 +277,7 @@ export default function Editor(props: Props) {
 
 		getOriginalSourceData: getOriginalSourceData,
 		overrideSourceData: setOverrideSourceData2,
-		indexOverridenSourceData: indexOverridenSourceData,
+		isOverridenSourceData: !!overrideSourceData,
 		refreshSourceData: refreshSourceData,
 		sourceData: source.data,
 		sourceErrorMsg: source.msg,

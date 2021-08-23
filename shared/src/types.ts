@@ -45,7 +45,8 @@ export interface TReport {
 		paperWidth?: number,
 		paperHeight?: number,
 		lang?: string,
-	}
+	},
+	dataUrl: string,
 }
 
 export interface TReportShort {

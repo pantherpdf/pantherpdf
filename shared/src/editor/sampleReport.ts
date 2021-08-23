@@ -11,4 +11,5 @@ export const sampleReport: TReport = {
 	transforms: [],
 	properties: {
 	},
+	dataUrl: '',
 }

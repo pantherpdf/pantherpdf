@@ -37,9 +37,9 @@ export type TDragObj = {type:'wid', wid: number[]} | {type:'widget', widget: TDa
 export interface GeneralProps {
 	allReports: TReportShort[],
 
-	getOriginalSourceData: () => any,
-	overrideSourceData: (obj: any) => void,
-	indexOverridenSourceData: number,
+	getOriginalSourceData: (report: TReport) => any,
+	overrideSourceData: (data: any) => void,
+	isOverridenSourceData: boolean,
 	sourceData: any,
 	sourceErrorMsg?: string | undefined,
 	refreshSourceData: (report: TReport) => void,

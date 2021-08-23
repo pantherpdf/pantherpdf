@@ -123,6 +123,7 @@ const tr2 = {
 	'repeat - direction grid': { en: 'Grid', sl: 'Mreža' },
 
 	'no image selected': { en: 'No image selected', sl: 'Slika ni izbrana' },
+	'load local json file': { en: 'Load local .json file', sl: 'Naloži lokalno .json datoteko' },
 }
 
 export type trKeys = keyof typeof tr2
