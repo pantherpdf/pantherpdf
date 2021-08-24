@@ -15,12 +15,12 @@ import type { ItemRendeProps, Widget } from '../editor/types'
 import BoxName from './BoxName'
 import PropertyFont, { PropertyFontGenCss, TFont } from './PropertyFont'
 import FormulaEvaluate from '../formula/formula'
-import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight, faBold, faItalic, faTag, faTrash, faUnderline, IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight, faBold, faItalic, faTag, faUnderline, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { FormulaHelper } from '../editor/compile'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { listOfAdjusts } from './formulaAdjust'
 import Trans, { TransName, trKeys } from '../translation'
-import { idCmp, removeFromList } from '../editor/childrenMgmt'
+import { idCmp } from '../editor/childrenMgmt'
 import InputApplyOnEnter from './InputApplyOnEnter'
 import style from './TextHtml.module.css'
 
@@ -616,17 +616,6 @@ export const TextHtml: Widget = {
 					onChange={val => props.setItem({...props.item, font: val})}
 					loadFonts={props.api.fonts}
 				/>
-				<button
-					className='btn btn-sm btn-outline-danger ms-2'
-					onClick={() => {
-						const report = removeFromList(props.report, props.wid)
-						props.setReport(report)
-						props.setSelected(null)
-					}}
-				>
-					<FontAwesomeIcon icon={faTrash} className='me-2' />
-					{Trans('remove')}
-				</button>
 			</div>
 			<hr />
 			<div>

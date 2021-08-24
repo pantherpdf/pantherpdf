@@ -12,7 +12,7 @@ import PropertyFont, { TFont } from '../widgets/PropertyFont'
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter'
 import Property4SideInput, { Value as Property4SideInputValue } from '../widgets/Property4SideInput'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCaretDown, faCaretUp, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faCaretDown, faCaretUp, faEdit } from '@fortawesome/free-solid-svg-icons'
 
 
 // hack to get array of possible values
@@ -71,13 +71,6 @@ export default function ReportSettings(props: GeneralProps) {
 		return props.setReport(obj)
 	}
 
-	async function deleteReport() {
-		if (!window.confirm(Trans('delete report question')))
-			return
-		return props.deleteReport()
-	}
-
-
 	const margin: Property4SideInputValue = props.report.properties.margin ? props.report.properties.margin : [0,0,0,0]
 	return <>
 		<label>{Trans('name')}</label>
@@ -85,12 +78,6 @@ export default function ReportSettings(props: GeneralProps) {
 			<input type="text" className="form-control" disabled value={TransName(props.report.name)}/>
 			<button className="btn btn-sm btn-outline-secondary" onClick={changeName}>
 				<FontAwesomeIcon icon={faEdit} />
-			</button>
-		</div>
-
-		<div>
-			<button className="btn btn-sm btn-outline-danger" onClick={deleteReport}>
-				<FontAwesomeIcon icon={faTrash} className='me-2' /> {Trans('delete report')}
 			</button>
 		</div>
 		

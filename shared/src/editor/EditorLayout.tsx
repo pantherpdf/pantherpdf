@@ -16,30 +16,71 @@ import getWidget from '../widgets/allWidgets'
 import { findInList, removeFromList, updateItem } from './childrenMgmt'
 import ReportSettings from './ReportSettings'
 import { extractFiles } from '../FileSelect'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
+
+
+interface PropertiesHeaderProps extends GeneralProps {
+	name: string | { [key: string]: string },
+	onDelete: () => void,
+}
+function PropertiesHeader(props: PropertiesHeaderProps) {
+	return <div className='d-flex border-bottom'>
+		<div className='h3 flex-fill'>
+			{TransName(props.name)}
+		</div>
+		<button
+			className='btn btn-sm btn-outline-danger'
+			onClick={props.onDelete}
+		>
+			<FontAwesomeIcon icon={faTrash} />
+		</button>
+	</div>
+}
 
 
 function Properties(props: GeneralProps) {
 	if (!props.selected) {
 		return <>
-			<div className='h5 border-bottom'>
-				{Trans('report')}
-			</div>
+			<PropertiesHeader
+				{...props}
+				name={Trans('report')}
+				onDelete={() => {
+					if (!window.confirm(Trans('delete report question'))) {
+						return
+					}
+					return props.deleteReport()
+				}}
+			/>
 			<ReportSettings {...props} />
 		</>
+	}
+
+	function remove() {
+		if (!props.selected) {
+			return
+		}
+		const report = removeFromList(props.report, props.selected)
+		props.setReport(report)
+		props.setSelected(null)
 	}
 
 	const wid = props.selected
 	const selected = findInList(props.report, wid)
 	const comp = getWidget(selected.type)
 	if (!comp.RenderProperties) {
-		return <div className='h3 border-bottom'>
-			{TransName(comp.name)}
-		</div>
+		return <PropertiesHeader
+			{...props}
+			name={comp.name}
+			onDelete={remove}
+		/>
 	}
 	return <>
-		<div className='h5 border-bottom mb-3'>
-			{TransName(comp.name)}
-		</div>
+		<PropertiesHeader
+			{...props}
+			name={comp.name}
+			onDelete={remove}
+		/>
 		<comp.RenderProperties
 			{...props}
 			item={selected}
