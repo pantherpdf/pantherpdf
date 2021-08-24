@@ -1,0 +1,13 @@
+.editor button {
+	display: inline-block;
+    cursor: pointer;
+    outline: 1px solid #949ea8;
+    border: none;
+    color: inherit;
+	padding: 0 0.1rem;
+    background-color: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    font-style: inherit;
+}

@@ -22,6 +22,7 @@ import { listOfAdjusts } from './formulaAdjust'
 import Trans, { TransName, trKeys } from '../translation'
 import { idCmp, removeFromList } from '../editor/childrenMgmt'
 import InputApplyOnEnter from './InputApplyOnEnter'
+import style from './TextHtml.module.css'
 
 
 const listOfEditors: Editor[] = []
@@ -517,6 +518,7 @@ class Editor extends React.Component<EditorProps, EditorState> {
 			onKeyDown={this.editorKeyDown.bind(this)}
 			onInput={this.editorInput.bind(this)}
 			onBlur={() => this.sendChanges(true)}
+			className={style.editor}
 		/>
 	}
 }
@@ -677,9 +679,7 @@ export const TextHtml: Widget = {
 						const parentNode = selectedNode.parentNode
 
 						const btn = document.createElement('button')
-						btn.setAttribute('class', 'btn btn-outline-secondary')
 						btn.setAttribute('data-adjust', '')
-						btn.style.padding = '0 0.2rem'
 						const btnValue = 'data'
 						const btnTextNode = document.createTextNode(btnValue)
 						btn.appendChild(btnTextNode)
