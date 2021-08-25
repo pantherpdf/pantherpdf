@@ -540,15 +540,26 @@ export interface TextHtmlCompiled extends TDataCompiled {
 }
 
 
+function escapeHtml(unsafe: string): string {
+	return unsafe
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#039;");
+ }
+
+
 export const TextHtml: Widget = {
 	name: {en: 'Text', sl: 'Besedilo'},
 	icon: {fontawesome: faAlignLeft},
 
-	newItem: async (): Promise<TextHtmlData> => {
+	newItem: async (props): Promise<TextHtmlData> => {
+		const value = props.report.children.length > 0 ? '' : `<div>${escapeHtml(Trans('TextHtml initial value'))}</div>`
 		return {
 			type: 'TextHtml',
 			children: [],
-			value: '',
+			value,
 			font: {},
 		}
 	},

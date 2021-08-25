@@ -125,6 +125,7 @@ const tr2 = {
 
 	'no image selected': { en: 'No image selected', sl: 'Slika ni izbrana' },
 	'load local json file': { en: 'Load local .json file', sl: 'Naloži lokalno .json datoteko' },
+	'TextHtml initial value': { en: 'This is sample text', sl: 'To je vzorčni tekst' },
 }
 
 export type trKeys = keyof typeof tr2

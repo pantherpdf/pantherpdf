@@ -83,10 +83,14 @@ export interface CompileHelper {
 	api?: ApiEndpoints,
 }
 
+export interface NewItemProps {
+	report: TReport,
+}
+
 export interface Widget {
 	name: TName,
 	icon: TFontAwesomeIcon,
-	newItem: () => Promise<TData>,
+	newItem: (props: NewItemProps) => Promise<TData>,
 	compile: (dt: any, helper: CompileHelper) => Promise<TDataCompiled>,
 	RenderProperties?: FunctionComponent<ItemRendeProps>,
 	Render: FunctionComponent<ItemRendeProps>,

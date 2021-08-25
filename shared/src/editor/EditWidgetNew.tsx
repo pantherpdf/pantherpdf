@@ -9,7 +9,7 @@ import Trans, { TransName } from '../translation'
 import style from './EditWidgets.module.css'
 import { saveAs } from 'file-saver'
 import { ReportResponseBase } from '../types'
-import { Widget, GeneralProps } from './types'
+import { Widget, GeneralProps, NewItemProps } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faMinus, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
@@ -107,7 +107,10 @@ function ShowWidgets(props: GeneralProps) {
 	}, [])
 
 	async function dragStartWidget(e: React.DragEvent<HTMLDivElement>, w: Widget) {
-		const obj = await w.newItem()
+		const propsNewItem: NewItemProps = {
+			report: props.report,
+		}
+		const obj = await w.newItem(propsNewItem)
 		return props.dragWidgetStart(e, {type:'widget', widget:obj})
 	}
 	

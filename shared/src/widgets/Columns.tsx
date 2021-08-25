@@ -97,13 +97,13 @@ export const Columns: Widget = {
 	name: {en: 'Columns', sl: 'Stolpci'},
 	icon: {fontawesome: faColumns},
 
-	newItem: async (): Promise<ColumnsData> => {
+	newItem: async (props): Promise<ColumnsData> => {
 		return {
 			type: 'Columns',
 			children: [
-				await ColumnsCt.newItem(),
-				await ColumnsCt.newItem(),
-				await ColumnsCt.newItem(),
+				await ColumnsCt.newItem({report: props.report}),
+				await ColumnsCt.newItem({report: props.report}),
+				await ColumnsCt.newItem({report: props.report}),
 			],
 			widths: [
 				'',
@@ -206,7 +206,7 @@ export const Columns: Widget = {
 					className='btn btn-secondary'
 					onClick={async () => {
 						const ws = [...item.widths, '']
-						const chs = [...item.children, await ColumnsCt.newItem()]
+						const chs = [...item.children, await ColumnsCt.newItem({report: props.report})]
 						props.setItem({...item, widths: ws, children: chs})
 					}}
 				>
