@@ -136,6 +136,7 @@ export const Columns: Widget = {
 				{item.children.map((ch, idx) => <div
 					key={idx}
 					style={{...baseStyle, ...colStyle(item.widths[idx])}}
+					onDrop={e => props.drop(e, [...props.wid,idx,ch.children.length])}
 				>
 					{props.renderWidgets(ch.children, [...props.wid, idx])}
 				</div>)}
