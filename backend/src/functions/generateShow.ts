@@ -27,6 +27,7 @@ const handler: Handler = async (event, context) => {
 	}
 	const cssObj: CSSProperties = {...defaultReportCss, ...PropertyFontGenCss(report.properties.font || {})}
 	const css = styleToCssString(cssObj)
+	const modePrint = (event.queryStringParameters && event.queryStringParameters.mode === 'print') || false
 
 	const html = `<!DOCTYPE html>
 <html lang="en-US">
@@ -117,7 +118,9 @@ body {
 </style>
 </head>
 <body>
+${!modePrint && '<div style="max-width:800px; border: 2px solid #ddd; padding: 30px; margin: 0 auto">'}
 ${obj.html}
+${!modePrint && '</div>'}
 </body>
 </html>
 `

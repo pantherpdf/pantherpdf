@@ -32,7 +32,7 @@ const handler: Handler = async (event, context) => {
 	
 	// prepare options
 	const rq = {
-		url: `${PUBLIC_URL}/.netlify/functions/generateShow?key=${encodeURIComponent(accessKey)}`,
+		url: `${PUBLIC_URL}/.netlify/functions/generateShow?key=${encodeURIComponent(accessKey)}&mode=print`,
 	}
 	// todo pageWidth, ...
 
