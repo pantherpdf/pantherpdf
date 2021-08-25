@@ -53,6 +53,7 @@ test('whitespace', () => {
 	expect(isWhiteSpace(' ')).toBe(true)
 	expect(isWhiteSpace('\t')).toBe(true)
 	expect(isWhiteSpace('\n')).toBe(true)
+	expect(isWhiteSpace('\u00A0')).toBe(true)
 	expect(isWhiteSpace('\r')).toBe(true)
 	expect(isWhiteSpace('_')).toBe(false)
 })

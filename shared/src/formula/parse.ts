@@ -8,7 +8,8 @@ import { TExpr, ParseError, TSubExpr_variable_dyn, TSubExpr_variable, TSubExpr_f
 
 export function isWhiteSpace(ch: string): boolean {
 	if (ch.length !== 1) { throw new Error('bad params') }
-	return ch === ' ' || ch === '\n' || ch === '\t' || ch === '\r'
+	return ch === ' ' || ch === '\n' || ch === '\t' || ch === '\r' ||
+		ch === '\u00A0' || ch === '\u2028' || ch === '\u2029' || ch === '\uFEFF'
 }
 
 export function skipWhitespace(str: string, i: number): number {
