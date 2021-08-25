@@ -77,6 +77,7 @@ const tr2 = {
 	'replace': { en: 'Replace', sl: 'Zamenjaj' },
 	'reset': { en: 'Reset', sl: 'Ponastavi' },
 	'drag drop widgets here': { en: 'Drag & Drop widgets here', sl: 'Prenesi gradnike sem' },
+	'drag drop widgets': { en: 'Drag & Drop widgets', sl: 'Zgrabi, prenesi, odloži' },
 
 	'width': { en: 'Width', sl: 'Širina' },
 	'height': { en: 'Height', sl: 'Višina' },

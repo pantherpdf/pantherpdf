@@ -4,7 +4,7 @@
  */
 
 
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Trans, { TransName } from '../translation'
 import style from './EditWidgets.module.css'
 import { saveAs } from 'file-saver'
@@ -13,6 +13,7 @@ import { Widget, GeneralProps } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faMinus, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { Overlay, Tooltip } from 'react-bootstrap'
 
 interface ExpandableProps {
 	name: string,
@@ -78,25 +79,61 @@ function ShowReports(props: GeneralProps) {
 
 
 function ShowWidgets(props: GeneralProps) {
+	const target = useRef<HTMLDivElement | null>(null)
+	const tooltipTimer = useRef<number>(0)
+	const [showTooltipIdx, setShowTooltipIdx] = useState<number>(-1)
+
+	function showTooltip(idx: number, el: HTMLDivElement) {
+		hideTooltip()
+		tooltipTimer.current = window.setTimeout(hideTooltip, 2500)
+		target.current = el
+		setShowTooltipIdx(idx)
+	}
+
+	function hideTooltip() {
+		if (tooltipTimer.current === 0) {
+			return
+		}
+		clearTimeout(tooltipTimer.current)
+		tooltipTimer.current = 0
+		target.current = null
+		setShowTooltipIdx(-1)
+	}
+
+	useEffect(() => {
+		return () => {
+			hideTooltip()
+		}
+	}, [])
+
 	async function dragStartWidget(e: React.DragEvent<HTMLDivElement>, w: Widget) {
 		const obj = await w.newItem()
 		return props.dragWidgetStart(e, {type:'widget', widget:obj})
 	}
 	
-	return <>{Object.values(allWidgets).map((w,idx) => {
-		if (typeof w.canAdd !== 'undefined' && !w.canAdd)
-			return null
-		return <div
-			key={idx}
-			draggable={true}
-			onDragStart={e => dragStartWidget(e, w)}
-			onDragEnd={e => props.dragWidgetEnd(e)}
-			className={style.widget}
-		>
-			<FontAwesomeIcon icon={w.icon.fontawesome} fixedWidth className='me-2' />
-			{TransName(w.name)}
-		</div>
-	})}</>
+	return <>
+		{Object.values(allWidgets).map((w,idx) => {
+			if (typeof w.canAdd !== 'undefined' && !w.canAdd) {
+				return null
+			}
+			return <div
+				key={idx}
+				draggable={true}
+				onDragStart={e => dragStartWidget(e, w)}
+				onDragEnd={e => props.dragWidgetEnd(e)}
+				className={style.widget}
+				onClick={e => showTooltip(idx, e.currentTarget)}
+			>
+				<FontAwesomeIcon icon={w.icon.fontawesome} fixedWidth className='me-2' />
+				{TransName(w.name)}
+			</div>
+		})}
+		<Overlay target={target.current} show={showTooltipIdx!==-1} placement='right'>
+			{(props) => <Tooltip id='editWidgetNewWidgetTooltip' {...props}>
+				{Trans('drag drop widgets')}
+			</Tooltip>}
+		</Overlay>
+	</>
 }
 
 
