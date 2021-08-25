@@ -181,6 +181,7 @@ export default function FileDialog(props: Props) {
 						{props.mode === 'link' ? <a href={props.api.filesDownloadUrl(f.name)} target='_blank' rel='noreferrer' className='d-block'>{f.name}</a> : <button
 							className='btn btn-link d-block w-100 text-start'
 							onClick={() => props.onChange && props.onChange(f.name)}
+							disabled={f.upload && f.upload.status !== 'complete'}
 						>
 							{f.name}
 						</button>}
