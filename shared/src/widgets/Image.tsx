@@ -78,7 +78,7 @@ export const Image: Widget = {
 		const item = props.item as ImageData
 
 		const cssImg: CSSProperties = {
-			display: 'block',
+			display: 'inline-block',
 		}
 		if (item.width.length > 0) {
 			cssImg.width = item.width
@@ -132,6 +132,9 @@ export const Image: Widget = {
 		}
 		if (item.width.length > 0) {
 			cssImg.width = item.width
+		}
+		else {
+			cssImg.maxWidth = '100%'
 		}
 		const cssContainer: CSSProperties = { }
 		if (item.align) {
