@@ -667,6 +667,17 @@ export const TextHtml: Widget = {
 						}
 						const parentNode = selectedNode.parentNode
 
+						// is inside button?
+						{
+							let el: Node | null = selectedNode
+							while (el) {
+								if (el.nodeName === 'BUTTON') {
+									return
+								}
+								el = el.parentNode
+							}
+						}
+
 						const btn = document.createElement('button')
 						btn.setAttribute('data-adjust', '')
 						const btnValue = 'data'
