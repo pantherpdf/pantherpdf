@@ -15,13 +15,13 @@ function App() {
 		filesUpload: async (file, data, cbProgress) => { },
 		filesDownloadUrl: (name) => { throw new Error('') },
 		fonts: async () => { return ['arial','times new roman'] },
+		allReports: async () => { return [] },
 	}
 
 	return <Editor
 		report={report}
 		setReport={async (r) => setReport(r)}
 		deleteReport={() => {}}
-		allReports={[]}
 		api={api}
 	/>
 }

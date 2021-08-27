@@ -7,7 +7,7 @@
 import React, { ReactNode, useEffect, useRef } from 'react'
 import { useState } from 'react'
 import getWidget from '../widgets/allWidgets'
-import { TReport, TData, TReportShort, ApiEndpoints } from '../types'
+import { TReport, TData, ApiEndpoints } from '../types'
 import { GeneralProps, TDragObj } from './types'
 import style from './Editor.module.css'
 import Layout from './EditorLayout'
@@ -19,7 +19,6 @@ interface EditorProps {
 	report: TReport,
 	setReport: (val: TReport) => Promise<void>,
 	deleteReport: () => void,
-	allReports: TReportShort[],
 	api: ApiEndpoints,
 }
 
@@ -273,8 +272,6 @@ export default function Editor(props: EditorProps) {
 	}
 	
 	props2 = {
-		allReports: props.allReports,
-
 		getOriginalSourceData: getOriginalSourceData,
 		overrideSourceData: setOverrideSourceData2,
 		isOverridenSourceData: !!overrideSourceData,

@@ -232,7 +232,6 @@ export default function Report(props: ReportProps) {
 				report={report}
 				setReport={setReport2}
 				deleteReport={deleteReport}
-				allReports={app.reports}
 				api={api}
 			/>
 		</Suspense>

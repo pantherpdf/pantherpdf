@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Trans, { TransName } from '../translation'
 import style from './EditWidgets.module.css'
 import { saveAs } from 'file-saver'
-import { ReportResponseBase } from '../types'
+import { ReportResponseBase, TReportShort } from '../types'
 import { Widget, GeneralProps, NewItemProps } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -39,6 +39,10 @@ function Expandable(props: ExpandableProps) {
 
 
 function ShowReports(props: GeneralProps) {
+	const [allReports, setAllReports] = useState<TReportShort[]>([])
+	useEffect(() => {
+		props.api.allReports().then(arr => setAllReports(arr))
+	}, [props.api])
 
 	async function dragStartReport(e: React.DragEvent<HTMLDivElement>, id: string) {
 		let js: ReportResponseBase
@@ -53,14 +57,14 @@ function ShowReports(props: GeneralProps) {
 	}
 
 	
-	if(props.allReports.length === 0) {
+	if (allReports.length === 0) {
 		return <>
 			<span className='text-muted'>
 				{Trans('empty')}
 			</span>
 		</>
 	}
-	return <>{props.allReports.map((r,idx) => <React.Fragment key={idx}>
+	return <>{allReports.map((r,idx) => <React.Fragment key={idx}>
 			<div
 				key={idx}
 				draggable={true}

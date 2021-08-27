@@ -123,6 +123,7 @@ export interface ApiEndpoints {
 	filesUpload: (file: File, data: FileUploadData, cbProgress: (prc: number) => void) =>  Promise<void>,
 	filesDownloadUrl: (name: string) => string,
 	fonts: () => Promise<string[]>,
+	allReports: () => Promise<TReportShort[]>,
 }
 
 

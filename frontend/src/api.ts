@@ -120,6 +120,10 @@ export default function getApi(app: IAppContextCB): ApiEndpoints {
 		fonts: async function() {
 			return ['arial','times new roman']
 		},
+
+		allReports: async () => {
+			return app.reports
+		},
 	}
 	return api
 }

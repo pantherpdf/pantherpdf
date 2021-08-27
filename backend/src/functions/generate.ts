@@ -93,6 +93,7 @@ const handler: Handler = async (event, context) => {
 			return `${PUBLIC_URL}/.netlify/functions/filesDownload?name=${encodeURIComponent(name)}&sid=${encodeURIComponent(sid)}`
 		},
 		fonts: () => { throw new Error('not implemented')},
+		allReports: () => { throw new Error('not implemented')},
 	}
 
 	// prepare data

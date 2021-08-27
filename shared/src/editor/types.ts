@@ -35,8 +35,6 @@ export type ReportForceChildren<T> = TReport & { children: ForceChildren<T>[] }
 export type TDragObj = {type:'wid', wid: number[]} | {type:'widget', widget: TData} | {type:'widgets', widgets: TData[]}
 
 export interface GeneralProps {
-	allReports: TReportShort[],
-
 	getOriginalSourceData: (report: TReport) => any,
 	overrideSourceData: (data: any) => void,
 	isOverridenSourceData: boolean,
