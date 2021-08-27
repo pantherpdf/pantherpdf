@@ -179,6 +179,14 @@ function fileUpload(arr: any[], setArr: React.Dispatch<React.SetStateAction<any[
 				alert(Trans('upload bad file')+' '+(String(e)))
 				return
 			}
+			if (typeof dt !== 'object') {
+				alert('Bad data')
+				return
+			}
+			if (typeof dt.version !== 'string' || dt.version.split('.').length !== 3 || dt.version.split('.')[0] !== '1') {
+				alert('Bad data or bad version')
+				return
+			}
 			let n = arr.length
 			setArr([...arr, dt])
 			alert(Trans('upload finished', [(n+1).toString()]))
