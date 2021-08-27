@@ -91,7 +91,6 @@ async function uploadOverrideSourceData(): Promise<any> {
 		el.multiple = false
 		el.addEventListener('change', function(ev2) {
 			const f = (el.files && el.files.length > 0) ? el.files[0] : undefined
-			console.log(f)
 			if (!f) {
 				return resolve(undefined)
 			}
