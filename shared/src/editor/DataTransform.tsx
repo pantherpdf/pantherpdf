@@ -11,7 +11,7 @@ import { Dropdown, Button, ButtonGroup, Modal } from 'react-bootstrap'
 import Trans, { TransName } from '../translation'
 import getTransform, { allTransforms } from '../transforms/allTransforms'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowDown, faArrowUp, faEdit, faEllipsisH, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faArrowDown, faArrowUp, faEdit, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons'
 import ObjectExplorer from './ObjectExplorer'
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter'
 
@@ -235,7 +235,7 @@ export default function DataTransform(props: GeneralProps) {
 				}}
 				title={Trans('load local json file')}
 			>
-				<FontAwesomeIcon icon={props.isOverridenSourceData ? faTimes : faEllipsisH} />
+				<FontAwesomeIcon icon={props.isOverridenSourceData ? faTimes : faArrowUp} />
 			</button>
 		</div>
 		<InputApplyOnEnter
