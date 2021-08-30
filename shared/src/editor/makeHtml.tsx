@@ -5,8 +5,8 @@
 
 
 import React from 'react'
-import type { TReportCompiled, TDataCompiled } from '../types'
-import type { ItemRendeFinalProps, ItemRendeFinalHelper } from './types'
+import type { TReportCompiled } from '../types'
+import type { ItemRendeFinalHelper } from './types'
 import getWidget from '../widgets/allWidgets'
 
 

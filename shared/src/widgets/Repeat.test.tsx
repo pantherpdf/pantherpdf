@@ -3,7 +3,7 @@
  */
 
 import { TextSimpleData } from './TextSimple'
-import { Repeat, RepeatData } from './Repeat'
+import { RepeatData } from './Repeat'
 import compile, { compileComponent } from '../editor/compile'
 import { ForceChildren } from '../editor/types'
 import { sampleReport } from '../editor/sampleReport'
@@ -14,7 +14,7 @@ import renderer from 'react-test-renderer'
 
 
 test('text', async () => {
-	const dt: ForceChildren<RepeatData|TextSimpleData> = {type:'Repeat', varName:'rp', source:'data.arr + ["a","b"]', children:[
+	const dt: ForceChildren<RepeatData|TextSimpleData> = {type:'Repeat', varName:'rp', source:'data.arr + ["a","b"]', direction:'rows', children:[
 		{type:'TextSimple', formula:'rp', children:[]}
 	]}
 	const data = { arr:['1','2'] }

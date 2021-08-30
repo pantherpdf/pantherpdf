@@ -5,7 +5,7 @@
 
 import compile from './compile'
 import type { ReportForceChildren } from './types'
-import type { TextSimpleData, TextSimpleCompiled } from '../widgets/TextSimple'
+import type { TextSimpleData } from '../widgets/TextSimple'
 import { sampleReport } from './sampleReport'
 import makeHtml from './makeHtml'
 import renderer from 'react-test-renderer'

@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { TextHtml, TextHtmlData, TextHtmlCompiled, evaluateFormulaInsideHtml } from './TextHtml'
+import { TextHtmlData, TextHtmlCompiled, evaluateFormulaInsideHtml } from './TextHtml'
 import compile, { compileComponent, FormulaHelper } from '../editor/compile'
 import makeHtml from '../editor/makeHtml'
 import renderer from 'react-test-renderer'

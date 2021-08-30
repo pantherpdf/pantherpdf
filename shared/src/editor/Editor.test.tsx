@@ -13,7 +13,7 @@ import { TDragObj } from './types'
 test('dropImpl copy existing widget to the end of doc', () => {
 	const r = JSON.parse(JSON.stringify(sampleReport)) as TReport
 	const c2: TextSimpleData = {type: 'TextSimple', children:[], formula:''}
-	const c1: RepeatData = {type: 'Repeat', children:[c2], source:'', varName:''}
+	const c1: RepeatData = {type: 'Repeat', children:[c2], source:'', varName:'', direction:'rows'}
 	r.children = [c1]
 	const dObj: TDragObj = {type:'wid', wid: [0,0]}
 	const report2 = dropImpl(r, dObj, [1], true)
@@ -27,7 +27,7 @@ test('dropImpl copy existing widget to the end of doc', () => {
 test('dropImpl move existing widget to the end of doc', () => {
 	const r = JSON.parse(JSON.stringify(sampleReport)) as TReport
 	const c2: TextSimpleData = {type: 'TextSimple', children:[], formula:''}
-	const c1: RepeatData = {type: 'Repeat', children:[c2], source:'', varName:''}
+	const c1: RepeatData = {type: 'Repeat', children:[c2], source:'', varName:'', direction:'rows'}
 	r.children = [c1]
 	const dObj: TDragObj = {type:'wid', wid: [0,0]}
 	const report2 = dropImpl(r, dObj, [1], false)

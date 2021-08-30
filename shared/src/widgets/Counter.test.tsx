@@ -12,7 +12,7 @@ import { ForceChildren } from '../editor/types'
 test('text', async () => {
 	const dt: ForceChildren<CounterData|RepeatData|TextSimpleData> =
 	{type: 'Counter', varName: 'counter1', children: [
-		{type:'Repeat', varName:'rp', source:'["a","b","c"]', children:[
+		{type:'Repeat', varName:'rp', source:'["a","b","c"]', direction:'rows', children:[
 			{type:'TextSimple', formula:'rp + counter1', children:[]}
 		]}
 	]}
