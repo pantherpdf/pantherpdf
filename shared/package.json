@@ -1,6 +1,6 @@
 {
 	"name": "reports-shared",
-	"version": "1.0.60",
+	"version": "1.0.61",
 	"private": true,
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^5.15.3",
@@ -9,7 +9,6 @@
 		"@fortawesome/react-fontawesome": "^0.1.14",
 		"bootstrap": "^5.0.1",
 		"file-saver": "^2.0.3",
-		"jsdom": "^17.0.0",
 		"react": "^17.0.2",
 		"react-bootstrap": "^2.0.0-beta.4",
 		"react-colorful": "^5.3.0"
@@ -22,7 +21,6 @@
 		"@types/react": "^17.0.0",
 		"@types/react-dom": "^17.0.9",
 		"@types/react-test-renderer": "^17.0.1",
-		"bootstrap": "^5.0.1",
 		"react-dom": "^17.0.2",
 		"react-scripts": "4.0.3",
 		"react-test-renderer": "^17.0.2",
@@ -30,7 +28,7 @@
 		"typescript-plugin-css-modules": "^3.4.0"
 	},
 	"scripts": {
-		"build": "rm -rdf ./build && tsc --p tsconfig.build.json && node build-helper.js",
+		"build": "BUILD_PATH='../frontend/public/app' react-scripts build",
 		"start": "react-scripts start",
 		"test": "react-scripts test"
 	},
@@ -39,6 +37,7 @@
 	"files": [
 		"/build"
 	],
+	"homepage": "./",
 	"eslintConfig": {
 		"extends": [
 			"react-app",

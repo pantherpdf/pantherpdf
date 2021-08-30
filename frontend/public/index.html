@@ -1,22 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>Reports</title>
-    <style>
-      html {
-        font-size: 14px;
-      }
-    </style>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+<html lang="en-US">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Kelgrand Reports</title>
+		<link rel="icon" href="/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" href="/milligram.min.css">
+	</head>
+	<body>
+	
+		<main style="margin-top: 70px; color: #232129; text-align: center;">
+			
+			<h1>
+				Generate PDFs,<br />
+				extract data from your SaaS app.
+			</h1>
+			<p>
+				We were developing web app and needed to generate PDF reports.<br />
+				There was no well-suited solution so we build one. 🎉 🎉 🎉
+			</p>
+
+			<div style="display: flex; justify-content: center; margin: 60px 0 50px 0;">
+				<a href='/sample-report' class='button button-large button-outline2' style="margin-right: 4rem">
+					Sample Report
+				</a>
+				<a href='/editor' class='button button-large button-outline2'>
+					Open Editor
+				</a>
+			</div>
+
+			<h3>
+				Features
+			</h3>
+			<p>
+				Async functions, Custom Widgets, Export to CSV, Multilingual, Subreports ...
+			</p>
+
+			<h3>
+				Want to learn more?
+			</h3>
+			<form>
+				<div style="display: flex; justify-content: center;">
+					<input
+						type='email'
+						placeholder='Enter email to learn more'
+						style="max-width: 30rem; margin-right: 1rem;"
+					/>
+					<button
+						type='submit'
+						class='button button-small button-outline'
+					>
+						Tell me more
+					</button>
+				</div>
+				<p>
+					<small>
+						Or send email to <a href='mailto:info@kelgrand.com'>info@kelgrand.com</a>
+					</small>
+				</p>
+			</form>
+
+		</main>
+	</body>
 </html>

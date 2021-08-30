@@ -239,20 +239,8 @@ function TagEditor(props: ItemRendeProps) {
 // replace <button> with value of formula inside <button>
 export async function evaluateFormulaInsideHtml(html: string, formulaHelper: FormulaHelper): Promise<string> {
 	// parse html
-	// on browser use createElement()
-	// on nodejs use JSDOM library
-	let parentEl: HTMLElement
-	let doc2: Document
-	if (typeof window === 'undefined') {
-		const { JSDOM } = require('jsdom')
-		const dom = new JSDOM(html)
-		parentEl = dom.window.document.body
-		doc2 = dom.window.document
-	}
-	else {
-		parentEl = document.createElement('div')
-		doc2 = window.document
-	}
+	const parentEl = document.createElement('div')
+	const doc2 = window.document
 
 	function processBtn(el: Node, value: string): Node | null {
 		if (el.nodeName === '#text') {

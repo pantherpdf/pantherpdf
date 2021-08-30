@@ -4,26 +4,18 @@
 	"private": true,
 	"scripts": {
 		"start": "netlify-lambda serve src/functions --config ./webpack.functions.js",
-		"build": "netlify-lambda build src/functions --config ./webpack.functions.js",
-		"test": "echo '\n* * * * * * * *\nTODO make tests for backend\n* * * * * * * *\n'"
+		"build": "netlify-lambda build src/functions --config ./webpack.functions.js"
 	},
 	"dependencies": {
 		"@netlify/functions": "^0.7.2",
 		"abort-controller": "^3.0.0",
-		"crypto": "^1.0.1",
 		"encoding": "^0.1.13",
-		"jsdom": "^16.7.0",
-		"mongodb": "^3.6.9",
-		"mongodb-client-encryption": "^1.2.5",
 		"netlify-lambda": "^2.0.8",
-		"node-fetch": "^2.6.1",
-		"react-style-object-to-css": "^1.1.2",
-		"reports-shared": "file:../shared"
+		"node-fetch": "^2.6.1"
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.14.5",
 		"@babel/preset-typescript": "^7.14.5",
-		"@types/mongodb": "3.6.17",
 		"@types/node-fetch": "^2.5.12",
 		"css-loader": "^4.3.0",
 		"dotenv-webpack": "7.0.3",

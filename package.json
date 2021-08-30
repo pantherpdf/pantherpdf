@@ -6,12 +6,9 @@
   "workspaces": ["backend", "frontend","shared"],
   "scripts": {
     "start": "concurrently \"yarn workspace reports-backend start\" \"yarn workspace reports-frontend start\"",
-    "build": "yarn workspace reports-shared build && yarn workspace reports-backend build && yarn workspace reports-frontend build",
-    "test": "yarn workspace reports-shared test && yarn workspace reports-backend test && yarn workspace reports-frontend test",
-    "updateShared": "node updateShared.js"
+    "build": "yarn workspace reports-shared build && yarn workspace reports-backend build && yarn workspace reports-frontend build"
   },
   "devDependencies": {
-    "concurrently": "^6.2.0",
-    "start-server-and-test": "^1.12.5"
+    "concurrently": "^6.2.0"
   }
 }
