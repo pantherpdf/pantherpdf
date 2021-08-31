@@ -138,7 +138,7 @@ export default function Container() {
 			}
 			catch(e) {
 				setLoading(false)
-				alert(e.message)
+				alert(String(e))
 				setReport(oldVal)
 				setUndoStack(oldUndoStack)
 				setUndoNext(oldUndoNext)
