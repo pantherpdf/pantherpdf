@@ -58,7 +58,7 @@ export const Image: Widget = {
 		else if (dt.formula.length > 0) {
 			const data2 = await helpers.evalFormula(dt.formula)
 			if (typeof data2 !== 'string') {
-				throw new Error('Image from formula not a string')
+				throw new Error(`Image from formula expected string but got ${typeof data2}`)
 			}
 			data = data2
 		}
