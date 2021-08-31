@@ -28,7 +28,7 @@
 		"typescript-plugin-css-modules": "^3.4.0"
 	},
 	"scripts": {
-		"build": "BUILD_PATH='../frontend/public/app' react-scripts build",
+		"build": "BUILD_PATH='../frontend/public/app' PUBLIC_URL='./' react-scripts build",
 		"start": "react-scripts start",
 		"test": "react-scripts test"
 	},
