@@ -7,7 +7,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import type { FunctionComponent, ReactNode } from 'react'
 import type { FormulaHelper } from './compile'
-import { TReport, TReportShort, TData, TTransformData, ApiEndpoints, TDataCompiled } from '../types'
+import { TReport, TData, TTransformData, ApiEndpoints, TDataCompiled } from '../types'
 
 
 
@@ -32,20 +32,23 @@ export type ReportForceChildren<T> = TReport & { children: ForceChildren<T>[] }
 
 
 
+export interface TSourceData {
+	data: any,
+	errorMsg?: string,
+}
+
 export type TDragObj = {type:'wid', wid: number[]} | {type:'widget', widget: TData} | {type:'widgets', widgets: TData[]}
 
 export interface GeneralProps {
-	getOriginalSourceData: (report: TReport) => any,
-	overrideSourceData: (data: any) => void,
+	getOriginalSourceData: () => Promise<any>,
+	overrideSourceData?: (data: any) => void,
 	isOverridenSourceData: boolean,
-	sourceData: any,
-	sourceErrorMsg?: string | undefined,
-	refreshSourceData: (report: TReport) => void,
+	data: TSourceData,
 	api: ApiEndpoints,
 
 	report: TReport,
 	setReport: (report: TReport) => Promise<void>,
-	deleteReport: () => void,
+	deleteReport?: () => void,
 
 	selected: number[] | null,
 	setSelected: React.Dispatch<React.SetStateAction<number[]|null>>,

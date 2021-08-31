@@ -52,7 +52,7 @@ export const Image: Widget = {
 		if (dt.url.length > 0) {
 			data = dt.url
 			if (data.startsWith('local/')) {
-				data = helpers.api ? helpers.api.filesDownloadUrl(data.substring(6)) : ''
+				data = helpers.api && helpers.api.filesDownloadUrl ? helpers.api.filesDownloadUrl(data.substring(6)) : ''
 			}
 		}
 		else if (dt.formula.length > 0) {
@@ -91,7 +91,7 @@ export const Image: Widget = {
 		if (item.url.length >  0) {
 			let url = item.url
 			if (url.startsWith('local/')) {
-				url = props.api.filesDownloadUrl(url.substring(6))
+				url = props.api.filesDownloadUrl ? props.api.filesDownloadUrl(url.substring(6)) : ''
 			}
 			img = <img src={url} alt='' style={cssImg} />
 		}
@@ -189,6 +189,7 @@ export const Image: Widget = {
 				<button
 					className="btn btn-outline-secondary"
 					onClick={() => setShowModal(true)}
+					disabled={!props.api.files}
 				>
 					<FontAwesomeIcon icon={faEllipsisH} />
 				</button>

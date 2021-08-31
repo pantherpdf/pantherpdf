@@ -8,12 +8,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import Trans, { TransName } from '../translation'
 import style from './EditWidgets.module.css'
 import { saveAs } from 'file-saver'
-import { ReportResponseBase, TReportShort } from '../types'
+import { ReportResponseBase, ReportTypeGuard, TReportShort } from '../types'
 import { Widget, GeneralProps, NewItemProps } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faMinus, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { Overlay, Tooltip } from 'react-bootstrap'
+import packageJson from '../../package.json'
 
 interface ExpandableProps {
 	name: string,
@@ -41,10 +42,15 @@ function Expandable(props: ExpandableProps) {
 function ShowReports(props: GeneralProps) {
 	const [allReports, setAllReports] = useState<TReportShort[]>([])
 	useEffect(() => {
-		props.api.allReports().then(arr => setAllReports(arr))
+		if (props.api.allReports) {
+			props.api.allReports().then(arr => setAllReports(arr))
+		}
 	}, [props.api])
 
 	async function dragStartReport(e: React.DragEvent<HTMLDivElement>, id: string) {
+		if (!props.api.reportGet) {
+			return
+		}
 		let js: ReportResponseBase
 		try {
 			js = await props.api.reportGet(id)
@@ -53,7 +59,7 @@ function ShowReports(props: GeneralProps) {
 			alert(String(e))
 			return
 		}
-		return props.dragWidgetStart(e, {type:'widgets', widgets:js.obj.children})
+		return props.dragWidgetStart(e, {type:'widgets', widgets:js.report.children})
 	}
 
 	
@@ -183,12 +189,14 @@ function fileUpload(arr: any[], setArr: React.Dispatch<React.SetStateAction<any[
 				alert(Trans('upload bad file')+' '+(String(e)))
 				return
 			}
-			if (typeof dt !== 'object') {
+			if (!ReportTypeGuard(dt)) {
 				alert('Bad data')
 				return
 			}
-			if (typeof dt.version !== 'string' || dt.version.split('.').length !== 3 || dt.version.split('.')[0] !== '1') {
-				alert('Bad data or bad version')
+			const myVersion = packageJson.version.split('.')[0]
+			const docVersion = dt.version.split('.')[0]
+			if (docVersion !== myVersion) {
+				alert(`Bad version. Expected ${myVersion} but got ${docVersion}`)
 				return
 			}
 			let n = arr.length
@@ -259,9 +267,11 @@ export default function EditWidgetNew(props: GeneralProps) {
 			<ShowPredefined {...props} />
 		</Expandable>
 		*/}
+		{!!props.api.allReports && (
 		<Expandable name={Trans('reports')}>
 			<ShowReports {...props} />
 		</Expandable>
+		)}
 		<Expandable name={Trans('file')}>
 			<ShowUpload {...props} />
 		</Expandable>

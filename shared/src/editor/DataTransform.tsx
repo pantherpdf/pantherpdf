@@ -135,7 +135,7 @@ export default function DataTransform(props: GeneralProps) {
 	async function doShowData(len: number) {
 		let dt
 		try {
-			dt = props.getOriginalSourceData(props.report);
+			dt = await props.getOriginalSourceData()
 		}
 		catch(e) {
 			const msg = e instanceof Error ? e.message : 'Unknown error'
@@ -218,9 +218,12 @@ export default function DataTransform(props: GeneralProps) {
 			<label htmlFor='source-url' className='flex-fill'>
 				{Trans('source data')}
 			</label>
-			<button
+			{!!props.overrideSourceData && <button
 				className='btn btn-link py-0'
 				onClick={async () => {
+					if (!props.overrideSourceData) {
+						return
+					}
 					if (props.isOverridenSourceData) {
 						// remove
 						props.overrideSourceData(undefined)
@@ -236,7 +239,7 @@ export default function DataTransform(props: GeneralProps) {
 				title={Trans('load local json file')}
 			>
 				<FontAwesomeIcon icon={props.isOverridenSourceData ? faTimes : faArrowUp} />
-			</button>
+			</button>}
 		</div>
 		<InputApplyOnEnter
 			id='source-url'

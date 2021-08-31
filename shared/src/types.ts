@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import type { CSSProperties } from 'react'
 
 // helper for converting tuple into type
 type Narrowable = string | number | boolean | symbol | object | {} | void | null | undefined;
@@ -95,6 +95,12 @@ export function ReportTypeGuard(r: any): r is TReport {
 	}
 	if (typeof r.properties !== 'object')
 		return false
+	// version
+	if (typeof r.version !== 'string')
+		return false
+	if (r.version.split('.').length !== 3)
+		return false
+	//
 	return true
 }
 
@@ -114,16 +120,16 @@ export interface FileUploadData {
 }
 
 
-export type ReportResponseBase = { obj: WithId<TReport> }
+export type ReportResponseBase = { report: WithId<TReport> }
 export type FilesResponseBase = { files: TFileShort[] }
 export interface ApiEndpoints {
-	reportGet: (id: string) =>  Promise<ReportResponseBase>,
-	files: () =>  Promise<FilesResponseBase>,
-	filesDelete: (name: string) =>  Promise<void>,
-	filesUpload: (file: File, data: FileUploadData, cbProgress: (prc: number) => void) =>  Promise<void>,
-	filesDownloadUrl: (name: string) => string,
-	fonts: () => Promise<string[]>,
-	allReports: () => Promise<TReportShort[]>,
+	reportGet?: (id: string) =>  Promise<ReportResponseBase>,
+	files?: () =>  Promise<FilesResponseBase>,
+	filesDelete?: (name: string) =>  Promise<void>,
+	filesUpload?: (file: File, data: FileUploadData, cbProgress: (prc: number) => void) =>  Promise<void>,
+	filesDownloadUrl?: (name: string) => string,
+	fonts?: () => Promise<string[]>,
+	allReports?: () => Promise<TReportShort[]>,
 }
 
 

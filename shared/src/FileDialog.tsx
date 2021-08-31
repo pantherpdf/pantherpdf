@@ -117,7 +117,7 @@ export default function FileDialog(props: Props) {
 	async function doUpload(f: TFileUpload) {
 		reportStatus(f.name, 'uploading')
 
-		if (!f.upload)
+		if (!f.upload || !props.api.filesUpload)
 			throw new Error('Missing upload')
 
 		try {
@@ -148,6 +148,9 @@ export default function FileDialog(props: Props) {
 
 	// load files
 	useEffect(() => {
+		if (!props.api.files) {
+			return
+		}
 		props.api.files().then(js => {
 			setFiles(js.files)
 			setLoading(false)
@@ -156,6 +159,8 @@ export default function FileDialog(props: Props) {
 
 
 	async function fileDelete(name: string): Promise<void> {
+		if (!props.api.filesDelete)
+			return
 		if (!window.confirm(Trans('delete confirm', [name])))
 			return
 		await props.api.filesDelete(name)
@@ -178,7 +183,7 @@ export default function FileDialog(props: Props) {
 			<tbody>
 				{files.map(f => <tr key={f.name}>
 					<td>
-						{props.mode === 'link' ? <a href={props.api.filesDownloadUrl(f.name)} target='_blank' rel='noreferrer' className='d-block'>{f.name}</a> : <button
+						{props.mode === 'link' && props.api.filesDownloadUrl ? <a href={props.api.filesDownloadUrl(f.name)} target='_blank' rel='noreferrer' className='d-block'>{f.name}</a> : <button
 							className='btn btn-link d-block w-100 text-start'
 							onClick={() => props.onChange && props.onChange(f.name)}
 							disabled={f.upload && f.upload.status !== 'complete'}

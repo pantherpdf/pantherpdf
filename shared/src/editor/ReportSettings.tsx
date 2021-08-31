@@ -107,11 +107,11 @@ export default function ReportSettings(props: GeneralProps) {
 
 			{props.report.target === 'pdf' && <>
 				<div className='mt-2 mb-2'>
-					<PropertyFont
+					{props.api.fonts && <PropertyFont
 						value={props.report.properties.font?props.report.properties.font:{}}
 						onChange={changeFont}
 						loadFonts={props.api.fonts}
-					/>
+					/>}
 				</div>
 				
 				<label htmlFor='paperWidth'>{Trans('paperWidth')} <small className='text-muted'>{Trans('0 means default')}</small></label>

@@ -22,35 +22,39 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
 interface PropertiesHeaderProps extends GeneralProps {
 	name: string | { [key: string]: string },
-	onDelete: () => void,
+	onDelete?: () => void,
 }
 function PropertiesHeader(props: PropertiesHeaderProps) {
 	return <div className='d-flex border-bottom'>
 		<div className='h3 flex-fill'>
 			{TransName(props.name)}
 		</div>
-		<button
+		{!!props.onDelete && <button
 			className='btn btn-sm btn-outline-danger'
 			onClick={props.onDelete}
 		>
 			<FontAwesomeIcon icon={faTrash} />
-		</button>
+		</button>}
 	</div>
 }
 
 
 function Properties(props: GeneralProps) {
 	if (!props.selected) {
+		function deleteReport() {
+			if (!props.deleteReport) {
+				return
+			}
+			if (!window.confirm(Trans('delete report question'))) {
+				return
+			}
+			return props.deleteReport()
+		}
 		return <>
 			<PropertiesHeader
 				{...props}
 				name={Trans('report')}
-				onDelete={() => {
-					if (!window.confirm(Trans('delete report question'))) {
-						return
-					}
-					return props.deleteReport()
-				}}
+				onDelete={props.deleteReport ? deleteReport : undefined}
 			/>
 			<ReportSettings {...props} />
 		</>
@@ -108,7 +112,7 @@ function RenderContent(props: GeneralProps) {
 	
 	if (t === 'json') {
 		try {
-			const content = JSON.stringify(props.sourceData)
+			const content = JSON.stringify(props.data.data)
 			return <pre>{content}</pre>
 		}
 		catch(e) {
@@ -119,7 +123,7 @@ function RenderContent(props: GeneralProps) {
 	}
 
 	if (t === 'csv-excel-utf-8' || t === 'csv-windows-1250') {
-		const dt = props.sourceData
+		const dt = props.data.data
 		if( !Array.isArray(dt) ) {
 			return <div className="alert alert-danger">
 				{Trans('data must be 2D array')}
@@ -166,6 +170,9 @@ export default function Layout(props: GeneralProps&{dragOver: (e: React.DragEven
 	function onDrop(e: React.DragEvent<HTMLDivElement>) {
 		e.preventDefault()
 		e.stopPropagation()
+		if (!props.overrideSourceData) {
+			return
+		}
 		const arr = extractFiles(e.dataTransfer)
 		if (arr.length === 0) {
 			return
@@ -178,7 +185,9 @@ export default function Layout(props: GeneralProps&{dragOver: (e: React.DragEven
 					return
 				}
 				const dt = JSON.parse(e2.target.result)
-				props.overrideSourceData(dt)
+				if (props.overrideSourceData) {
+					props.overrideSourceData(dt)
+				}
 			}
 			reader.readAsText(f)
 		}
@@ -199,7 +208,7 @@ export default function Layout(props: GeneralProps&{dragOver: (e: React.DragEven
 		>
 			<DataTransform {...props} />
 			<hr/>
-			{props.sourceErrorMsg ? <div>{props.sourceErrorMsg}</div> : <ObjectExplorer data={props.sourceData} />}
+			{props.data.errorMsg ? <div>{props.data.errorMsg}</div> : <ObjectExplorer data={props.data.data} />}
 		</div>
 		<div className={style.box3}>
 			<Properties {...props} />

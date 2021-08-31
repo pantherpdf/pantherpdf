@@ -240,6 +240,7 @@ function TagEditor(props: ItemRendeProps) {
 export async function evaluateFormulaInsideHtml(html: string, formulaHelper: FormulaHelper): Promise<string> {
 	// parse html
 	const parentEl = document.createElement('div')
+	parentEl.innerHTML = html
 	const doc2 = window.document
 
 	function processBtn(el: Node, value: string): Node | null {
@@ -610,11 +611,11 @@ export const TextHtml: Widget = {
 		]
 		return <>
 			<div className='d-flex'>
-				<PropertyFont
+				{props.api.fonts && <PropertyFont
 					value={item.font}
 					onChange={val => props.setItem({...props.item, font: val})}
 					loadFonts={props.api.fonts}
-				/>
+				/>}
 			</div>
 			<hr />
 			<div>

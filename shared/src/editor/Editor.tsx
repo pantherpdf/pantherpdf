@@ -4,7 +4,7 @@
  */
 
 
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useRef } from 'react'
 import { useState } from 'react'
 import getWidget from '../widgets/allWidgets'
 import { TReport, TData, ApiEndpoints } from '../types'
@@ -12,20 +12,18 @@ import { GeneralProps, TDragObj } from './types'
 import style from './Editor.module.css'
 import Layout from './EditorLayout'
 import { findInList, removeFromList, insertIntoList, updateDestAfterRemove, idCmp, updateItem } from './childrenMgmt'
-import { transformData } from './DataTransform'
 
 
 interface EditorProps {
 	report: TReport,
 	setReport: (val: TReport) => Promise<void>,
-	deleteReport: () => void,
+	deleteReport?: () => void,
 	api: ApiEndpoints,
-}
-
-
-interface SourceData {
-	data: any,
-	msg: string | undefined,
+	
+	getOriginalSourceData: () => Promise<any>,
+	setOverrideSourceData?: (dt: any) => void,
+	isOverridenSourceData: boolean,
+	data: { data: any, errorMsg?: string },
 }
 
 
@@ -88,75 +86,9 @@ export function dropImpl(report: TReport, current: TDragObj, dest: number[], cop
 
 export default function Editor(props: EditorProps) {
 	const [selected, setSelected] = useState<number[]|null>(null)
-	const [source, setSource] = useState<SourceData>({data: null, msg: 'loading ...'})
 	const dragObj = useRef<TDragObj|null>(null)
-	const [overrideSourceData, setOverrideSourceData] = useState<string | null>(null)
 
-	useEffect(() => {
-		refreshSourceData(props.report)
-		// eslint-disable-next-line
-	}, [overrideSourceData, props.report.dataUrl, props.report.transforms])
 
-	async function getOriginalSourceData(report: TReport): Promise<any> {
-		if (overrideSourceData) {
-			return JSON.parse(overrideSourceData)
-		}
-		if (report.dataUrl.length > 0) {
-			let url = report.dataUrl
-			if (url.startsWith('local/')) {
-				url = props.api.filesDownloadUrl(url.substring(6))
-			}
-			const r = await fetch(url, {
-				headers: {
-					Accept: 'text/javascript, application/json'
-				},
-			})
-			if (r.status !== 200) {
-				throw new Error(`Bad response status: ${r.status}`)
-			}
-			const ct = (r.headers.get('Content-Type') || '').split(';')[0].trim()
-			if (ct === 'text/javascript' || ct === 'application/javascript') {
-				// cannot import module because import() gets transformed into something else
-				//const module = await import(url)
-				
-				// cannot eval and import because nodejs doesnt support importing from http://
-				//const enc = encodeURIComponent(url)
-				//const prms = eval(`import("${decodeURIComponent(enc)}")`)
-				//const module = await prms
-				//const getData = module.default
-				//return getData()
-
-				//
-				const code = await r.text()
-				const a = eval(code+';;;;{getData();}')
-				const data = await a
-				return data
-			}
-			if (ct === 'application/json') {
-				return r.json()
-			}
-			throw new Error(`Invalid response. Content-Type: ${ct}`)
-		}
-	}
-
-	async function setOverrideSourceData2(data: any) {
-		setOverrideSourceData(JSON.stringify(data))
-	}
-
-	async function refreshSourceData(report: TReport) {
-		// get current report data because props.report may not update yet
-		let data
-		try {
-			data = await getOriginalSourceData(report);
-			data = await transformData(data, report)
-		}
-		catch(e) {
-			const msg = e instanceof Error ? e.message : 'Unknown error'
-			setSource({data: null, msg})
-			return
-		}
-		setSource({data: data, msg: undefined})
-	}
 
 	let props2: GeneralProps
 
@@ -272,12 +204,10 @@ export default function Editor(props: EditorProps) {
 	}
 	
 	props2 = {
-		getOriginalSourceData: getOriginalSourceData,
-		overrideSourceData: setOverrideSourceData2,
-		isOverridenSourceData: !!overrideSourceData,
-		refreshSourceData: refreshSourceData,
-		sourceData: source.data,
-		sourceErrorMsg: source.msg,
+		getOriginalSourceData: props.getOriginalSourceData,
+		overrideSourceData: props.setOverrideSourceData,
+		isOverridenSourceData: props.isOverridenSourceData,
+		data: props.data,
 		api: props.api,
 
 		report: props.report,
