@@ -240,12 +240,7 @@ export default function Container() {
 					alert(msg)
 					return
 				}
-				const js = await r.json()
-				if (typeof js !== 'object' || typeof js.report !== 'object') {
-					alert('bad data')
-					return
-				}
-				const report = js.report
+				const report = await r.json()
 				if (!ReportTypeGuard(report)) {
 					alert('Bad data')
 					return

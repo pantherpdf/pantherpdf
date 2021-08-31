@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Trans, { TransName } from '../translation'
 import style from './EditWidgets.module.css'
 import { saveAs } from 'file-saver'
-import { ReportResponseBase, ReportTypeGuard, TReportShort } from '../types'
+import { ReportTypeGuard, TReport, TReportShort } from '../types'
 import { Widget, GeneralProps, NewItemProps } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -51,7 +51,7 @@ function ShowReports(props: GeneralProps) {
 		if (!props.api.reportGet) {
 			return
 		}
-		let js: ReportResponseBase
+		let js: TReport
 		try {
 			js = await props.api.reportGet(id)
 		}
@@ -59,7 +59,7 @@ function ShowReports(props: GeneralProps) {
 			alert(String(e))
 			return
 		}
-		return props.dragWidgetStart(e, {type:'widgets', widgets:js.report.children})
+		return props.dragWidgetStart(e, {type:'widgets', widgets:js.children})
 	}
 
 	

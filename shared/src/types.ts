@@ -120,10 +120,9 @@ export interface FileUploadData {
 }
 
 
-export type ReportResponseBase = { report: WithId<TReport> }
 export type FilesResponseBase = { files: TFileShort[] }
 export interface ApiEndpoints {
-	reportGet?: (id: string) =>  Promise<ReportResponseBase>,
+	reportGet?: (id: string) =>  Promise<TReport>,
 	files?: () =>  Promise<FilesResponseBase>,
 	filesDelete?: (name: string) =>  Promise<void>,
 	filesUpload?: (file: File, data: FileUploadData, cbProgress: (prc: number) => void) =>  Promise<void>,
