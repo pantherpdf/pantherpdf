@@ -1,0 +1,19 @@
+{
+  "_id": "invoice",
+  "name": "Invoice Windows",
+  "target": "pdf",
+  "version": "1.0.0",
+  "email": "info@kelgrand.com",
+  "time": "2021-07-01T13:00:00Z",
+  "children": [
+    {
+      "type": "TextHtml",
+      "children": [],
+      "value": "<div>TODO</div>",
+      "font": {}
+    }
+  ],
+  "transforms": [],
+  "properties": {},
+  "dataUrl": "/samples/invoice-data.js"
+}
