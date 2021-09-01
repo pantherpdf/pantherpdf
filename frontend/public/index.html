@@ -39,7 +39,7 @@
 			<h3>
 				Want to learn more?
 			</h3>
-			<form>
+			<form id='form-tell-me-more'>
 				<div style="display: flex; justify-content: center;">
 					<input
 						type='email'
@@ -61,5 +61,50 @@
 			</form>
 
 		</main>
+
+		<script src="https://www.google.com/recaptcha/api.js?render=6LcoIgUcAAAAABZEpxNOpXZw1J0tr2nmmAewH09t"></script>
+		<script>
+			async function captcha(token, action) {
+				const prms = new Promise((resolve) => {
+					grecaptcha.ready(resolve)
+				})
+				await prms
+				return grecaptcha.execute(token, {action})
+			}
+			const form = document.getElementById('form-tell-me-more')
+			const input = form.querySelector('input[type=email]')
+			form.onsubmit = async (e) => {
+				e.preventDefault()
+				const captchaToken = await captcha('6LcoIgUcAAAAABZEpxNOpXZw1J0tr2nmmAewH09t', 'subscribe')
+				const rq = {
+					email: input.value,
+					captchaToken,
+				}
+				try {
+					const r = await fetch('/.netlify/functions/contactSubscribe', {
+						method: 'POST',
+						body: JSON.stringify(rq),
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					})
+					if (!r.ok) {
+						let msg = 'unknown error'
+						try {
+							const js = await r.json()
+							if (typeof js === 'object' && typeof js.msg === 'string') {
+								msg = js.msg
+							}
+						}
+						catch(e) { }
+						throw new Error(msg)
+					}
+					alert('OK')
+				}
+				catch(e) {
+					alert(`Error: ${String(e)}`)
+				}
+			}
+		</script>
 	</body>
 </html>

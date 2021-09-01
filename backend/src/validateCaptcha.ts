@@ -1,15 +1,11 @@
 import fetch from 'node-fetch'
-import AbortController from 'abort-controller'
 
 export default async function validateCaptcha(action: string, token: string, host?: string): Promise<number> {
 	const url = 'https://www.google.com/recaptcha/api/siteverify?secret='+process.env.CAPTCHA_PRIVATE+'&response='+token
-	const controller = new AbortController()
-	const timeoutId = setTimeout(() => controller.abort(), 4000)
 	let r, js3
 	try {
 		r = await fetch(url, {
 			method:'POST',
-			signal: controller.signal
 		})
 		js3 = await r.json()
 	}
@@ -17,7 +13,6 @@ export default async function validateCaptcha(action: string, token: string, hos
 		console.log(e)
 		throw new Error('Unknown error while checking captcha 1')
 	}
-	clearTimeout(timeoutId)
 	if (!r.ok || typeof js3 !== 'object') {
 		console.log(js3)
 		throw new Error('Unknown error while checking captcha 2')

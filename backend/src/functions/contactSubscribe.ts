@@ -2,6 +2,7 @@ import { Handler } from '@netlify/functions'
 import { ContactSubscribeRequestTypeGuard } from '../types'
 import validateCaptcha from '../validateCaptcha'
 import fetch from 'node-fetch'
+import { URL } from 'url'
 
 
 const handler: Handler = async (event, context) => {
@@ -26,6 +27,7 @@ const handler: Handler = async (event, context) => {
 	catch(e) {
 		return { statusCode: 500, body: JSON.stringify({msg: String(e)}) }
 	}
+	console.log(`Captcha score: ${score}`)
 	if (score < 0.3) {
 		return { statusCode: 400, body: JSON.stringify({msg: 'You do not look like a human according to Captcha.'}) }
 	}
