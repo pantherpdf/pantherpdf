@@ -27,7 +27,7 @@ interface MenuProps {
 
 function Menu(props: MenuProps) {
 	return <>
-		<header className='border-bottom mb-3 fixed-top'>
+		<header className='border-bottom mb-3 fixed-top bg-white'>
 			<div className='container'>
 				<div className='d-flex py-2'>
 					<ul className='nav flex-grow-1'>
