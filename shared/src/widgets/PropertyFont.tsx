@@ -74,14 +74,19 @@ interface Props {
 	textButton?: boolean,
 	iconButton?: boolean,
 	id?: string,
-	loadFonts: () => Promise<string[]>,
+	loadFonts?: () => Promise<string[]>,
 }
 export default function PropertyFont(props: Props) {
 	const [fonts, setFonts] = useState<string[]>([])
 
 	const loadFonts = props.loadFonts
 	useEffect(() => {
-		loadFonts().then(arr => setFonts(arr))
+		if (loadFonts) {
+			loadFonts().then(arr => setFonts(arr))
+		}
+		else {
+			setFonts([])
+		}
 	}, [loadFonts])
 
 	function handleInputChange(event: React.FormEvent<HTMLSelectElement|HTMLInputElement>) {

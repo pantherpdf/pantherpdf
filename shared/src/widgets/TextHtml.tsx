@@ -611,11 +611,11 @@ export const TextHtml: Widget = {
 		]
 		return <>
 			<div className='d-flex'>
-				{props.api.fonts && <PropertyFont
+				<PropertyFont
 					value={item.font}
 					onChange={val => props.setItem({...props.item, font: val})}
 					loadFonts={props.api.fonts}
-				/>}
+				/>
 			</div>
 			<hr />
 			<div>

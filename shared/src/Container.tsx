@@ -83,7 +83,9 @@ export default function Container() {
 	const getUrl = params.get('getUrl')
 	const updateUrl = params.get('updateUrl')
 	const deleteUrl = params.get('deleteUrl')
-	const api: ApiEndpoints = { }
+	const api: ApiEndpoints = {
+		fonts: async () => { return ['arial', 'times new roman'] },
+	}
 
 
 	// refresh data
