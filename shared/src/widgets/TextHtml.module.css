@@ -20,4 +20,7 @@
     font-family: inherit;
     font-style: inherit;
     text-align: inherit;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
 }
