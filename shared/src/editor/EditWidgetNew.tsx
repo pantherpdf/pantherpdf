@@ -168,7 +168,7 @@ function ShowPredefined(props: GeneralProps) {
 */
 
 
-function fileUpload(arr: any[], setArr: React.Dispatch<React.SetStateAction<any[]>>,) {
+function fileUpload(arr: any[], setArr: React.Dispatch<React.SetStateAction<TReport[]>>) {
 	const el = document.createElement('input')
 	el.type = 'file'
 	el.accept = 'application/json'
@@ -210,7 +210,7 @@ function fileUpload(arr: any[], setArr: React.Dispatch<React.SetStateAction<any[
 
 
 function ShowUpload(props: GeneralProps) {
-	const [arr, setArr] = useState<any[]>([]);
+	const [arr, setArr] = useState<TReport[]>([]);
 
 	function fileDownload() {
 		let blob = new Blob([JSON.stringify(props.report,null,4)], {type: 'application/json'});
@@ -248,7 +248,7 @@ function ShowUpload(props: GeneralProps) {
 			onDragEnd={props.dragWidgetEnd}
 			className={style.widget}
 		>
-			{(idx+1).toString()}
+			{r.name}&nbsp;
 		</div>)}
 	</>
 }
