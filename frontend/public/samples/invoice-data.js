@@ -29,6 +29,7 @@ async function getData() {
 				type: 'window',
 				price: 1454.0,
 				quantity: 1,
+				unit: 'pcs',
 				details: [
 					{name: 'Profile uPVC 78', price: 0},
 					{name: 'Glass A', price: 239.65},
@@ -42,6 +43,7 @@ async function getData() {
 				type: 'window',
 				price: 454.0,
 				quantity: 3,
+				unit: 'pcs',
 				details: [
 					{name: 'Profile uPVC 78', price: 0},
 					{name: 'Glass A', price: 239.65},
@@ -54,6 +56,7 @@ async function getData() {
 				type: 'window',
 				price: 454.0,
 				quantity: 1,
+				unit: 'pcs',
 				details: [
 					{name: 'Profile uPVC 78', price: 0},
 					{name: 'Glass A', price: 206.65},
@@ -65,6 +68,7 @@ async function getData() {
 				name: {en: 'Installation'},
 				description: 'Delivery + installation',
 				type: 'text',
+				unit: 'set',
 				price: 1454.0,
 				quantity: 1,
 			},
