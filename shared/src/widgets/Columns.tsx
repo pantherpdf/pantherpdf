@@ -172,6 +172,9 @@ export const Columns: Widget = {
 			<small className='text-muted d-block'>
 				{WidthOptions}
 			</small>
+			<small className='text-muted d-block'>
+				{Trans('columns - empty = auto')}
+			</small>
 			{item.widths.map((w, idx) => <div
 				key={idx}
 				className='input-group'
