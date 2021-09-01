@@ -41,6 +41,13 @@ export const functions: {[key: string]: (...args: any[])=>any } = {
 	'toLowerCase': (str) => { if (typeof str !== 'string') { throw new Error('not a string') } return str.toLowerCase() },
 	'upper': (str) => { if (typeof str !== 'string') { throw new Error('not a string') } return str.toUpperCase() },
 	'toUpperCase': (str) => { if (typeof str !== 'string') { throw new Error('not a string') } return str.toUpperCase() },
+	'sin': (n) => { if (typeof n !== 'number') { throw new Error(`expected number but got ${typeof n}`) } return Math.sin(n) },
+	'cos': (n) => { if (typeof n !== 'number') { throw new Error(`expected number but got ${typeof n}`) } return Math.cos(n) },
+	'tan': (n) => { if (typeof n !== 'number') { throw new Error(`expected number but got ${typeof n}`) } return Math.tan(n) },
+	'asin': (n) => { if (typeof n !== 'number') { throw new Error(`expected number but got ${typeof n}`) } return Math.asin(n) },
+	'acos': (n) => { if (typeof n !== 'number') { throw new Error(`expected number but got ${typeof n}`) } return Math.acos(n) },
+	'atan': (n) => { if (typeof n !== 'number') { throw new Error(`expected number but got ${typeof n}`) } return Math.atan(n) },
+	'atan2': (y,x) => { if (typeof y !== 'number' || typeof x !== 'number') { throw new Error(`expected number but got ${typeof y} and ${typeof x}`) } return Math.atan2(y, x) },
 }
 
 
@@ -48,4 +55,6 @@ export const constants: {[key: string]: any} = {
 	'false': false,
 	'true': true,
 	'null': null,
+	'pi': Math.PI,
+	'PI': Math.PI,
 }
