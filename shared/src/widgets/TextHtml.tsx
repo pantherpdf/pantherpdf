@@ -452,6 +452,7 @@ class Editor extends React.Component<EditorProps, EditorState> {
 			// todo sanitize
 			// todo remove empty button
 			// todo remove nbsp at end of line
+			// todo remove tags like <span style="white-space: nowrap;">new real text</span>
 			if (val === this.currentValueFromProps) {
 				return
 			}
@@ -495,6 +496,29 @@ class Editor extends React.Component<EditorProps, EditorState> {
 		}
 	}
 
+	// hack for safari
+	// without removing draggable, text selection doesnt work
+	// https://stackoverflow.com/questions/6399131/html5-draggable-and-contenteditable-not-working-together
+	parentsRemoveDraggable(el: HTMLElement | null) {
+		while (el) {
+			if (el.draggable) {
+				el.draggable = false
+				el.setAttribute('data-draggable', '1')
+			}
+			el = el.parentElement
+		}
+	}
+
+	parentsRestoreDraggable(el: HTMLElement | null) {
+		while (el) {
+			if (el.getAttribute('data-draggable') === '1') {
+				el.draggable = true
+				el.removeAttribute('data-draggable')
+			}
+			el = el.parentElement
+		}
+	}
+
 	render() {
 		return <div
 			ref={this.setElementRef.bind(this)}
@@ -506,7 +530,13 @@ class Editor extends React.Component<EditorProps, EditorState> {
 			}}
 			onKeyDown={this.editorKeyDown.bind(this)}
 			onInput={this.editorInput.bind(this)}
-			onBlur={() => this.sendChanges(true)}
+			onFocus={(e) => {
+				this.parentsRemoveDraggable(e.currentTarget)
+			}}
+			onBlur={(e) => {
+				this.parentsRestoreDraggable(e.currentTarget)
+				this.sendChanges(true)
+			}}
 			className={style.editor}
 		/>
 	}
@@ -536,7 +566,7 @@ function escapeHtml(unsafe: string): string {
 		.replace(/>/g, "&gt;")
 		.replace(/"/g, "&quot;")
 		.replace(/'/g, "&#039;");
- }
+}
 
 
 export const TextHtml: Widget = {
