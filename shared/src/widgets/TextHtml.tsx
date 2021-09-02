@@ -312,6 +312,65 @@ export async function evaluateFormulaInsideHtml(html: string, formulaHelper: For
 }
 
 
+function insertTag(wid: number[]) {
+	const editor = editorGet(wid)
+	if (!editor || !editor.elementRef) {
+		return
+	}
+	const selectedNode = getNodeFromPid(editor.selectedNode, editor.elementRef)
+	if (!selectedNode || !selectedNode.parentNode) {
+		return
+	}
+	const parentNode = selectedNode.parentNode
+
+	// is inside button?
+	{
+		let el: Node | null = selectedNode
+		while (el) {
+			if (el.nodeName === 'BUTTON') {
+				return
+			}
+			el = el.parentNode
+		}
+	}
+
+	const btn = document.createElement('button')
+	btn.setAttribute('data-adjust', '')
+	const btnValue = 'data'
+	const btnTextNode = document.createTextNode(btnValue)
+	btn.appendChild(btnTextNode)
+	
+	if (selectedNode.nodeName === '#text') {
+		const txtBefore = selectedNode.nodeValue?.substring(0, editor.selectedOffset) || ''
+		const txtAfter = (selectedNode.nodeValue?.substring(editor.selectedOffset) || '') + '\u00a0'  // &nbsp;
+		const nextSib = selectedNode.nextSibling
+		selectedNode.nodeValue = txtBefore
+		parentNode.insertBefore(btn, nextSib)
+		parentNode.insertBefore(document.createTextNode(txtAfter), nextSib)
+	}
+	else if (selectedNode === editor.elementRef) {
+		selectedNode.appendChild(btn)
+		selectedNode.appendChild(document.createTextNode('\u00a0'))
+	}
+	else {
+		const nextSib = selectedNode.nextSibling
+		parentNode.insertBefore(btn, nextSib)
+		parentNode.insertBefore(document.createTextNode('\u00a0'), nextSib)
+	}
+
+	// select
+	const range = document.createRange()
+	range.setStart(btnTextNode, 0)
+	range.setEnd(btnTextNode, btnValue.length)
+	range.collapse(true)
+	const s = window.getSelection()
+	if (s) {
+		s.removeAllRanges()
+		s.addRange(range)
+	}
+}
+
+
 
 
 
@@ -519,6 +578,60 @@ class Editor extends React.Component<EditorProps, EditorState> {
 		}
 	}
 
+	dropTag(e: React.DragEvent<HTMLDivElement>) {
+		// https://developer.mozilla.org/en-US/docs/Web/API/Document/caretRangeFromPoint
+		// https://jsfiddle.net/fpkjbech/
+		e.preventDefault()
+		const document_ = document as any
+		const e_ = e as any
+		let node: Node
+		let offset: number
+		e.currentTarget.focus()
+		if (document_.caretRangeFromPoint) {
+			const range = document.caretRangeFromPoint(e.clientX, e.clientY)
+			if (!range) {
+				return
+			}
+			node = range.startContainer
+			offset = range.startOffset
+		}
+		else if (document_.caretPositionFromPoint) {
+			const range = document.caretPositionFromPoint(e.clientX, e.clientY)  // todo
+			if (!range) {
+				return
+			}
+			node = range.offsetNode
+			offset = range.offset
+		}
+		else if (e_.rangeParent) {
+			const range = document.createRange()
+			range.setStart(e_.rangeParent, e_.rangeOffset)
+			node = range.startContainer
+			offset = range.startOffset
+		}
+		else {
+			// not supported
+			return
+		}
+		// update selection
+		if (!node || !this.elementRef) {
+			return
+		}
+		this.selectedNode = getPidFromNode(node, this.elementRef)
+		this.selectedOffset = offset
+		for (const cb of listOfSelectionCallbacks) {
+			cb()
+		}
+		// editor
+		const widStr = e.currentTarget.getAttribute('data-wid')
+		if (!widStr || widStr.length === 0) {
+			return
+		}
+		const wid = widStr.split(',').map(x => parseInt(x))
+		// insert
+		insertTag(wid)
+	}
+
 	render() {
 		return <div
 			ref={this.setElementRef.bind(this)}
@@ -538,6 +651,12 @@ class Editor extends React.Component<EditorProps, EditorState> {
 				this.sendChanges(true)
 			}}
 			className={style.editor}
+			onDrop={(e) => {
+				const dt = e.dataTransfer.getData('text/plain')
+				if (dt === 'insert-tag') {
+					this.dropTag(e)
+				}
+			}}
 		/>
 	}
 }
@@ -686,64 +805,12 @@ export const TextHtml: Widget = {
 				</div>
 				<button
 					className='btn btn-outline-secondary ms-2'
-					onClick={() => {
-						const editor = editorGet(props.wid)
-						if (!editor || !editor.elementRef) {
-							return
-						}
-						const selectedNode = getNodeFromPid(editor.selectedNode, editor.elementRef)
-						if (!selectedNode || !selectedNode.parentNode) {
-							return
-						}
-						const parentNode = selectedNode.parentNode
-
-						// is inside button?
-						{
-							let el: Node | null = selectedNode
-							while (el) {
-								if (el.nodeName === 'BUTTON') {
-									return
-								}
-								el = el.parentNode
-							}
-						}
-
-						const btn = document.createElement('button')
-						btn.setAttribute('data-adjust', '')
-						const btnValue = 'data'
-						const btnTextNode = document.createTextNode(btnValue)
-						btn.appendChild(btnTextNode)
-						
-						if (selectedNode.nodeName === '#text') {
-							const txtBefore = selectedNode.nodeValue?.substring(0, editor.selectedOffset) || ''
-							const txtAfter = (selectedNode.nodeValue?.substring(editor.selectedOffset) || '') + '\u00a0'  // &nbsp;
-							const nextSib = selectedNode.nextSibling
-							selectedNode.nodeValue = txtBefore
-							parentNode.insertBefore(btn, nextSib)
-							parentNode.insertBefore(document.createTextNode(txtAfter), nextSib)
-						}
-						else if (selectedNode === editor.elementRef) {
-							selectedNode.appendChild(btn)
-							selectedNode.appendChild(document.createTextNode('\u00a0'))
-						}
-						else {
-							const nextSib = selectedNode.nextSibling
-							parentNode.insertBefore(btn, nextSib)
-							parentNode.insertBefore(document.createTextNode('\u00a0'), nextSib)
-						}
-
-						// select
-						const range = document.createRange()
-						range.setStart(btnTextNode, 0)
-						range.setEnd(btnTextNode, btnValue.length)
-						range.collapse(true)
-						const s = window.getSelection()
-						if (s) {
-							s.removeAllRanges()
-							s.addRange(range)
-						}
-					}}
 					title={Trans('tag insert')}
+					draggable='true'
+					onDragStart={(e) => {
+						e.dataTransfer.setData('text/plain', 'insert-tag')
+					}}
+					onClick={() => insertTag(props.wid)}
 				>
 					<FontAwesomeIcon icon={faTag} />
 				</button>
