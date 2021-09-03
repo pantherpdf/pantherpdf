@@ -83,6 +83,7 @@ export default function Container() {
 	const getUrl = params.get('getUrl')
 	const updateUrl = params.get('updateUrl')
 	const deleteUrl = params.get('deleteUrl')
+	const loadLocalReport = params.get('loadLocalReport') === '1'
 	const api: ApiEndpoints = {
 		fonts: async () => { return ['arial', 'times new roman'] },
 	}
@@ -232,15 +233,18 @@ export default function Container() {
 
 		(async function() {
 			try {
+				if (loadLocalReport) {
+					const reportTxt = window.localStorage.getItem('report')
+					const report = (reportTxt && reportTxt.length > 0) ? JSON.parse(reportTxt) : null
+					if (ReportTypeGuard(report)) {
+						setReport(report)
+						setUndoStack([report])
+						setUndoNext(1)
+						return
+					}
+				}
 				if (!getUrl) {
-					let report: TReport
-					const txt = window.localStorage.getItem('report')
-					if (txt && txt.length > 0) {
-						report = JSON.parse(txt)
-					}
-					else {
-						report = sampleReport
-					}
+					const report = sampleReport
 					setReport(report)
 					setUndoStack([report])
 					setUndoNext(1)
