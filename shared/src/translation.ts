@@ -102,8 +102,6 @@ const tr2 = {
 	'repeat - current item is this var': { en: 'Current item will be accessible with this variable', sl: 'Trenutni element bo dostopen s to spremenljivko' },
 	'repeat - index name': { en: 'Current index is inside: {0}', sl: 'Trenutni index je v: {0}' },
 
-	'counter - current count var': { en: 'where current count is saved', sl: 'tukaj je shranjena vrednost števca' },
-	'counter - var increment access': { en: 'var will be incremented each time it is accessed', sl: 'spremenljivka bo povečana vsakič ko bo prebrana' },
 	'columns add': { en: 'Add column', sl: 'Dodaj stolpec' },
 	'columns - empty = auto': { en: 'Empty = auto width', sl: 'Prazno = auto širina' },
 	'current item is in var -name-': { en: 'current item is in variable {0}', sl: 'trenutni element je v spremenljivki {0}' },
