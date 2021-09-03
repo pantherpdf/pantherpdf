@@ -148,6 +148,9 @@ export default function Container() {
 			}
 		}
 
+		// save to local storage
+		window.localStorage.setItem('report', JSON.stringify(val))
+
 		// ok
 		setLoading(false)
 	}
@@ -230,7 +233,14 @@ export default function Container() {
 		(async function() {
 			try {
 				if (!getUrl) {
-					const report = sampleReport
+					let report: TReport
+					const txt = window.localStorage.getItem('report')
+					if (txt && txt.length > 0) {
+						report = JSON.parse(txt)
+					}
+					else {
+						report = sampleReport
+					}
 					setReport(report)
 					setUndoStack([report])
 					setUndoNext(1)
