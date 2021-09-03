@@ -596,7 +596,7 @@ class Editor extends React.Component<EditorProps, EditorState> {
 			offset = range.startOffset
 		}
 		else if (document_.caretPositionFromPoint) {
-			const range = document.caretPositionFromPoint(e.clientX, e.clientY)  // todo
+			const range = document_.caretPositionFromPoint(e.clientX, e.clientY)
 			if (!range) {
 				return
 			}
