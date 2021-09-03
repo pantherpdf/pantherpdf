@@ -279,7 +279,7 @@ export default function Container() {
 				setLoading(false)
 			}
 		})()
-	}, [getUrl])
+	}, [getUrl, loadLocalReport])
 
 	
 	// is loading?
