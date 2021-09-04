@@ -9,6 +9,7 @@ import type { Widget } from '../editor/types'
 import { faMinus } from '@fortawesome/free-solid-svg-icons'
 import PropertyBorder, { Border, genBorderCss } from './PropertyBorder'
 import Trans from '../translation'
+import BoxName from './BoxName'
 
 
 export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
@@ -63,7 +64,9 @@ export const Separator: Widget = {
 
 	Render: function(props) {
 		const item = props.item as SeparatorData
-		return <hr style={GenStyle(item)} />
+		return <BoxName {...props} name={Separator.name}>
+			<hr style={GenStyle(item)} />
+		</BoxName>
 	},
 
 	RenderFinal: function(props) {
