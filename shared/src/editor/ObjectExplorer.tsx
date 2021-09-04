@@ -59,7 +59,7 @@ export default class ObjectExplorer extends Component<Props, State> {
 	}
 
 	renderIcon(key: string, dt: any) {
-		if (typeof this.state.promiseResolved === 'object' && key in this.state.promiseResolved )
+		if (typeof this.state.promiseResolved === 'object' && this.state.promiseResolved && key in this.state.promiseResolved )
 			return <span style={{fontSize:'50%'}}>prms</span>
 		if( dt === null || dt === undefined )
 			return <span style={{fontSize:'50%'}}>nul</span>

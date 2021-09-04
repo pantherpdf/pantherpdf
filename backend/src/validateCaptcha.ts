@@ -13,7 +13,7 @@ export default async function validateCaptcha(action: string, token: string, hos
 		console.log(e)
 		throw new Error('Unknown error while checking captcha 1')
 	}
-	if (!r.ok || typeof js3 !== 'object') {
+	if (!r.ok || typeof js3 !== 'object' || !js3) {
 		console.log(js3)
 		throw new Error('Unknown error while checking captcha 2')
 	}

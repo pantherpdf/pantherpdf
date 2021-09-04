@@ -51,7 +51,7 @@ const n14: TAdjust = { id: 'json', category: 'general', func: (val: any) => {
 			}
 			return '['+txt+']'
 		}
-		if(typeof val == 'object') {
+		if(typeof val == 'object' && val) {
 			let txt = ''
 			for(const key of Object.keys(val)) {
 				if(txt.length > 0) {

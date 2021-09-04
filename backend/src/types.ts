@@ -4,7 +4,7 @@ export interface ErrorResponse {
 
 export type ContactSubscribeRequest = { email: string, captchaToken: string }
 export function ContactSubscribeRequestTypeGuard(r: any): r is ContactSubscribeRequest {
-	if (typeof r != 'object')
+	if (typeof r != 'object' || !r)
 		return false
 	if (Object.keys(r).length !== 2)
 		return false

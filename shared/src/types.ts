@@ -79,7 +79,7 @@ export function TDataTypeGuard(r: any): r is TData {
 }
 
 export function ReportTypeGuard(r: any): r is TReport {
-	if (typeof r != 'object')
+	if (typeof r != 'object' || !r)
 		return false
 	if (typeof r.email !== 'string')
 		return false
@@ -93,7 +93,7 @@ export function ReportTypeGuard(r: any): r is TReport {
 		if (!TDataTypeGuard(ch))
 			return false
 	}
-	if (typeof r.properties !== 'object')
+	if (typeof r.properties !== 'object' || !r.properties)
 		return false
 	// version
 	if (typeof r.version !== 'string')
