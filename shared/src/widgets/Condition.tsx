@@ -9,7 +9,7 @@ import type { Widget } from '../editor/types'
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons'
 import BoxName from './BoxName'
 import InputApplyOnEnter from './InputApplyOnEnter'
-import Trans from '../translation'
+import Trans, { TransName } from '../translation'
 
 
 export interface ConditionData extends TData {
@@ -44,7 +44,7 @@ export const Condition: Widget = {
 
 	Render: function(props) {
 		const item = props.item as ConditionData
-		return <BoxName {...props} name={Condition.name}>
+		return <BoxName {...props} name={TransName(Condition.name)+': '+item.formula}>
 			{props.renderWidgets(item.children, props.wid)}
 		</BoxName>
 	},
