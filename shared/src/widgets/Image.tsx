@@ -102,9 +102,9 @@ export const Image: Widget = {
 			cssImg.justifyContent = 'center'
 			cssImg.alignItems = 'center'
 			img = <div style={cssImg}>
-				<small className='text-muted font-monospace'>
+				<span className='font-monospace text-nowrap overflow-hidden' style={{fontSize:'70%', opacity:'0.3'}}>
 					{item.formula}
-				</small>
+				</span>
 			</div>
 		}
 		else {
