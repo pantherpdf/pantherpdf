@@ -89,9 +89,15 @@ export default function InputApplyOnEnter(props: Props) {
 			}
 		}}
 		onBlur={() => {
-			if (!applyValue()) {
+			const result = applyValue()
+			// allways force old original value
+			// in case there is validation outside of this function
+			// and it doesnt change value
+			// we want to show current value
+			// useEffect() will not be called because props.value didnt change
+			setValue(String(origValue))
+			if (!result) {
 				alert(Trans('invalid value'))
-				setValue(String(origValue))
 			}
 		}}
 		className="form-control"
