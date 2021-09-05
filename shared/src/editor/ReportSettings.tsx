@@ -13,6 +13,7 @@ import InputApplyOnEnter from '../widgets/InputApplyOnEnter'
 import Property4SideInput, { Value as Property4SideInputValue } from '../widgets/Property4SideInput'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faCaretUp, faEdit } from '@fortawesome/free-solid-svg-icons'
+import VarEditor from './VarEditor'
 
 
 // hack to get array of possible values
@@ -129,6 +130,8 @@ export default function ReportSettings(props: GeneralProps) {
 				<label>{Trans('margin')} <small className='text-muted'>mm</small></label>
 				<Property4SideInput value={margin} onChange={changeMargin} />
 			</>}
+
+			<VarEditor {...props} />
 		</>}
 			
 	</>

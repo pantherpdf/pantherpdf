@@ -42,10 +42,24 @@ export class FormulaHelper {
 
 
 export default async function compile(report: TReport, data: any, api?: ApiEndpoints): Promise<TReportCompiled> {
+	// make a copy, to support changing
+	report = JSON.parse(JSON.stringify(report))
+
 	const formulaHelper = new FormulaHelper()
 	const getVar = formulaHelper.getVar.bind(formulaHelper)
 	formulaHelper.push('data', data)
 	formulaHelper.push('report', report)
+	
+	// custom variables
+	const vars: {[key: string]: any} = {}
+	function getVarValue(varName: string): any {
+		return vars[varName]
+	}
+	for (const v of report.variables) {
+		vars[v.name] = await FormulaEvaluate(v.formula, {getVar})
+		formulaHelper.push(v.name, getVarValue)
+	}
+
 	const dt2: TReportCompiled = {...report}
 
 	if (dt2.properties.fileName) {
@@ -61,6 +75,7 @@ export default async function compile(report: TReport, data: any, api?: ApiEndpo
 		report: report,
 		formulaHelper,
 		api,
+		variables: vars,
 		
 		evalFormula: async (txt: string) => {
 			return FormulaEvaluate(txt, {getVar})
@@ -83,6 +98,7 @@ export default async function compile(report: TReport, data: any, api?: ApiEndpo
 	
 	formulaHelper.pop()
 	formulaHelper.pop()
+	report.variables.map(() => formulaHelper.pop())
 	if (formulaHelper.overrides.length !== 0) {
 		throw new Error('helper has overrides still left inside')
 	}
@@ -104,6 +120,7 @@ export async function compileComponent(cmpData: object, data: any, api?: ApiEndp
 		transforms: [],
 		properties: { },
 		dataUrl: '',
+		variables: [],
 	}
 	const reportCompiled = await compile(dt, data, api)
 	return reportCompiled.children[0]

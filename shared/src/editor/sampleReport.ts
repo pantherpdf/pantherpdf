@@ -12,4 +12,5 @@ export const sampleReport: TReport = {
 	properties: {
 	},
 	dataUrl: '',
+	variables: [],
 }

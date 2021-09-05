@@ -82,6 +82,7 @@ export interface CompileHelper {
 	wid: number[],
 	report: TReport,
 	api?: ApiEndpoints,
+	variables: {[key: string]: any},
 }
 
 export interface NewItemProps {

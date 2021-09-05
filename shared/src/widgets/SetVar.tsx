@@ -15,6 +15,7 @@ export interface SetVarData extends TData {
 	type: 'SetVar',
 	source: string,
 	varName: string,
+	varValue: any,
 }
 
 export interface SetVarCompiled extends TDataCompiled {
@@ -30,16 +31,22 @@ export const SetVar: Widget = {
 		return {
 			type: 'SetVar',
 			children: [],
-			source: '',
-			varName: '',
+			source: '1',
+			varName: 'var',
+			varValue: undefined,
 		}
 	},
 
 	compile: async (dt: SetVarData, helper): Promise<SetVarCompiled> => {
-		const value = await helper.evalFormula(dt.source)
-		helper.formulaHelper.push(dt.varName, value)
+		dt.varValue = await helper.evalFormula(dt.source)
+		if (dt.varValue === undefined) {
+			// undefined in evaluateFormula means variable doesnt exist
+			throw new Error('SetVar should not set variable value to undefined')
+		}
+		helper.formulaHelper.push(dt.varName, () => dt.varValue)
 		const children = await helper.compileChildren(dt.children, helper)
 		helper.formulaHelper.pop()
+		dt.varValue = undefined
 		return {
 			type: dt.type,
 			children,

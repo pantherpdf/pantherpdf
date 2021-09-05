@@ -29,6 +29,11 @@ export interface TTransformData {
 	comment: string,
 }
 
+export interface TVariable {
+	name: string,
+	formula: string,
+}
+
 export interface TReport {
 	_id: string,
 	name: string,
@@ -47,6 +52,7 @@ export interface TReport {
 		lang?: string,
 	},
 	dataUrl: string,
+	variables: TVariable[],
 }
 
 export interface TReportShort {
@@ -81,6 +87,8 @@ export function TDataTypeGuard(r: any): r is TData {
 export function ReportTypeGuard(r: any): r is TReport {
 	if (typeof r != 'object' || !r)
 		return false
+	if (typeof r._id !== 'string')
+		return false
 	if (typeof r.email !== 'string')
 		return false
 	if (typeof r.name !== 'string')
@@ -101,6 +109,14 @@ export function ReportTypeGuard(r: any): r is TReport {
 	if (r.version.split('.').length !== 3)
 		return false
 	//
+	if (typeof r.time !== 'string')
+		return false
+	if (typeof r.dataUrl !== 'string')
+		return false
+	if (!Array.isArray(r.variables))
+		return false
+	if (!Array.isArray(r.transforms))
+		return false
 	return true
 }
 
