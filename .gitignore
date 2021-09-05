@@ -6,3 +6,5 @@
 /.env*
 # keep example
 !/.env.example
+
+/build/
