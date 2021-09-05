@@ -31,7 +31,7 @@ export const SetVar: Widget = {
 		return {
 			type: 'SetVar',
 			children: [],
-			source: '1',
+			source: '0',
 			varName: 'var',
 			varValue: undefined,
 		}
