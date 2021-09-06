@@ -6,7 +6,7 @@
 // manual tests:
 // - widget not selected, try to drag it. It should not be draggable, however it should select text
 // - type some text, then wait few sec to periodicaly save, the cursor should stay on same place
-// - insert tag, delete nbsp space after button and press enter
+// - insert tag, delete nbsp space after tag and press enter
 
 
 import React, { useEffect, useState, CSSProperties } from 'react'
@@ -27,6 +27,7 @@ import style from './TextHtml.module.css'
 
 const listOfEditors: Editor[] = []
 const listOfSelectionCallbacks: (() => void)[] = []
+const tagType = 'data'
 
 
 function editorGet(wid: number[]): Editor | undefined {
@@ -69,17 +70,17 @@ if (typeof window !== 'undefined' && window.document) {
 
 
 
-// return first parent button
+// return first parent tag
 // node is usualy text
-function getButtonFromSelection(node: Node, editor: HTMLElement): HTMLButtonElement | null {
+function getTagFromSelection(node: Node, editor: HTMLElement): HTMLElement | null {
 	if (node === editor) {
 		return null
 	}
-	if (node.nodeName === 'BUTTON') {
-		return node as HTMLButtonElement
+	if (node.nodeName.toLowerCase() === tagType.toLowerCase()) {
+		return node as HTMLElement
 	}
 	if (node.parentNode) {
-		return getButtonFromSelection(node.parentNode, editor)
+		return getTagFromSelection(node.parentNode, editor)
 	}
 	return null
 }
@@ -138,8 +139,8 @@ function isNodeInside(node: Node, parent: Node): boolean {
 }
 
 
-// Properties editor for tag <button>
-function getSelectedButtonPid(wid: number[]): number[] | null {
+// Properties editor for tag
+function getSelectedTagPid(wid: number[]): number[] | null {
 	const x = editorGet(wid)
 	if (!x || !x.elementRef) {
 		return null
@@ -148,7 +149,7 @@ function getSelectedButtonPid(wid: number[]): number[] | null {
 	if (!selected) {
 		return null
 	}
-	const btn = getButtonFromSelection(selected, x.elementRef)
+	const btn = getTagFromSelection(selected, x.elementRef)
 	if (!btn) {
 		return null
 	}
@@ -162,7 +163,7 @@ function TagEditor(props: ItemRendeProps) {
 	// subscribe to selection change
 	useEffect(() => {
 		function selectionChanged() {
-			setBtnId(getSelectedButtonPid(props.wid))
+			setBtnId(getSelectedTagPid(props.wid))
 		}
 		selectionChanged()
 		listOfSelectionCallbacks.push(selectionChanged)
@@ -174,16 +175,16 @@ function TagEditor(props: ItemRendeProps) {
 		}
 	}, [props.wid])
 
-	// get <button>
+	// get <?>
 	const editor = editorGet(props.wid)
 	if (!btnId || !editor || !editor.elementRef) {
 		return null
 	}
 	const btnTmp = getNodeFromPid(btnId, editor.elementRef)
-	if (!btnTmp || btnTmp.nodeName !== 'BUTTON') {
+	if (!btnTmp || btnTmp.nodeName.toLowerCase() !== tagType.toLowerCase()) {
 		return null
 	}
-	const btn = btnTmp as HTMLButtonElement
+	const btn = btnTmp as HTMLElement
 
 	const arrAdjusts = [...listOfAdjusts].sort((a,b) => a.category <= b.category ? -1 : 1)
 	
@@ -236,7 +237,7 @@ function TagEditor(props: ItemRendeProps) {
 
 
 // evaluate during compile
-// replace <button> with value of formula inside <button>
+// replace <?> with value of formula inside <?>
 export async function evaluateFormulaInsideHtml(html: string, formulaHelper: FormulaHelper): Promise<string> {
 	// parse html
 	const parentEl = document.createElement('div')
@@ -266,8 +267,8 @@ export async function evaluateFormulaInsideHtml(html: string, formulaHelper: For
 	}
 
 	async function process(el: Node): Promise<Node> {
-		if (el.nodeName === 'BUTTON') {
-			const btn = (el as HTMLButtonElement)
+		if (el.nodeName.toLowerCase() === tagType.toLowerCase()) {
+			const btn = (el as HTMLElement)
 			const formula = btn.textContent
 			if (formula === null) {
 				return doc2.createTextNode('')
@@ -323,18 +324,18 @@ function insertTag(wid: number[]) {
 	}
 	const parentNode = selectedNode.parentNode
 
-	// is inside button?
+	// is inside tag?
 	{
 		let el: Node | null = selectedNode
 		while (el) {
-			if (el.nodeName === 'BUTTON') {
+			if (el.nodeName.toLowerCase() === tagType.toLowerCase()) {
 				return
 			}
 			el = el.parentNode
 		}
 	}
 
-	const btn = document.createElement('button')
+	const btn = document.createElement(tagType.toUpperCase())
 	btn.setAttribute('data-adjust', '')
 	const btnValue = 'data'
 	const btnTextNode = document.createTextNode(btnValue)
@@ -509,9 +510,10 @@ class Editor extends React.Component<EditorProps, EditorState> {
 		}
 		if (cleanHtml) {
 			// todo sanitize
-			// todo remove empty button
+			// todo remove empty tag
 			// todo remove nbsp at end of line
 			// todo remove tags like <span style="white-space: nowrap;">new real text</span>
+			// todo remove style padding, margin, ...
 			if (val === this.currentValueFromProps) {
 				return
 			}
@@ -522,7 +524,7 @@ class Editor extends React.Component<EditorProps, EditorState> {
 
 	editorKeyDown(e: React.KeyboardEvent<HTMLDivElement>): void {
 		e.stopPropagation()
-		// when user presses enter, manually add new line to prevent adding new line inside button
+		// when user presses enter, manually add new line to prevent adding new line inside tag
 		if (e.key !== 'Enter') {
 			return
 		}
@@ -533,11 +535,11 @@ class Editor extends React.Component<EditorProps, EditorState> {
 		if (!node) {
 			return
 		}
-		const btn = getButtonFromSelection(node, this.elementRef)
+		const btn = getTagFromSelection(node, this.elementRef)
 		if (!btn || !btn.parentElement) {
 			return
 		}
-		// add new line after <button>
+		// add new line after <?>
 		e.preventDefault()
 		const el = document.createElement('div')
 		const nodeTxt = document.createTextNode('\u00a0')
