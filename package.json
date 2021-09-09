@@ -29,9 +29,15 @@
 	},
 	"scripts": {
 		"build": "PUBLIC_URL='./' react-scripts build",
+		"build:package": "rm -rdf ./build-package && tsc --p tsconfig.build.json && node build-helper.js",
 		"start": "react-scripts start",
 		"test": "react-scripts test"
 	},
+	"main": "build-package/src/index-package.js",
+	"types": "build-package/src/index-package.d.ts",
+	"files": [
+		"/build-package"
+	],
 	"homepage": "./",
 	"eslintConfig": {
 		"extends": [
