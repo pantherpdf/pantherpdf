@@ -238,17 +238,19 @@ function TagEditor(props: ItemRendeProps) {
 
 // evaluate during compile
 // replace <?> with value of formula inside <?>
-export async function evaluateFormulaInsideHtml(html: string, formulaHelper: FormulaHelper, createElement: ((tag:string)=>HTMLElement)|undefined): Promise<string> {
+export async function evaluateFormulaInsideHtml(html: string, formulaHelper: FormulaHelper, createDocument: (()=>Document)|undefined): Promise<string> {
 	// parse html
-	let parentEl
-	if (createElement) {
-		parentEl = createElement('div')
+	let parentEl: HTMLElement
+	let doc2: Document
+	if (createDocument) {
+		doc2 = createDocument()
+		parentEl = doc2.body
 	}
 	else {
-		parentEl = document.createElement('div')
+		doc2 = window.document
+		parentEl = doc2.createElement('div')
 	}
 	parentEl.innerHTML = html
-	const doc2 = window.document
 
 	function processBtn(el: Node, value: string): Node | null {
 		if (el.nodeName === '#text') {
@@ -714,7 +716,7 @@ export const TextHtml: Widget = {
 		return {
 			type: dt.type,
 			children: [],
-			value: await evaluateFormulaInsideHtml(dt.value, helper.formulaHelper, helper.externalHelpers.createElement),
+			value: await evaluateFormulaInsideHtml(dt.value, helper.formulaHelper, helper.externalHelpers.createDocument),
 			font: dt.font,
 		}
 	},
