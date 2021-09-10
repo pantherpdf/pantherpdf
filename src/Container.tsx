@@ -89,12 +89,23 @@ export default function Container() {
 	}
 
 
+	//
+	async function getOrigSourceInternal(): Promise<any> {
+		if (overrideSourceData) {
+			return JSON.parse(overrideSourceData)
+		}
+		if (report) {
+			return getOriginalSourceData(report, api, undefined, undefined)
+		}
+		return undefined
+	}
+
 	// refresh data
 	useEffect(() => {
 		if (report) {
 			(async function() {
 				try {
-					const dt1 = await getOriginalSourceData(report, overrideSourceData, api)
+					const dt1 = await getOrigSourceInternal()
 					const dt2 = await transformData(dt1, report)
 					setData({data: dt2})
 				}
@@ -212,7 +223,7 @@ export default function Container() {
 			return
 		}
 		try {
-			const source = await getOriginalSourceData(report, overrideSourceData, api)
+			const source = await getOrigSourceInternal()
 			const data = await transformData(source, report)
 			const c = await compile(report, data, api)
 			const nodes = makeHtml(c)
@@ -312,7 +323,7 @@ export default function Container() {
 			deleteReport={deleteUrl ? deleteReport : undefined}
 			api={api}
 			setOverrideSourceData={setOverrideSourceData2}
-			getOriginalSourceData={() => getOriginalSourceData(report, overrideSourceData, api)}
+			getOriginalSourceData={getOrigSourceInternal}
 			isOverridenSourceData={!!overrideSourceData}
 			data={data}
 		/>
