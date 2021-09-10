@@ -1,6 +1,6 @@
 {
 	"name": "kelgrand-reports",
-	"version": "1.0.62",
+	"version": "1.0.63",
 	"private": true,
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^5.15.3",

@@ -225,7 +225,7 @@ export default function Container() {
 		try {
 			const source = await getOrigSourceInternal()
 			const data = await transformData(source, report)
-			const c = await compile(report, data, api)
+			const c = await compile(report, data, api, {})
 			const nodes = makeHtml(c)
 			setShownModalPrint(nodes)
 		}

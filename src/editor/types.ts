@@ -69,6 +69,7 @@ export interface ItemRendeProps extends GeneralProps {
 export interface ItemRendeFinalHelper {
 	renderItem: (item: TDataCompiled, helper: ItemRendeFinalHelper) => ReactNode,
 	renderChildren: (chs: TDataCompiled[], helper: ItemRendeFinalHelper) => ReactNode,
+	externalHelpers: {[key: string]: any},
 }
 
 export interface ItemRendeFinalProps extends ItemRendeFinalHelper {
@@ -81,7 +82,8 @@ export interface CompileHelper {
 	compileChildren: (arr1: TData[], helper: CompileHelper) => Promise<TDataCompiled[]>,
 	wid: number[],
 	report: TReport,
-	api?: ApiEndpoints,
+	api: ApiEndpoints,
+	externalHelpers: {[key: string]: any}
 	variables: {[key: string]: any},
 }
 

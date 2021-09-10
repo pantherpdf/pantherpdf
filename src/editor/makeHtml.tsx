@@ -10,7 +10,7 @@ import type { ItemRendeFinalHelper } from './types'
 import getWidget from '../widgets/allWidgets'
 
 
-export default function makeHtml(report: TReportCompiled) {
+export default function makeHtml(report: TReportCompiled, externalHelpers: {[key: string]: any}={}) {
 	const helper: ItemRendeFinalHelper = {
 		renderItem: (item, helper) => {
 			const w = getWidget(item.type)
@@ -25,6 +25,7 @@ export default function makeHtml(report: TReportCompiled) {
 				return <w.RenderFinal {...helper} item={item} key={idx} />
 			})}</>
 		},
+		externalHelpers,
 	}
 
 	const arr = helper.renderChildren(report.children, helper)

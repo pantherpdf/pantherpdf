@@ -41,7 +41,7 @@ export class FormulaHelper {
 }
 
 
-export default async function compile(report: TReport, data: any, api?: ApiEndpoints): Promise<TReportCompiled> {
+export default async function compile(report: TReport, data: any, api: ApiEndpoints={}, externalHelpers: {[key: string]: any}={}): Promise<TReportCompiled> {
 	// make a copy, to support changing
 	report = JSON.parse(JSON.stringify(report))
 
@@ -76,6 +76,7 @@ export default async function compile(report: TReport, data: any, api?: ApiEndpo
 		formulaHelper,
 		api,
 		variables: vars,
+		externalHelpers,
 		
 		evalFormula: async (txt: string) => {
 			return FormulaEvaluate(txt, {getVar})
@@ -106,7 +107,7 @@ export default async function compile(report: TReport, data: any, api?: ApiEndpo
 }
 
 
-export async function compileComponent(cmpData: object, data: any, api?: ApiEndpoints): Promise<TDataCompiled> {
+export async function compileComponent(cmpData: object, data: any): Promise<TDataCompiled> {
 	const dt: TReport = {
 		_id: '',
 		target: 'pdf',
@@ -122,6 +123,6 @@ export async function compileComponent(cmpData: object, data: any, api?: ApiEndp
 		dataUrl: '',
 		variables: [],
 	}
-	const reportCompiled = await compile(dt, data, api)
+	const reportCompiled = await compile(dt, data)
 	return reportCompiled.children[0]
 }
