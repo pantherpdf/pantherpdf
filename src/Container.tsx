@@ -1,8 +1,8 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPrint, faRedo, faSpinner, faUndo } from '@fortawesome/free-solid-svg-icons'
-import { ApiEndpoints, ReportTypeGuard, TReport } from './types'
+import { faFilePdf, faPrint, faRedo, faSpinner, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { ApiEndpoints, FilesResponseBase, ReportTypeGuard, TReport } from './types'
 import packageJson from '../package.json'
 import Editor from './editor/Editor'
 import { sampleReport } from './editor/sampleReport'
@@ -13,6 +13,7 @@ import makeHtml from './editor/makeHtml'
 import getOriginalSourceData from './editor/getOriginalSourceData'
 import { transformData } from './editor/DataTransform'
 import { TSourceData } from './editor/types'
+import { uploadFile } from './FileDialog'
 
 
 interface MenuProps {
@@ -79,13 +80,59 @@ export default function Container() {
 
 	const url = new URL(window.location.href)
 	const params = new URLSearchParams(url.search);
-	const homeUrl = params.get('homeUrl')
-	const getUrl = params.get('getUrl')
-	const updateUrl = params.get('updateUrl')
-	const deleteUrl = params.get('deleteUrl')
-	const loadLocalReport = params.get('loadLocalReport') === '1'
+	const homeUrl = params.get('home')
+	const reportUrl = params.get('report')
+	const auth = params.get('auth')
+	const reportEditable = params.get('reportEditable')===null || params.get('reportEditable') === '1' || params.get('reportEditable') === 'true'
+	const loadLocalReport = params.get('loadLocalReport') === '1' || params.get('loadLocalReport') === 'true'
+	const generatePdfUrl = params.get('generatePdf')
+	const filesUrl = params.get('files')
+	const filesDownloadUrl = params.get('filesDownload')
+	if (filesUrl && filesUrl.indexOf(':name') === -1) {
+		throw new Error('Missing :name in url files')
+	}
+	if (filesDownloadUrl && filesDownloadUrl.indexOf(':name') === -1) {
+		throw new Error('Missing :name in url filesDownloadUrl')
+	}
 	const api: ApiEndpoints = {
 		fonts: async () => { return ['arial', 'times new roman'] },
+		files: (filesUrl ? async () => {
+			let url = filesUrl.replace(':name', '')
+			const r = await fetch(url, {
+				headers: {
+					...(auth && { 'Authentication': auth }),
+				},
+			})
+			if (!r.ok) {
+				const txt = await r.text()
+				throw new Error(txt)
+			}
+			const js = await r.json() as FilesResponseBase
+			return js
+		} : undefined),
+		filesDelete: (filesUrl ? async (name) => {
+			let url = filesUrl.replace(':name', '')
+			const r = await fetch(url, {
+				method: 'DELETE',
+				headers: {
+					...(auth && { 'Authentication': auth }),
+				},
+			})
+			if (!r.ok) {
+				const txt = await r.text()
+				throw new Error(txt)
+			}
+		} : undefined),
+		filesUpload: (filesUrl ? async (file, data, cbProgress) => {
+			let url = filesUrl.replace(':name', encodeURIComponent(data.name))
+			uploadFile(url, file, {
+				'x-data': JSON.stringify(data),
+				...(auth ? {'Authentication': auth} : {}),
+			}, cbProgress)
+		} : undefined),
+		filesDownloadUrl: (filesDownloadUrl ? (name) => {
+			return filesDownloadUrl.replace(':name', encodeURIComponent(name))
+		} : undefined),
 	}
 
 
@@ -143,14 +190,21 @@ export default function Container() {
 		setReport(val)
 		
 		// send to DB
-		if (updateUrl) {
+		if (reportEditable && reportUrl) {
 			try {
-				const r = await fetch(updateUrl, {method:'POST', headers: {'Content-Type':'application/json'}, body:JSON.stringify(val)})
+				const r = await fetch(reportUrl, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						...(auth && { 'Authentication': auth }),
+					},
+					body: JSON.stringify(val)
+				})
 				if (!r.ok) {
 					throw new Error('unknown error')
 				}
 			}
-			catch(e) {
+			catch (e) {
 				setLoading(false)
 				alert(String(e))
 				setReport(oldVal)
@@ -161,7 +215,9 @@ export default function Container() {
 		}
 
 		// save to local storage
-		window.localStorage.setItem('report', JSON.stringify(val))
+		if (loadLocalReport) {
+			window.localStorage.setItem('report', JSON.stringify(val))
+		}
 
 		// ok
 		setLoading(false)
@@ -197,11 +253,16 @@ export default function Container() {
 	}
 
 	async function deleteReport() {
-		if (!deleteUrl) {
+		if (!reportEditable || !reportUrl) {
 			return
 		}
 		// delete from db
-		const r = await fetch(deleteUrl, {method:'DELETE'})
+		const r = await fetch(reportUrl, {
+			method:'DELETE',
+			headers: {
+				...(auth && { 'Authentication': auth }),
+			},
+		})
 		if (!r.ok) {
 			alert('error')
 			return
@@ -234,6 +295,52 @@ export default function Container() {
 		}
 	}
 
+	async function genPdf() {
+		if (!generatePdfUrl || !report || !reportUrl) {
+			return
+		}
+		const w = window.open('', '_blank')
+		if (!w) {
+			return
+		}
+		interface GenPdfRequest {
+			dataUrl?: string,
+			data?: any,
+		}
+		interface GenPdfResponse {
+			url: string,
+		}
+		const rq: GenPdfRequest = {
+			...(overrideSourceData ? {data: JSON.parse(overrideSourceData)} : {}),
+		}
+		try {
+			const r = await fetch(generatePdfUrl, {
+				headers: {
+					'Content-Type': 'application/json',
+					...(auth ? {'Authtentication': auth} : {}),
+				},
+				body: JSON.stringify(rq),
+			})
+			if (!r.ok) {
+				const txt = await r.text()
+				throw new Error(txt)
+			}
+			const js = await r.json() as GenPdfResponse
+			w.location.replace(js.url)
+		}
+		catch (e) {
+			let txt = `Error: ${String(e)}`
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;")
+			.replace(/"/g, "&quot;")
+			.replace(/'/g, "&#039;");
+			txt = `<!DOCTYPE html><html><head><title>Gen PDF error</title></head><body>${txt}</body></html>`
+			txt = `data:text/html;charset=utf-8,${encodeURIComponent(txt)}`
+			w.location.replace(txt)
+		}
+	}
+
 
 	// load report from db
 	useEffect(() => {
@@ -254,14 +361,18 @@ export default function Container() {
 						return
 					}
 				}
-				if (!getUrl) {
+				if (!reportUrl) {
 					const report = sampleReport
 					setReport(report)
 					setUndoStack([report])
 					setUndoNext(1)
 					return
 				}
-				const r = await fetch(getUrl)
+				const r = await fetch(reportUrl, {
+					headers: {
+						...(auth && { 'Authentication': auth }),
+					},
+				})
 				if (!r.ok) {
 					const msg = await r.text()
 					alert(msg)
@@ -290,7 +401,7 @@ export default function Container() {
 				setLoading(false)
 			}
 		})()
-	}, [getUrl, loadLocalReport])
+	}, [reportUrl, auth, loadLocalReport])
 
 	
 	// is loading?
@@ -320,7 +431,7 @@ export default function Container() {
 		<Editor
 			report={report}
 			setReport={setReport2}
-			deleteReport={deleteUrl ? deleteReport : undefined}
+			deleteReport={(reportUrl && reportEditable) ? deleteReport : undefined}
 			api={api}
 			setOverrideSourceData={setOverrideSourceData2}
 			getOriginalSourceData={getOrigSourceInternal}
@@ -333,6 +444,14 @@ export default function Container() {
 			<Modal.Header closeButton>
 				<Modal.Title>
 					{Trans('preview')}
+					{!!generatePdfUrl && !!report && !!reportUrl && (
+						<button
+							className='btn btn-outline-secondary'
+							onClick={genPdf}
+						>
+							<FontAwesomeIcon icon={faFilePdf} />
+						</button>
+					)}
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
@@ -340,6 +459,7 @@ export default function Container() {
 					<iframe
 						srcDoc={shownModalPrint.html}
 						style={{width: '100%', height: '83vh'}}
+						title='preview'
 					/>
 				)}
 				{!!shownModalPrint && 'errorMsg' in shownModalPrint && (

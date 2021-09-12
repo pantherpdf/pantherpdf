@@ -20,6 +20,64 @@ import Trans from './translation'
 const supportsRequestStreams: boolean = typeof window!=='undefined' && window.Request!==undefined && window.ReadableStream!==undefined && !new window.Request('', { body: new window.ReadableStream(), method: 'POST' }).headers.has('Content-Type');
 
 
+export async function uploadFile(url: string, file: File, headers: {[key:string]: string}, cbProgress: (prc: number) => void) {
+	let r: Response
+
+	if (!supportsRequestStreams) {
+		// old way, without progress
+		r = await fetch(url, {
+			method: 'POST',
+			headers,
+			body: file
+		});
+	}
+
+	else {
+		// fetch stream upload
+		// report progress
+		let bytesConsumed = 0
+		const totalSize = file.size
+		const fileReader: ReadableStreamDefaultReader = (file.stream() as any).getReader()
+		const stream = new ReadableStream({
+			async pull(c) {
+				const r = await fileReader.read()
+				if (r.done) {
+					c.close()
+				}
+				else {
+					let prc = bytesConsumed / totalSize
+					cbProgress(prc)
+					bytesConsumed += r.value.length
+					c.enqueue(r.value)
+				}
+			}
+		})
+
+		r = await fetch(url, {
+			method: 'POST',
+			headers,
+			body: stream,
+			allowHTTP1ForStreamingUpload: true,  // non-standard, but required by Chrome for HTTP/1
+		} as any);
+	}
+
+	// error handler
+	if (!r.ok) {
+		let msg: string = ''
+		try {
+			const js = await r.json()
+			if (typeof js === 'object' && 'msg' in js && typeof js.msg === 'string') {
+				msg = js.msg
+			}
+		}
+		catch(e) { }
+		if (msg.length === 0)
+			msg = 'Unknown error'
+		throw new Error(msg)
+	}
+}
+
+
 interface Props {
 	mode: 'value' | 'link',
 	value?: string | undefined,
