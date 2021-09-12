@@ -148,11 +148,12 @@ export const Image: Widget = {
 		else if (item.data.trimStart().startsWith('<svg')) {
 			img = <div style={cssImg} dangerouslySetInnerHTML={{__html: item.data}}></div>
 		}
-		else if (item.data.startsWith('data:image/') || item.data.startsWith('http://') || item.data.startsWith('https://')) {
+		else if (item.data.startsWith('data:image/') || item.data.startsWith('http://') || item.data.startsWith('https://') || item.data.startsWith('/') || item.data.startsWith('./') || item.data.startsWith('../')) {
 			img = <img src={item.data} alt='' style={cssImg} />
 		}
 		else {
-			img = <div>Bad img</div>
+			console.log(item.data)
+			throw new Error('Bad image data')
 		}
 
 		return <div style={cssContainer}>
