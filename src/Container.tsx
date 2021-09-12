@@ -100,7 +100,7 @@ export default function Container() {
 			let url = filesUrl.replace(':name', '')
 			const r = await fetch(url, {
 				headers: {
-					...(auth && { 'Authentication': auth }),
+					...(auth && { 'Authorization': auth }),
 				},
 			})
 			if (!r.ok) {
@@ -115,7 +115,7 @@ export default function Container() {
 			const r = await fetch(url, {
 				method: 'DELETE',
 				headers: {
-					...(auth && { 'Authentication': auth }),
+					...(auth && { 'Authorization': auth }),
 				},
 			})
 			if (!r.ok) {
@@ -127,7 +127,7 @@ export default function Container() {
 			let url = filesUrl.replace(':name', encodeURIComponent(data.name))
 			uploadFile(url, file, {
 				'x-data': JSON.stringify(data),
-				...(auth ? {'Authentication': auth} : {}),
+				...(auth ? {'Authorization': auth} : {}),
 			}, cbProgress)
 		} : undefined),
 		filesDownloadUrl: (filesDownloadUrl ? (name) => {
@@ -196,7 +196,7 @@ export default function Container() {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
-						...(auth && { 'Authentication': auth }),
+						...(auth && { 'Authorization': auth }),
 					},
 					body: JSON.stringify(val)
 				})
@@ -260,7 +260,7 @@ export default function Container() {
 		const r = await fetch(reportUrl, {
 			method:'DELETE',
 			headers: {
-				...(auth && { 'Authentication': auth }),
+				...(auth && { 'Authorization': auth }),
 			},
 		})
 		if (!r.ok) {
@@ -317,7 +317,7 @@ export default function Container() {
 			const r = await fetch(generatePdfUrl, {
 				headers: {
 					'Content-Type': 'application/json',
-					...(auth ? {'Authtentication': auth} : {}),
+					...(auth ? {'Authorization': auth} : {}),
 				},
 				body: JSON.stringify(rq),
 			})
@@ -370,7 +370,7 @@ export default function Container() {
 				}
 				const r = await fetch(reportUrl, {
 					headers: {
-						...(auth && { 'Authentication': auth }),
+						...(auth && { 'Authorization': auth }),
 					},
 				})
 				if (!r.ok) {
