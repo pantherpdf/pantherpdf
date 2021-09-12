@@ -344,8 +344,9 @@ export default function Container() {
 				// https://gist.github.com/devloco/5f779216c988438777b76e7db113d05c
 				const newBlob = new Blob([blob], { type: ct })
 				// MS Edge and IE don't allow using a blob object directly as link href, instead it is necessary to use msSaveOrOpenBlob
-				if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-					window.navigator.msSaveOrOpenBlob(newBlob)
+				const nav2 = window.navigator as any
+				if (nav2 && nav2.msSaveOrOpenBlob) {
+					nav2.msSaveOrOpenBlob(newBlob)
 				} else {
 					// For other browsers: create a link pointing to the ObjectURL containing the blob.
 					const objUrl = window.URL.createObjectURL(newBlob)
