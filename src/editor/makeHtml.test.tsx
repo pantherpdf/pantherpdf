@@ -7,7 +7,7 @@ import compile from './compile'
 import type { ReportForceChildren } from './types'
 import type { TextSimpleData } from '../widgets/TextSimple'
 import { sampleReport } from './sampleReport'
-import makeHtml from './makeHtml'
+import { makeHtmlContent } from './makeHtml'
 import renderer from 'react-test-renderer'
 
 test('text', async () => {
@@ -20,7 +20,7 @@ test('text', async () => {
 
 	const obj = { num: 123 }
 	const compiled = await compile(report, obj)
-	const html = makeHtml(compiled)
+	const html = makeHtmlContent(compiled)
 	const component = renderer.create(<>{html}</>)
 	const tree = component.toJSON()
   	expect(tree).toMatchSnapshot();

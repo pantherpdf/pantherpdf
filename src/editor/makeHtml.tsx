@@ -4,13 +4,16 @@
  */
 
 
-import React from 'react'
-import type { TReportCompiled } from '../types'
+import React, { CSSProperties } from 'react'
+import { defaultReportCss, TReportCompiled } from '../types'
 import type { ItemRendeFinalHelper } from './types'
 import getWidget from '../widgets/allWidgets'
+import ReactDOMServer from 'react-dom/server'
+import styleToCssString from 'react-style-object-to-css'
+import { PropertyFontGenCss } from '../widgets/PropertyFont'
 
 
-export default function makeHtml(report: TReportCompiled, externalHelpers: {[key: string]: any}={}) {
+export function makeHtmlContent(report: TReportCompiled, externalHelpers: {[key: string]: any}={}) {
 	const helper: ItemRendeFinalHelper = {
 		renderItem: (item, helper) => {
 			const w = getWidget(item.type)
@@ -30,4 +33,108 @@ export default function makeHtml(report: TReportCompiled, externalHelpers: {[key
 
 	const arr = helper.renderChildren(report.children, helper)
 	return arr
+}
+
+
+export default function makeHtml(report: TReportCompiled, externalHelpers: {[key: string]: any}={}): string {
+	// prepare css
+	const cssObj: CSSProperties = {...defaultReportCss, ...PropertyFontGenCss(report.properties.font || {})}
+	const css = styleToCssString(cssObj)
+
+	// render content
+	const el1 = makeHtmlContent(report, externalHelpers)
+	const el2 = React.createElement('div', {}, el1)
+	const htmlContent = ReactDOMServer.renderToStaticMarkup(el2)
+
+	const html = `<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Report</title>
+<style>
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* modifications */
+b, strong {
+	font-weight: bold;
+}
+cite, em, i {
+	font-style: italic;
+}
+big {
+	font-size: larger;
+}
+small {
+	font-size: smaller;
+}
+mark {
+	background-color: yellow;
+}
+sub {
+    vertical-align: sub;
+    font-size: smaller;
+}
+sup {
+    vertical-align: super;
+    font-size: smaller;
+}
+</style>
+<style>
+body {
+	${css}
+}
+</style>
+</head>
+<body>
+${htmlContent}
+</body>
+</html>
+`
+	return html
 }

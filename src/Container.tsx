@@ -73,7 +73,7 @@ export default function Container() {
 	const [undoStack, setUndoStack] = useState<TReport[]>([])
 	const [undoNext, setUndoNext] = useState<number>(0)
 
-	const [shownModalPrint, setShownModalPrint] = useState<React.ReactNode | string | undefined>(undefined)
+	const [shownModalPrint, setShownModalPrint] = useState<{html: string} | {errorMsg: string} | undefined>(undefined)
 	const [data, setData] = useState<TSourceData>({data: undefined})
 	const [overrideSourceData, setOverrideSourceData] = useState<string | undefined>(undefined)
 
@@ -226,11 +226,11 @@ export default function Container() {
 			const source = await getOrigSourceInternal()
 			const data = await transformData(source, report)
 			const c = await compile(report, data, api, {})
-			const nodes = makeHtml(c)
-			setShownModalPrint(nodes)
+			const html = makeHtml(c)
+			setShownModalPrint({html})
 		}
 		catch(e) {
-			setShownModalPrint(String(e))
+			setShownModalPrint({errorMsg: String(e)})
 		}
 	}
 
@@ -328,7 +328,7 @@ export default function Container() {
 			data={data}
 		/>
 
-		{/* ADD NEW */}
+		{/* Preview */}
 		<Modal show={!!shownModalPrint} onHide={() => setShownModalPrint(undefined)} size='lg'>
 			<Modal.Header closeButton>
 				<Modal.Title>
@@ -336,7 +336,17 @@ export default function Container() {
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				{shownModalPrint}
+				{!!shownModalPrint && 'html' in shownModalPrint && (
+					<iframe
+						srcDoc={shownModalPrint.html}
+						style={{width: '100%', height: '83vh'}}
+					/>
+				)}
+				{!!shownModalPrint && 'errorMsg' in shownModalPrint && (
+					<div className='alert alert-danger'>
+						{shownModalPrint.errorMsg}
+					</div>
+				)}
 			</Modal.Body>
 		</Modal>
 	</>

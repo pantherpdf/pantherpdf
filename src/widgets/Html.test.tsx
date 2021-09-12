@@ -4,7 +4,7 @@
 
 import { Html, HtmlData, HtmlCompiled } from './Html'
 import compile, { compileComponent } from '../editor/compile'
-import makeHtml from '../editor/makeHtml'
+import { makeHtmlContent } from '../editor/makeHtml'
 import renderer from 'react-test-renderer'
 import { sampleReport } from '../editor/sampleReport'
 import { ReportForceChildren } from '../editor/types'
@@ -32,7 +32,7 @@ test('html render', async () => {
 
 	const data = { desc: '<p>Hello</p>' }
 	const compiled = await compile(report, data)
-	const html = makeHtml(compiled)
+	const html = makeHtmlContent(compiled)
 	const component = renderer.create(<>{html}</>)
 	const tree = component.toJSON()
   	expect(tree).toMatchSnapshot();
