@@ -311,6 +311,7 @@ export default function Container() {
 		}
 		try {
 			const r = await fetch(generatePdfUrl, {
+				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					...(auth ? {'Authorization': auth} : {}),
@@ -321,8 +322,43 @@ export default function Container() {
 				const txt = await r.text()
 				throw new Error(txt)
 			}
-			const js = await r.json() as GenPdfResponse
-			window.location.href = js.url
+			const ct = r.headers.get('Content-Type') || ''
+			const disp = r.headers.get('Content-Disposition') || ''
+			const isRedirect = ct.indexOf('application/json') !== -1 && disp.indexOf('attachment') === -1
+			if (isRedirect) {
+				const js = await r.json() as GenPdfResponse
+				window.location.href = js.url
+			}
+			else {
+				const idx1 = disp.indexOf('filename="')
+				const idx2 = disp.lastIndexOf('"')
+				let filename = ''
+				if (idx2 > idx1+9) {
+					filename = disp.substring(idx1+10, idx2)
+				}
+				if (filename.trim().length === 0) {
+					filename = 'report.pdf'
+				}
+				const blob = await r.blob()
+				
+				// https://gist.github.com/devloco/5f779216c988438777b76e7db113d05c
+				const newBlob = new Blob([blob], { type: ct })
+				// MS Edge and IE don't allow using a blob object directly as link href, instead it is necessary to use msSaveOrOpenBlob
+				if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+					window.navigator.msSaveOrOpenBlob(newBlob)
+				} else {
+					// For other browsers: create a link pointing to the ObjectURL containing the blob.
+					const objUrl = window.URL.createObjectURL(newBlob)
+
+					let link = document.createElement('a')
+					link.href = objUrl
+					link.download = filename
+					link.click()
+
+					// For Firefox it is necessary to delay revoking the ObjectURL.
+					setTimeout(() => { window.URL.revokeObjectURL(objUrl) }, 250)
+				}
+			}
 		}
 		catch (e) {
 			alert(`Error: ${String(e)}`)
@@ -437,7 +473,7 @@ export default function Container() {
 							className='btn btn-outline-secondary'
 							onClick={genPdf}
 						>
-							<FontAwesomeIcon icon={faFilePdf} />
+							<FontAwesomeIcon icon={faFilePdf} className='ms-2' />
 						</button>
 					)}
 				</Modal.Title>
