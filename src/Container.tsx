@@ -471,10 +471,10 @@ export default function Container() {
 					{Trans('preview')}
 					{!!generatePdfUrl && !!report && !!reportUrl && (
 						<button
-							className='btn btn-outline-secondary'
+							className='btn btn-outline-secondary ms-2'
 							onClick={genPdf}
 						>
-							<FontAwesomeIcon icon={faFilePdf} className='ms-2' />
+							<FontAwesomeIcon icon={faFilePdf} />
 						</button>
 					)}
 				</Modal.Title>
