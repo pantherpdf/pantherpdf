@@ -299,10 +299,6 @@ export default function Container() {
 		if (!generatePdfUrl || !report || !reportUrl) {
 			return
 		}
-		const w = window.open('', '_blank')
-		if (!w) {
-			return
-		}
 		interface GenPdfRequest {
 			dataUrl?: string,
 			data?: any,
@@ -326,18 +322,10 @@ export default function Container() {
 				throw new Error(txt)
 			}
 			const js = await r.json() as GenPdfResponse
-			w.location.replace(js.url)
+			window.location.href = js.url
 		}
 		catch (e) {
-			let txt = `Error: ${String(e)}`
-			.replace(/&/g, "&amp;")
-			.replace(/</g, "&lt;")
-			.replace(/>/g, "&gt;")
-			.replace(/"/g, "&quot;")
-			.replace(/'/g, "&#039;");
-			txt = `<!DOCTYPE html><html><head><title>Gen PDF error</title></head><body>${txt}</body></html>`
-			txt = `data:text/html;charset=utf-8,${encodeURIComponent(txt)}`
-			w.location.replace(txt)
+			alert(`Error: ${String(e)}`)
 		}
 	}
 
