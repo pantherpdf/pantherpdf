@@ -193,7 +193,7 @@ export default function Container() {
 		if (reportEditable && reportUrl) {
 			try {
 				const r = await fetch(reportUrl, {
-					method: 'POST',
+					method: 'PUT',
 					headers: {
 						'Content-Type': 'application/json',
 						...(auth && { 'Authorization': auth }),
