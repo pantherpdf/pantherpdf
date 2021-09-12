@@ -17,7 +17,7 @@ import Trans from './translation'
 // check browser support for fetch stream upload
 // it enabled upload progress bar
 // Chrome 92 requires experimental flag #enable-experimental-web-platform-features
-const supportsRequestStreams: boolean = typeof window!=='undefined' && window.Request!==undefined && !new window.Request('', { body: new ReadableStream(), method: 'POST' }).headers.has('Content-Type');
+const supportsRequestStreams: boolean = typeof window!=='undefined' && window.Request!==undefined && window.ReadableStream!==undefined && !new window.Request('', { body: new window.ReadableStream(), method: 'POST' }).headers.has('Content-Type');
 
 
 interface Props {

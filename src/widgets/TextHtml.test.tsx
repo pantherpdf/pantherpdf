@@ -1,10 +1,10 @@
 /**
- * @jest-environment node
+ * @jest-environment jsdom
  */
 
 import { TextHtmlData, TextHtmlCompiled, evaluateFormulaInsideHtml } from './TextHtml'
 import compile, { compileComponent, FormulaHelper } from '../editor/compile'
-import makeHtml from '../editor/makeHtml'
+import { makeHtmlContent } from '../editor/makeHtml'
 import renderer from 'react-test-renderer'
 import { ReportForceChildren } from '../editor/types'
 import { sampleReport } from '../editor/sampleReport'
@@ -12,7 +12,7 @@ import { sampleReport } from '../editor/sampleReport'
 test('parse TextHtml formula', async () => {
 const html = `aaa
 <div>a<b style="color:white">b</b>c</div>
-d<b id="&quot;">ef</b> <button><i></i><b>d</b>ata.def</button><br/>
+d<b id="&quot;">ef</b> <data><i></i><b>d</b>ata.def</data><br/>
 <div>ghi</div>
 <p></p>`
 const htmlExpected = `aaa
@@ -23,13 +23,13 @@ d<b id="&quot;">ef</b> <b>123</b><br>
 	const data = { def: '123' }
 	const helper = new FormulaHelper()
 	helper.push('data', data)
-	const html2 = await evaluateFormulaInsideHtml(html, helper)
+	const html2 = await evaluateFormulaInsideHtml(html, helper, undefined)
 	expect(html2).toBe(htmlExpected)
 })
 
 
 test('TextHtml 2', async () => {
-	const dt: TextHtmlData = {type:'TextHtml', value:'Hello <button><i></i><b>data.txt</b></button>', children:[], font:{}}
+	const dt: TextHtmlData = {type:'TextHtml', value:'Hello <data><i></i><b>data.txt</b></data>', children:[], font:{}}
 	const data = { txt: '123' }
 	const p2 = await compileComponent(dt, data)
 	expect(p2).toBeTruthy()
@@ -40,7 +40,7 @@ test('TextHtml 2', async () => {
 
 
 test('TextHtml Filter', async () => {
-	const dt: TextHtmlData = {type:'TextHtml', value:'Hello <button data-adjust="num, 2 dec">data.num</button>', children:[], font:{}}
+	const dt: TextHtmlData = {type:'TextHtml', value:'Hello <data data-adjust="num, 2 dec">data.num</data>', children:[], font:{}}
 	const data = { num: 123.123456789 }
 	const p2 = await compileComponent(dt, data)
 	expect(p2).toBeTruthy()
@@ -58,7 +58,7 @@ test('TextHtml should render html', async () => {
 		]
 	}
 	const compiled = await compile(report, {})
-	const html = makeHtml(compiled)
+	const html = makeHtmlContent(compiled)
 	const component = renderer.create(<>{html}</>)
 	const tree = component.toJSON()
   	expect(tree).toMatchSnapshot();

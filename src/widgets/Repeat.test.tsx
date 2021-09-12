@@ -1,5 +1,5 @@
 /**
- * @jest-environment node
+ * @jest-environment jsdom
  */
 
 import { TextSimpleData } from './TextSimple'
@@ -9,7 +9,7 @@ import { ForceChildren } from '../editor/types'
 import { sampleReport } from '../editor/sampleReport'
 import { TReport } from '../types'
 import { TextHtmlData } from './TextHtml'
-import makeHtml from '../editor/makeHtml'
+import { makeHtmlContent } from '../editor/makeHtml'
 import renderer from 'react-test-renderer'
 
 
@@ -29,7 +29,7 @@ test('text', async () => {
 
 
 test('complete rows', async () => {
-	const txt: TextHtmlData = { type: 'TextHtml', value: '<button>item</button>', font:{}, children:[] }
+	const txt: TextHtmlData = { type: 'TextHtml', value: '<data>item</data>', font:{}, children:[] }
 	const rpt: RepeatData = { type: 'Repeat', children: [txt], source: '[1,2,3,4,5]', varName: 'item', direction: 'rows' }
 	const report: TReport = {...sampleReport, children: [rpt] }
 	const report2 = await compile(report, {})
@@ -40,7 +40,7 @@ test('complete rows', async () => {
 	expect(report2.children[0].children[0][0].type).toBe('TextHtml')
 	expect(report2.children[0].children[0][0].value).toBe('1')
 
-	const html = makeHtml(report2)
+	const html = makeHtmlContent(report2)
 	const component = renderer.create(<>{html}</>)
 	const tree = component.toJSON()
   	expect(tree).toMatchSnapshot();
@@ -48,7 +48,7 @@ test('complete rows', async () => {
 
 
 test('complete grid', async () => {
-	const txt: TextHtmlData = { type: 'TextHtml', value: '<button>item</button>', font:{}, children:[] }
+	const txt: TextHtmlData = { type: 'TextHtml', value: '<data>item</data>', font:{}, children:[] }
 	const rpt: RepeatData = { type: 'Repeat', children: [txt], source: '[1,2,3,4,5]', varName: 'item', direction: 'grid' }
 	const report: TReport = {...sampleReport, children: [rpt] }
 	const report2 = await compile(report, {})
@@ -59,7 +59,7 @@ test('complete grid', async () => {
 	expect(report2.children[0].children[0][0].type).toBe('TextHtml')
 	expect(report2.children[0].children[0][0].value).toBe('1')
 
-	const html = makeHtml(report2)
+	const html = makeHtmlContent(report2)
 	const component = renderer.create(<>{html}</>)
 	const tree = component.toJSON()
   	expect(tree).toMatchSnapshot();
