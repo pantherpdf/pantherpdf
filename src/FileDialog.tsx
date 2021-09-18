@@ -73,7 +73,7 @@ export async function uploadFile(url: string, file: File, headers: {[key:string]
 		catch(e) { }
 		if (msg.length === 0)
 			msg = 'Unknown error'
-		return Promise.reject(msg)
+		throw new Error(msg)
 	}
 }
 
@@ -244,13 +244,29 @@ export default function FileDialog(props: Props) {
 			<tbody>
 				{files.map(f => <tr key={f.name}>
 					<td>
-						{props.mode === 'link' && props.api.filesDownloadUrl ? <a href={props.api.filesDownloadUrl(f.name)} target='_blank' rel='noreferrer' className='d-block'>{f.name}</a> : <button
-							className='btn btn-link d-block w-100 text-start'
-							onClick={() => props.onChange && props.onChange(f.name)}
-							disabled={f.upload && f.upload.status !== 'complete'}
-						>
-							{f.name}
-						</button>}
+						{(!f.upload || (f.upload.status === 'complete' && !f.upload.errorMsg)) ? (
+							(props.mode === 'link' && props.api.filesDownloadUrl) ? (
+								<a
+									href={props.api.filesDownloadUrl(f.name)}
+									target='_blank'
+									rel='noreferrer'
+									className='d-block'
+								>
+									{f.name}
+								</a>
+							) : (
+								<button
+									className='btn btn-link d-block w-100 text-start'
+									onClick={() => props.onChange && props.onChange(f.name)}
+								>
+									{f.name}
+								</button>
+							)
+						) : (
+							<span>
+								{f.name}
+							</span>
+						)}
 						{f.upload && <>
 							{f.upload.status === 'waiting' && (
 								<div>
