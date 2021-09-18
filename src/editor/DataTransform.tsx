@@ -138,7 +138,10 @@ export default function DataTransform(props: GeneralProps) {
 			dt = await props.getOriginalSourceData()
 		}
 		catch(e) {
-			const msg = e instanceof Error ? e.message : 'Unknown error'
+			let msg = String(e)
+			if (msg.trim().length === 0) {
+				msg = 'unknown error'
+			}
 			setShowData({data: null, errorMsg: msg})
 			return
 		}
@@ -148,7 +151,10 @@ export default function DataTransform(props: GeneralProps) {
 			dt2 = await transformData(dt, props.report, len)
 		}
 		catch(e) {
-			const msg = e instanceof Error ? e.message : 'Unknown error'
+			let msg = String(e)
+			if (msg.trim().length === 0) {
+				msg = 'unknown error'
+			}
 			setShowData({data: null, errorMsg: msg})
 			return
 		}

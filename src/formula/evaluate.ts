@@ -177,7 +177,7 @@ export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers)
 				catch(e) {
 					if (e instanceof EvaluateError)
 						throw e
-					const msg = (e instanceof Error) ? e.message : 'unknown error while calling a function'
+					const msg = (e instanceof Error) ? e.message : (typeof e === 'string' ? e : 'unknown error while calling a function')
 					throw new EvaluateError(msg, sub.position)
 				}
 			}

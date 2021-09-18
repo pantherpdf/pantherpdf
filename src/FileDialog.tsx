@@ -190,7 +190,10 @@ export default function FileDialog(props: Props) {
 			reportStatus(f.name, 'complete')
 		}
 		catch(e) {
-			const msg = e instanceof Error ? e.message : 'unknown error'
+			let msg = String(e)
+			if (msg.trim().length === 0) {
+				msg = 'unknown error'
+			}
 			reportStatus(f.name, 'complete', msg)
 		}
 	}
