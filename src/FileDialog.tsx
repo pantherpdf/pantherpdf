@@ -73,7 +73,7 @@ export async function uploadFile(url: string, file: File, headers: {[key:string]
 		catch(e) { }
 		if (msg.length === 0)
 			msg = 'Unknown error'
-		throw new Error(msg)
+		return Promise.reject(msg)
 	}
 }
 
@@ -249,15 +249,36 @@ export default function FileDialog(props: Props) {
 							{f.name}
 						</button>}
 						{f.upload && <>
-							{f.upload.status === 'waiting' && <div>{Trans('waiting')}</div>}
+							{f.upload.status === 'waiting' && (
+								<div>
+									{Trans('waiting')}
+								</div>
+							)}
 							{f.upload.status === 'complete' && <>
-								{f.upload.errorMsg ? <div className='text-danger'>{f.upload.errorMsg}</div> : <div className='text-success'>{Trans('upload complete')}</div>}
+								{f.upload.errorMsg ? (
+									<div className='text-danger'>
+										{f.upload.errorMsg}
+									</div>
+								 ) : (
+								 	<div className='text-success'>
+										{Trans('upload complete')}
+									</div>
+								 )}
 							</>}
 							{f.upload.status === 'uploading' && <>
-								<div>{Trans('uploading...')} <FontAwesomeIcon icon={faSpinner} spin={true} className='ms-2' /></div>
-								{supportsRequestStreams && <div className="progress">
-									<div className="progress-bar" role="progressbar" style={{width:((f.upload.progress||0)*100).toString()+'%'}}></div>
-								</div>}
+								<div>
+									{Trans('uploading...')}
+									<FontAwesomeIcon icon={faSpinner} spin={true} className='ms-2' />
+								</div>
+								{supportsRequestStreams && (
+									<div className="progress">
+										<div
+											className="progress-bar"
+											role="progressbar"
+											style={{width:((f.upload.progress||0)*100).toString()+'%'}}
+										/>
+									</div>
+								)}
 							</>}
 						</>}
 					</td>
