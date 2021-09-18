@@ -14,6 +14,7 @@ import getOriginalSourceData from './editor/getOriginalSourceData'
 import { transformData } from './editor/DataTransform'
 import { TSourceData } from './editor/types'
 import { uploadFile } from './FileDialog'
+import style from './Container.module.css'
 
 
 interface MenuProps {
@@ -487,7 +488,7 @@ export default function Container() {
 		/>
 
 		{/* Preview */}
-		<Modal show={!!shownModalPrint} onHide={() => setShownModalPrint(undefined)} size='lg'>
+		<Modal show={!!shownModalPrint} onHide={() => setShownModalPrint(undefined)} dialogClassName={style.modalPreviewDialog}>
 			<Modal.Header closeButton>
 				<Modal.Title>
 					{Trans('preview')}
