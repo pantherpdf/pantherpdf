@@ -220,11 +220,19 @@ export default function FileDialog(props: Props) {
 
 
 	async function fileDelete(name: string): Promise<void> {
-		if (!props.api.filesDelete)
+		// find current file object
+		const f = files.find(f => f.name === name)
+		if (!f) {
 			return
-		if (!window.confirm(Trans('delete confirm', [name])))
-			return
-		await props.api.filesDelete(name)
+		}
+		// if upload failed, delete without questions
+		if (!f.upload || !f.upload.errorMsg) {
+			if (!props.api.filesDelete)
+				return
+			if (!window.confirm(Trans('delete confirm', [name])))
+				return
+			await props.api.filesDelete(name)
+		}
 		const arr = files.filter(f => f.name !== name)
 		setFiles(arr)
 	}
