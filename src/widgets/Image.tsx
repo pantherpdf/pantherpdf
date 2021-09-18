@@ -33,6 +33,10 @@ export interface ImageCompiled extends TDataCompiled {
 }
 
 
+// to force reload images when user reuploads or deletes image
+// this will append &state=<number> to url to force reload
+let imgState = 0
+
 
 export const Image: Widget = {
 	name: {en: 'Image', sl: 'Slika'},
@@ -100,6 +104,9 @@ export const Image: Widget = {
 			let url = item.url
 			if (url.startsWith('local/')) {
 				url = props.api.filesDownloadUrl ? props.api.filesDownloadUrl(url.substring(6)) : ''
+				// force refresh
+				const hasQuestion = url.indexOf('?') !== -1
+				url += (hasQuestion ? '&' : '?') + '_reports_state=' + String(imgState)
 			}
 			img = <img src={url} alt='' style={cssImg} />
 		}
@@ -233,6 +240,7 @@ export const Image: Widget = {
 						value={(item.url && item.url.startsWith('local/')) ? item.url.substring(6) : ''}
 						onChange={(val) => { setShowModal(false); props.setItem({...item, url: (val && val.length>0) ? `local/${val}` : ''}); }}
 						api={props.api}
+						somethingChanged={() => imgState += 1}
 					/>
 				</Modal.Body>
 			</Modal>

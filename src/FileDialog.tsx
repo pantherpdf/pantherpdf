@@ -83,6 +83,7 @@ interface Props {
 	value?: string | undefined,
 	onChange?: (val: string | undefined) => void,
 	api: ApiEndpoints,
+	somethingChanged?: () => void,
 }
 
 type TStatus = 'waiting' | 'uploading' | 'complete'
@@ -170,6 +171,9 @@ export default function FileDialog(props: Props) {
 			upload,
 		}
 		setFiles(files2)
+		if (props.somethingChanged) {
+			props.somethingChanged()
+		}
 	}
 
 	async function doUpload(f: TFileUpload) {
@@ -235,6 +239,10 @@ export default function FileDialog(props: Props) {
 		}
 		const arr = files.filter(f => f.name !== name)
 		setFiles(arr)
+
+		if (props.somethingChanged) {
+			props.somethingChanged()
+		}
 	}
 
 
