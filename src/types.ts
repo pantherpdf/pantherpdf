@@ -143,6 +143,7 @@ export interface ApiEndpoints {
 	filesDelete?: (name: string) =>  Promise<void>,
 	filesUpload?: (file: File, data: FileUploadData, cbProgress: (prc: number) => void) =>  Promise<void>,
 	filesDownloadUrl?: (name: string) => string,
+	filesDownload?: (name: string) => Promise<{ data: ArrayBuffer, mimeType: string }>,
 	fonts?: () => Promise<string[]>,
 	allReports?: () => Promise<TReportShort[]>,
 }

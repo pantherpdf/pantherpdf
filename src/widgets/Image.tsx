@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Modal } from 'react-bootstrap'
 import FileDialog from '../FileDialog'
 import Trans from '../translation'
+import base64ArrayBuffer from './base64ArrayBuffer'
 
 
 export interface ImageData extends TData {
@@ -52,7 +53,14 @@ export const Image: Widget = {
 		if (dt.url.length > 0) {
 			data = dt.url
 			if (data.startsWith('local/')) {
-				data = helpers.api && helpers.api.filesDownloadUrl ? helpers.api.filesDownloadUrl(data.substring(6)) : ''
+				if (!helpers.api.filesDownload) {
+					throw new Error('Missing api.filesDownload')
+				}
+				const obj = await helpers.api.filesDownload(data.substring(6))
+				if (obj.mimeType.indexOf(';') !== -1) {
+					throw new Error('Bad mime type')
+				}
+				data = `data:${obj.mimeType};base64,${base64ArrayBuffer(obj.data)}`
 			}
 		}
 		else if (dt.formula.length > 0) {

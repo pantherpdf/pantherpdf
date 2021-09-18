@@ -133,6 +133,28 @@ export default function Container() {
 		filesDownloadUrl: (filesDownloadUrl ? (name) => {
 			return filesDownloadUrl.replace(':name', encodeURIComponent(name))
 		} : undefined),
+		filesDownload: (filesDownloadUrl ? async (name) => {
+			const url = filesDownloadUrl.replace(':name', encodeURIComponent(name))
+			const r = await fetch(url)
+			if (!r.ok) {
+				let msg = ''
+				try {
+					msg = await r.text()
+				}
+				catch(e) {
+				}
+				if (msg.trim().length === 0) {
+					msg = 'bad response'
+				}
+				throw new Error(msg)
+			}
+			const data = await r.arrayBuffer()
+			let mimeType = (r.headers.get('Content-Type') || '').split(';')[0].trim()
+			if (mimeType.length === 0) {
+				mimeType = 'application/octet-stream'
+			}
+			return { mimeType: mimeType, data }
+		} : undefined),
 	}
 
 
