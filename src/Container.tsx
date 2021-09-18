@@ -125,7 +125,7 @@ export default function Container() {
 		} : undefined),
 		filesUpload: (filesUrl ? async (file, data, cbProgress) => {
 			let url = filesUrl.replace(':name', encodeURIComponent(data.name))
-			uploadFile(url, file, {
+			await uploadFile(url, file, {
 				'x-data': JSON.stringify(data),
 				...(auth ? {'Authorization': auth} : {}),
 			}, cbProgress)
