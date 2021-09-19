@@ -138,7 +138,8 @@ export function TransName(name: string|{[key:string]:string}, lang?: string): st
 		return name
 	if (lang && lang in name)
 		return name[lang]
-	if ('sl' in name)  // todo
+	// todo get current lang
+	if ('en' in name)
 		return name.sl
 	const keys = Object.keys(name)
 	if (keys.length > 0)
