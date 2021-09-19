@@ -25,6 +25,7 @@ interface MenuProps {
 	undo: () => Promise<void>,
 	redo: () => Promise<void>,
 	print: () => Promise<void>,
+	isPrinting: boolean,
 }
 
 function Menu(props: MenuProps) {
@@ -41,7 +42,11 @@ function Menu(props: MenuProps) {
 					</ul>
 					<div>
 						<button type='button' className='btn btn-outline-secondary me-3' onClick={props.print}>
-							<FontAwesomeIcon icon={faPrint} fixedWidth />
+							{!props.isPrinting ? (
+								<FontAwesomeIcon icon={faPrint} fixedWidth />
+							) : (
+								<FontAwesomeIcon icon={faSpinner} spin fixedWidth />
+							)}
 						</button>
 						<div className="btn-group" role="group">
 							<button type="button" className="btn btn-outline-secondary" onClick={props.undo} disabled={!props.enableUndo}>
@@ -78,6 +83,8 @@ export default function Container() {
 	const [shownModalPrint, setShownModalPrint] = useState<{html: string} | {csv: string[][]} | {json: string} | {errorMsg: string} | undefined>(undefined)
 	const [data, setData] = useState<TSourceData>({data: undefined})
 	const [overrideSourceData, setOverrideSourceData] = useState<string | undefined>(undefined)
+	const [isPrinting, setIsPrinting] = useState<boolean>(false)
+	const [isDownloading, setIsDownloading] = useState<boolean>(false)
 
 	const url = new URL(window.location.href)
 	const params = new URLSearchParams(url.search);
@@ -306,6 +313,7 @@ export default function Container() {
 		if (!report) {
 			return
 		}
+		setIsPrinting(true)
 		try {
 			const source = await getOrigSourceInternal()
 			const data = await transformData(source, report)
@@ -335,6 +343,7 @@ export default function Container() {
 		catch(e) {
 			setShownModalPrint({errorMsg: String(e)})
 		}
+		setIsPrinting(false)
 	}
 
 	async function genPdf() {
@@ -355,6 +364,7 @@ export default function Container() {
 		}
 		const url = generatePdfUrl.replace(':reportId', report._id)
 		try {
+			setIsDownloading(true)
 			const r = await fetch(url, {
 				method: 'POST',
 				headers: {
@@ -409,6 +419,7 @@ export default function Container() {
 		catch (e) {
 			alert(`Error: ${String(e)}`)
 		}
+		setIsDownloading(false)
 	}
 
 
@@ -497,6 +508,7 @@ export default function Container() {
 			undo={undo}
 			redo={redo}
 			print={print}
+			isPrinting={isPrinting}
 		/>
 		<Editor
 			report={report}
@@ -518,8 +530,13 @@ export default function Container() {
 						<button
 							className='btn btn-outline-secondary ms-2'
 							onClick={genPdf}
+							disabled={isDownloading}
 						>
-							<FontAwesomeIcon icon={faDownload} className='me-2' />
+							{!isDownloading ? (
+								<FontAwesomeIcon icon={faDownload} className='me-2' />
+							) : (
+								<FontAwesomeIcon icon={faSpinner} spin className='me-2' />
+							)}
 							{Trans('download')}
 						</button>
 					)}
