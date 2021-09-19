@@ -10,16 +10,16 @@ import Trans from '../translation'
 
 
 interface Props {
-	data: any,
+	data: unknown,
 }
 
 interface State {
-	data: any,
+	data: unknown,
 	expanded: {[key: string]: boolean},
-	promiseResolved: boolean | {[key: string]: any},
-	promiseResult: any,
+	promiseResolved: boolean | {[key: string]: unknown},
+	promiseResult: unknown,
 	funcResolved: {[key: string]: boolean},
-	funcResult: {[key: string]: any},
+	funcResult: {[key: string]: unknown},
 }
 
 
@@ -29,7 +29,7 @@ export default class ObjectExplorer extends Component<Props, State> {
 		this.state = ObjectExplorer.reset(props.data)
 	}
 
-	static reset(data: any): State {
+	static reset(data: unknown): State {
 		return {
 			data: data,
 			expanded: {},
@@ -50,7 +50,7 @@ export default class ObjectExplorer extends Component<Props, State> {
 
 	componentDidMount() {
 		if( this.state.data && typeof this.state.data === 'object' && Promise.resolve(this.state.data) === this.state.data ) {
-			(this.state.data as Promise<any>).then(dt => this.setState({promiseResolved: true, promiseResult: dt}))
+			(this.state.data as Promise<unknown>).then(dt => this.setState({promiseResolved: true, promiseResult: dt}))
 		}
 	}
 
@@ -58,7 +58,7 @@ export default class ObjectExplorer extends Component<Props, State> {
 		return this.state.expanded[key]
 	}
 
-	renderIcon(key: string, dt: any) {
+	renderIcon(key: string, dt: unknown) {
 		if (typeof this.state.promiseResolved === 'object' && this.state.promiseResolved && key in this.state.promiseResolved )
 			return <span style={{fontSize:'50%'}}>prms</span>
 		if( dt === null || dt === undefined )
@@ -78,7 +78,7 @@ export default class ObjectExplorer extends Component<Props, State> {
 		return '{}'
 	}
 
-	renderItemExpand(name: string, key: string, dt: any) {
+	renderItemExpand(name: string, key: string, dt: unknown) {
 		const canExpand = dt && (typeof dt === 'object' || typeof dt === 'function')
 		return <div key={key}>
 			<div className={style.row}>
@@ -102,7 +102,7 @@ export default class ObjectExplorer extends Component<Props, State> {
 		</div>
 	}
 
-	change_funcResult(key: string, value: any) {
+	change_funcResult(key: string, value: unknown) {
 		this.setState((prevState) => {
 			const fr = {...prevState.funcResult}
 			fr[key] = value
@@ -126,7 +126,7 @@ export default class ObjectExplorer extends Component<Props, State> {
 		})
 	}
 
-	expand(key: string, dt: any) {
+	expand(key: string, dt: unknown) {
 		if( dt && typeof dt === 'function' && !this.state.funcResolved[key] ) {
 			this.change_funcResult(key, dt())
 			this.change_funcResolved(key, true)
@@ -134,33 +134,35 @@ export default class ObjectExplorer extends Component<Props, State> {
 		this.change_expanded(key, true)
 	}
 
-	collapse(key: string, dt: any) {
+	collapse(key: string, dt: unknown) {
 		this.change_expanded(key, false)
 	}
 
 	renderArray() {
-		if( this.state.data.length === 0 ) {
+		const data = this.state.data as unknown[]
+		if (data.length === 0 ) {
 			return <div>
 				<div>{'['}</div>
 				<div><small className='text-muted'>{Trans('empty')}</small></div>
 				<div>{']'}</div>
 			</div>
 		}
-		return (this.state.data as any[]).map((dt,idx) => this.renderItemExpand('['+idx+']', String(idx), dt))
+		return data.map((dt,idx) => this.renderItemExpand('['+idx+']', String(idx), dt))
 	}
 
 	renderObject() {
-		if( Object.keys(this.state.data).length === 0 ) {
+		const data = this.state.data as {[key: string]: unknown}
+		if( Object.keys(data).length === 0 ) {
 			return <div>
 				<div>{'{'}</div>
 				<div><small className='text-muted'>{Trans('empty')}</small></div>
 				<div>{'}'}</div>
 			</div>
 		}
-		return Object.keys(this.state.data).map(key => {
+		return Object.keys(data).map(key => {
 			if( key.substr(0,2) === '$$' )
 				return null
-			return this.renderItemExpand(key, key, this.state.data[key])
+			return this.renderItemExpand(key, key, data[key])
 		})
 	}
 

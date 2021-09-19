@@ -1,4 +1,4 @@
-function toColumnName(num: any) {
+function toColumnName(num: unknown) {
 	if (typeof num !== 'number') {
 		throw new Error('Not a number')
 	}
@@ -9,25 +9,34 @@ function toColumnName(num: any) {
 	return ret;
 }
 
-function inArray(arr: any, val: any) {
+function inArray(arr: unknown, val: unknown) {
 	if( !Array.isArray(arr) )
 		throw new Error('Not an array')
 	return arr.indexOf(val) !== -1
 }
 
-function arrayIndexOf(arr: any, val: any) {
+function arrayIndexOf(arr: unknown, val: unknown) {
 	if( !Array.isArray(arr) )
 		throw new Error('Not an array')
 	return arr.indexOf(val)
 }
 
-function substr2(txt: any, start: any, end: any) {
+function substr2(txt: unknown, start: unknown, end: unknown) {
+	if (typeof txt !== 'string') {
+		throw new Error('text should be a string')
+	}
+	if (typeof start !== 'number') {
+		throw new Error('start should be a number')
+	}
+	if (typeof end !== 'number' && end !== undefined) {
+		throw new Error('end should be a number')
+	}
 	return txt.slice(start, end)
 }
 
 
-export const functions: {[key: string]: (...args: any[])=>any } = {
-	'pow': (a, b) => Math.pow(a, b),
+export const functions: {[key: string]: (...args: unknown[])=>unknown } = {
+	'pow': (a, b) => { if (typeof a !== 'number') { throw new Error('bad a') } if (typeof b !== 'number') { throw new Error('bad b') } return Math.pow(a, b) },
 	'not': (a) => !a,
 	'columnName': (a) => toColumnName(a),
 	'inArray': (a,b) => inArray(a, b),
@@ -51,7 +60,7 @@ export const functions: {[key: string]: (...args: any[])=>any } = {
 }
 
 
-export const constants: {[key: string]: any} = {
+export const constants: {[key: string]: unknown} = {
 	'false': false,
 	'true': true,
 	'null': null,

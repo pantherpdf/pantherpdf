@@ -4,7 +4,7 @@ import { constants, functions } from './constantsAndFunctions'
 
 let cacheFunctions: string[] | undefined
 let cacheConstants: string[] | undefined
-async function getVariable(name: string, helpers?: IHelpers): Promise<any> {
+async function getVariable(name: string, helpers?: IHelpers): Promise<unknown> {
 	// user defined
 	if (helpers && helpers.vars) {
 		if (Object.keys(helpers.vars).indexOf(name) !== -1) {
@@ -61,7 +61,7 @@ function objectEquals(x: any, y: any): boolean {
 }
 
 
-export function evaluateOperator(op: TOperators, a: any, b: any, pos: number): any {
+export function evaluateOperator(op: TOperators, a: any, b: any, pos: number): unknown {
 	// logical operators
 	if( op === '==' )
 		return objectEquals(a,b)
@@ -110,12 +110,12 @@ export function evaluateOperator(op: TOperators, a: any, b: any, pos: number): a
 }
 
 
-export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers): Promise<any> {
+export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers): Promise<unknown> {
 	if (expr.length === 0) {
 		return undefined
 	}
 
-	const stack: any[] = []
+	const stack: unknown[] = []
 
 	for (const part of expr) {
 		// operator
@@ -123,8 +123,8 @@ export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers)
 			if (stack.length < 2) {
 				throw new EvaluateError('Need two values for an operator', part.position)
 			}
-			const a: any = stack[stack.length-2]
-			const b: any = stack[stack.length-1]
+			const a: unknown = stack[stack.length-2]
+			const b: unknown = stack[stack.length-1]
 			stack.splice(stack.length-2, 2)
 			const value = evaluateOperator(part.name, a, b, part.position)
 			stack.push(value)
@@ -190,8 +190,9 @@ export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers)
 				}
 				else {
 					// prevent __proto__ and other built-in
-					if (Object.keys(value).indexOf(key) !== -1) {
-						value = await value[key]
+					const key2 = String(key)
+					if (Object.keys(value).indexOf(key2) !== -1) {
+						value = await value[key2]
 					}
 					else {
 						value = undefined

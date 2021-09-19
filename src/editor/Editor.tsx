@@ -20,10 +20,10 @@ interface EditorProps {
 	deleteReport?: () => void,
 	api: ApiEndpoints,
 	
-	getOriginalSourceData: () => Promise<any>,
-	setOverrideSourceData?: (dt: any) => void,
+	getOriginalSourceData: () => Promise<unknown>,
+	setOverrideSourceData?: (dt: unknown) => void,
 	isOverridenSourceData: boolean,
-	data: { data: any, errorMsg?: string },
+	data: { data: unknown, errorMsg?: string },
 }
 
 

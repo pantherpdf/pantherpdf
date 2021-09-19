@@ -23,7 +23,7 @@ interface Properties {
 	backgroundColor?: string,
 }
 export type FrameData = TData & Properties
-export type FrameCompiled = TDataCompiled & Properties
+export type FrameCompiled = TDataCompiled & Properties & {children: TDataCompiled[]}
 
 
 function genStyle(item: FrameData | FrameCompiled, final: boolean): CSSProperties {

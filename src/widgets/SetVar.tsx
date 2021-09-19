@@ -15,7 +15,7 @@ export interface SetVarData extends TData {
 	type: 'SetVar',
 	source: string,
 	varName: string,
-	varValue: any,
+	varValue: unknown,
 }
 
 export interface SetVarCompiled extends TDataCompiled {
@@ -62,8 +62,9 @@ export const SetVar: Widget = {
 	},
 
 	RenderFinal: function(props) {
+		const item = props.item as SetVarCompiled
 		return <>
-			{props.renderChildren(props.item.children, props)}
+			{props.renderChildren(item.children, props)}
 		</>
 	},
 

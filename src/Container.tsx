@@ -160,7 +160,7 @@ export default function Container() {
 
 
 	//
-	async function getOrigSourceInternal(): Promise<any> {
+	async function getOrigSourceInternal(): Promise<unknown> {
 		if (overrideSourceData) {
 			return JSON.parse(overrideSourceData)
 		}
@@ -190,7 +190,7 @@ export default function Container() {
 		// eslint-disable-next-line
 	}, [overrideSourceData, report?.dataUrl, report?.transforms])
 
-	async function setOverrideSourceData2(data: any) {
+	async function setOverrideSourceData2(data: unknown) {
 		if (typeof data !== 'undefined') {
 			setOverrideSourceData(JSON.stringify(data))
 		}
@@ -344,7 +344,7 @@ export default function Container() {
 		interface GenPdfRequest {
 			reportId: string,
 			dataUrl?: string,
-			data?: any,
+			data?: unknown,
 		}
 		interface GenPdfResponse {
 			url: string,

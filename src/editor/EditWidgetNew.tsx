@@ -168,7 +168,7 @@ function ShowPredefined(props: GeneralProps) {
 */
 
 
-function fileUpload(arr: any[], setArr: React.Dispatch<React.SetStateAction<TReport[]>>) {
+function fileReportUpload(arr: TReport[], setArr: React.Dispatch<React.SetStateAction<TReport[]>>) {
 	const el = document.createElement('input')
 	el.type = 'file'
 	el.accept = 'application/json'
@@ -217,16 +217,8 @@ function ShowUpload(props: GeneralProps) {
 		saveAs(blob, props.report._id+'.json');
 	}
 
-	function dragStartFile(e: React.DragEvent<HTMLDivElement>, dt: any) {
-		if(dt && !Array.isArray(dt) && dt._id && dt.children && Array.isArray(dt.children)) {
-			return props.dragWidgetStart(e, {type:'widgets', widgets:dt.children})
-		}
-		else if(Array.isArray(dt)) {
-			return props.dragWidgetStart(e, {type:'widgets', widgets:dt})
-		}
-		else {
-			return props.dragWidgetStart(e, {type:'widget', widget:dt})
-		}
+	function dragStartFile(e: React.DragEvent<HTMLDivElement>, dt: TReport) {
+		return props.dragWidgetStart(e, {type:'widgets', widgets:dt.children})
 	}
 
 	return <>
@@ -235,7 +227,7 @@ function ShowUpload(props: GeneralProps) {
 				<FontAwesomeIcon icon={faDownload} fixedWidth className='me-2' />
 				{Trans('download')}
 			</button>
-			<button className='btn btn-outline-primary' onClick={() => fileUpload(arr, setArr)}>
+			<button className='btn btn-outline-primary' onClick={() => fileReportUpload(arr, setArr)}>
 				<FontAwesomeIcon icon={faUpload} fixedWidth className='me-2' />
 				{Trans('upload')}
 			</button>

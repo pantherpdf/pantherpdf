@@ -1,6 +1,6 @@
 export interface IHelpers {
-	getVar?: (name: string) => Promise<any>,
-	vars?: {[key: string]: any},
+	getVar?: (name: string) => Promise<unknown>,
+	vars?: {[key: string]: unknown},
 }
 
 export interface TSubExpr_function { type: 'function', arguments: TExpr[][], position: number }

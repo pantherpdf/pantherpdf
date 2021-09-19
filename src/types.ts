@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import type { TFont } from './widgets/PropertyFont'
 
 // helper for converting tuple into type
 type Narrowable = string | number | boolean | symbol | object | {} | void | null | undefined;
@@ -8,7 +9,7 @@ export type WithId<T> = T & {_id: string}
 
 
 export interface TData {
-	[key: string]: any,
+	[key: string]: unknown,
 	type: string,
 	children: TData[],
 }
@@ -24,7 +25,7 @@ export function TargetOptionTypeGuard(r: any): r is TargetOption {
 }
 
 export interface TTransformData {
-	[key: string]: any,
+	[key: string]: unknown,
 	type: string,
 	comment: string,
 }
@@ -44,7 +45,7 @@ export interface TReport {
 	children: TData[],
 	transforms: TTransformData[],
 	properties: {
-		font?: any,
+		font?: TFont,
 		margin?: [number, number, number, number],
 		fileName?: string,
 		paperWidth?: number,
@@ -63,7 +64,7 @@ export interface TReportShort {
 }
 
 export interface TDataCompiled {
-	[key: string]: any,
+	[key: string]: unknown,
 	type: string,
 }
 

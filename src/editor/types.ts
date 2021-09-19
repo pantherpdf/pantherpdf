@@ -19,7 +19,7 @@ export interface TFontAwesomeIcon { fontawesome: IconDefinition }
 
 // to help construct tests
 // to force specific children type
-export type ForceChildren<T> = T | {[key:string]: any, children: ForceChildren<T>[]}
+export type ForceChildren<T> = T | {[key:string]: unknown, children: ForceChildren<T>[]}
 
 
 
@@ -33,15 +33,15 @@ export type ReportForceChildren<T> = TReport & { children: ForceChildren<T>[] }
 
 
 export interface TSourceData {
-	data: any,
+	data: unknown,
 	errorMsg?: string,
 }
 
 export type TDragObj = {type:'wid', wid: number[]} | {type:'widget', widget: TData} | {type:'widgets', widgets: TData[]}
 
 export interface GeneralProps {
-	getOriginalSourceData: () => Promise<any>,
-	overrideSourceData?: (data: any) => void,
+	getOriginalSourceData: () => Promise<unknown>,
+	overrideSourceData?: (data: unknown) => void,
 	isOverridenSourceData: boolean,
 	data: TSourceData,
 	api: ApiEndpoints,
@@ -78,13 +78,13 @@ export interface ItemRendeFinalProps extends ItemRendeFinalHelper {
 
 export interface CompileHelper {
 	formulaHelper: FormulaHelper,
-	evalFormula: (txt: string) => Promise<any>,
+	evalFormula: (txt: string) => Promise<unknown>,
 	compileChildren: (arr1: TData[], helper: CompileHelper) => Promise<TDataCompiled[]>,
 	wid: number[],
 	report: TReport,
 	api: ApiEndpoints,
 	externalHelpers: {[key: string]: any}
-	variables: {[key: string]: any},
+	variables: {[key: string]: unknown},
 }
 
 export interface NewItemProps {
@@ -115,7 +115,7 @@ export interface TransformRendeProps extends GeneralProps {
 export interface TTransformWidget {
 	name: TName,
 	newItem: () => Promise<TTransformData>,
-	transform: (dt: any, item: TTransformData) => Promise<any>,
+	transform: (dt: unknown, item: TTransformData) => Promise<unknown>,
 	Editor: FunctionComponent<TransformRendeProps>,
 }
 

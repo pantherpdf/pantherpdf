@@ -9,7 +9,7 @@ import FormulaEvaluate from '../formula/formula'
 import getWidget from '../widgets/allWidgets'
 import { CompileHelper } from './types'
 
-type TOvrr = [string, any]
+type TOvrr = [string, unknown]
 
 export class FormulaHelper {
 	overrides: TOvrr[]
@@ -18,7 +18,7 @@ export class FormulaHelper {
 		this.overrides = []
 	}
 
-	push(name: string, valueOrCb: any) {
+	push(name: string, valueOrCb: unknown) {
 		this.overrides.push([name, valueOrCb])
 	}
 
@@ -26,7 +26,7 @@ export class FormulaHelper {
 		this.overrides.pop()
 	}
 
-	async getVar(name: string): Promise<any> {
+	async getVar(name: string): Promise<unknown> {
 		for (let i=this.overrides.length-1; i>=0; --i) {
 			if (this.overrides[i][0] === name) {
 				let val = this.overrides[i][1]
@@ -41,7 +41,7 @@ export class FormulaHelper {
 }
 
 
-export default async function compile(report: TReport, data: any, api: ApiEndpoints={}, externalHelpers: {[key: string]: any}={}): Promise<TReportCompiled> {
+export default async function compile(report: TReport, data: unknown, api: ApiEndpoints={}, externalHelpers: {[key: string]: any}={}): Promise<TReportCompiled> {
 	// make a copy, to support changing
 	report = JSON.parse(JSON.stringify(report))
 
@@ -51,8 +51,8 @@ export default async function compile(report: TReport, data: any, api: ApiEndpoi
 	formulaHelper.push('report', report)
 	
 	// custom variables
-	const vars: {[key: string]: any} = {}
-	function getVarValue(varName: string): any {
+	const vars: {[key: string]: unknown} = {}
+	function getVarValue(varName: string): unknown {
 		return vars[varName]
 	}
 	for (const v of report.variables) {
@@ -107,7 +107,7 @@ export default async function compile(report: TReport, data: any, api: ApiEndpoi
 }
 
 
-export async function compileComponent(cmpData: object, data: any): Promise<TDataCompiled> {
+export async function compileComponent(cmpData: object, data: unknown): Promise<TDataCompiled> {
 	const dt: TReport = {
 		_id: '',
 		target: 'pdf',

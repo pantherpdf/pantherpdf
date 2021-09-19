@@ -284,7 +284,8 @@ export async function evaluateFormulaInsideHtml(html: string, formulaHelper: For
 			if (typeof formula !== 'string') {
 				return doc2.createTextNode('ERROR')
 			}
-			let value = await FormulaEvaluate(formula, formulaHelper)
+			const value2 = await FormulaEvaluate(formula, formulaHelper)
+			let value
 			// adjust
 			const adjustName = btn.getAttribute('data-adjust')
 			if (adjustName) {
@@ -292,7 +293,10 @@ export async function evaluateFormulaInsideHtml(html: string, formulaHelper: For
 				if (!adjust) {
 					throw new Error(`Unknown adjust ${adjustName}`)
 				}
-				value = adjust.func(value, [])
+				value = adjust.func(value2, [])
+			}
+			else {
+				value = String(value2)
 			}
 			//
 			const el2 = processBtn(el, value)

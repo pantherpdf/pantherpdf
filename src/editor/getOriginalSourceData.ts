@@ -1,7 +1,7 @@
 import { ApiEndpoints, TReport } from "../types"
 
 
-export async function getDataFromObj(obj: {mimeType: string, data: ArrayBuffer}): Promise<any> {
+export async function getDataFromObj(obj: {mimeType: string, data: ArrayBuffer}): Promise<unknown> {
 	if (obj.mimeType === 'text/javascript' || obj.mimeType === 'application/javascript') {
 		// cannot import module because import() gets transformed into something else
 		//const module = await import(url)
@@ -28,7 +28,7 @@ export async function getDataFromObj(obj: {mimeType: string, data: ArrayBuffer})
 }
 
 
-export async function getDataFromUrl(url: string): Promise<any> {
+export async function getDataFromUrl(url: string): Promise<unknown> {
 	const r = await fetch(url, {
 		headers: {
 			Accept: 'text/javascript, application/json'
@@ -43,7 +43,7 @@ export async function getDataFromUrl(url: string): Promise<any> {
 }
 
 
-export default async function getOriginalSourceData(report: TReport, api: ApiEndpoints, data: any, dataUrl: string|undefined): Promise<any> {
+export default async function getOriginalSourceData(report: TReport, api: ApiEndpoints, data: unknown, dataUrl: string|undefined): Promise<unknown> {
 	if (data !== undefined) {
 		return data
 	}

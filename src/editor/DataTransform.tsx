@@ -19,10 +19,10 @@ import InputApplyOnEnter from '../widgets/InputApplyOnEnter'
 /**
  * Function for calling all transformations
  * @func
- * @param {inputData} any - Input data
+ * @param {inputData} unknown - Input data
  * @param {len} number - Number of transformations to apply
  */
-export async function transformData(inputData: any, report: TReport, len?: number) {
+export async function transformData(inputData: unknown, report: TReport, len?: number) {
 	if (len === undefined) {
 		len = report.transforms.length
 	}
@@ -83,7 +83,7 @@ function TransformItem(props: TransformItemProps) {
 }
 
 
-async function uploadOverrideSourceData(): Promise<any> {
+async function uploadOverrideSourceData(): Promise<unknown> {
 	return new Promise((resolve) => {
 		let el = document.createElement('INPUT') as HTMLInputElement
 		el.type = 'file'
@@ -123,7 +123,7 @@ interface TEdit {
 
 interface TSourceDataShow {
 	length?: number,
-	data: any,
+	data: unknown,
 	errorMsg?: string,
 }
 

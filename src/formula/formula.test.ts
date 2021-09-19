@@ -136,7 +136,7 @@ test('built-in functions', async () => {
 })
 
 test('build-in date functions', async () => {
-	const r1 = await FormulaEvaluate('now()')
+	const r1 = await FormulaEvaluate('now()') as any
 	expect(typeof r1).toBe('string')
 	expect(r1.length).toBe(20)
 	expect(r1.toLowerCase() === r1).toBe(false)
