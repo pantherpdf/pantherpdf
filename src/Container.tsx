@@ -75,7 +75,7 @@ export default function Container() {
 	const [undoStack, setUndoStack] = useState<TReport[]>([])
 	const [undoNext, setUndoNext] = useState<number>(0)
 
-	const [shownModalPrint, setShownModalPrint] = useState<{html: string} | {errorMsg: string} | undefined>(undefined)
+	const [shownModalPrint, setShownModalPrint] = useState<{html: string} | {csv: string[][]} | {json: string} | {errorMsg: string} | undefined>(undefined)
 	const [data, setData] = useState<TSourceData>({data: undefined})
 	const [overrideSourceData, setOverrideSourceData] = useState<string | undefined>(undefined)
 
@@ -309,9 +309,28 @@ export default function Container() {
 		try {
 			const source = await getOrigSourceInternal()
 			const data = await transformData(source, report)
-			const c = await compile(report, data, api, {})
-			const html = makeHtml(c)
-			setShownModalPrint({html})
+			if (report.target === 'pdf') {
+				const c = await compile(report, data, api, {})
+				const html = makeHtml(c)
+				setShownModalPrint({html})
+			}
+			else if (report.target === 'json') {
+				setShownModalPrint({json: JSON.stringify(data)})
+			}
+			else if (report.target === 'csv-excel-utf-8' || report.target === 'csv-windows-1250') {
+				if (!Array.isArray(data)) {
+					throw new Error('data must be 2D array')
+				}
+				for (const row of data) {
+					if (!Array.isArray(row)) {
+						throw new Error('data must be 2D array')
+					}
+				}
+				setShownModalPrint({csv: data})
+			}
+			else {
+				throw new Error('unknown target')
+			}
 		}
 		catch(e) {
 			setShownModalPrint({errorMsg: String(e)})
@@ -512,6 +531,20 @@ export default function Container() {
 						style={{width: '100%', height: '83vh'}}
 						title='preview'
 					/>
+				)}
+				{!!shownModalPrint && 'csv' in shownModalPrint && (
+					<table className='table'>
+						<tbody>
+							{shownModalPrint.csv.map((row,idx) => <tr key={idx}>
+								{row.map((cell,idx2) => <td key={idx2}>
+									{String(cell)}
+								</td>)}
+							</tr>)}
+						</tbody>
+					</table>
+				)}
+				{!!shownModalPrint && 'json' in shownModalPrint && (
+					<pre>{shownModalPrint.json}</pre>
 				)}
 				{!!shownModalPrint && 'errorMsg' in shownModalPrint && (
 					<div className='alert alert-danger'>
