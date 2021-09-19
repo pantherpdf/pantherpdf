@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFilePdf, faPrint, faRedo, faSpinner, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faPrint, faRedo, faSpinner, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { ApiEndpoints, FilesResponseBase, ReportTypeGuard, TReport } from './types'
 import packageJson from '../package.json'
 import Editor from './editor/Editor'
@@ -519,7 +519,8 @@ export default function Container() {
 							className='btn btn-outline-secondary ms-2'
 							onClick={genPdf}
 						>
-							<FontAwesomeIcon icon={faFilePdf} />
+							<FontAwesomeIcon icon={faDownload} className='me-2' />
+							{Trans('download')}
 						</button>
 					)}
 				</Modal.Title>
