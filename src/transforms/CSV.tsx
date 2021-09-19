@@ -55,11 +55,11 @@ const CSV: TTransformWidget = {
 					throw new Error(`transform Filter: source of row should be array but got: ${typeof rowSource}, for source: ${rowDef.source}.`)
 				}
 				for (const rowItem of rowSource) {
-					const row: any[] = []
+					const row: string[] = []
 					helper.vars.item = rowItem
 					for (const cellFormula of rowDef.cols) {
 						const cell = await FormulaEvaluate(cellFormula, helper)
-						row.push(cell)
+						row.push(String(cell))
 					}
 					delete helper.vars.item
 					arr.push(row)
@@ -67,10 +67,10 @@ const CSV: TTransformWidget = {
 			}
 			else {
 				// append one row
-				const row: any[] = []
+				const row: string[] = []
 				for (const cellFormula of rowDef.cols) {
 					const cell = await FormulaEvaluate(cellFormula, helper)
-					row.push(cell)
+					row.push(String(cell))
 				}
 				arr.push(row)
 			}
