@@ -323,6 +323,7 @@ export default function Container() {
 			return
 		}
 		interface GenPdfRequest {
+			reportId: string,
 			dataUrl?: string,
 			data?: any,
 		}
@@ -330,10 +331,12 @@ export default function Container() {
 			url: string,
 		}
 		const rq: GenPdfRequest = {
+			reportId: report._id,
 			...(overrideSourceData ? {data: JSON.parse(overrideSourceData)} : {}),
 		}
+		const url = generatePdfUrl.replace(':reportId', report._id)
 		try {
-			const r = await fetch(generatePdfUrl, {
+			const r = await fetch(url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
