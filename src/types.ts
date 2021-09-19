@@ -65,7 +65,6 @@ export interface TReportShort {
 export interface TDataCompiled {
 	[key: string]: any,
 	type: string,
-	children: any[],
 }
 
 export interface TReportCompiled extends Omit<TReport, 'children'> {

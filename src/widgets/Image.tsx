@@ -79,7 +79,6 @@ export const Image: Widget = {
 		}
 		return {
 			type: dt.type,
-			children: [],
 			data,
 			align: dt.align,
 			width: dt.width,

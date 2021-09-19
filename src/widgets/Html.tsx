@@ -41,7 +41,6 @@ export const Html: Widget = {
 		const str = (str2 !== undefined && str2 !== null && str2 !== false) ? String(str2) : ''
 		return {
 			type: dt.type,
-			children: [],
 			data: str,
 		}
 	},

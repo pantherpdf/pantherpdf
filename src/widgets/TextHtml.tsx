@@ -715,7 +715,6 @@ export const TextHtml: Widget = {
 	compile: async (dt: TextHtmlData, helper): Promise<TextHtmlCompiled> => {
 		return {
 			type: dt.type,
-			children: [],
 			value: await evaluateFormulaInsideHtml(dt.value, helper.formulaHelper, helper.externalHelpers.createDocument),
 			font: dt.font,
 		}

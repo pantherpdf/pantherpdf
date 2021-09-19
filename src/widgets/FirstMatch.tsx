@@ -21,6 +21,7 @@ export interface FirstMatchData extends TData {
 
 export interface FirstMatchCompiled extends TDataCompiled {
 	type: 'FirstMatch',
+	children: TDataCompiled[],
 }
 
 

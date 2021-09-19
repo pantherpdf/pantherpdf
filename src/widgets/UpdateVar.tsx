@@ -88,7 +88,6 @@ export const UpdateVar: Widget = {
 		}
 		return {
 			type: dt.type,
-			children: [],
 		}
 	},
 

@@ -19,6 +19,7 @@ export interface ColumnsCtData extends TData {
 
 export interface ColumnsCtCompiled extends TDataCompiled {
 	type: 'ColumnsCt',
+	children: TDataCompiled[],
 }
 
 export const ColumnsCt: Widget = {
@@ -71,6 +72,7 @@ export interface ColumnsData extends TData {
 export interface ColumnsCompiled extends TDataCompiled {
 	type: 'Columns',
 	widths: string[],
+	children: ColumnsCtCompiled[],
 }
 
 function colStyle(w: string): CSSProperties {
@@ -116,7 +118,7 @@ export const Columns: Widget = {
 	compile: async (dt: ColumnsData, helper): Promise<ColumnsCompiled> => {
 		return {
 			type: dt.type,
-			children: await helper.compileChildren(dt.children, helper),
+			children: await helper.compileChildren(dt.children, helper) as ColumnsCtCompiled[],
 			widths: dt.widths,
 		}
 	},

@@ -19,6 +19,7 @@ export interface ConditionData extends TData {
 
 export interface ConditionCompiled extends TDataCompiled {
 	type: 'Condition',
+	children: TDataCompiled[],
 }
 
 

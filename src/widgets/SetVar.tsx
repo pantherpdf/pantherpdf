@@ -20,6 +20,7 @@ export interface SetVarData extends TData {
 
 export interface SetVarCompiled extends TDataCompiled {
 	type: 'SetVar',
+	children: TDataCompiled[],
 }
 
 
