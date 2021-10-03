@@ -61,22 +61,26 @@ const Filter: TTransformWidget = {
 	Editor: function(props) {
 		const item = props.item as FilterData
 		return <>
-			<label htmlFor='trans-edit-field'>{Trans('field')}</label>
-			<div className="input-group mb-3">
-				<span className="input-group-text fst-italic">ƒ</span>
-				<InputApplyOnEnter id='trans-edit-field' value={item.field} onChange={val=>props.setItem({...item, field: val})} />
+			<div className='hform'>
+				<label htmlFor='trans-edit-field'>{Trans('field')}</label>
+				<div className="input-group mb-3">
+					<span className="input-group-text fst-italic">ƒ</span>
+					<InputApplyOnEnter id='trans-edit-field' value={item.field} onChange={val=>props.setItem({...item, field: val})} />
+				</div>
 			</div>
 
-			<label htmlFor='trans-edit-condition'>
-				{Trans('condition')}
-				<small className='ms-2 text-muted'>
-					{Trans('current item is in var -name-', ['item'])}
-				</small>
-			</label>
-			<div className="input-group mb-3">
-				<span className="input-group-text fst-italic">ƒ</span>
-				<InputApplyOnEnter id='trans-edit-condition' value={item.condition} onChange={val=>props.setItem({...item, condition: val})} />
+			<div className='hform mb-0'>
+				<label htmlFor='trans-edit-condition'>
+					{Trans('condition')}
+				</label>
+				<div className='input-group'>
+					<span className="input-group-text fst-italic">ƒ</span>
+					<InputApplyOnEnter id='trans-edit-condition' value={item.condition} onChange={val=>props.setItem({...item, condition: val})} />
+				</div>
 			</div>
+			<small className='text-muted mb-3'>
+				{Trans('current item is in var -name-', ['item'])}
+			</small>
 		</>
 	},
 }

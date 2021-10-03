@@ -21,6 +21,7 @@ interface Props {
 	id?: string,
 	style?: React.CSSProperties,
 	placeholder?: string,
+	className?: string,
 }
 
 export default function InputApplyOnEnter(props: Props) {
@@ -100,6 +101,6 @@ export default function InputApplyOnEnter(props: Props) {
 				alert(Trans('invalid value'))
 			}
 		}}
-		className="form-control"
+		className={`form-control ${props.className || ''}`}
 	/>
 }

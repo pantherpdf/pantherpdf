@@ -71,29 +71,33 @@ export const SetVar: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as SetVarData
 		return <>
-			<label htmlFor='SetVar-source' className='d-block'>
-				{Trans('source data')}
-			</label>
-			<div className="input-group mb-3">
-				<span className="input-group-text fst-italic">ƒ</span>
-				<InputApplyOnEnter
-					id='SetVar-source'
-					value={item.source}
-					onChange={val=>props.setItem({...item, source: val})}
-				/>
+			<div className='hform'>
+				<label htmlFor='SetVar-source'>
+					{Trans('source data')}
+				</label>
+				<div className="input-group mb-3">
+					<span className="input-group-text fst-italic">ƒ</span>
+					<InputApplyOnEnter
+						id='SetVar-source'
+						value={item.source}
+						onChange={val=>props.setItem({...item, source: val})}
+					/>
+				</div>
 			</div>
 
-			<label htmlFor='SetVar-varName' className='d-block'>
-				{Trans('varName')}
-			</label>
-			<small className='text-muted d-block'>
+			<div className='hform mb-0'>
+				<label htmlFor='SetVar-varName'>
+					{Trans('varName')}
+				</label>
+				<InputApplyOnEnter
+					id='SetVar-varName'
+					value={item.varName}
+					onChange={val=>props.setItem({...item, varName: val})}
+				/>
+			</div>
+			<small className='text-muted d-block mb-3'>
 				{Trans('repeat - current item is this var')}
 			</small>
-			<InputApplyOnEnter
-				id='SetVar-varName'
-				value={item.varName}
-				onChange={val=>props.setItem({...item, varName: val})}
-			/>
 		</>
 	},
 }

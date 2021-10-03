@@ -77,7 +77,13 @@ export const Separator: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as SeparatorData
 		return <>
-			<label htmlFor='sep-marginTop' className='d-block'>
+			<PropertyBorder
+				id='sep-border'
+				value={item.border}
+				onChange={val => props.setItem({...props.item, border: val})}
+			/>
+
+			<label htmlFor='sep-marginTop' className='section-name'>
 				{Trans('margin top')}
 				<small className='ms-2 text-muted'>
 					{item.marginTop}px
@@ -93,7 +99,7 @@ export const Separator: Widget = {
 				className='form-range'
 			/>
 
-			<label htmlFor='sep-marginBottom' className='d-block'>
+			<label htmlFor='sep-marginBottom' className='section-name'>
 				{Trans('margin bottom')}
 				<small className='ms-2 text-muted'>
 					{item.marginBottom}px
@@ -109,11 +115,6 @@ export const Separator: Widget = {
 				className='form-range'
 			/>
 
-			<PropertyBorder
-				id='sep-border'
-				value={item.border}
-				onChange={val => props.setItem({...props.item, border: val})}
-			/>
 		</>
 	},
 }

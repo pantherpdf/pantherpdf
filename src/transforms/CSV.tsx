@@ -88,14 +88,19 @@ const CSV: TTransformWidget = {
 							{Trans('source data')}
 						</td>
 						{item.rows[0].cols.map((_, colIdx) => <td key={colIdx}>
-							<button
-								className='btn btn-sm btn-outline-secondary'
-								onClick={() => removeCol(item, props.setItem, colIdx)}
-								title={Trans('remove')}
-								disabled={item.rows[0].cols.length <= 1}
-							>
-								<FontAwesomeIcon icon={faTimes} />
-							</button>
+							<div className='d-flex'>
+								<div className='flex-fill'>
+									{columnName(colIdx+1)}
+								</div>
+								<button
+									className='btn btn-sm btn-outline-secondary'
+									onClick={() => removeCol(item, props.setItem, colIdx)}
+									title={Trans('remove')}
+									disabled={item.rows[0].cols.length <= 1}
+								>
+									<FontAwesomeIcon icon={faTimes} />
+								</button>
+							</div>
 						</td>)}
 						<td></td>
 					</tr>
@@ -218,6 +223,15 @@ function updateSource(item: CSVData, setItem: (itm: CSVData)=>void, rowIdx: numb
 	item2.rows[rowIdx] = {...item2.rows[rowIdx]}
 	item2.rows[rowIdx].source = val
 	setItem(item2)
+}
+
+
+function columnName(num: number): string {
+	let ret, a, b
+	for ( ret = '', a = 1, b = 26; (num -= a) >= 0; a = b, b *= 26) {
+		ret = String.fromCharCode(Math.floor((num % b) / a) + 65) + ret;
+	}
+	return ret;
 }
 
 

@@ -179,107 +179,35 @@ export const Frame: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as FrameData
 		return <>
-			<label htmlFor='Frame-margin'>
-				{Trans('margin')}
-				<small className='ms-2 text-muted'>
-					{item.margin[0]},{item.margin[1]},{item.margin[2]},{item.margin[3]}px
-				</small>
-			</label>
-			<Property4SideRange
-				id='Frame-margin'
-				min={0}
-				max={80}
-				value={item.margin}
-				onChange={val => props.setItem({...props.item, margin: val})}
-			/>
-
-			<hr />
-			
-			<label htmlFor='Frame-padding'>
-				{Trans('padding')}
-				<small className='ms-2 text-muted'>
-					{item.padding[0]},{item.padding[1]},{item.padding[2]},{item.padding[3]}px
-				</small>
-			</label>
-			<Property4SideRange
-				id='Frame-padding'
-				min={0}
-				max={80}
-				value={item.padding}
-				onChange={val => props.setItem({...props.item, padding: val})}
-			/>
-
-			<hr />
-
-			<div className="form-check">
-				<input
-					type='checkbox'
-					id='Frame-border-single'
-					className='form-check-input'
-					checked={Array.isArray(item.border)}
-					onChange={e => {
-						const obj: FrameData = {...item}
-						if (e.currentTarget.checked) {
-							const brd: Border = !Array.isArray(item.border) ? item.border : {width:1, color: '#cccccc', style:'solid'}
-							obj.border = [{...brd}, {...brd}, {...brd}, {...brd}]
-						}
-						else {
-							obj.border = {width:1, color: '#cccccc', style:'solid'}
-						}
-						props.setItem(obj)
-					}}
-				/>
-				<label className="form-check-label" htmlFor='Frame-border-single'>
-					{Trans('border different sides')}
+			<div className='hform'>
+				<label htmlFor='Frame-width'>
+					{Trans('width')}
+					<small className='text-muted ms-1'>
+						[{WidthOptions}]
+					</small>
 				</label>
+				<InputApplyOnEnter
+					id='Frame-width'
+					value={item.width || ''}
+					onChange={val => props.setItem({...item, width: String(val)})}
+					regex={WidthRegex}
+				/>
 			</div>
-			
-			{Array.isArray(item.border) && ['top','right','bottom','left'].map((side, idx) => {
-				const val2 = Array.isArray(item.border) ? item.border : [item.border, item.border, item.border, item.border]
-				return <React.Fragment key={side}>
-					<div>{side}</div>
-					<PropertyBorder
-						value={val2[idx]}
-						onChange={val => {
-							const arr = [...val2]
-							arr[idx] = val
-							props.setItem({...item, border: arr})
-						}}
-					/>
-				</React.Fragment>
-			})}
-			{!Array.isArray(item.border) && <PropertyBorder
-				value={item.border}
-				onChange={val => props.setItem({...item, border: val})}
-			/>}
-			<hr />
 
-
-			<label htmlFor='Frame-width' className='d-block'>
-				{Trans('width')}
-				<small className='text-muted ms-1'>
-					[{WidthOptions}]
-				</small>
-			</label>
-			<InputApplyOnEnter
-				id='Frame-width'
-				value={item.width || ''}
-				onChange={val => props.setItem({...item, width: String(val)})}
-				regex={WidthRegex}
-			/>
-
-			<label htmlFor='Frame-height' className='d-block'>
-				{Trans('height')}
-				<small className='text-muted ms-1'>
-					[{WidthOptions}]
-				</small>
-			</label>
-			<InputApplyOnEnter
-				id='Frame-height'
-				value={item.height || ''}
-				onChange={val => props.setItem({...item, height: String(val)})}
-				regex={WidthRegex}
-			/>
+			<div className='hform'>
+				<label htmlFor='Frame-height'>
+					{Trans('height')}
+					<small className='text-muted ms-1'>
+						[{WidthOptions}]
+					</small>
+				</label>
+				<InputApplyOnEnter
+					id='Frame-height'
+					value={item.height || ''}
+					onChange={val => props.setItem({...item, height: String(val)})}
+					regex={WidthRegex}
+				/>
+			</div>
 
 			<div className="form-check">
 				<input
@@ -306,6 +234,87 @@ export const Frame: Widget = {
 				value={item.backgroundColor}
 				onChange={val => props.setItem({...item, backgroundColor: val})}
 			/>}
+
+			<div className='section-name'>
+				{Trans('margin')}
+				<small className='ms-2 text-muted'>
+					{item.margin[0]},{item.margin[1]},{item.margin[2]},{item.margin[3]}px
+				</small>
+			</div>
+			<Property4SideRange
+				id='Frame-margin'
+				min={0}
+				max={80}
+				value={item.margin}
+				onChange={val => props.setItem({...props.item, margin: val})}
+			/>
+
+			<div className='section-name'>
+				{Trans('padding')}
+				<small className='ms-2 text-muted'>
+					{item.padding[0]},{item.padding[1]},{item.padding[2]},{item.padding[3]}px
+				</small>
+			</div>
+			
+			<Property4SideRange
+				id='Frame-padding'
+				min={0}
+				max={80}
+				value={item.padding}
+				onChange={val => props.setItem({...props.item, padding: val})}
+			/>
+
+			<div className='section-name'>
+				{Trans('border')}
+			</div>
+
+			<div className='form-check mb-3'>
+				<input
+					type='checkbox'
+					id='Frame-border-single'
+					className='form-check-input'
+					checked={Array.isArray(item.border)}
+					onChange={e => {
+						const obj: FrameData = {...item}
+						if (e.currentTarget.checked) {
+							const brd: Border = !Array.isArray(item.border) ? item.border : {width:1, color: '#cccccc', style:'solid'}
+							obj.border = [{...brd}, {...brd}, {...brd}, {...brd}]
+						}
+						else {
+							obj.border = {width:1, color: '#cccccc', style:'solid'}
+						}
+						props.setItem(obj)
+					}}
+				/>
+				<label className="form-check-label" htmlFor='Frame-border-single'>
+					{Trans('border different sides')}
+				</label>
+			</div>
+			
+			{Array.isArray(item.border) && ['top','right','bottom','left'].map((side2, idx) => {
+				const side = side2 as 'top'|'right'|'bottom'|'left'
+				const val2 = Array.isArray(item.border) ? item.border : [item.border, item.border, item.border, item.border]
+				return <React.Fragment key={side}>
+					<div className='section-name'>
+						{Trans(`border-${side}`)}
+					</div>
+					<PropertyBorder
+						id={`Frame-border-${side}`}
+						value={val2[idx]}
+						onChange={val => {
+							const arr = [...val2]
+							arr[idx] = val
+							props.setItem({...item, border: arr})
+						}}
+					/>
+				</React.Fragment>
+			})}
+			{!Array.isArray(item.border) && <PropertyBorder
+				id={`Frame-border-full`}
+				value={item.border}
+				onChange={val => props.setItem({...item, border: val})}
+			/>}
+			
 		</>
 	},
 }

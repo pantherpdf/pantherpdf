@@ -132,36 +132,40 @@ export const UpdateVar: Widget = {
 		const varData = vars.find(v => v.name === 'data' && v.owner === undefined)
 		const varReport = vars.find(v => v.name === 'report' && v.owner === undefined)
 		return <>
-			<label htmlFor='UpdateVar-varName' className='d-block'>
-				{Trans('varName')}
-			</label>
-			<select
-				className='form-select'
-				value={item.varName}
-				onChange={e => props.setItem({...item, varName: e.currentTarget.value})}
-				id='UpdateVar-varName'
-			>
-				{!vars.find(v => v.name === item.varName) && <option value={item.varName}></option>}
-				{vars.map(v => <option
-					value={v.name}
-					key={v.name}
+			<div className='hform'>
+				<label htmlFor='UpdateVar-varName'>
+					{Trans('varName')}
+				</label>
+				<select
+					className='form-select'
+					value={item.varName}
+					onChange={e => props.setItem({...item, varName: e.currentTarget.value})}
+					id='UpdateVar-varName'
 				>
-					{v.name}
-				</option>)}
-				{varData && <option value='data' disabled>data</option>}
-				{varReport && <option value='report' disabled>report</option>}
-			</select>
+					{!vars.find(v => v.name === item.varName) && <option value={item.varName}></option>}
+					{vars.map(v => <option
+						value={v.name}
+						key={v.name}
+					>
+						{v.name}
+					</option>)}
+					{varData && <option value='data' disabled>data</option>}
+					{varReport && <option value='report' disabled>report</option>}
+				</select>
+			</div>
 
-			<label htmlFor='UpdateVar-Formula' className='d-block'>
-				{Trans('formula')}
-			</label>
-			<div className="input-group mb-3">
-				<span className="input-group-text fst-italic">ƒ</span>
-				<InputApplyOnEnter
-					id='UpdateVar-Formula'
-					value={item.formula}
-					onChange={val => props.setItem({...item, formula: val})}
-				/>
+			<div className='hform'>
+				<label htmlFor='UpdateVar-Formula'>
+					{Trans('formula')}
+				</label>
+				<div className='input-group'>
+					<span className="input-group-text fst-italic">ƒ</span>
+					<InputApplyOnEnter
+						id='UpdateVar-Formula'
+						value={item.formula}
+						onChange={val => props.setItem({...item, formula: val})}
+					/>
+				</div>
 			</div>
 		</>
 	},

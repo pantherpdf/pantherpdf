@@ -25,7 +25,7 @@ interface ExpandableProps {
 function Expandable(props: ExpandableProps) {
 	const [expanded, setExpanded] = useState(props.defaultExpanded || false);
 	return <div>
-		<div className={'d-flex '+style.header} onClick={() => setExpanded(!expanded)}>
+		<div className={'section-name d-flex '+style.header} onClick={() => setExpanded(!expanded)}>
 			<span className='mr-3' style={{fontSize:'110%'}}>
 				<small className='me-2'>
 					<FontAwesomeIcon icon={expanded ? faMinus : faPlus} fixedWidth />

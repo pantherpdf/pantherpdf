@@ -7,12 +7,12 @@
 import React, { useState } from 'react'
 import { GeneralProps } from './types'
 import type { TargetOption, TReport } from '../types'
-import Trans, { TransName } from '../translation'
+import Trans from '../translation'
 import PropertyFont, { TFont } from '../widgets/PropertyFont'
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter'
 import Property4SideInput, { Value as Property4SideInputValue } from '../widgets/Property4SideInput'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCaretDown, faCaretUp, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
 import VarEditor from './VarEditor'
 
 
@@ -24,14 +24,6 @@ const TargetOptionTmpKeys = Object.keys(TargetOptionTmpObj)
 
 export default function ReportSettings(props: GeneralProps) {
 	const [showMore, setShowMore] = useState<boolean>(false)
-
-	async function changeName() {
-		const txt = prompt(Trans('new name'), TransName(props.report.name))
-		if( !txt )
-			return
-		const obj = {...props.report, name: txt}
-		return props.setReport(obj)
-	}
 
 	async function changeTarget(e: React.ChangeEvent<HTMLSelectElement>) {
 		const value = e.currentTarget.value
@@ -74,60 +66,112 @@ export default function ReportSettings(props: GeneralProps) {
 
 	const margin: Property4SideInputValue = props.report.properties.margin ? props.report.properties.margin : [0,0,0,0]
 	return <>
-		<label>{Trans('name')}</label>
-		<div className="input-group mb-3">
-			<input type="text" className="form-control" disabled value={TransName(props.report.name)}/>
-			<button className="btn btn-sm btn-outline-secondary" onClick={changeName}>
-				<FontAwesomeIcon icon={faEdit} />
-			</button>
+		<div className='hform'>
+			<label htmlFor='report-name'>
+				{Trans('name')}
+			</label>
+			<div className='input-group'>
+				<InputApplyOnEnter
+					id='report-name'
+					value={props.report.name}
+					onChange={val => {
+						const obj = {...props.report, name: String(val)}
+						return props.setReport(obj)
+					}}
+				/>
+			</div>
+		</div>
+
+		<div className='hform'>
+			<label htmlFor='target'>
+				{Trans('target')}
+			</label>
+			<select
+				className='form-select'
+				id='target'
+				value={props.report.target}
+				onChange={changeTarget}
+			>
+				{TargetOptionTmpKeys.map(tp => <option key={tp} value={tp}>{tp}</option>)}
+			</select>
 		</div>
 		
-		<div className='mt-3'>
-			<button className='btn btn-sm btn-outline-primary mr-4 mb-1' onClick={() => setShowMore(!showMore)}>
-				{Trans(showMore ? 'show less' : 'show more')} <FontAwesomeIcon icon={showMore ? faCaretUp : faCaretDown} />
+		<div className='mb-3'>
+			<button className='btn btn-sm btn-outline-primary' onClick={() => setShowMore(!showMore)}>
+				<FontAwesomeIcon icon={showMore ? faCaretUp : faCaretDown} className='me-2' />
+				{Trans(showMore ? 'show less' : 'show more')}
 			</button>
 		</div>
 
 		{showMore && <>
-			<div>
-				<label htmlFor='target'>{Trans('target')}</label>
-				<select className='form-select' id='target' value={props.report.target} onChange={changeTarget}>
-					{TargetOptionTmpKeys.map(tp => <option key={tp} value={tp}>{tp}</option>)}
-				</select>
-			</div>
-			<div>
-				<label htmlFor='fileName'>{Trans('fileName')}</label>
-				<div className="input-group mb-3">
+			
+			<div className='hform'>
+				<label htmlFor='fileName'>
+					{Trans('fileName')}
+				</label>
+				<div className='input-group'>
 					<span className="input-group-text fst-italic">ƒ</span>
 					<InputApplyOnEnter id='fileName' value={props.report.properties.fileName||''} onChange={val=>(typeof val==='string'&&val.length>0)?changeProperty('fileName',val):deleteProperty('fileName')} />
 				</div>
 			</div>
 
-			<label htmlFor='lang'>{Trans('lang')} <small className='text-muted'>{Trans('lang 2 letter code')}</small></label>
-			<InputApplyOnEnter id='lang' value={props.report.properties.lang||''} onChange={val=>(typeof val==='string'&&val.length>0)?changeProperty('lang',val):deleteProperty('lang')} />
+			<div className='hform'>
+				<label htmlFor='lang'>
+					{Trans('lang')} <small className='text-muted'>{Trans('lang 2 letter code')}</small>
+				</label>
+				<InputApplyOnEnter
+					id='lang'
+					value={props.report.properties.lang||''}
+					onChange={val=>(typeof val==='string'&&val.length>0)?changeProperty('lang',val):deleteProperty('lang')}
+				/>
+			</div>
 
 			{props.report.target === 'pdf' && <>
-				<div className='mt-2 mb-2'>
-					<PropertyFont
-						value={props.report.properties.font?props.report.properties.font:{}}
-						onChange={changeFont}
-						loadFonts={props.api.fonts}
-					/>
+
+				<div className='hform'>
+					<label>
+						{Trans('font')}
+					</label>
+					<div className='input-group'>
+						<PropertyFont
+							value={props.report.properties.font?props.report.properties.font:{}}
+							onChange={changeFont}
+							loadFonts={props.api.fonts}
+						/>
+					</div>
+				</div>
+
+				<div className='section-name'>
+					{Trans('paper')}
+					<small className='text-muted ms-2'>
+						{Trans('0 means default')}
+					</small>
 				</div>
 				
-				<label htmlFor='paperWidth'>{Trans('paperWidth')} <small className='text-muted'>{Trans('0 means default')}</small></label>
-				<div className="input-group">
-					<InputApplyOnEnter id='paperWidth' min='0' max='10000' value={props.report.properties.paperWidth?props.report.properties.paperWidth:0} onChange={val=>val?changeProperty('paperWidth',val):deleteProperty('paperWidth')} />
-					<span className="input-group-text">mm</span>
+				<div className='hform'>
+					<label htmlFor='paperWidth'>
+						{Trans('width')}
+					</label>
+					<div className='input-group'>
+						<InputApplyOnEnter id='paperWidth' min='0' max='10000' value={props.report.properties.paperWidth?props.report.properties.paperWidth:0} onChange={val=>val?changeProperty('paperWidth',val):deleteProperty('paperWidth')} />
+						<span className="input-group-text">mm</span>
+					</div>
 				</div>
 
-				<label htmlFor='paperHeight'>{Trans('paperHeight')} <small className='text-muted'>{Trans('0 means default')}</small></label>
-				<div className="input-group">
-					<InputApplyOnEnter id='paperHeight' min='0' max='10000' value={props.report.properties.paperHeight?props.report.properties.paperHeight:0} onChange={val=>val?changeProperty('paperHeight',val):deleteProperty('paperHeight')} />
-					<span className="input-group-text">mm</span>
+				<div className='hform'>
+					<label htmlFor='paperHeight'>
+						{Trans('height')}
+					</label>
+					<div className='input-group'>
+						<InputApplyOnEnter id='paperHeight' min='0' max='10000' value={props.report.properties.paperHeight?props.report.properties.paperHeight:0} onChange={val=>val?changeProperty('paperHeight',val):deleteProperty('paperHeight')} />
+						<span className="input-group-text">mm</span>
+					</div>
 				</div>
 
-				<label>{Trans('margin')} <small className='text-muted'>mm</small></label>
+				<div className='section-name'>
+					{Trans('margin')}
+					<small className='text-muted ms-2'>mm</small>
+				</div>
 				<Property4SideInput value={margin} onChange={changeMargin} />
 			</>}
 

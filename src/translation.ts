@@ -15,11 +15,17 @@ const tr2 = {
 	'font-size': { en:'Size', sl:'Velikost' },
 	'font-style': { en:'Style', sl:'Stil' },
 	'font-weight': { en:'Weight', sl:'Debelina' },
+	'border': { en:'Border', sl:'Obroba' },
 	'border-style': { en:'Style', sl:'Stil' },
 	'border-solid': { en:'Solid', sl:'Polna' },
 	'border-dashed': { en:'Dashed', sl:'Črtkano' },
 	'border-dotted': { en:'Dotted', sl:'Pike' },
+	'border-left': { en:'Border Left', sl:'Obroba Levo' },
+	'border-right': { en:'Border Right', sl:'Obroba Desno' },
+	'border-top': { en:'Border Top', sl:'Obroba Zgoraj' },
+	'border-bottom': { en:'Border Bottom', sl:'Obroba Spodaj' },
 
+	'align': { en:'Align', sl:'Poravnaj' },
 	'align-left': { en:'Align Left', sl:'Poravnaj Levo' },
 	'align-center': { en:'Align Center', sl:'Poravnaj na Sredino' },
 	'align-right': { en:'Align Right', sl:'Poravnaj Desno' },
@@ -46,6 +52,7 @@ const tr2 = {
 	'fileName': { en:'File Name', sl:'Ime datoteke' },
 	'paperWidth': { en:'Paper Width', sl:'Papir širina' },
 	'paperHeight': { en:'Paper Height', sl:'Papir višina' },
+	'paper': { en:'Paper', sl:'Papir' },
 	'0 means default': { en:'0 means default', sl:'0 pomeni standardno' },
 	'margin': { en:'Margin', sl:'Odmik zunaj' },
 	'margin top': { en:'Margin Top', sl:'Odmik Zgoraj' },
@@ -98,7 +105,7 @@ const tr2 = {
 
 	'tag insert': { en: 'Insert tag', sl: 'Vstavi podatek' },
 
-	'varName': { en: 'Var Name', sl: 'Ime Spremenljivke' },
+	'varName': { en: 'Variable', sl: 'Spremenljivka' },
 	'repeat - current item is this var': { en: 'Current item will be accessible with this variable', sl: 'Trenutni element bo dostopen s to spremenljivko' },
 	'repeat - index name': { en: 'Current index is inside: {0}', sl: 'Trenutni index je v: {0}' },
 
@@ -133,14 +140,19 @@ const tr2 = {
 
 export type trKeys = keyof typeof tr2
 
+let currentLang = 'en'
+
+export function setCurrentLanguage(lang: string): void {
+	currentLang = lang
+}
+
 export function TransName(name: string|{[key:string]:string}, lang?: string): string {
 	if (typeof name == 'string')
 		return name
 	if (lang && lang in name)
 		return name[lang]
-	// todo get current lang
-	if ('en' in name)
-		return name.sl
+	if (currentLang in name)
+		return name[currentLang]
 	const keys = Object.keys(name)
 	if (keys.length > 0)
 		return name[keys[0]]

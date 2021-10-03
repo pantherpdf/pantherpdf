@@ -43,9 +43,9 @@ export default function VarEditor(props: GeneralProps) {
 	}
 
 	return <div className='mt-3'>
-		<h5>
+		<div className='section-name'>
 			{Trans('variables')}
-		</h5>
+		</div>
 		<table className='table table-sm'>
 			<thead>
 				<tr>

@@ -5,6 +5,7 @@
 	right: 20%;
 	min-height: 100vh;
 	padding: 4rem 1rem 0 1rem;
+	background-color: white;
 }
 .boxMain:focus {
 	outline: none;
@@ -18,8 +19,6 @@
 	top: 4rem;
 	bottom: calc(50% + 10px);
 	width: 20%;
-	border-bottom: 2px solid #999;
-	border-right: 1px solid #ddd;
 	padding: 0 0.5rem 10px 0.5rem;
 }
 .box2 {
@@ -27,7 +26,6 @@
 	top: 50%;
 	bottom: 0;
 	width: 20%;
-	border-right: 1px solid #ddd;
 	padding: 0 0.5rem;
 }
 .box3 {
@@ -35,7 +33,6 @@
 	top: 4rem;
 	bottom: 0;
 	width: 20%;
-	border-left: 1px solid #ddd;
 	padding: 0 0.5rem;
 }
 

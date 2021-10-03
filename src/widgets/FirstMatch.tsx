@@ -82,44 +82,50 @@ export const FirstMatch: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as FirstMatchData
 		return <>
-			<label htmlFor='FirstMatch-source' className='d-block'>
-				{Trans('source data')}
-			</label>
-			<div className="input-group mb-3">
-				<span className="input-group-text fst-italic">ƒ</span>
-				<InputApplyOnEnter
-					id='FirstMatch-source'
-					value={item.source}
-					onChange={val=>props.setItem({...item, source: val})}
-				/>
+			<div className='hform'>
+				<label htmlFor='FirstMatch-source'>
+					{Trans('source data')}
+				</label>
+				<div className="input-group mb-3">
+					<span className="input-group-text fst-italic">ƒ</span>
+					<InputApplyOnEnter
+						id='FirstMatch-source'
+						value={item.source}
+						onChange={val=>props.setItem({...item, source: val})}
+					/>
+				</div>
 			</div>
 
-			<label htmlFor='FirstMatch-condition' className='d-block'>
-				{Trans('condition')}
-			</label>
-			<small className='text-muted d-block'>
+			<div className='hform mb-0'>
+				<label htmlFor='FirstMatch-condition'>
+					{Trans('condition')}
+				</label>
+				<div className='input-group'>
+					<span className="input-group-text fst-italic">ƒ</span>
+					<InputApplyOnEnter
+						id='FirstMatch-condition'
+						value={item.condition}
+						onChange={val=>props.setItem({...item, condition: val})}
+					/>
+				</div>
+			</div>
+			<small className='text-muted d-block mb-3'>
 				{Trans('current item is in var -name-', [item.varName])}
 			</small>
-			<div className="input-group mb-3">
-				<span className="input-group-text fst-italic">ƒ</span>
+
+			<div className='hform mb-0'>
+				<label htmlFor='FirstMatch-varName' className='d-block'>
+					{Trans('varName')}
+				</label>
 				<InputApplyOnEnter
-					id='FirstMatch-condition'
-					value={item.condition}
-					onChange={val=>props.setItem({...item, condition: val})}
+					id='FirstMatch-varName'
+					value={item.varName}
+					onChange={val=>props.setItem({...item, varName: val})}
 				/>
 			</div>
-
-			<label htmlFor='FirstMatch-varName' className='d-block'>
-				{Trans('varName')}
-			</label>
-			<small className='text-muted d-block'>
+			<small className='text-muted d-block mb-3'>
 				{Trans('repeat - current item is this var')}
 			</small>
-			<InputApplyOnEnter
-				id='FirstMatch-varName'
-				value={item.varName}
-				onChange={val=>props.setItem({...item, varName: val})}
-			/>
 		</>
 	},
 }

@@ -25,8 +25,8 @@ interface PropertiesHeaderProps extends GeneralProps {
 	onDelete?: () => void,
 }
 function PropertiesHeader(props: PropertiesHeaderProps) {
-	return <div className='d-flex border-bottom'>
-		<div className='h3 flex-fill'>
+	return <div className='d-flex section-name'>
+		<div className='flex-fill'>
 			{TransName(props.name)}
 		</div>
 		{!!props.onDelete && <button

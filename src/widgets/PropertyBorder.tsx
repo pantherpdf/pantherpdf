@@ -36,36 +36,40 @@ interface BorderEditorProps {
 }
 export default function BorderEditor(props: BorderEditorProps) {
 	return <>
-		<label htmlFor={props.id ? `${props.id}-width`: undefined} className='d-block'>
-			{Trans('width')}
-			<span className='ms-2 text-muted'>
-				[px]
-			</span>
-		</label>
-		<InputApplyOnEnter
-			id={props.id ? `${props.id}-width`: undefined}
-			value={props.value.width}
-			step={1}
-			min={0}
-			onChange={val => props.onChange({...props.value, width: (typeof val === 'number' ? val : 0)})}
-		/>
+		<div className='hform'>
+			<label htmlFor={props.id ? `${props.id}-width`: undefined}>
+				{Trans('width')}
+				<span className='ms-2 text-muted'>
+					[px]
+				</span>
+			</label>
+			<InputApplyOnEnter
+				id={props.id ? `${props.id}-width`: undefined}
+				value={props.value.width}
+				step={1}
+				min={0}
+				onChange={val => props.onChange({...props.value, width: (typeof val === 'number' ? val : 0)})}
+			/>
+		</div>
 
-		<label htmlFor={props.id ? `${props.id}-style`: undefined} className='d-block'>
-			{Trans('border-style')}
-		</label>
-		<select
-			className='form-select'
-			id={props.id ? `${props.id}-width`: undefined}
-			value={props.value.style}
-			onChange={e => props.onChange({...props.value, style: e.currentTarget.value as TBorderStyle})}
-		>
-			{borderData.map(s => <option
-				value={s.type}
-				key={s.type}
+		<div className='hform'>
+			<label htmlFor={props.id ? `${props.id}-style`: undefined}>
+				{Trans('border-style')}
+			</label>
+			<select
+				className='form-select'
+				id={props.id ? `${props.id}-style`: undefined}
+				value={props.value.style}
+				onChange={e => props.onChange({...props.value, style: e.currentTarget.value as TBorderStyle})}
 			>
-				{Trans(s.transKey)}
-			</option>)}
-		</select>
+				{borderData.map(s => <option
+					value={s.type}
+					key={s.type}
+				>
+					{Trans(s.transKey)}
+				</option>)}
+			</select>
+		</div>
 
 		<PropertyColor
 			value={props.value.color}

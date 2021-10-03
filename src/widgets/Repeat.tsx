@@ -111,49 +111,55 @@ export const Repeat: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as RepeatData
 		return <>
-			<label htmlFor='Repeat-source'>
-				{Trans('source data')}
-			</label>
-			<div className="input-group mb-3">
-				<span className="input-group-text fst-italic">ƒ</span>
-				<InputApplyOnEnter
-					id='Repeat-source'
-					value={item.source}
-					onChange={val=>props.setItem({...item, source: val})}
-				/>
+			<div className='hform'>
+				<label htmlFor='Repeat-source'>
+					{Trans('source data')}
+				</label>
+				<div className='input-group'>
+					<span className="input-group-text fst-italic">ƒ</span>
+					<InputApplyOnEnter
+						id='Repeat-source'
+						value={item.source}
+						onChange={val=>props.setItem({...item, source: val})}
+					/>
+				</div>
 			</div>
 
-			<label htmlFor='Repeat-varName' className='d-block'>
-				{Trans('varName')}
-			</label>
+			<div className='hform'>
+				<label htmlFor='Repeat-varName'>
+					{Trans('varName')}
+				</label>
+				<InputApplyOnEnter
+					id='Repeat-varName'
+					value={item.varName}
+					onChange={val=>props.setItem({...item, varName: val})}
+				/>
+			</div>
 			<small className='text-muted d-block'>
 				{Trans('repeat - current item is this var')}
 			</small>
-			<small className='text-muted d-block'>
+			<small className='text-muted d-block mb-3'>
 				{Trans('repeat - index name', [`${item.varName}_i`])}
 			</small>
-			<InputApplyOnEnter
-				id='Repeat-varName'
-				value={item.varName}
-				onChange={val=>props.setItem({...item, varName: val})}
-			/>
 
-			<label htmlFor='Repeat-direction' className='d-block'>
-				{Trans('repeat - direction')}
-			</label>
-			<select
-				className='form-select'
-				value={item.direction}
-				onChange={e => props.setItem({...item, direction: e.currentTarget.value})}
-				id='Repeat-direction'
-			>
-				{RepeatDirections.map(m => <option
-					key={m}
-					value={m}
+			<div className='hform'>
+				<label htmlFor='Repeat-direction'>
+					{Trans('repeat - direction')}
+				</label>
+				<select
+					className='form-select'
+					value={item.direction}
+					onChange={e => props.setItem({...item, direction: e.currentTarget.value})}
+					id='Repeat-direction'
 				>
-					{Trans(RepeatDirectionTrans[m])}
-				</option>)}
-			</select>
+					{RepeatDirections.map(m => <option
+						key={m}
+						value={m}
+					>
+						{Trans(RepeatDirectionTrans[m])}
+					</option>)}
+				</select>
+			</div>
 		</>
 	},
 }

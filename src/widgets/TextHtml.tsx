@@ -772,7 +772,10 @@ export const TextHtml: Widget = {
 			['justify', 'justifyFull', faAlignJustify, 'align-justify'],
 		]
 		return <>
-			<div className='d-flex'>
+			<div className='hform'>
+				<label>
+					{Trans('font')}
+				</label>
 				<PropertyFont
 					value={item.font}
 					onChange={val => props.setItem({...props.item, font: val})}
@@ -780,7 +783,7 @@ export const TextHtml: Widget = {
 				/>
 			</div>
 			<hr />
-			<div>
+			<div className='mb-2'>
 				<div className='btn-group'>
 					{alignOpt.map(x => <button
 						key={x[0]}
@@ -792,7 +795,7 @@ export const TextHtml: Widget = {
 					</button>)}
 				</div>
 			</div>
-			<div className='d-flex mt-2'>
+			<div className='d-flex mb-3'>
 				<div className="btn-group">
 					<button
 						className='btn btn-outline-secondary'
@@ -829,9 +832,13 @@ export const TextHtml: Widget = {
 				</button>
 			</div>
 
-			<div className='mt-2'>
+			<div className='hform'>
+				<label htmlFor='TextHtml-fontSize'>
+					{Trans('font-size')}
+				</label>
 				<select
-					className="form-select"
+					className='form-select'
+					id='TextHtml-fontSize'
 					value=''
 					onChange={e => {
 						const val = `${e.currentTarget.value}pt`

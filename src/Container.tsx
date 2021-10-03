@@ -7,7 +7,7 @@ import packageJson from '../package.json'
 import Editor from './editor/Editor'
 import { sampleReport } from './editor/sampleReport'
 import { Modal } from 'react-bootstrap'
-import Trans from './translation'
+import Trans, { setCurrentLanguage } from './translation'
 import compile from './editor/compile'
 import makeHtml from './editor/makeHtml'
 import getOriginalSourceData from './editor/getOriginalSourceData'
@@ -30,7 +30,7 @@ interface MenuProps {
 
 function Menu(props: MenuProps) {
 	return <>
-		<header className='border-bottom mb-3 fixed-top bg-white'>
+		<header className='mb-3 fixed-top bg'>
 			<div className='container'>
 				<div className='d-flex py-2'>
 					<ul className='nav flex-grow-1'>
@@ -96,11 +96,15 @@ export default function Container() {
 	const generatePdfUrl = params.get('generatePdf')
 	const filesUrl = params.get('files')
 	const filesDownloadUrl = params.get('filesDownload')
+	const lang = params.get('lang')
 	if (filesUrl && filesUrl.indexOf(':name') === -1) {
 		throw new Error('Missing :name in url files')
 	}
 	if (filesDownloadUrl && filesDownloadUrl.indexOf(':name') === -1) {
 		throw new Error('Missing :name in url filesDownloadUrl')
+	}
+	if (lang && lang.length > 0) {
+		setCurrentLanguage(lang)
 	}
 	const api: ApiEndpoints = {
 		fonts: async () => { return ['arial', 'times new roman'] },

@@ -52,18 +52,21 @@ export const Spacer: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as SpacerData
 		return <>
-			<label htmlFor='spacer-height' className='d-block'>
-				{Trans('height')}
-				<small className='ms-2 text-muted'>
-					{item.height}px
-				</small>
-			</label>
-			<PropertySlider
-				min={3}
-				max={300}
-				value={item.height}
-				onChange={val => props.setItem({...item, height: val})}
-			/>
+			<div className='hform'>
+				<label htmlFor='spacer-height'>
+					{Trans('height')}
+					<br />
+					<small className='text-muted'>
+						{item.height}px
+					</small>
+				</label>
+				<PropertySlider
+					min={3}
+					max={300}
+					value={item.height}
+					onChange={val => props.setItem({...item, height: val})}
+				/>
+			</div>
 		</>
 	},
 }

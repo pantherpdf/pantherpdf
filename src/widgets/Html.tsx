@@ -64,16 +64,18 @@ export const Html: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as HtmlData
 		return <>
-			<label htmlFor='Html-source' className='d-block'>
-				{Trans('source data')}
-			</label>
-			<div className="input-group mb-3">
-				<span className="input-group-text fst-italic">ƒ</span>
-				<InputApplyOnEnter
-					id='Html-source'
-					value={item.source}
-					onChange={val=>props.setItem({...item, source: val})}
-				/>
+			<div className='hform'>
+				<label htmlFor='Html-source'>
+					{Trans('source data')}
+				</label>
+				<div className='input-group'>
+					<span className="input-group-text fst-italic">ƒ</span>
+					<InputApplyOnEnter
+						id='Html-source'
+						value={item.source}
+						onChange={val=>props.setItem({...item, source: val})}
+					/>
+				</div>
 			</div>
 		</>
 	},

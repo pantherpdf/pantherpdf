@@ -179,52 +179,66 @@ export const Image: Widget = {
 		const item = props.item as ImageData
 		const [showModal, setShowModal] = useState<boolean>(false)
 		return <>
-			<label htmlFor='img-formula' className='d-block'>
-				{Trans('formula')}
-			</label>
-			<div className="input-group mb-3">
-				<span className="input-group-text fst-italic">ƒ</span>
-				<InputApplyOnEnter
-					id='img-formula'
-					value={item.formula}
-					onChange={val => props.setItem({...item, formula: val})}
-				/>
+			<div className='hform'>
+				<label htmlFor='img-formula'>
+					{Trans('formula')}
+				</label>
+				<div className='input-group'>
+					<span className="input-group-text fst-italic">ƒ</span>
+					<InputApplyOnEnter
+						id='img-formula'
+						value={item.formula}
+						onChange={val => props.setItem({...item, formula: val})}
+					/>
+				</div>
 			</div>
 
-			<label htmlFor='img-url' className='d-block'>
-				{Trans('url')}
-			</label>
-			<div className="input-group mb-3">
+			<div className='hform'>
+				<div>
+					<label htmlFor='img-url'>
+						{Trans('url')}
+					</label>
+					<button
+						className='btn btn-outline-secondary ms-3'
+						onClick={() => setShowModal(true)}
+					>
+						<FontAwesomeIcon icon={faEllipsisH} />
+					</button>
+				</div>
 				<InputApplyOnEnter
 					id='img-url'
 					value={item.url}
 					onChange={val => props.setItem({...item, url: val})}
 					placeholder='https://www.example.com/image.jpg'
 				/>
-				<button
-					className="btn btn-outline-secondary"
-					onClick={() => setShowModal(true)}
-					disabled={!props.api.files}
-				>
-					<FontAwesomeIcon icon={faEllipsisH} />
-				</button>
 			</div>
 
-			<label htmlFor="width">
-				{Trans('width')} <span className="text-muted">{WidthOptions}</span>
-			</label>
-			<InputApplyOnEnter
-				id="width"
-				value={item.width}
-				onChange={val => props.setItem({...item, width: val})}
-				regex={WidthRegex}
-			/>
+			<div className='hform mb-0'>
+				<label htmlFor="width">
+					{Trans('width')}
+				</label>
+				<div>
+					<InputApplyOnEnter
+						id="width"
+						value={item.width}
+						onChange={val => props.setItem({...item, width: val})}
+						regex={WidthRegex}
+					/>
+				</div>
+			</div>
+			<small className='text-muted d-block mb-3'>
+				{WidthOptions}
+			</small>
 
-			<div className='mt-3' />
-			<PropertyAlign
-				value={item.align}
-				onChange={val => props.setItem({...item, align: val})}
-			/>
+			<div className='section-name'>
+				{Trans('align')}
+			</div>
+			<div className='text-center'>
+				<PropertyAlign
+					value={item.align}
+					onChange={val => props.setItem({...item, align: val})}
+				/>
+			</div>
 
 
 			<Modal show={showModal} onHide={() => setShowModal(false)} size='lg'>
