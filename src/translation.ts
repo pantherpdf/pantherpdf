@@ -103,6 +103,7 @@ const tr2 = {
 	'file -name- too big': { en: 'File {0} too big', sl: 'Datoteka {0} je prevelika' },
 	'delete confirm': { en: 'Are you sure to delete {0}?', sl: 'Ali si prepričan da želiš izbrisati {0}?' },
 
+	'tag': { en: 'Tag', sl: 'Podatek' },
 	'tag insert': { en: 'Insert tag', sl: 'Vstavi podatek' },
 
 	'varName': { en: 'Variable', sl: 'Spremenljivka' },

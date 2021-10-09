@@ -189,7 +189,9 @@ function TagEditor(props: ItemRendeProps) {
 	const arrAdjusts = [...listOfAdjusts].sort((a,b) => a.category <= b.category ? -1 : 1)
 	
 	return <>
-		<h3>Tag</h3>
+		<div className='section-name'>
+			{Trans('tag')}
+		</div>
 
 		{/* FORMULA */}
 		<div>
@@ -872,7 +874,6 @@ export const TextHtml: Widget = {
 				</select>
 			</div>
 
-			<hr />
 			<TagEditor {...props} />
 		</>
 	},
