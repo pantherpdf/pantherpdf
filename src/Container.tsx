@@ -526,7 +526,12 @@ export default function Container() {
 		/>
 
 		{/* Preview */}
-		<Modal show={!!shownModalPrint} onHide={() => setShownModalPrint(undefined)} dialogClassName={style.modalPreviewDialog}>
+		<Modal
+			show={!!shownModalPrint}
+			onHide={() => setShownModalPrint(undefined)}
+			dialogClassName={style.modalPreviewDialog}
+			contentClassName={style.modalPreviewContent}
+		>
 			<Modal.Header closeButton>
 				<Modal.Title>
 					{Trans('preview')}
