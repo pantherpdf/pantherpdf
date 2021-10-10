@@ -555,7 +555,7 @@ export default function Container() {
 				{!!shownModalPrint && 'html' in shownModalPrint && (
 					<iframe
 						srcDoc={shownModalPrint.html}
-						style={{width: '100%', height: '83vh'}}
+						style={{width: '100%', height: 'calc(100vh - 130px)'}}
 						title='preview'
 					/>
 				)}
