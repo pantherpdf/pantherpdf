@@ -4,7 +4,7 @@
 
 import { TextHtmlData, TextHtmlCompiled, evaluateFormulaInsideHtml } from './TextHtml'
 import compile, { compileComponent, FormulaHelper } from '../editor/compile'
-import { makeHtmlContent } from '../editor/makeHtml'
+import makeHtml, { makeHtmlContent } from '../editor/makeHtml'
 import renderer from 'react-test-renderer'
 import { ReportForceChildren } from '../editor/types'
 import { sampleReport } from '../editor/sampleReport'
@@ -62,4 +62,17 @@ test('TextHtml should render html', async () => {
 	const component = renderer.create(<>{html}</>)
 	const tree = component.toJSON()
   	expect(tree).toMatchSnapshot();
+})
+
+
+test('TextHtml should include google font', async () => {
+	const report: ReportForceChildren<TextHtmlData> = {
+		...sampleReport,
+		children: [
+			{type:'TextHtml', value:'text', children:[], font:{size: '20px', family: 'Lato'}}
+		]
+	}
+	const compiled = await compile(report, {})
+	const html = makeHtml(compiled)
+	expect(html).toContain('https://fonts.googleapis.com/css?family=Lato')
 })

@@ -60,7 +60,14 @@ export default async function compile(report: TReport, data: unknown, api: ApiEn
 		formulaHelper.push(v.name, getVarValue)
 	}
 
-	const dt2: TReportCompiled = {...report}
+	const dt2: TReportCompiled = JSON.parse(JSON.stringify({
+		...report,
+		children: [],
+		fontsUsed: [],
+	}))
+	if (dt2.properties.font?.family) {
+		dt2.fontsUsed.push(dt2.properties.font.family)
+	}
 
 	if (dt2.properties.fileName) {
 		const res = await FormulaEvaluate(dt2.properties.fileName, {getVar})
@@ -73,6 +80,7 @@ export default async function compile(report: TReport, data: unknown, api: ApiEn
 	const helper: CompileHelper = {
 		wid: [],
 		report: report,
+		reportCompiled: dt2,
 		formulaHelper,
 		api,
 		variables: vars,

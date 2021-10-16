@@ -15,6 +15,7 @@ const tr2 = {
 	'font-size': { en:'Size', sl:'Velikost' },
 	'font-style': { en:'Style', sl:'Stil' },
 	'font-weight': { en:'Weight', sl:'Debelina' },
+	'font-select-family': { en:'Select Font Family', sl:'Izberi Pisavo' },
 	'border': { en:'Border', sl:'Obroba' },
 	'border-style': { en:'Style', sl:'Stil' },
 	'border-solid': { en:'Solid', sl:'Polna' },

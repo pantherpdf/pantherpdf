@@ -7,7 +7,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import type { FunctionComponent, ReactNode } from 'react'
 import type { FormulaHelper } from './compile'
-import { TReport, TData, TTransformData, ApiEndpoints, TDataCompiled } from '../types'
+import { TReport, TData, TTransformData, ApiEndpoints, TDataCompiled, TReportCompiled } from '../types'
 
 
 
@@ -82,6 +82,7 @@ export interface CompileHelper {
 	compileChildren: (arr1: TData[], helper: CompileHelper) => Promise<TDataCompiled[]>,
 	wid: number[],
 	report: TReport,
+	reportCompiled: TReportCompiled,
 	api: ApiEndpoints,
 	externalHelpers: {[key: string]: any}
 	variables: {[key: string]: unknown},

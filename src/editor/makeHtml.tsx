@@ -11,6 +11,7 @@ import getWidget from '../widgets/allWidgets'
 import ReactDOMServer from 'react-dom/server'
 import styleToCssString from 'react-style-object-to-css'
 import { PropertyFontGenCss } from '../widgets/PropertyFont'
+import { GoogleFontCssUrl } from '../widgets/GoogleFonts'
 
 
 export function makeHtmlContent(report: TReportCompiled, externalHelpers: {[key: string]: any}={}) {
@@ -36,6 +37,16 @@ export function makeHtmlContent(report: TReportCompiled, externalHelpers: {[key:
 }
 
 
+function escapeHtml(unsafe: string): string {
+	return unsafe
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#039;");
+}
+
+
 export default function makeHtml(report: TReportCompiled, externalHelpers: {[key: string]: any}={}): string {
 	// prepare css
 	const cssObj: CSSProperties = {...defaultReportCss, ...PropertyFontGenCss(report.properties.font || {})}
@@ -45,6 +56,13 @@ export default function makeHtml(report: TReportCompiled, externalHelpers: {[key
 	const el1 = makeHtmlContent(report, externalHelpers)
 	const el2 = React.createElement('div', {}, el1)
 	const htmlContent = ReactDOMServer.renderToStaticMarkup(el2)
+
+	const fonts = new Set(report.fontsUsed)
+	const fontUrls = [...fonts]
+	.map(x => GoogleFontCssUrl(x) || '')
+	.filter(x => x.length > 0)
+	.map(x => `<link rel="stylesheet" href="${escapeHtml(x)}">`)
+	.join('\n')
 
 	const html = `<!DOCTYPE html>
 <html lang="en-US">
@@ -130,6 +148,7 @@ body {
 	${css}
 }
 </style>
+${fontUrls}
 </head>
 <body>
 ${htmlContent}

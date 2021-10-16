@@ -1,10 +1,11 @@
-import React, { useState, useEffect, CSSProperties } from 'react'
+import React, { useState, CSSProperties } from 'react'
 import Trans from '../translation'
-import { Popover, OverlayTrigger } from 'react-bootstrap'
+import { Popover, OverlayTrigger, Modal } from 'react-bootstrap'
 import PropertyColor from './PropertyColor'
 import InputApplyOnEnter, { WidthRegex, WidthOptions } from './InputApplyOnEnter'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFont } from '@fortawesome/free-solid-svg-icons'
+import { GoogleFontSelector } from './GoogleFonts'
 
 
 type Narrowable = string | number | boolean | symbol | object | {} | void | null | undefined;
@@ -74,20 +75,10 @@ interface Props {
 	textButton?: boolean,
 	iconButton?: boolean,
 	id?: string,
-	loadFonts?: () => Promise<string[]>,
+	googleFontApiKey?: string,
 }
 export default function PropertyFont(props: Props) {
-	const [fonts, setFonts] = useState<string[]>([])
-
-	const loadFonts = props.loadFonts
-	useEffect(() => {
-		if (loadFonts) {
-			loadFonts().then(arr => setFonts(arr))
-		}
-		else {
-			setFonts([])
-		}
-	}, [loadFonts])
+	const [showModal, setShowModal] = useState<boolean>(false)
 
 	function handleInputChange(event: React.FormEvent<HTMLSelectElement|HTMLInputElement>) {
 		const target = event.target as any;
@@ -145,11 +136,25 @@ export default function PropertyFont(props: Props) {
 
 	const popover = <Popover className='p-3' id={props.id||''}>
 		<div className="d-flex">
-			<label htmlFor="family" style={{width:'50%'}}>{Trans('font-family')}</label>
-			<select className="form-select" name="family" id="family" value={family} onChange={handleInputChange}>
-				<option value=""></option>
-				{fonts.map(f => <option key={f} value={f}>{f}</option>)}
-			</select>
+			<label htmlFor="family" style={{width:'50%'}}>
+				{Trans('font-family')}
+			</label>
+			<div className='input-group'>
+				<input
+					type='text'
+					className='form-control'
+					value={family}
+					onChange={handleInputChange}
+					name='family'
+					id='family'
+				/>
+				{props.googleFontApiKey && <button
+					className='btn btn-outline-secondary'
+					onClick={() => setShowModal(true)}
+				>
+					...
+				</button>}
+			</div>
 		</div>
 		<div className="d-flex">
 			<label htmlFor="size" style={{width:'50%'}}>{Trans('font-size')}</label>
@@ -195,5 +200,33 @@ export default function PropertyFont(props: Props) {
 		<OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
 			{renderBtn()}
 		</OverlayTrigger>
+
+		<Modal
+			show={showModal}
+			onHide={() => setShowModal(false)}
+		>
+			<Modal.Header closeButton>
+				<Modal.Title>
+					{Trans('font-select-family')}
+				</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				{showModal && props.googleFontApiKey && <GoogleFontSelector
+					apiKey={props.googleFontApiKey}
+					value={family}
+					onChange={x => {
+						const obj: TFont = {...props.value}
+						if (x) {
+							obj.family = x
+						}
+						else {
+							delete obj.family
+						}
+						props.onChange(obj as TFont)
+						setShowModal(false)
+					}}
+				/>}
+			</Modal.Body>
+		</Modal>
 	</>
 }

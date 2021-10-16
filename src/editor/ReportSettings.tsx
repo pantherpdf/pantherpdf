@@ -136,7 +136,7 @@ export default function ReportSettings(props: GeneralProps) {
 						<PropertyFont
 							value={props.report.properties.font?props.report.properties.font:{}}
 							onChange={changeFont}
-							loadFonts={props.api.fonts}
+							googleFontApiKey={props.api.googleFontApiKey}
 						/>
 					</div>
 				</div>

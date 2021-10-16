@@ -18,6 +18,7 @@ import ReportSettings from './ReportSettings'
 import { extractFiles } from '../FileSelect'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { LoadGoogleFontCss } from '../widgets/GoogleFonts'
 
 
 interface PropertiesHeaderProps extends GeneralProps {
@@ -102,6 +103,9 @@ function RenderContent(props: GeneralProps) {
 	const t = props.report.target
 	if (t === 'pdf') {
 		const style = {...defaultReportCss, ...PropertyFontGenCss(props.report.properties.font || {})}
+		if (props.report.properties.font?.family) {
+			LoadGoogleFontCss(props.report.properties.font.family)
+		}
 		return <div style={style}>
 			{props.renderWidgets(props.report.children, [])}
 			{props.report.children.length === 0 && <div className='text-muted text-center'>

@@ -70,6 +70,7 @@ export interface TDataCompiled {
 
 export interface TReportCompiled extends Omit<TReport, 'children'> {
 	children: TDataCompiled[],
+	fontsUsed: string[],
 }
 
 export function TDataTypeGuard(r: any): r is TData {
@@ -144,14 +145,14 @@ export interface ApiEndpoints {
 	filesUpload?: (file: File, data: FileUploadData, cbProgress: (prc: number) => void) =>  Promise<void>,
 	filesDownloadUrl?: (name: string) => string,
 	filesDownload?: (name: string) => Promise<{ data: ArrayBuffer, mimeType: string }>,
-	fonts?: () => Promise<string[]>,
 	allReports?: () => Promise<TReportShort[]>,
+	googleFontApiKey?: string,
 }
 
 
 
 export const defaultReportCss: CSSProperties = {
-	fontFamily: 'arial, serif',
+	fontFamily: 'sans-serif',
 	fontSize: '12pt',
 	color: '#000000',
 }

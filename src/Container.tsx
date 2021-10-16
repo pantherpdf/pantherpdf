@@ -97,7 +97,7 @@ export default function Container() {
 	const filesUrl = params.get('files')
 	const filesDownloadUrl = params.get('filesDownload')
 	const lang = params.get('lang')
-	const fonts = params.get('fonts')?.split(',').map(x => x.trim()) || []
+	const googleFontApiKey = params.get('googleFontApiKey') || undefined
 	if (filesUrl && filesUrl.indexOf(':name') === -1) {
 		throw new Error('Missing :name in url files')
 	}
@@ -108,7 +108,7 @@ export default function Container() {
 		setCurrentLanguage(lang)
 	}
 	const api: ApiEndpoints = {
-		fonts: async () => { return fonts },
+		googleFontApiKey,
 		files: (filesUrl ? async () => {
 			let url = filesUrl.replace(':name', '')
 			const r = await fetch(url, {

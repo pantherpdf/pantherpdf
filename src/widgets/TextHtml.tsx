@@ -23,6 +23,7 @@ import Trans, { TransName, trKeys } from '../translation'
 import { idCmp } from '../editor/childrenMgmt'
 import InputApplyOnEnter from './InputApplyOnEnter'
 import style from './TextHtml.module.css'
+import { LoadGoogleFontCss } from './GoogleFonts'
 
 
 const listOfEditors: Editor[] = []
@@ -719,6 +720,9 @@ export const TextHtml: Widget = {
 	},
 
 	compile: async (dt: TextHtmlData, helper): Promise<TextHtmlCompiled> => {
+		if (dt.font.family) {
+			helper.reportCompiled.fontsUsed.push(dt.font.family)
+		}
 		return {
 			type: dt.type,
 			value: await evaluateFormulaInsideHtml(dt.value, helper.formulaHelper, helper.externalHelpers.createDocument),
@@ -730,6 +734,9 @@ export const TextHtml: Widget = {
 		const item = props.item as TextHtmlData
 		const css = PropertyFontGenCss(item.font)
 		css.minHeight = '20px'
+		if (item.font.family) {
+			LoadGoogleFontCss(item.font.family)
+		}
 		
 		return <BoxName
 			{...props}
@@ -781,7 +788,7 @@ export const TextHtml: Widget = {
 				<PropertyFont
 					value={item.font}
 					onChange={val => props.setItem({...props.item, font: val})}
-					loadFonts={props.api.fonts}
+					googleFontApiKey={props.api.googleFontApiKey}
 				/>
 			</div>
 			<hr />
