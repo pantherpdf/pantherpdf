@@ -140,12 +140,19 @@ export default function PropertyFont(props: Props) {
 				{Trans('font-family')}
 			</label>
 			<div className='input-group'>
-				<input
-					type='text'
+				<InputApplyOnEnter
 					className='form-control'
 					value={family}
-					onChange={handleInputChange}
-					name='family'
+					onChange={val => {
+						if (val && String(val).length > 0) {
+							return props.onChange({...props.value, family: String(val)})
+						}
+						else {
+							const val3: TFont = {...props.value}
+							delete val3.family
+							return props.onChange(val3)
+						}
+					}}
 					id='family'
 				/>
 				{props.googleFontApiKey && <button
