@@ -12,6 +12,8 @@ import PropertyBorder, { Border, genBorderCss } from './PropertyBorder'
 import BoxName from './BoxName'
 import Trans from '../translation'
 import InputApplyOnEnter, { WidthOptions, WidthRegex } from './InputApplyOnEnter'
+import PropertyFont, { PropertyFontGenCss, TFont } from './PropertyFont'
+import { LoadGoogleFontCss } from './GoogleFonts'
 
 
 interface Properties {
@@ -21,6 +23,8 @@ interface Properties {
 	width: string,
 	height: string,
 	backgroundColor?: string,
+	pageBreakAvoid?: boolean,
+	font: TFont,
 }
 export type FrameData = TData & Properties
 export type FrameCompiled = TDataCompiled & Properties & {children: TDataCompiled[]}
@@ -66,6 +70,14 @@ function genStyle(item: FrameData | FrameCompiled, final: boolean): CSSPropertie
 			css.minHeight = item.height
 		}
 	}
+
+	if (item.pageBreakAvoid) {
+		css.pageBreakInside = 'avoid'
+	}
+
+	const cssFont = PropertyFontGenCss(item.font)
+	Object.assign(css, cssFont)
+
 	return css
 }
 
@@ -153,17 +165,24 @@ export const Frame: Widget = {
 			},
 			width: '',
 			height: '',
+			font: {},
 		}
 	},
 
 	compile: async (dt: FrameData, helpers): Promise<FrameCompiled> => {
 		const dt2: FrameCompiled = JSON.parse(JSON.stringify({...dt, children: []}))
+		if (dt.font.family) {
+			helpers.reportCompiled.fontsUsed.push(dt.font.family)
+		}
 		dt2.children = await helpers.compileChildren(dt.children, helpers)
 		return dt2
 	},
 
 	Render: function(props) {
 		const item = props.item as FrameData
+		if (item.font.family) {
+			LoadGoogleFontCss(item.font.family)
+		}
 		return <BoxName {...props} style={genStyle(item, false)} name={Frame.name}>
 			{props.renderWidgets(item.children, props.wid)}
 		</BoxName>
@@ -314,6 +333,36 @@ export const Frame: Widget = {
 				value={item.border}
 				onChange={val => props.setItem({...item, border: val})}
 			/>}
+
+			<div className='section-name'>
+				{Trans('other')}
+			</div>
+			<div className='hform'>
+				<label>
+					{Trans('font')}
+				</label>
+				<PropertyFont
+					value={item.font}
+					onChange={val => props.setItem({...props.item, font: val})}
+					googleFontApiKey={props.api.googleFontApiKey}
+				/>
+			</div>
+			<div className='form-check'>
+				<input
+					type='checkbox'
+					id='Frame-page-break-avoid'
+					className='form-check-input'
+					checked={!!item.pageBreakAvoid}
+					onChange={e => {
+						const obj: FrameData = {...item}
+						obj.pageBreakAvoid = e.currentTarget.checked
+						props.setItem(obj)
+					}}
+				/>
+				<label className='form-check-label' htmlFor='Frame-page-break-avoid'>
+					{Trans('page-break-avoid')}
+				</label>
+			</div>
 			
 		</>
 	},

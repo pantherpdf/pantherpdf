@@ -138,6 +138,8 @@ const tr2 = {
 	'load local json file': { en: 'Load local .json file', sl: 'Naloži lokalno .json datoteko' },
 	'TextHtml initial value': { en: 'This is sample text', sl: 'To je vzorčni tekst' },
 	'preview': { en: 'Preview', sl: 'Predogled' },
+	'other': { en: 'Other', sl: 'Drugo' },
+	'page-break-avoid': { en: 'Avoid page break', sl: 'Izogibaj se prelomu strani' },
 }
 
 export type trKeys = keyof typeof tr2
