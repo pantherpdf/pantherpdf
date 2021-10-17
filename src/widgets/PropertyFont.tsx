@@ -25,6 +25,7 @@ export interface TFont {
 	weight?: TWeightOption,
 	style?: TStyleOption,
 	color?: string,
+	lineHeight?: number,
 }
 
 
@@ -49,22 +50,45 @@ const styleName: {[key in TStyleOption]: string} = {
 }
 
 
+const lineHeightOptions: {txt:string, value:number}[] = [
+	{ txt: '66%', value: 0.666 },
+	{ txt: '90%', value: 0.9 },
+	{ txt: '100%', value: 1.0 },
+	{ txt: '115%', value: 1.15 },
+	{ txt: '150%', value: 1.5 },
+	{ txt: '200%', value: 2.0 },
+]
+
+
 export function PropertyFontGenCss(obj: TFont): CSSProperties {
 	const css: CSSProperties = {}
-	if (obj.family)
+	if (obj.family) {
 		css.fontFamily = obj.family+', sans-serif'
-	if (obj.size)
-		css.fontSize = obj.size
-	if (obj.weight && obj.weight.length > 0) {
-		if ((obj.weight as any) >= 100 && (obj.weight as any) <= 900)
-			css.fontWeight = parseInt(obj.weight)
-		else
-			css.fontWeight = obj.weight as any
 	}
-	if (obj.style && obj.style.length > 0)
+	if (obj.size) {
+		css.fontSize = obj.size
+		if (typeof obj.lineHeight !== 'undefined') {
+			const found = obj.size.match(/^\d*/gm)
+			const txtDigits = (found && found.length > 0) ? found[0] : ''
+			const sizeInt = parseInt(txtDigits)
+			const ext = obj.size.substring(txtDigits.length)
+			css.lineHeight = `${sizeInt*obj.lineHeight*1.5}${ext}`
+		}
+	}
+	if (obj.weight && obj.weight.length > 0) {
+		if ((obj.weight as any) >= 100 && (obj.weight as any) <= 900) {
+			css.fontWeight = parseInt(obj.weight)
+		}
+		else {
+			css.fontWeight = obj.weight as any
+		}
+	}
+	if (obj.style && obj.style.length > 0) {
 		css.fontStyle = obj.style
-	if (obj.color)
+	}
+	if (obj.color) {
 		css.color = obj.color
+	}
 	return css
 }
 
@@ -130,6 +154,7 @@ export default function PropertyFont(props: Props) {
 
 	const family = props.value.family || ''
 	const size = props.value.size || ''
+	const lineHeight = props.value.lineHeight || 0
 	const weight = props.value.weight || ''
 	const style = props.value.style || ''
 	const color = props.value.color || ''
@@ -170,6 +195,34 @@ export default function PropertyFont(props: Props) {
 				<small className='text-muted'>{WidthOptions}</small>
 			</div>
 		</div>
+		{size.length > 0 && (
+		<div className="d-flex">
+			<label htmlFor="lineHeight" style={{width:'50%'}}>
+				{Trans('font-line-height')}
+			</label>
+			<select
+				className="form-select"
+				name="lineHeight"
+				id="lineHeight"
+				value={lineHeight}
+				onChange={e => {
+					const obj: TFont = {...props.value}
+					if (e.currentTarget.value) {
+						obj.lineHeight = parseFloat(e.currentTarget.value)
+					}
+					else {
+						delete obj.lineHeight
+					}
+					props.onChange(obj)
+				}}
+			>
+				<option value=""></option>
+				{lineHeightOptions.map(w => <option value={w.value} key={w.value}>
+					{w.txt}
+				</option>)}
+			</select>
+		</div>
+		)}
 		<div className="d-flex">
 			<label htmlFor="weight" style={{width:'50%'}}>{Trans('font-weight')}</label>
 			<select className="form-select" name="weight" id="weight" value={weight} onChange={handleInputChange}>

@@ -13,6 +13,7 @@ const tr2 = {
 	'font': { en:'Font', sl:'Pisava' },
 	'font-family': { en:'Family', sl:'Vrsta' },
 	'font-size': { en:'Size', sl:'Velikost' },
+	'font-line-height': { en:'Line height', sl:'Višina vrstice' },
 	'font-style': { en:'Style', sl:'Stil' },
 	'font-weight': { en:'Weight', sl:'Debelina' },
 	'font-select-family': { en:'Select Font Family', sl:'Izberi Pisavo' },
