@@ -15,6 +15,7 @@ import { FirstMatch } from './FirstMatch'
 import { Html } from './Html'
 import { Separator } from './Separator'
 import { Spacer } from './Spacer'
+import { PageBreak } from './PageBreak'
 import { Frame } from './Frame'
 import { SetVar } from './SetVar'
 import { UpdateVar } from './UpdateVar'
@@ -31,6 +32,7 @@ export const allWidgets: {[key: string]: Widget} = {
 	Html,
 	Separator,
 	Spacer,
+	PageBreak,
 	Frame,
 	SetVar,
 	UpdateVar,
