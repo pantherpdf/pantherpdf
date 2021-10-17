@@ -52,6 +52,7 @@ export default function BorderEditor(props: BorderEditorProps) {
 			/>
 		</div>
 
+		{props.value.width > 0 && <>
 		<div className='hform'>
 			<label htmlFor={props.id ? `${props.id}-style`: undefined}>
 				{Trans('border-style')}
@@ -75,5 +76,6 @@ export default function BorderEditor(props: BorderEditorProps) {
 			value={props.value.color}
 			onChange={val => props.onChange({...props.value, color: val})}
 		/>
+		</>}
 	</>
 }
