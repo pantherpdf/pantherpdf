@@ -134,7 +134,7 @@ function ShowWidgets(props: GeneralProps) {
 				draggable={true}
 				onDragStart={e => dragStartWidget(e, w)}
 				onDragEnd={e => props.dragWidgetEnd(e)}
-				className={style.widget}
+				className={`${style.widget} bg`}
 				onClick={e => showTooltip(idx, e.currentTarget)}
 			>
 				<FontAwesomeIcon icon={w.icon.fontawesome} fixedWidth className='me-2' />
