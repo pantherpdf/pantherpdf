@@ -7,11 +7,13 @@
 import React, { ReactNode, useRef } from 'react'
 import { useState } from 'react'
 import getWidget from '../widgets/allWidgets'
-import { TReport, TData, ApiEndpoints } from '../types'
-import { GeneralProps, TDragObj } from './types'
+import { TReport, TData, ApiEndpoints, FileUploadData } from '../types'
+import { GeneralProps, NewItemProps, TDragObj } from './types'
 import style from './Editor.module.css'
 import Layout from './EditorLayout'
 import { findInList, removeFromList, insertIntoList, updateDestAfterRemove, idCmp, updateItem } from './childrenMgmt'
+import { extractFiles } from '../FileSelect'
+import { Image as ImageWidget, ImageData } from '../widgets/Image'
 
 
 interface EditorProps {
@@ -92,36 +94,77 @@ export default function Editor(props: EditorProps) {
 
 	let props2: GeneralProps
 
-	function drop(e: React.DragEvent<HTMLDivElement>, dest: number[]): void {
+	async function drop(e: React.DragEvent<HTMLDivElement>, dest: number[]): Promise<void> {
 		e.preventDefault()
 		e.stopPropagation()
 		e.currentTarget.classList.remove(style.dragging)
-		const copy = e.altKey || e.metaKey
 
+		// widget
 		if (dragObj.current) {
+			const copy = e.altKey || e.metaKey
 			// dragObj.current is empty when you drag-drop some other element like logo, menu ...
 			const report2 = dropImpl(props.report, dragObj.current, dest, copy)
 			if (report2) {
 				props.setReport(report2)
 				setSelected(null)
 			}
+			dragObj.current = null
+			return
 		}
 
-		dragObj.current = null
+		// file upload
+		const files = extractFiles(e.dataTransfer)
+		if (files.length > 0) {
+			if (!props.api.filesUpload) {
+				alert('File upload not supported')
+				return
+			}
+			const f = files[0]
+			const dt: FileUploadData = {
+				name: f.name,
+				modifiedTime: new Date(f.lastModified).toISOString().substring(0,19)+'Z',
+				mimeType: f.type,
+			}
+			try {
+				await props.api.filesUpload(f, dt, ()=>{})
+			}
+			catch (e) {
+				alert(`Error while uploading: ${String(e)}`)
+			}
+			const newItemProps: NewItemProps = { report: props.report }
+			const img = await ImageWidget.newItem(newItemProps) as ImageData
+			img.url = `local/${f.name}`
+			const report2 = dropImpl(props.report, {type:'widget', widget: img }, dest, false)
+			if (report2) {
+				props.setReport(report2)
+				setSelected(null)
+			}
+			dragObj.current = null
+			return
+		}
 	}
 
 	function dragOver(e: React.DragEvent<HTMLDivElement>): void {
-		if (!dragObj.current) {
+		// widget
+		if (dragObj.current) {
+			e.stopPropagation()
+			e.preventDefault()
+			if (dragObj.current.type === 'wid') {
+				const copy = e.altKey || e.metaKey
+				e.dataTransfer.dropEffect = copy ? 'copy' : 'move'
+			}
+			else {
+				e.dataTransfer.dropEffect = 'copy'
+			}
 			return
 		}
-		e.stopPropagation()
-		e.preventDefault()
-		if (dragObj.current.type === 'wid') {
-			const copy = e.altKey || e.metaKey
-			e.dataTransfer.dropEffect = copy ? 'copy' : 'move'
-		}
-		else {
+
+		// file upload
+		if (e.dataTransfer.items.length > 0 || e.dataTransfer.files.length > 0) {
+			e.stopPropagation()
+			e.preventDefault()
 			e.dataTransfer.dropEffect = 'copy'
+			return
 		}
 	}
 
