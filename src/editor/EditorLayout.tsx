@@ -106,6 +106,9 @@ function RenderContent(props: GeneralProps) {
 		if (props.report.properties.font?.family) {
 			LoadGoogleFontCss(props.report.properties.font.family)
 		}
+		let width = props.report.properties.paperWidth || 210
+		style.maxWidth = `${width * 800/210}px`
+		style.margin = `0 auto`
 		return <div style={style}>
 			{props.renderWidgets(props.report.children, [])}
 			{props.report.children.length === 0 && <div className='text-muted text-center'>
