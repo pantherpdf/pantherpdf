@@ -124,7 +124,7 @@ export default function Container() {
 			return js
 		} : undefined),
 		filesDelete: (filesUrl ? async (name) => {
-			let url = filesUrl.replace(':name', '')
+			let url = filesUrl.replace(':name', name)
 			const r = await fetch(url, {
 				method: 'DELETE',
 				headers: {
