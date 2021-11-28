@@ -9,6 +9,7 @@ import type { Widget } from '../editor/types'
 import { faArrowsAltV } from '@fortawesome/free-solid-svg-icons'
 import PropertySlider from './PropertySlider';
 import Trans from '../translation';
+import BoxName from './BoxName';
 
 
 export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
@@ -41,7 +42,9 @@ export const Spacer: Widget = {
 
 	Render: function(props) {
 		const item = props.item as SpacerData
-		return <div style={{height: `${item.height}px`}} />
+		return <BoxName {...props} name={Spacer.name}>
+			<div style={{height: `${item.height}px`}} />
+		</BoxName>
 	},
 
 	RenderFinal: function(props) {
