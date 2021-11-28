@@ -53,14 +53,9 @@ export const Spacer: Widget = {
 		const item = props.item as SpacerData
 		return <>
 			<div className='hform'>
-				<label htmlFor='spacer-height'>
-					{Trans('height')}
-					<br />
-					<small className='text-muted'>
-						{item.height}px
-					</small>
-				</label>
 				<PropertySlider
+					id='spacer-height'
+					label={Trans('height')}
 					min={3}
 					max={300}
 					value={item.height}

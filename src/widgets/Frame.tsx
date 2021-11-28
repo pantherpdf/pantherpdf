@@ -3,7 +3,7 @@
  */
 
 
-import React, { useState, useEffect, CSSProperties } from 'react'
+import React, { CSSProperties } from 'react'
 import { TData, TDataCompiled } from '../types'
 import type { Widget } from '../editor/types'
 import { faBorderStyle } from '@fortawesome/free-solid-svg-icons'
@@ -14,6 +14,7 @@ import Trans from '../translation'
 import InputApplyOnEnter, { WidthOptions, WidthRegex } from './InputApplyOnEnter'
 import PropertyFont, { PropertyFontGenCss, TFont } from './PropertyFont'
 import { LoadGoogleFontCss } from './GoogleFonts'
+import useStateDelayed from '../useStateDelayed'
 
 
 interface Properties {
@@ -85,35 +86,24 @@ function genStyle(item: FrameData | FrameCompiled, final: boolean): CSSPropertie
 type Property4SideRangeValue = [number, number, number, number]
 interface Property4SideRangeProps {
 	id: string,
+	label: string,
 	min: number,
 	max: number,
 	value: Property4SideRangeValue,
 	onChange: (val: Property4SideRangeValue) => void,
 }
 function Property4SideRange(props: Property4SideRangeProps) {
-	const [value, setValue] = useState<Property4SideRangeValue>(props.value)
-
-	useEffect(() => {
-		setValue(props.value)
-	}, [props.value])
-
-	// only call onChange() when user releases mouse
-	useEffect(() => {
-		window.document.documentElement.addEventListener('mouseup', mouseup);
-		return () => {
-			window.document.documentElement.removeEventListener('mouseup', mouseup);
-		}
-	})
-	const mouseup = () => {
-		if (value !== props.value) {
-			props.onChange(value)
-		}
-	}
+	const [value, setValue] = useStateDelayed<Property4SideRangeValue>(props.value, props.onChange)
 
 	function renderInput(idx: number) {
 		const st: CSSProperties = {
 			width: '50%',
 			display: 'inline',
+		}
+		function setValueInput(val: string, delay: number) {
+			const arr: Property4SideRangeValue = [...value]
+			arr[idx] = parseInt(val)
+			return setValue(arr, delay)
 		}
 		return <input
 			type='range'
@@ -122,16 +112,19 @@ function Property4SideRange(props: Property4SideRangeProps) {
 			min={props.min}
 			max={props.max}
 			value={value[idx]}
-			onChange={e => {
-				const arr: Property4SideRangeValue = [...value]
-				arr[idx] = parseInt(e.currentTarget.value)
-				setValue(arr)
-			}}
+			onChange={e => setValueInput(e.currentTarget.value, 300)}
+			onMouseUp={e => setValueInput(e.currentTarget.value, 0)}
 			className='form-range'
 		/>
 	}
 
 	return <div>
+		<div className='section-name'>
+			{props.label}
+			<small className='ms-2 text-muted'>
+				{value[0]}, {value[1]}, {value[2]}, {value[3]} px
+			</small>
+		</div>
 		<div style={{textAlign:'center'}}>
 			{renderInput(0)}
 		</div>
@@ -254,29 +247,18 @@ export const Frame: Widget = {
 				onChange={val => props.setItem({...item, backgroundColor: val})}
 			/>}
 
-			<div className='section-name'>
-				{Trans('margin')}
-				<small className='ms-2 text-muted'>
-					{item.margin[0]},{item.margin[1]},{item.margin[2]},{item.margin[3]}px
-				</small>
-			</div>
 			<Property4SideRange
 				id='Frame-margin'
+				label={Trans('margin')}
 				min={0}
 				max={80}
 				value={item.margin}
 				onChange={val => props.setItem({...props.item, margin: val})}
 			/>
 
-			<div className='section-name'>
-				{Trans('padding')}
-				<small className='ms-2 text-muted'>
-					{item.padding[0]},{item.padding[1]},{item.padding[2]},{item.padding[3]}px
-				</small>
-			</div>
-			
 			<Property4SideRange
 				id='Frame-padding'
+				label={Trans('padding')}
 				min={0}
 				max={80}
 				value={item.padding}

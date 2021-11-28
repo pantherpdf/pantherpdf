@@ -10,6 +10,7 @@ import { faMinus } from '@fortawesome/free-solid-svg-icons'
 import PropertyBorder, { Border, genBorderCss } from './PropertyBorder'
 import Trans from '../translation'
 import BoxName from './BoxName'
+import PropertySlider from './PropertySlider'
 
 
 export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
@@ -83,36 +84,24 @@ export const Separator: Widget = {
 				onChange={val => props.setItem({...props.item, border: val})}
 			/>
 
-			<label htmlFor='sep-marginTop' className='section-name'>
-				{Trans('margin top')}
-				<small className='ms-2 text-muted'>
-					{item.marginTop}px
-				</small>
-			</label>
-			<input
-				type='range'
+			<PropertySlider
 				id='sep-marginTop'
+				label={Trans('margin top')}
+				labelClassName='section-name'
 				min={0}
 				max={40}
 				value={item.marginTop}
-				onChange={e => props.setItem({...props.item, marginTop: parseFloat(e.currentTarget.value)})}
-				className='form-range'
+				onChange={val => props.setItem({...props.item, marginTop: val})}
 			/>
 
-			<label htmlFor='sep-marginBottom' className='section-name'>
-				{Trans('margin bottom')}
-				<small className='ms-2 text-muted'>
-					{item.marginBottom}px
-				</small>
-			</label>
-			<input
-				type='range'
+			<PropertySlider
 				id='sep-marginBottom'
+				label={Trans('margin bottom')}
+				labelClassName='section-name'
 				min={0}
 				max={40}
 				value={item.marginBottom}
-				onChange={e => props.setItem({...props.item, marginBottom: parseFloat(e.currentTarget.value)})}
-				className='form-range'
+				onChange={val => props.setItem({...props.item, marginBottom: val})}
 			/>
 
 		</>
