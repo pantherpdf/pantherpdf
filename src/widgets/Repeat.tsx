@@ -30,6 +30,7 @@ export interface RepeatCompiled extends TDataCompiled {
 	type: 'Repeat',
 	children: TDataCompiled[][],
 	direction: RepeatDirection,
+	addChildElement: boolean,
 }
 
 
@@ -61,10 +62,31 @@ export const Repeat: Widget = {
 			helper.formulaHelper.pop()
 			helper.formulaHelper.pop()
 		}
+		let addChildElement = true
+		if (dt.direction === 'grid') {
+			// remove <div> when only one child and this child is frame
+			if (dt.children.length === 1 && dt.children[0].type === 'Frame') {
+				// dont display as flex because flex and page-break-inside: avoid dont work together
+				// dont add additional div, so that frame can control width/height
+				// add css to frame
+				// inline-block to display them in line
+				// vertical-align: top, to prevent vertical space between frames
+				addChildElement = false
+				if (helper.reportCompiled.globalCss.indexOf('.grid-with-frame') === -1) {
+					helper.reportCompiled.globalCss += `
+						.grid-with-frame > div {
+							display: inline-block;
+							vertical-align: top;
+						}
+					`
+				}
+			}
+		}
 		return {
 			type: dt.type,
 			children,
 			direction: dt.direction,
+			addChildElement,
 		}
 	},
 
@@ -94,18 +116,38 @@ export const Repeat: Widget = {
 			cssItem.flex = `0 0 ${w.toFixed(1)}%`
 		}
 		if (item.direction === 'grid') {
-			cssParent.display = 'flex'
-			cssParent.flexWrap = 'wrap'
+			if (item.addChildElement) {
+				cssParent.display = 'flex'
+				cssParent.flexWrap = 'wrap'
+			}
+			else {
+				cssParent.display = 'block'
+			}
 		}
-		// maybe remove <div> when only one child and this child is frame?
-		return <div style={cssParent}>
-			{item.children.map((item, idx) => <div
-				key={idx}
-				style={cssItem}
-			>
-				{props.renderChildren(item, props)}
-			</div>)}
-		</div>
+
+		if (item.addChildElement) {
+			return <div style={cssParent}>
+				{item.children.map((item2, idx) => {
+					return <div
+						key={idx}
+						style={cssItem}
+					>
+						{props.renderChildren(item2, props)}
+					</div>
+				})}
+			</div>
+		}
+		else {
+			return <div style={cssParent} className='grid-with-frame'>
+				{item.children.map((item2, idx) => {
+					return <React.Fragment
+						key={idx}
+					>
+						{props.renderChildren(item2, props)}
+					</React.Fragment>
+				})}
+			</div>
+		}
 	},
 
 	RenderProperties: function(props) {

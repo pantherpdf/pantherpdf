@@ -43,3 +43,11 @@ test('should include google font', async () => {
 	const html = makeHtml(compiled)
 	expect(html.indexOf('https://fonts.googleapis.com/css?family=Roboto+Mono')!=-1 || html.indexOf('https://fonts.googleapis.com/css?family=Roboto%20Mono')!=-1)
 })
+
+
+test('should include globalCss', async () => {
+	const compiled = await compile(sampleReport, {})
+	compiled.globalCss = '.abc-def-123-456 { font-weight: bold }'
+	const html = makeHtml(compiled)
+	expect(html.indexOf('.abc-def-123-456 { font-weight: bold }') !== -1)
+})

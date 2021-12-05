@@ -153,6 +153,7 @@ sup {
 body {
 	${css}
 }
+${report.globalCss}
 </style>
 ${fontUrls}
 </head>

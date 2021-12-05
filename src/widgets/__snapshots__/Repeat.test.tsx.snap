@@ -116,3 +116,60 @@ Array [
   />,
 ]
 `;
+
+exports[`grid - products 1`] = `
+<div
+  className="grid-with-frame"
+  style={
+    Object {
+      "display": "block",
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "border": "0px solid ",
+        "boxSizing": "border-box",
+        "flex": "0 0 5cm",
+        "height": "5cm",
+        "margin": "0px 0px 0px 0px",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "padding": "0px 0px 0px 0px",
+        "width": "5cm",
+      }
+    }
+  />
+  <div
+    style={
+      Object {
+        "border": "0px solid ",
+        "boxSizing": "border-box",
+        "flex": "0 0 5cm",
+        "height": "5cm",
+        "margin": "0px 0px 0px 0px",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "padding": "0px 0px 0px 0px",
+        "width": "5cm",
+      }
+    }
+  />
+  <div
+    style={
+      Object {
+        "border": "0px solid ",
+        "boxSizing": "border-box",
+        "flex": "0 0 5cm",
+        "height": "5cm",
+        "margin": "0px 0px 0px 0px",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "padding": "0px 0px 0px 0px",
+        "width": "5cm",
+      }
+    }
+  />
+</div>
+`;

@@ -71,6 +71,7 @@ export interface TDataCompiled {
 export interface TReportCompiled extends Omit<TReport, 'children'> {
 	children: TDataCompiled[],
 	fontsUsed: string[],
+	globalCss: string,
 }
 
 export function TDataTypeGuard(r: any): r is TData {

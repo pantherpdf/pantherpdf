@@ -60,11 +60,13 @@ export default async function compile(report: TReport, data: unknown, api: ApiEn
 		formulaHelper.push(v.name, getVarValue)
 	}
 
-	const dt2: TReportCompiled = JSON.parse(JSON.stringify({
+	let dt2: TReportCompiled = {
 		...report,
 		children: [],
 		fontsUsed: [],
-	}))
+		globalCss: '',
+	}
+	dt2 = JSON.parse(JSON.stringify(dt2))
 	if (dt2.properties.font?.family) {
 		dt2.fontsUsed.push(dt2.properties.font.family)
 	}

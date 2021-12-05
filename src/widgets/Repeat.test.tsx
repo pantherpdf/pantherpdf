@@ -11,6 +11,7 @@ import { TReport } from '../types'
 import { TextHtmlData } from './TextHtml'
 import { makeHtmlContent } from '../editor/makeHtml'
 import renderer from 'react-test-renderer'
+import { FrameData } from './Frame'
 
 
 test('text', async () => {
@@ -65,4 +66,31 @@ test('complete grid', async () => {
 	const component = renderer.create(<>{html}</>)
 	const tree = component.toJSON()
   	expect(tree).toMatchSnapshot();
+})
+
+
+test('grid - products', async () => {
+	const frame: FrameData = {
+		type: 'Frame',
+		children: [],
+		margin: [0, 0, 0, 0],
+		padding: [0, 0, 0, 0],
+		border: {
+			width: 0,
+			color: '',
+			style: 'solid',
+		},
+		width: '5cm',
+		height: '5cm',
+		font: {},
+	}
+	const rpt: RepeatData = { type: 'Repeat', children: [frame], source: '[1,2,3]', varName: 'item', direction: 'grid' }
+	const report: TReport = {...sampleReport, children: [rpt] }
+	const report2 = await compile(report, {})
+
+	const html = makeHtmlContent(report2)
+	const component = renderer.create(<>{html}</>)
+	const tree = component.toJSON()
+  	expect(tree).toMatchSnapshot();
+	expect(report2.globalCss.replace(/\s/g,'')).toContain('.grid-with-frame>div{display:inline-block;vertical-align:top;}')
 })
