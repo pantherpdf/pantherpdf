@@ -20,8 +20,9 @@ test('UpdateVar SetVar', async () => {
 		{type:'TextSimple', formula:'ccc', children:[]},
 	]}
 	const p = await compileComponent(dt, {})
-	expect(p.children[0].data).toBe('1')
-	expect(p.children[2].data).toBe('6')
+	const children = p.children as any
+	expect(children[0].data).toBe('1')
+	expect(children[2].data).toBe('6')
 })
 
 test('UpdateVar reportVar', async () => {

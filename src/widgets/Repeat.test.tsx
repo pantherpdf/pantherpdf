@@ -34,11 +34,12 @@ test('complete rows', async () => {
 	const report: TReport = {...sampleReport, children: [rpt] }
 	const report2 = await compile(report, {})
 	
-	expect(report2.children[0].type).toBe('Repeat')
-	expect(report2.children[0].children.length).toBe(5)
-	expect(Array.isArray(report2.children[0].children[0])).toBeTruthy()
-	expect(report2.children[0].children[0][0].type).toBe('TextHtml')
-	expect(report2.children[0].children[0][0].value).toBe('1')
+	const children = report2.children as any
+	expect(children[0].type).toBe('Repeat')
+	expect(children[0].children.length).toBe(5)
+	expect(Array.isArray(children[0].children[0])).toBeTruthy()
+	expect(children[0].children[0][0].type).toBe('TextHtml')
+	expect(children[0].children[0][0].value).toBe('1')
 
 	const html = makeHtmlContent(report2)
 	const component = renderer.create(<>{html}</>)
@@ -53,11 +54,12 @@ test('complete grid', async () => {
 	const report: TReport = {...sampleReport, children: [rpt] }
 	const report2 = await compile(report, {})
 
-	expect(report2.children[0].type).toBe('Repeat')
-	expect(report2.children[0].children.length).toBe(5)
-	expect(Array.isArray(report2.children[0].children[0])).toBeTruthy()
-	expect(report2.children[0].children[0][0].type).toBe('TextHtml')
-	expect(report2.children[0].children[0][0].value).toBe('1')
+	const children = report2.children as any
+	expect(children[0].type).toBe('Repeat')
+	expect(children[0].children.length).toBe(5)
+	expect(Array.isArray(children[0].children[0])).toBeTruthy()
+	expect(children[0].children[0][0].type).toBe('TextHtml')
+	expect(children[0].children[0][0].value).toBe('1')
 
 	const html = makeHtmlContent(report2)
 	const component = renderer.create(<>{html}</>)

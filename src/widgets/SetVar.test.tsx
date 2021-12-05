@@ -13,8 +13,9 @@ test('SetVar', async () => {
 	]}
 	const data = { abc: { def: '123' } }
 	const p = await compileComponent(dt, data)
-	expect(p.children.length).toBe(1)
-	expect(p.children[0].data).toBe('123')
+	const children = p.children as any
+	expect(children.length).toBe(1)
+	expect(children[0].data).toBe('123')
 })
 
 
