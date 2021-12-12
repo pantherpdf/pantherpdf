@@ -12,6 +12,7 @@ import ReactDOMServer from 'react-dom/server'
 import styleToCssString from 'react-style-object-to-css'
 import { PropertyFontGenCss } from '../widgets/PropertyFont'
 import { GoogleFontCssUrl } from '../widgets/GoogleFonts'
+import { encodeHtml } from '../widgets/HtmlParser'
 
 
 export function makeHtmlContent(report: TReportCompiled, externalHelpers: {[key: string]: any}={}) {
@@ -37,16 +38,6 @@ export function makeHtmlContent(report: TReportCompiled, externalHelpers: {[key:
 }
 
 
-function escapeHtml(unsafe: string): string {
-	return unsafe
-		.replace(/&/g, "&amp;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;")
-		.replace(/"/g, "&quot;")
-		.replace(/'/g, "&#039;");
-}
-
-
 export default function makeHtml(report: TReportCompiled, externalHelpers: {[key: string]: any}={}): string {
 	// prepare css
 	const cssObj: CSSProperties = {...defaultReportCss, ...PropertyFontGenCss(report.properties.font || {})}
@@ -61,7 +52,7 @@ export default function makeHtml(report: TReportCompiled, externalHelpers: {[key
 	const fontUrls = [...fonts]
 	.map(x => GoogleFontCssUrl(x) || '')
 	.filter(x => x.length > 0)
-	.map(x => `<link rel="stylesheet" href="${escapeHtml(x)}">`)
+	.map(x => `<link rel="stylesheet" href="${encodeHtml(x)}">`)
 	.join('\n')
 
 	const html = `<!DOCTYPE html>

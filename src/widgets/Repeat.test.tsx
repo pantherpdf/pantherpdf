@@ -8,7 +8,7 @@ import compile, { compileComponent } from '../editor/compile'
 import { ForceChildren } from '../editor/types'
 import { sampleReport } from '../editor/sampleReport'
 import { TReport } from '../types'
-import { TextHtmlData } from './TextHtml'
+import { TextHtmlData, ValueInternalFromEditor } from './TextHtml'
 import { makeHtmlContent } from '../editor/makeHtml'
 import renderer from 'react-test-renderer'
 import { FrameData } from './Frame'
@@ -30,7 +30,7 @@ test('text', async () => {
 
 
 test('complete rows', async () => {
-	const txt: TextHtmlData = { type: 'TextHtml', value: '<data>item</data>', font:{}, children:[] }
+	const txt: TextHtmlData = { type: 'TextHtml', value: ValueInternalFromEditor('<data>item</data>'), font:{}, children:[] }
 	const rpt: RepeatData = { type: 'Repeat', children: [txt], source: '[1,2,3,4,5]', varName: 'item', direction: 'rows' }
 	const report: TReport = {...sampleReport, children: [rpt] }
 	const report2 = await compile(report, {})
@@ -50,7 +50,7 @@ test('complete rows', async () => {
 
 
 test('complete grid', async () => {
-	const txt: TextHtmlData = { type: 'TextHtml', value: '<data>item</data>', font:{}, children:[] }
+	const txt: TextHtmlData = { type: 'TextHtml', value: ValueInternalFromEditor('<data>item</data>'), font:{}, children:[] }
 	const rpt: RepeatData = { type: 'Repeat', children: [txt], source: '[1,2,3,4,5]', varName: 'item', direction: 'grid' }
 	const report: TReport = {...sampleReport, children: [rpt] }
 	const report2 = await compile(report, {})

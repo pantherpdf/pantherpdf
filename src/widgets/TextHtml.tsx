@@ -16,7 +16,6 @@ import BoxName from './BoxName'
 import PropertyFont, { PropertyFontGenCss, TFont } from './PropertyFont'
 import FormulaEvaluate from '../formula/formula'
 import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight, faBold, faItalic, faTag, faUnderline, IconDefinition } from '@fortawesome/free-solid-svg-icons'
-import { FormulaHelper } from '../editor/compile'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { listOfAdjusts } from './formulaAdjust'
 import Trans, { TransName, trKeys } from '../translation'
@@ -24,6 +23,7 @@ import { idCmp } from '../editor/childrenMgmt'
 import InputApplyOnEnter from './InputApplyOnEnter'
 import style from './TextHtml.module.css'
 import { LoadGoogleFontCss } from './GoogleFonts'
+import { Element_, parse, extractText } from './HtmlParser'
 
 
 const listOfEditors: Editor[] = []
@@ -236,95 +236,6 @@ function TagEditor(props: ItemRendeProps) {
 			</React.Fragment>)}
 		</select>
 	</>
-}
-
-
-// evaluate during compile
-// replace <?> with value of formula inside <?>
-export async function evaluateFormulaInsideHtml(html: string, formulaHelper: FormulaHelper, createDocument: (()=>Document)|undefined): Promise<string> {
-	// parse html
-	let parentEl: HTMLElement
-	let doc2: Document
-	if (createDocument) {
-		doc2 = createDocument()
-		parentEl = doc2.body
-	}
-	else {
-		doc2 = window.document
-		parentEl = doc2.createElement('div')
-	}
-	parentEl.innerHTML = html
-
-	function processBtn(el: Node, value: string): Node | null {
-		if (el.nodeName === '#text') {
-			return doc2.createTextNode(value)
-		}
-		if (el.childNodes.length === 0) {
-			return null
-		}
-		// b, i, ...
-		const el2 = el.cloneNode(false)
-		while (el2.lastChild) {
-			el2.removeChild(el2.lastChild)
-		}
-		for (let i = 0; i < el.childNodes.length; ++i) {
-			const el3 = processBtn(el.childNodes[i], value)
-			if (el3) {
-				el2.appendChild(el3)
-				return el2
-			}
-		}
-		return null
-	}
-
-	async function process(el: Node): Promise<Node> {
-		if (el.nodeName.toLowerCase() === tagType.toLowerCase()) {
-			const btn = (el as HTMLElement)
-			const formula = btn.textContent
-			if (formula === null) {
-				return doc2.createTextNode('')
-			}
-			if (typeof formula !== 'string') {
-				return doc2.createTextNode('ERROR')
-			}
-			const value2 = await FormulaEvaluate(formula, formulaHelper)
-			let value
-			// adjust
-			const adjustName = btn.getAttribute('data-adjust')
-			if (adjustName) {
-				const adjust = listOfAdjusts.find(x => x.id === adjustName)
-				if (!adjust) {
-					throw new Error(`Unknown adjust ${adjustName}`)
-				}
-				value = adjust.func(value2, [])
-			}
-			else {
-				value = String(value2)
-			}
-			//
-			const el2 = processBtn(el, value)
-			return el2 ? el2.childNodes[0] : doc2.createTextNode(value)
-		}
-
-		// string
-		if (el.nodeType !== 1) {
-			return el.cloneNode(true)
-		}
-
-		// div, span, p ...
-		const el2 = el.cloneNode(false)
-		while (el2.lastChild) {
-			el2.removeChild(el2.lastChild)
-		}
-		for (let i = 0; i < el.childNodes.length; ++i) {
-			const el3 = await process(el.childNodes[i])
-			el2.appendChild(el3)
-		}
-		return el2
-	}
-
-	const parentEl2 = await process(parentEl)
-	return (parentEl2 as HTMLElement).innerHTML
 }
 
 
@@ -680,9 +591,10 @@ class Editor extends React.Component<EditorProps, EditorState> {
 
 
 
+type TextHtmlDataValue = {type:'html', value:string} | {type:'formula', value:string, adjust?:string}
 export interface TextHtmlData extends TData {
 	type: 'TextHtml',
-	value: string,
+	value: TextHtmlDataValue[],
 	font: TFont,
 }
 
@@ -705,12 +617,137 @@ function escapeHtml(unsafe: string): string {
 }
 
 
+export function assertUnreachable(_x: never): never {
+	throw new Error("Didn't expect to get here");
+}
+
+
+function ValueInternalToEditor(value: TextHtmlDataValue[]): string {
+	let html = ''
+	for (const part of value) {
+		switch (part.type) {
+			case 'html': {
+				html += part.value
+				break;
+			}
+			case 'formula': {
+				html += `<${tagType}`
+				if (part.adjust) {
+					html += ` data-adjust="${escapeHtml(part.adjust)}"`
+				}
+				html += `>${escapeHtml(part.value)}</${tagType}>`
+				break;
+			}
+			default: {
+				assertUnreachable(part)
+			}
+		}
+	}
+	return html
+}
+
+
+export function extractTag(html: string) {
+	function process(el: Element_): Element_[] {
+		for (const el2 of el.children) {
+			if (el2.name === '#text' && el2.textContent.trim().length > 0) {
+				return [el]
+			}
+			const sub = process(el2)
+			if (sub.length > 0) {
+				return [el, ...sub]
+			}
+		}
+		return []
+	}
+
+	const r = parse(html)
+	if (r.length !== 1) {
+		throw new Error('Bad element')
+	}
+	const adjust = r[0].attributes['data-adjust'] || ''
+
+	const tags2 = process(r[0])
+	if (tags2.length > 0) {
+		// remove el
+		tags2.splice(0, 1)
+	}
+	const tags = tags2.map(el => ({name: el.name, attributes: el.attributes}))
+	return {
+		formula: extractText(r[0]),
+		adjust: adjust || undefined,
+		tags,
+	}
+}
+
+
+export function ValueInternalFromEditor(html: string): TextHtmlDataValue[] {
+	if (html.indexOf('<!--') !== -1) {
+		throw new Error('Comments not supported')
+	}
+	const arr: TextHtmlDataValue[] = []
+	const tagStart = '<' + tagType
+	const tagEnd = '</' + tagType + '>'
+	let i = 0
+	while (i < html.length) {
+		const i2 = html.indexOf(tagStart, i)
+		if (i2 === -1) {
+			break
+		}
+		const i3 = html.indexOf(tagEnd, i2)
+		if (i3 === -1) {
+			break
+		}
+		const html2 = html.substring(i, i2)
+		if (html2.length > 0) {
+			if (arr.length === 0 || arr[arr.length-1].type !== 'html') {
+				arr.push({type: 'html', value: ''})
+			}
+			arr[arr.length-1].value += html2
+		}
+		const { formula, adjust, tags } = extractTag(html.substring(i2, i3+tagEnd.length))
+		if (tags.length  > 0 && (arr.length === 0 || arr[arr.length-1].type !== 'html')) {
+			arr.push({type: 'html', value: ''})
+		}
+		for (const tag of tags) {
+			arr[arr.length - 1].value += `<${tag.name}`
+			for (const [key, value] of Object.entries(tag.attributes)) {
+				arr[arr.length - 1].value += ` ${key}`
+				if (value !== undefined) {
+					arr[arr.length - 1].value += `="${escapeHtml(value)}"`
+				}
+			}
+			arr[arr.length - 1].value += `>`
+		}
+		if (formula.length > 0) {
+			arr.push({type: 'formula', value: formula, adjust})
+		}
+		if (tags.length  > 0) {
+			const val: TextHtmlDataValue = {type: 'html', value: ''}
+			for (const tag of [...tags].reverse()) {
+				val.value += `</${tag.name}>`
+			}
+			arr.push(val)
+		}
+		i = i3 + tagEnd.length
+	}
+	if (i < html.length) {
+		if (arr.length === 0 || arr[arr.length-1].type !== 'html') {
+			arr.push({type: 'html', value: ''})
+		}
+		arr[arr.length-1].value += html.substring(i)
+	}
+	return arr
+}
+
+
 export const TextHtml: Widget = {
 	name: {en: 'Text', sl: 'Besedilo'},
 	icon: {fontawesome: faAlignLeft},
 
 	newItem: async (props): Promise<TextHtmlData> => {
-		const value = props.report.children.length > 0 ? '' : `<div>${escapeHtml(Trans('TextHtml initial value'))}</div>`
+		const valueTxt =  `<div>${escapeHtml(Trans('TextHtml initial value'))}</div>`
+		const value: TextHtmlDataValue[] = props.report.children.length > 0 ? [{type: 'html', value: valueTxt}] : []
 		return {
 			type: 'TextHtml',
 			children: [],
@@ -723,9 +760,34 @@ export const TextHtml: Widget = {
 		if (dt.font.family) {
 			helper.reportCompiled.fontsUsed.push(dt.font.family)
 		}
+		// combine parts
+		let html = ''
+		for (const part of dt.value) {
+			switch (part.type) {
+				case 'html': {
+					html += part.value
+					break;
+				}
+				case 'formula': {
+					let value = await FormulaEvaluate(part.value, helper.formulaHelper)
+					if (part.adjust && part.adjust.length > 0) {
+						const adjustObj = listOfAdjusts.find(x => x.id === part.adjust)
+						if (!adjustObj) {
+							throw new Error(`Unknown adjust ${part.adjust}`)
+						}
+						value = adjustObj.func(value, [])
+					}
+					html += String(value)
+					break;
+				}
+				default: {
+					assertUnreachable(part)
+				}
+			}
+		}
 		return {
 			type: dt.type,
-			value: await evaluateFormulaInsideHtml(dt.value, helper.formulaHelper, helper.externalHelpers.createDocument),
+			value: html,
 			font: dt.font,
 		}
 	},
@@ -754,8 +816,8 @@ export const TextHtml: Widget = {
 			>
 				<Editor
 					wid={props.wid}
-					value={item.value}
-					onChange={val => props.setItem({...item, value: val})}
+					value={ValueInternalToEditor(item.value)}
+					onChange={val => props.setItem({...item, value: ValueInternalFromEditor(val)})}
 					style={css}
 					active={!!props.selected && idCmp(props.wid, props.selected)}
 				/>
