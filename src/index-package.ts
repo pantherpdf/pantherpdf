@@ -7,4 +7,5 @@ import { transformData } from './editor/DataTransform'
 import getOriginalSourceData from './editor/getOriginalSourceData'
 
 export * from './types'
+export * from './editor/generateTarget'
 export { Editor, FileDialog, compile, makeHtml, PropertyFontGenCss, transformData, getOriginalSourceData, uploadFile }
