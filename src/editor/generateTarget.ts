@@ -89,8 +89,13 @@ export async function generateTarget(report: TReport, api: ApiEndpoints, data: u
 		const tMakeHtmlAfter = logPerformance ? performance.now() : 0
 		if (logPerformance) { console.log(`makeHtml() took ${(tMakeHtmlAfter-tMakeHtmlBefore).toFixed(0)}ms`) }
 
+		const tPdfBefore = logPerformance ? performance.now() : 0
+		const body = await makePdf(reportCompiled, html)
+		const tPdfAfter = logPerformance ? performance.now() : 0
+		if (logPerformance) { console.log(`makePdf() took ${(tPdfAfter-tPdfBefore).toFixed(0)}ms`) }
+
 		return {
-			'body': await makePdf(reportCompiled, html),
+			'body': body,
 			'contentType': 'application/pdf',
 			'filename': reportCompiled.properties.fileName || 'report.pdf',
 		}
