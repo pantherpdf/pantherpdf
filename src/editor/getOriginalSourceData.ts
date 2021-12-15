@@ -1,34 +1,64 @@
 import { ApiEndpoints, TReport } from "../types"
 
 
-export async function getDataFromObj(obj: {mimeType: string, data: ArrayBuffer}): Promise<unknown> {
-	if (obj.mimeType === 'text/javascript' || obj.mimeType === 'application/javascript') {
-		// cannot import module because import() gets transformed into something else
-		//const module = await import(url)
-		
-		// cannot eval and import because nodejs doesnt support importing from http://
-		//const enc = encodeURIComponent(url)
-		//const prms = eval(`import("${decodeURIComponent(enc)}")`)
-		//const module = await prms
-		//const getData = module.default
-		//return getData()
-
-		//
-		const code = new TextDecoder('utf-8').decode(obj.data)
-		// eslint-disable-next-line
-		const a = eval(code+';;;;{getData();}')
-		const data = await a
-		return data
-	}
-	if (obj.mimeType === 'application/json') {
-		const code = new TextDecoder('utf-8').decode(obj.data)
-		return JSON.parse(code)
-	}
-	throw new Error(`Invalid response. Content-Type: ${obj.mimeType}`)
+export type DataTypes = 'as-is' | 'javascript' | 'url'
+export type DataObj = { value: unknown, type: DataTypes }
+interface Args {
+	report: TReport
+	api: ApiEndpoints
+	data?: DataObj
+	allowUnsafeJsEval?: boolean
 }
 
 
-export async function getDataFromUrl(url: string): Promise<unknown> {
+async function dataFromObj(value: unknown, type: DataTypes, allowUnsafeJsEval: boolean): Promise<unknown> {
+	if (type === 'as-is') {
+		return value
+	}
+
+	if (type === 'javascript') {
+		if (!allowUnsafeJsEval) {
+			throw new Error('Evaluating JS is disabled')
+		}
+		if (typeof value !== 'string') {
+			throw new Error('JS code should be string')
+		}
+		return evalJs(value)
+	}
+
+	if (type === 'url') {
+		if (typeof value !== 'string') {
+			throw new Error('JS code should be string')
+		}
+		return getDataFromUrl(value, allowUnsafeJsEval)
+	}
+
+	throw new Error('Unknown data type')
+}
+
+
+async function evalJs(code: string): Promise<unknown> {
+	// cannot import module because import() gets transformed into something else
+	//const module = await import(url)
+	
+	// cannot eval and import because nodejs doesnt support importing from http://
+	//const enc = encodeURIComponent(url)
+	//const prms = eval(`import("${decodeURIComponent(enc)}")`)
+	//const module = await prms
+	//const getData = module.default
+	//return getData()
+
+	// eslint-disable-next-line
+	const a = eval(code)
+	const data = await a
+	return data
+}
+
+
+export async function getDataFromUrl(url: string, allowUnsafeJsEval: boolean): Promise<unknown> {
+	if (!url.startsWith('http://') && !url.startsWith('https://')) {
+		throw new Error('Only absolute url is allowed')
+	}
 	const r = await fetch(url, {
 		headers: {
 			Accept: 'text/javascript, application/json'
@@ -38,17 +68,28 @@ export async function getDataFromUrl(url: string): Promise<unknown> {
 		throw new Error(`Bad response status: ${r.status}`)
 	}
 	const ct = (r.headers.get('Content-Type') || '').split(';')[0].trim()
-	const data = await r.arrayBuffer()
-	return await getDataFromObj({mimeType: ct, data})
+	if (ct === 'text/javascript' || ct === 'application/javascript') {
+		const code = await r.text()
+		return dataFromObj(code, 'javascript', allowUnsafeJsEval)
+	}
+	if (ct === 'application/json') {
+		const data = await r.json()
+		return dataFromObj(data, 'as-is', allowUnsafeJsEval)
+	}
+	throw new Error('unsupported data content-type')
 }
 
 
-export default async function getOriginalSourceData(report: TReport, api: ApiEndpoints, data: unknown, dataUrl: string|undefined): Promise<unknown> {
-	if (data !== undefined) {
-		return data
-	}
-	if (dataUrl) {
-		return getDataFromUrl(dataUrl)
+export default async function getOriginalSourceData(args: Args): Promise<unknown> {
+	const {
+		report,
+		api,
+		data,
+		allowUnsafeJsEval = false
+	} = args;
+
+	if (data) {
+		return dataFromObj(data.value, data.type, allowUnsafeJsEval)
 	}
 	if (report.dataUrl.length > 0) {
 		let url = report.dataUrl
@@ -57,9 +98,17 @@ export default async function getOriginalSourceData(report: TReport, api: ApiEnd
 				throw new Error('missing api filesDownload')
 			}
 			const obj = await api.filesDownload(url.substring(6))
-			return await getDataFromObj(obj)
+			if (obj.mimeType === 'text/javascript' || obj.mimeType === 'application/javascript') {
+				const code = new TextDecoder('utf-8').decode(obj.data)
+				return dataFromObj(code, 'javascript', allowUnsafeJsEval)
+			}
+			if (obj.mimeType === 'application/json') {
+				const data = new TextDecoder('utf-8').decode(obj.data)
+				return dataFromObj(data, 'as-is', allowUnsafeJsEval)
+			}
+			throw new Error('unsupported data content-type')
 		}
-		return getDataFromUrl(url)
+		return getDataFromUrl(url, allowUnsafeJsEval)
 	}
 	return undefined
 }

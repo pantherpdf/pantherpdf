@@ -28,7 +28,7 @@ test('generateTarget CSV CP1250', async () => {
 
 	const data = [{abc:"a", def:"b"}, {abc:"č", def:"€"}]
 	const api: ApiEndpoints = { }
-	const result = await generateTarget(report, api, data, undefined, false, ()=>{throw new Error('not supported')})
+	const result = await generateTarget({report, api, data:{value:data, type:'as-is'}, makePdf: ()=>{throw new Error('not supported')}})
 	expect(result.filename).toBe('abc.def')
 	expect(result.contentType).toBe('text/csv; charset=windows-1250')
 	const b64 = Buffer.from(result.body).toString('base64')
@@ -55,7 +55,7 @@ test('generateTarget CSV newlines', async () => {
 
 	const data = [{abc:"\"", def:"1\n2"}, {abc:"č", def:"';'"}]
 	const api: ApiEndpoints = { }
-	const result = await generateTarget(report, api, data, undefined, false, ()=>{throw new Error('not supported')})
+	const result = await generateTarget({report, api, data:{value:data, type:'as-is'}, makePdf:()=>{throw new Error('not supported')}})
 	expect(result.filename).toBe('abc.def')
 	expect(result.contentType).toBe('text/csv; charset=utf-8')
 	const b64 = Buffer.from(result.body).toString('base64')

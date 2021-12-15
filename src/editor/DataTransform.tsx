@@ -22,14 +22,14 @@ import InputApplyOnEnter from '../widgets/InputApplyOnEnter'
  * @param {inputData} unknown - Input data
  * @param {len} number - Number of transformations to apply
  */
-export async function transformData(inputData: unknown, report: TReport, len?: number) {
+export async function transformData(inputData: unknown, report: TReport, allowUnsafeJsEval: boolean, len?: number) {
 	if (len === undefined) {
 		len = report.transforms.length
 	}
 	for (let i=0; i<len; ++i) {
 		const w = report.transforms[i]
 		const comp = getTransform(w.type)
-		inputData = await comp.transform(inputData, w)
+		inputData = await comp.transform(inputData, w, allowUnsafeJsEval)
 	}
 	return inputData
 }
@@ -148,7 +148,7 @@ export default function DataTransform(props: GeneralProps) {
 		
 		let dt2
 		try {
-			dt2 = await transformData(dt, props.report, len)
+			dt2 = await transformData(dt, props.report, true, len)
 		}
 		catch(e) {
 			let msg = String(e)

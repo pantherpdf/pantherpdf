@@ -39,7 +39,7 @@ const CSV: TTransformWidget = {
 		return obj
 	},
 	
-	transform: async (dt, item2: TTransformData) => {
+	transform: async (dt, item2: TTransformData, allowUnsafeJsEval) => {
 		const item = item2 as CSVData
 		const arr: string[][] = []
 		const helper: IHelpers & {vars: {}} = {

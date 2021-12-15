@@ -31,7 +31,7 @@ const Filter: TTransformWidget = {
 		return obj
 	},
 	
-	transform: async (dt, item2: TTransformData) => {
+	transform: async (dt, item2: TTransformData, allowUnsafeJsEval) => {
 		const item = item2 as FilterData
 		if (item.field.length === 0 || item.condition.length === 0)
 			return dt

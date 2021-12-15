@@ -1,6 +1,6 @@
 import { ApiEndpoints, TReport, TReportCompiled } from '../types'
 import compile from './compile'
-import getOriginalSourceData from './getOriginalSourceData'
+import getOriginalSourceData, { DataObj } from './getOriginalSourceData'
 import { transformData } from './DataTransform'
 import makeHtml from './makeHtml'
 import iconv from 'iconv-lite'
@@ -70,10 +70,29 @@ interface FileOutput {
 	contentType: string,
 	filename: string,
 }
-export async function generateTarget(report: TReport, api: ApiEndpoints, data: unknown, dataUrl: string|undefined, logPerformance: boolean, makePdf: (report: TReportCompiled, html: string)=>Promise<Uint8Array>): Promise<FileOutput> {
+
+interface Args {
+	report: TReport
+	api: ApiEndpoints
+	makePdf: (report: TReportCompiled, html: string)=>Promise<Uint8Array>
+	data?: DataObj
+	logPerformance?: boolean
+	allowUnsafeJsEval?: boolean
+}
+
+export async function generateTarget(props: Args): Promise<FileOutput> {
+	const {
+		report,
+		api,
+		makePdf,
+		data,
+		logPerformance = false,
+		allowUnsafeJsEval = false,
+	} = props
+
 	const tDataBefore = logPerformance ? performance.now() : 0
-	const source = await getOriginalSourceData(report, api, data, dataUrl)
-	const inputData = await transformData(source, report)
+	const source = await getOriginalSourceData({report, api, data, allowUnsafeJsEval})
+	const inputData = await transformData(source, report, allowUnsafeJsEval)
 	const tDataAfter = logPerformance ? performance.now() : 0
 	if (logPerformance) { console.log(`getOriginalSourceData() + transformData() took ${(tDataAfter-tDataBefore).toFixed(0)}ms`) }
 

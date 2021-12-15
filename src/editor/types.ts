@@ -116,7 +116,7 @@ export interface TransformRendeProps extends GeneralProps {
 export interface TTransformWidget {
 	name: TName,
 	newItem: () => Promise<TTransformData>,
-	transform: (dt: unknown, item: TTransformData) => Promise<unknown>,
+	transform: (dt: unknown, item: TTransformData, allowUnsafeJsEval: boolean) => Promise<unknown>,
 	Editor: FunctionComponent<TransformRendeProps>,
 }
 

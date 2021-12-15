@@ -177,7 +177,7 @@ export default function Container() {
 			return JSON.parse(overrideSourceData)
 		}
 		if (report) {
-			return getOriginalSourceData(report, api, undefined, undefined)
+			return getOriginalSourceData({report, api, allowUnsafeJsEval:true})
 		}
 		return undefined
 	}
@@ -188,7 +188,7 @@ export default function Container() {
 			(async function() {
 				try {
 					const dt1 = await getOrigSourceInternal()
-					const dt2 = await transformData(dt1, report)
+					const dt2 = await transformData(dt1, report, true)
 					setData({data: dt2})
 				}
 				catch(e) {
@@ -321,7 +321,7 @@ export default function Container() {
 		setIsPrinting(true)
 		try {
 			const source = await getOrigSourceInternal()
-			const data = await transformData(source, report)
+			const data = await transformData(source, report, true)
 			if (report.target === 'pdf') {
 				const c = await compile(report, data, api, {})
 				const html = makeHtml(c)
