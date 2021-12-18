@@ -11,12 +11,13 @@
 		"file-saver": "^2.0.3",
 		"iconv-lite": "^0.6.3",
 		"react": "^17.0.2",
-		"react-dom": "^17.0.2",
 		"react-bootstrap": "^2.0.0-beta.4",
 		"react-colorful": "^5.3.0",
+		"react-dom": "^17.0.2",
 		"react-style-object-to-css": "^1.1.2"
 	},
 	"devDependencies": {
+		"@babel/helper-environment-visitor": "^7.16.5",
 		"@types/file-saver": "^2.0.3",
 		"@types/jest": "^26.0.24",
 		"@types/jsdom": "^16.2.13",
@@ -29,6 +30,9 @@
 		"typescript": "^4.4.3",
 		"typescript-plugin-css-modules": "^3.4.0"
 	},
+	"comments": [
+		"@babel/helper-environment-visitor is required by some package ..."
+	],
 	"scripts": {
 		"build": "PUBLIC_URL='./' react-scripts build",
 		"build:package": "rm -rdf ./build-package && tsc --p tsconfig.build.json && node build-helper.js",
