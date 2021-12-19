@@ -14,7 +14,7 @@ export interface TData {
 	children: TData[],
 }
 
-export const TargetOptions = tuple('pdf', 'json', 'csv-excel-utf-8', 'csv-windows-1250');
+export const TargetOptions = tuple('pdf', 'html', 'json', 'csv-utf-8', 'csv-windows-1250');
 export type TargetOption = (typeof TargetOptions)[number];
 export function TargetOptionTypeGuard(r: any): r is TargetOption {
 	if (typeof r !== 'string')
@@ -95,7 +95,7 @@ export function ReportTypeGuard(r: any): r is TReport {
 		return false
 	if (typeof r.name !== 'string')
 		return false
-	if (r.target !== 'pdf' && r.target !== 'json' && r.target !== 'csv-excel-utf-8' && r.target !== 'csv-windows-1250')
+	if (r.target !== 'pdf' && r.target !== 'html' && r.target !== 'json' && r.target !== 'csv-utf-8' && r.target !== 'csv-windows-1250')
 		return false
 	if (!Array.isArray(r.children))
 		return false

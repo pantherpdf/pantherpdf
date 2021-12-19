@@ -322,7 +322,7 @@ export default function Container() {
 		try {
 			const source = await getOrigSourceInternal()
 			const data = await transformData(source, report, true)
-			if (report.target === 'pdf') {
+			if (report.target === 'pdf' || report.target === 'html') {
 				const c = await compile(report, data, api, {})
 				const html = makeHtml(c)
 				setShownModalPrint({html})
@@ -330,7 +330,7 @@ export default function Container() {
 			else if (report.target === 'json') {
 				setShownModalPrint({json: JSON.stringify(data)})
 			}
-			else if (report.target === 'csv-excel-utf-8' || report.target === 'csv-windows-1250') {
+			else if (report.target === 'csv-utf-8' || report.target === 'csv-windows-1250') {
 				if (!Array.isArray(data)) {
 					throw new Error('data must be 2D array')
 				}

@@ -1,4 +1,4 @@
-import { ApiEndpoints, TReport, TReportCompiled } from '../types'
+import { ApiEndpoints, TargetOption, TReport, TReportCompiled } from '../types'
 import compile from './compile'
 import getOriginalSourceData, { DataObj } from './getOriginalSourceData'
 import { transformData } from './DataTransform'
@@ -65,6 +65,29 @@ export function checkCsvFormat(data: any): data is string[][] {
 }
 
 
+function targetExtension(type: TargetOption): string {
+	if (type === 'pdf') { return '.pdf' }
+	if (type === 'html') { return '.html' }
+	if (type === 'json') { return '.json' }
+	if (type === 'csv-utf-8') { return '.csv' }
+	if (type === 'csv-windows-1250') { return '.csv' }
+	assertUnreachableTarget(type)
+}
+
+
+function correctExtension(filename: string | undefined, sourceType: TargetOption, targetType: TargetOption): string {
+	const extTarget = targetExtension(targetType)
+	if (filename) {
+		const extSource = targetExtension(sourceType)
+		if (extSource !== extTarget && filename.toLowerCase().endsWith(extSource)) {
+			return filename.substring(0, filename.length - extSource.length) + extTarget
+		}
+		return filename
+	}
+	return `report${extTarget}`
+}
+
+
 interface FileOutput {
 	body: Uint8Array,
 	contentType: string,
@@ -78,6 +101,7 @@ interface Args {
 	data?: DataObj
 	logPerformance?: boolean
 	allowUnsafeJsEval?: boolean
+	targetOverride?: TargetOption
 }
 
 export async function generateTarget(props: Args): Promise<FileOutput> {
@@ -88,6 +112,7 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
 		data,
 		logPerformance = false,
 		allowUnsafeJsEval = false,
+		targetOverride
 	} = props
 
 	const tDataBefore = logPerformance ? performance.now() : 0
@@ -100,9 +125,11 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
 	const reportCompiled = await compile(report, inputData, api)
 	const tCompileAfter = logPerformance ? performance.now() : 0
 	if (logPerformance) { console.log(`compile() took ${(tCompileAfter-tCompileBefore).toFixed(0)}ms`) }
+
+	const target = targetOverride || report.target
 	
 	// PDF
-	if (report.target === 'pdf') {
+	if (target === 'pdf') {
 		const tMakeHtmlBefore = logPerformance ? performance.now() : 0
 		const html = makeHtml(reportCompiled)
 		const tMakeHtmlAfter = logPerformance ? performance.now() : 0
@@ -116,23 +143,37 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
 		return {
 			'body': body,
 			'contentType': 'application/pdf',
-			'filename': reportCompiled.properties.fileName || 'report.pdf',
+			'filename': correctExtension(reportCompiled.properties.fileName, reportCompiled.target, target)
+		}
+	}
+
+	// html
+	if (target === 'html') {
+		const tMakeHtmlBefore = logPerformance ? performance.now() : 0
+		const html = makeHtml(reportCompiled)
+		const tMakeHtmlAfter = logPerformance ? performance.now() : 0
+		if (logPerformance) { console.log(`makeHtml() took ${(tMakeHtmlAfter-tMakeHtmlBefore).toFixed(0)}ms`) }
+		const encoder = new TextEncoder()
+		return {
+			'body': encoder.encode(html),
+			'contentType': 'text/html; charset=utf-8',
+			'filename': correctExtension(reportCompiled.properties.fileName, reportCompiled.target, target)
 		}
 	}
 
 	// JSON
-	if (report.target === 'json') {
+	if (target === 'json') {
 		const contents = JSON.stringify(inputData)
 		const encoder = new TextEncoder()
 		return {
 			'body': encoder.encode(contents),
 			'contentType': 'application/json',
-			'filename': reportCompiled.properties.fileName || 'report.json',
+			'filename': correctExtension(reportCompiled.properties.fileName, reportCompiled.target, target)
 		}
 	}
 
 	// CSV utf8
-	if (report.target === 'csv-excel-utf-8') {
+	if (target === 'csv-utf-8') {
 		if (!checkCsvFormat(inputData)) {
 			throw new Error('data (transformed) is not CSV compatible')
 		}
@@ -140,12 +181,12 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
 		return {
 			'body': csv,
 			'contentType': 'text/csv; charset=utf-8',
-			'filename': reportCompiled.properties.fileName || 'report.csv',
+			'filename': correctExtension(reportCompiled.properties.fileName, reportCompiled.target, target)
 		}
 	}
 
 	// CSV Win-1250 CP-1250
-	if (report.target === 'csv-windows-1250') {
+	if (target === 'csv-windows-1250') {
 		if (!checkCsvFormat(inputData)) {
 			throw new Error('data (transformed) is not CSV compatible')
 		}
@@ -153,9 +194,9 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
 		return {
 			'body': csv,
 			'contentType': 'text/csv; charset=windows-1250',
-			'filename': reportCompiled.properties.fileName || 'report.csv',
+			'filename': correctExtension(reportCompiled.properties.fileName, reportCompiled.target, target)
 		}
 	}
 
-	assertUnreachableTarget(report.target)
+	assertUnreachableTarget(target)
 }

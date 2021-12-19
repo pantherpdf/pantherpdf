@@ -34,6 +34,7 @@
 	"scripts": {
 		"build": "PUBLIC_URL='./' react-scripts build",
 		"build:package": "rm -rdf ./build-package && tsc --p tsconfig.build.json && node build-helper.js",
+		"build:check": "tsc --noEmit",
 		"start": "react-scripts start",
 		"test": "react-scripts test"
 	},

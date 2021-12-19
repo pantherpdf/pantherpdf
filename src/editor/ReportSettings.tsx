@@ -18,7 +18,7 @@ import VarEditor from './VarEditor'
 
 // hack to get array of possible values
 // because I can only import types from shared
-const TargetOptionTmpObj: {[key in TargetOption]: number} = { 'pdf': 1, 'json': 1, 'csv-excel-utf-8': 1, 'csv-windows-1250': 1, }
+const TargetOptionTmpObj: {[key in TargetOption]: number} = { 'pdf': 1, 'html': 1, 'json': 1, 'csv-utf-8': 1, 'csv-windows-1250': 1, }
 const TargetOptionTmpKeys = Object.keys(TargetOptionTmpObj)
 
 

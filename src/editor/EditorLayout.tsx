@@ -101,7 +101,7 @@ function Properties(props: GeneralProps) {
 
 function RenderContent(props: GeneralProps) {
 	const t = props.report.target
-	if (t === 'pdf') {
+	if (t === 'pdf' || t === 'html') {
 		const style = {...defaultReportCss, ...PropertyFontGenCss(props.report.properties.font || {})}
 		if (props.report.properties.font?.family) {
 			LoadGoogleFontCss(props.report.properties.font.family)
@@ -129,7 +129,7 @@ function RenderContent(props: GeneralProps) {
 		}
 	}
 
-	if (t === 'csv-excel-utf-8' || t === 'csv-windows-1250') {
+	if (t === 'csv-utf-8' || t === 'csv-windows-1250') {
 		const dt = props.data.data
 		if( !Array.isArray(dt) ) {
 			return <div className="alert alert-danger">
