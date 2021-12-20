@@ -3,7 +3,7 @@ import compile from './compile'
 import getOriginalSourceData, { DataObj } from './getOriginalSourceData'
 import { transformData } from './DataTransform'
 import makeHtml from './makeHtml'
-import iconv from 'iconv-lite'
+import { encode } from './encoding'
 
 
 function escapeCsv(txt: string): string {
@@ -16,24 +16,23 @@ function assertUnreachableTarget(_x: never): never {
 }
 
 
-export function makeCsv(rows: string[][], encoding: 'UTF-8' | 'CP1250'): Buffer {
-	const newLine = Buffer.from( (encoding.toLowerCase()==='utf-8' || encoding.toLowerCase()==='utf8') ? '\n' : '\r\n' );
-	const cellEncosing = Buffer.from('"')
-	const collSeparator = Buffer.from(';')
-	const out: Buffer[] = []
+export function makeCsv(rows: string[][], encoding: 'utf-8' | 'cp1250'): Uint8Array {
+	let out = ''
+	const newLine = encoding==='utf-8' ? '\n' : '\r\n'
+	const cellEnclosing = '"'
+	const collSeparator = ';'
+	
 	for (const row of rows) {
 		for (let i = 0; i < row.length; ++i) {
-			if (i != 0) {
-				out.push(collSeparator)
+			if (i !== 0) {
+				out += collSeparator
 			}
-			out.push(cellEncosing)
-			const txt = escapeCsv(row[i])
-			out.push(iconv.encode(txt, encoding))
-			out.push(cellEncosing)
+			out += cellEnclosing + escapeCsv(row[i]) + cellEnclosing
 		}
-		out.push(newLine)
+		out += newLine
 	}
-	return Buffer.concat(out)
+
+	return encode(out, encoding)
 }
 
 
@@ -177,7 +176,7 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
 		if (!checkCsvFormat(inputData)) {
 			throw new Error('data (transformed) is not CSV compatible')
 		}
-		const csv = makeCsv(inputData, 'UTF-8')
+		const csv = makeCsv(inputData, 'utf-8')
 		return {
 			'body': csv,
 			'contentType': 'text/csv; charset=utf-8',
@@ -190,7 +189,7 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
 		if (!checkCsvFormat(inputData)) {
 			throw new Error('data (transformed) is not CSV compatible')
 		}
-		const csv = makeCsv(inputData, 'CP1250')
+		const csv = makeCsv(inputData, 'cp1250')
 		return {
 			'body': csv,
 			'contentType': 'text/csv; charset=windows-1250',

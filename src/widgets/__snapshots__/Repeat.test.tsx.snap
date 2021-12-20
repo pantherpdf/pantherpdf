@@ -1,175 +1,62 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`complete grid 1`] = `
-<div
-  style={
-    Object {
-      "display": "flex",
-      "flexWrap": "wrap",
-    }
-  }
->
-  <div
-    style={Object {}}
-  >
-    <div
-      dangerouslySetInnerHTML={
-        Object {
-          "__html": "1",
-        }
-      }
-      style={Object {}}
-    />
+<div style="display: flex;  flex-wrap: wrap;">
+  <div style>
+    <div style>
+      1
+    </div>
   </div>
-  <div
-    style={Object {}}
-  >
-    <div
-      dangerouslySetInnerHTML={
-        Object {
-          "__html": "2",
-        }
-      }
-      style={Object {}}
-    />
+  <div style>
+    <div style>
+      2
+    </div>
   </div>
-  <div
-    style={Object {}}
-  >
-    <div
-      dangerouslySetInnerHTML={
-        Object {
-          "__html": "3",
-        }
-      }
-      style={Object {}}
-    />
+  <div style>
+    <div style>
+      3
+    </div>
   </div>
-  <div
-    style={Object {}}
-  >
-    <div
-      dangerouslySetInnerHTML={
-        Object {
-          "__html": "4",
-        }
-      }
-      style={Object {}}
-    />
+  <div style>
+    <div style>
+      4
+    </div>
   </div>
-  <div
-    style={Object {}}
-  >
-    <div
-      dangerouslySetInnerHTML={
-        Object {
-          "__html": "5",
-        }
-      }
-      style={Object {}}
-    />
+  <div style>
+    <div style>
+      5
+    </div>
   </div>
 </div>
 `;
 
 exports[`complete rows 1`] = `
-Array [
-  <div
-    dangerouslySetInnerHTML={
-      Object {
-        "__html": "1",
-      }
-    }
-    style={Object {}}
-  />,
-  <div
-    dangerouslySetInnerHTML={
-      Object {
-        "__html": "2",
-      }
-    }
-    style={Object {}}
-  />,
-  <div
-    dangerouslySetInnerHTML={
-      Object {
-        "__html": "3",
-      }
-    }
-    style={Object {}}
-  />,
-  <div
-    dangerouslySetInnerHTML={
-      Object {
-        "__html": "4",
-      }
-    }
-    style={Object {}}
-  />,
-  <div
-    dangerouslySetInnerHTML={
-      Object {
-        "__html": "5",
-      }
-    }
-    style={Object {}}
-  />,
-]
+<div style>
+  1
+</div>
+<div style>
+  2
+</div>
+<div style>
+  3
+</div>
+<div style>
+  4
+</div>
+<div style>
+  5
+</div>
 `;
 
 exports[`grid - products 1`] = `
-<div
-  className="grid-with-frame"
-  style={
-    Object {
-      "display": "block",
-    }
-  }
+<div style="display: block;"
+     class="grid-with-frame"
 >
-  <div
-    style={
-      Object {
-        "border": "0px solid ",
-        "boxSizing": "border-box",
-        "flex": "0 0 5cm",
-        "height": "5cm",
-        "margin": "0px 0px 0px 0px",
-        "overflowX": "hidden",
-        "overflowY": "hidden",
-        "padding": "0px 0px 0px 0px",
-        "width": "5cm",
-      }
-    }
-  />
-  <div
-    style={
-      Object {
-        "border": "0px solid ",
-        "boxSizing": "border-box",
-        "flex": "0 0 5cm",
-        "height": "5cm",
-        "margin": "0px 0px 0px 0px",
-        "overflowX": "hidden",
-        "overflowY": "hidden",
-        "padding": "0px 0px 0px 0px",
-        "width": "5cm",
-      }
-    }
-  />
-  <div
-    style={
-      Object {
-        "border": "0px solid ",
-        "boxSizing": "border-box",
-        "flex": "0 0 5cm",
-        "height": "5cm",
-        "margin": "0px 0px 0px 0px",
-        "overflowX": "hidden",
-        "overflowY": "hidden",
-        "padding": "0px 0px 0px 0px",
-        "width": "5cm",
-      }
-    }
-  />
+  <div style="margin: 0px 0px 0px 0px;  padding: 0px 0px 0px 0px;  box-sizing: border-box;  width: 5cm;  border: 0px solid #000000;  flex: 0 0 5cm;  overflow-x: hidden;  height: 5cm;  overflow-y: hidden;">
+  </div>
+  <div style="margin: 0px 0px 0px 0px;  padding: 0px 0px 0px 0px;  box-sizing: border-box;  width: 5cm;  border: 0px solid #000000;  flex: 0 0 5cm;  overflow-x: hidden;  height: 5cm;  overflow-y: hidden;">
+  </div>
+  <div style="margin: 0px 0px 0px 0px;  padding: 0px 0px 0px 0px;  box-sizing: border-box;  width: 5cm;  border: 0px solid #000000;  flex: 0 0 5cm;  overflow-x: hidden;  height: 5cm;  overflow-y: hidden;">
+  </div>
 </div>
 `;

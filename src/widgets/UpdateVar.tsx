@@ -123,7 +123,7 @@ export const UpdateVar: Widget = {
 	},
 
 	RenderFinal: function(props) {
-		return null
+		return ''
 	},
 
 	RenderProperties: function(props) {

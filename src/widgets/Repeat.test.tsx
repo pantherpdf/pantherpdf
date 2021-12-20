@@ -77,7 +77,7 @@ test('grid - products', async () => {
 		padding: [0, 0, 0, 0],
 		border: {
 			width: 0,
-			color: '',
+			color: '#000000',
 			style: 'solid',
 		},
 		width: '5cm',

@@ -157,22 +157,22 @@ export const Image: Widget = {
 
 		let img
 		if (item.data === '') {
-			return null
+			return ''
 		}
 		else if (item.data.trimStart().startsWith('<svg')) {
-			img = <div style={cssImg} dangerouslySetInnerHTML={{__html: item.data}}></div>
+			img = `<div style="${props.styleToStringAttribute(cssImg)}">${item.data}</div>`
 		}
 		else if (item.data.startsWith('data:image/') || item.data.startsWith('http://') || item.data.startsWith('https://') || item.data.startsWith('/') || item.data.startsWith('./') || item.data.startsWith('../')) {
-			img = <img src={item.data} alt='' style={cssImg} />
+			img = `<img src="${props.escapeHtml(item.data)}" alt="" style="${props.styleToStringAttribute(cssImg)}" />`
 		}
 		else {
 			console.log(item.data)
 			throw new Error('Bad image data')
 		}
 
-		return <div style={cssContainer}>
-			{img}
-		</div>
+		return `<div style="${props.styleToStringAttribute(cssContainer)}">
+			${img}
+		</div>\n`
 	},
 
 	RenderProperties: function(props) {

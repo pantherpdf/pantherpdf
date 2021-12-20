@@ -183,9 +183,10 @@ export const Frame: Widget = {
 
 	RenderFinal: function(props) {
 		const item = props.item as FrameCompiled
-		return <div style={genStyle(item, true)}>
-			{props.renderChildren(item.children, props)}
-		</div>
+		const style = genStyle(item, true)
+		return `<div style="${props.styleToStringAttribute(style)}">
+			${props.renderChildren(item.children, props)}
+		</div>\n`
 	},
 
 	RenderProperties: function(props) {

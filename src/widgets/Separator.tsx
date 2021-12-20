@@ -72,7 +72,8 @@ export const Separator: Widget = {
 
 	RenderFinal: function(props) {
 		const item = props.item as SeparatorCompiled
-		return <hr style={GenStyle(item)} />
+		const style = GenStyle(item)
+		return `<hr style="${props.styleToStringAttribute(style)}" />\n`
 	},
 
 	RenderProperties: function(props) {
