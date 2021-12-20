@@ -7,7 +7,6 @@ import compile from '../editor/compile'
 import { sampleReport } from '../editor/sampleReport'
 import type { TReport } from '../types'
 import { makeHtmlContent } from '../editor/makeHtml'
-import ReactDOMServer from 'react-dom/server'
 import type { NewItemProps } from '../editor/types'
 
 
@@ -34,6 +33,5 @@ test('Frame should include page break property', async () => {
 	}
 	const compiled = await compile(report, {})
 	const html = makeHtmlContent(compiled)
-	const htmlContent = ReactDOMServer.renderToStaticMarkup(<>{html}</>)
-	expect(htmlContent).toContain('page-break-inside:avoid')
+	expect(html.replace(/\s/g,'')).toContain('page-break-inside:avoid')
 })

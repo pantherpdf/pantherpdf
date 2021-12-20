@@ -1,16 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TextHtml should render html 1`] = `
-<div
-  dangerouslySetInnerHTML={
-    Object {
-      "__html": "Hello <b>world</b>",
-    }
-  }
-  style={
-    Object {
-      "fontSize": "20px",
-    }
-  }
-/>
+<div style="font-size: 20px;">
+  Hello
+  <b>
+    world
+  </b>
+</div>
 `;

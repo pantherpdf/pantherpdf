@@ -102,11 +102,7 @@ export const Repeat: Widget = {
 		if (item.direction === 'rows') {
 			// maybe add to cssItem:
 			// pageBreakInside: 'avoid',  // must be present otherwise item in quotes gets breaked up
-			return <>
-				{item.children.map((item, idx) => <React.Fragment key={idx}>
-					{props.renderChildren(item, props)}
-				</React.Fragment>)}
-			</>
+			return item.children.map(item => props.renderChildren(item, props)).join('') + '\n'
 		}
 		const cssParent: CSSProperties = {}
 		const cssItem: CSSProperties = {}
@@ -126,27 +122,20 @@ export const Repeat: Widget = {
 		}
 
 		if (item.addChildElement) {
-			return <div style={cssParent}>
-				{item.children.map((item2, idx) => {
-					return <div
-						key={idx}
-						style={cssItem}
+			return `<div style="${props.styleToStringAttribute(cssParent)}">
+				${item.children.map((item2, idx) => {
+					return `<div
+						style="${props.styleToStringAttribute(cssItem)}"
 					>
-						{props.renderChildren(item2, props)}
-					</div>
-				})}
-			</div>
+						${props.renderChildren(item2, props)}
+					</div>`
+				}).join('')}
+			</div>\n`
 		}
 		else {
-			return <div style={cssParent} className='grid-with-frame'>
-				{item.children.map((item2, idx) => {
-					return <React.Fragment
-						key={idx}
-					>
-						{props.renderChildren(item2, props)}
-					</React.Fragment>
-				})}
-			</div>
+			return `<div style="${props.styleToStringAttribute(cssParent)}" class="grid-with-frame">
+				${item.children.map(item2 => props.renderChildren(item2, props)).join('')}
+			</div>\n`
 		}
 	},
 

@@ -49,7 +49,7 @@ export const Spacer: Widget = {
 
 	RenderFinal: function(props) {
 		const item = props.item as SpacerCompiled
-		return <div style={{height: `${item.height}px`}} />
+		return `<div style="height: ${item.height}px"></div>\n`
 	},
 
 	RenderProperties: function(props) {

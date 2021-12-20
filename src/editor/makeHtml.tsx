@@ -8,33 +8,45 @@ import React, { CSSProperties } from 'react'
 import { defaultReportCss, TReportCompiled } from '../types'
 import type { ItemRendeFinalHelper } from './types'
 import getWidget from '../widgets/allWidgets'
-import ReactDOMServer from 'react-dom/server'
 import styleToCssString from 'react-style-object-to-css'
 import { PropertyFontGenCss } from '../widgets/PropertyFont'
 import { GoogleFontCssUrl } from '../widgets/GoogleFonts'
 import { encodeHtml } from '../widgets/HtmlParser'
 
 
+function escapeHtml(unsafe: string): string {
+	return unsafe
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#039;");
+}
+
+
 export function makeHtmlContent(report: TReportCompiled, externalHelpers: {[key: string]: any}={}) {
 	const helper: ItemRendeFinalHelper = {
 		renderItem: (item, helper) => {
 			const w = getWidget(item.type)
-			return <w.RenderFinal {...helper} item={item} />
+			return w.RenderFinal({...helper, item})
 		},
 		renderChildren: (chs, helper) => {
 			if (!Array.isArray(chs)) {
 				throw new Error('Bad childs array')
 			}
-			return <>{chs.map((item, idx) => {
+			let txt = ''
+			for (const item of chs) {
 				const w = getWidget(item.type)
-				return <w.RenderFinal {...helper} item={item} key={idx} />
-			})}</>
+				txt += w.RenderFinal({...helper, item})
+			}
+			return txt
 		},
+		escapeHtml,
+		styleToStringAttribute: (css: CSSProperties) => escapeHtml(styleToCssString(css).trim()),
 		externalHelpers,
 	}
 
-	const arr = helper.renderChildren(report.children, helper)
-	return arr
+	return helper.renderChildren(report.children, helper)
 }
 
 
@@ -44,9 +56,7 @@ export default function makeHtml(report: TReportCompiled, externalHelpers: {[key
 	const css = styleToCssString(cssObj)
 
 	// render content
-	const el1 = makeHtmlContent(report, externalHelpers)
-	const el2 = React.createElement('div', {}, el1)
-	const htmlContent = ReactDOMServer.renderToStaticMarkup(el2)
+	const htmlContent = makeHtmlContent(report, externalHelpers)
 
 	const fonts = new Set(report.fontsUsed)
 	const fontUrls = [...fonts]

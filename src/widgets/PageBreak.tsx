@@ -40,9 +40,7 @@ export const PageBreak: Widget = {
 	},
 
 	RenderFinal: function() {
-		return <div style={{
-			pageBreakBefore: 'always',
-		}} />
+		return '<div style="page-break-before: always"></div>\n'
 	},
 
 	RenderProperties: function() {
