@@ -4,7 +4,7 @@
  */
 
 
-import React, { CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import { defaultReportCss, TReportCompiled } from '../types'
 import type { ItemRendeFinalHelper } from './types'
 import getWidget from '../widgets/allWidgets'
