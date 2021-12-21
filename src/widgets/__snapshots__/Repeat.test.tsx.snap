@@ -60,3 +60,43 @@ exports[`grid - products 1`] = `
   </div>
 </div>
 `;
+
+exports[`repeat columns 1`] = `
+<div style="display: flex;">
+  <div style="flex: 0 0 14.2857%;">
+    <div style>
+      1
+    </div>
+  </div>
+  <div style="flex: 0 0 14.2857%;">
+    <div style>
+      2
+    </div>
+  </div>
+  <div style="flex: 0 0 14.2857%;">
+    <div style>
+      3
+    </div>
+  </div>
+  <div style="flex: 0 0 14.2857%;">
+    <div style>
+      4
+    </div>
+  </div>
+  <div style="flex: 0 0 14.2857%;">
+    <div style>
+      5
+    </div>
+  </div>
+  <div style="flex: 0 0 14.2857%;">
+    <div style>
+      6
+    </div>
+  </div>
+  <div style="flex: 0 0 14.2857%;">
+    <div style>
+      7
+    </div>
+  </div>
+</div>
+`;

@@ -109,7 +109,7 @@ export const Repeat: Widget = {
 		if (item.direction === 'columns') {
 			cssParent.display = 'flex'
 			const w = item.children.length > 0 ? 1 / item.children.length : 1
-			cssItem.flex = `0 0 ${w.toFixed(1)}%`
+			cssItem.flex = `0 0 ${(w * 100).toLocaleString('en-US', {maximumFractionDigits:4})}%`
 		}
 		if (item.direction === 'grid') {
 			if (item.addChildElement) {

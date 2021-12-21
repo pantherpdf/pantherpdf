@@ -47,6 +47,17 @@ test('complete rows', async () => {
 })
 
 
+test('repeat columns', async () => {
+	const txt: TextHtmlData = { type: 'TextHtml', value: ValueInternalFromEditor('<data>item</data>'), font:{}, children:[] }
+	const rpt: RepeatData = { type: 'Repeat', children: [txt], source: '[1,2,3,4,5,6,7]', varName: 'item', direction: 'columns' }
+	const report: TReport = {...sampleReport, children: [rpt] }
+	
+	const report2 = await compile(report, {})
+	const html = makeHtmlContent(report2)
+  	expect(html).toMatchSnapshot();
+})
+
+
 test('complete grid', async () => {
 	const txt: TextHtmlData = { type: 'TextHtml', value: ValueInternalFromEditor('<data>item</data>'), font:{}, children:[] }
 	const rpt: RepeatData = { type: 'Repeat', children: [txt], source: '[1,2,3,4,5]', varName: 'item', direction: 'grid' }
