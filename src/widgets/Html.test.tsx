@@ -33,9 +33,7 @@ test('html render', async () => {
 	const data = { desc: '<p>Hello</p>' }
 	const compiled = await compile(report, data)
 	const html = makeHtmlContent(compiled)
-	const component = renderer.create(<>{html}</>)
-	const tree = component.toJSON()
-  	expect(tree).toMatchSnapshot();
+  	expect(html).toMatchSnapshot();
 })
 
 

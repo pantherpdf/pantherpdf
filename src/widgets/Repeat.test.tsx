@@ -43,9 +43,7 @@ test('complete rows', async () => {
 	expect(children[0].children[0][0].value).toBe('1')
 
 	const html = makeHtmlContent(report2)
-	const component = renderer.create(<>{html}</>)
-	const tree = component.toJSON()
-  	expect(tree).toMatchSnapshot();
+  	expect(html).toMatchSnapshot();
 })
 
 
@@ -63,9 +61,7 @@ test('complete grid', async () => {
 	expect(children[0].children[0][0].value).toBe('1')
 
 	const html = makeHtmlContent(report2)
-	const component = renderer.create(<>{html}</>)
-	const tree = component.toJSON()
-  	expect(tree).toMatchSnapshot();
+  	expect(html).toMatchSnapshot();
 })
 
 
@@ -89,8 +85,6 @@ test('grid - products', async () => {
 	const report2 = await compile(report, {})
 
 	const html = makeHtmlContent(report2)
-	const component = renderer.create(<>{html}</>)
-	const tree = component.toJSON()
-  	expect(tree).toMatchSnapshot();
+  	expect(html).toMatchSnapshot();
 	expect(report2.globalCss.replace(/\s/g,'')).toContain('.grid-with-frame>div{display:inline-block;vertical-align:top;}')
 })

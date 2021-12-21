@@ -71,9 +71,7 @@ test('TextHtml should render html', async () => {
 	}
 	const compiled = await compile(report, {})
 	const html = makeHtmlContent(compiled)
-	const component = renderer.create(<>{html}</>)
-	const tree = component.toJSON()
-  	expect(tree).toMatchSnapshot();
+  	expect(html).toMatchSnapshot();
 })
 
 
