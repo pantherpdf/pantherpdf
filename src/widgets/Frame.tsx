@@ -186,7 +186,7 @@ export const Frame: Widget = {
 		const style = genStyle(item, true)
 		return `<div style="${props.styleToStringAttribute(style)}">
 			${props.renderChildren(item.children, props)}
-		</div>\n`
+		</div>`
 	},
 
 	RenderProperties: function(props) {
