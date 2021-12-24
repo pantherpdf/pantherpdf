@@ -110,11 +110,11 @@ export const Image: Widget = {
 			img = <img src={url} alt='' style={cssImg} />
 		}
 		else if (item.formula.length > 0) {
-			cssImg.minHeight = '50px'
 			cssImg.backgroundColor = '#ddd'
-			cssImg.display = 'flex'
-			cssImg.justifyContent = 'center'
-			cssImg.alignItems = 'center'
+			cssImg.textAlign = 'center'
+			cssImg.minWidth = '100px'
+			cssImg.padding = '20px 0'
+			cssImg.overflow = 'hidden'
 			img = <div style={cssImg}>
 				<span className='font-monospace text-nowrap overflow-hidden' style={{fontSize:'70%', opacity:'0.3'}}>
 					{item.formula}
