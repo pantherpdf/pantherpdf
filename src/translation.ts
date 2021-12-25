@@ -141,6 +141,11 @@ const tr2 = {
 	'preview': { en: 'Preview', sl: 'Predogled' },
 	'other': { en: 'Other', sl: 'Drugo' },
 	'page-break-avoid': { en: 'Avoid page break', sl: 'Izogibaj se prelomu strani' },
+
+	'img-fit': { en: 'Fit', sl: 'Prilagodi' },
+	'img-fit-fill': { en: 'Fill', sl: 'Zapolni' },
+	'img-fit-contain': { en: 'Contain', sl: 'Pomanjšaj' },
+	'img-fit-cover': { en: 'Cover', sl: 'Povečaj' },
 }
 
 export type trKeys = keyof typeof tr2

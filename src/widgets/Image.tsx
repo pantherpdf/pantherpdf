@@ -22,14 +22,18 @@ export interface ImageData extends TData {
 	url: string,
 	formula: string,
 	align?: TAlign,
-	width: string,
+	width?: string,
+	height?: string,
+	fit?: 'fill' | 'contain' | 'cover',
 }
 
 export interface ImageCompiled extends TDataCompiled {
 	type: 'Image',
 	data: string,
 	align?: TAlign,
-	width: string,
+	width?: string,
+	height?: string,
+	fit?: 'fill' | 'contain' | 'cover',
 }
 
 
@@ -82,6 +86,8 @@ export const Image: Widget = {
 			data,
 			align: dt.align,
 			width: dt.width,
+			height: dt.height,
+			fit: dt.fit,
 		}
 	},
 
@@ -91,11 +97,18 @@ export const Image: Widget = {
 		const cssImg: CSSProperties = {
 			display: 'inline-block',
 		}
-		if (item.width.length > 0) {
+		if (item.width) {
 			cssImg.width = item.width
 		}
 		else {
 			cssImg.maxWidth = '100%'
+		}
+
+		if (item.height) {
+			cssImg.height = item.height
+		}
+		if (item.width && item.height) {
+			cssImg.objectFit = item.fit || 'fill'
 		}
 
 		let img
@@ -144,11 +157,17 @@ export const Image: Widget = {
 		const cssImg: CSSProperties = {
 			display: 'inline-block',
 		}
-		if (item.width.length > 0) {
+		if (item.width) {
 			cssImg.width = item.width
 		}
 		else {
 			cssImg.maxWidth = '100%'
+		}
+		if (item.height) {
+			cssImg.height = item.height
+		}
+		if (item.width && item.height) {
+			cssImg.objectFit = item.fit || 'fill'
 		}
 		const cssContainer: CSSProperties = { }
 		if (item.align) {
@@ -213,22 +232,56 @@ export const Image: Widget = {
 				/>
 			</div>
 
+			<div className='section-name'>
+				{Trans('size')}
+			</div>
+
 			<div className='hform mb-0'>
 				<label htmlFor="width">
 					{Trans('width')}
 				</label>
-				<div>
-					<InputApplyOnEnter
-						id="width"
-						value={item.width}
-						onChange={val => props.setItem({...item, width: val})}
-						regex={WidthRegex}
-					/>
-				</div>
+				<InputApplyOnEnter
+					id="width"
+					value={item.width || ''}
+					onChange={val => { const val2: ImageData = {...item}; if (val) { val2.width = String(val) } else { delete val2.width } return props.setItem(val2); }}
+					regex={WidthRegex}
+				/>
 			</div>
 			<small className='text-muted d-block mb-3'>
 				{WidthOptions}
 			</small>
+
+			<div className='hform mb-0'>
+				<label htmlFor="height">
+					{Trans('height')}
+				</label>
+				<InputApplyOnEnter
+					id="height"
+					value={item.height || ''}
+					onChange={val => { const val2: ImageData = {...item}; if (val) { val2.height = String(val) } else { delete val2.height } return props.setItem(val2); }}
+					regex={WidthRegex}
+				/>
+			</div>
+			<small className='text-muted d-block mb-3'>
+				{WidthOptions}
+			</small>
+
+			<div className='hform mb-0'>
+				<label htmlFor="fit">
+					{Trans('img-fit')}
+				</label>
+				<select
+					value={(!!item.fit && !!item.width && !!item.height) ? item.fit : 'fill'}
+					onChange={val => { const val2: ImageData = {...item}; if (val) { val2.fit = val.target.value as any; } else { delete val2.fit; } return props.setItem(val2); } }
+					className='form-select'
+					disabled={!item.width || !item.height}
+					id='fit'
+				>
+					<option value='fill'>{Trans('img-fit-fill')}</option>
+					<option value='contain'>{Trans('img-fit-contain')}</option>
+					<option value='cover'>{Trans('img-fit-cover')}</option>
+				</select>
+			</div>
 
 			<div className='section-name'>
 				{Trans('align')}
