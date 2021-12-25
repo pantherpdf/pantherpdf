@@ -72,7 +72,7 @@ export function PropertyFontGenCss(obj: TFont): CSSProperties {
 			const txtDigits = (found && found.length > 0) ? found[0] : ''
 			const sizeInt = parseInt(txtDigits)
 			const ext = obj.size.substring(txtDigits.length)
-			css.lineHeight = `${sizeInt*obj.lineHeight*1.5}${ext}`
+			css.lineHeight = `${sizeInt*obj.lineHeight*1.25}${ext}`
 		}
 	}
 	if (obj.weight && obj.weight.length > 0) {
