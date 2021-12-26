@@ -110,6 +110,45 @@ export function evaluateOperator(op: TOperators, a: any, b: any, pos: number): u
 }
 
 
+function isBuiltInPropertyAllowed(value: any, key: string): boolean {
+	let allowed: string[]
+	// array
+	if (Array.isArray(value)) {
+		allowed = [
+			'length',
+			'slice',
+			'join',
+		]
+	}
+
+	// undefined
+	else if (typeof value === 'object' && !value) {
+		return false
+	}
+
+	// object
+	else if (typeof value === 'object') {
+		allowed = []
+	}
+
+	// string
+	else if (typeof value === 'string') {
+		allowed = [
+			'length',
+			'replaceAll',
+			'substring',
+		]
+	}
+
+	// other
+	else {
+		return false
+	}
+
+	return allowed.indexOf(key) !== -1
+}
+
+
 export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers): Promise<unknown> {
 	if (expr.length === 0) {
 		return undefined
@@ -193,6 +232,13 @@ export default async function evaluatePostfix(expr: TExpr[], helpers?: IHelpers)
 					const key2 = String(key)
 					if (Object.keys(value).indexOf(key2) !== -1) {
 						value = await value[key2]
+					}
+					else if (isBuiltInPropertyAllowed(value, key2)) {
+						const prevVal = value
+						value = value[key2]
+						if (typeof value === 'function') {
+							value = value.bind(prevVal)
+						}
 					}
 					else {
 						value = undefined

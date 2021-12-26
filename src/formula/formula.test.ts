@@ -205,3 +205,13 @@ test('custom functions', async () => {
 	await expect(FormulaEvaluate('data.func(10)', helper)).resolves.toBe(20)
 	await expect(FormulaEvaluate('data.funcErr()', helper)).rejects.toThrowError('my custom error')
 })
+
+test('buildin properties', async () => {
+	await expect(FormulaEvaluate('[ 1, 2 ].join("x")')).resolves.toStrictEqual('1x2')
+	await expect(FormulaEvaluate('[ 1, 2 ].length')).resolves.toStrictEqual(2)
+	await expect(FormulaEvaluate('[ 1, 2, 3, 4, 5, 6, 7, 8 ].slice(1, 3)')).resolves.toStrictEqual([2, 3])
+	await expect(FormulaEvaluate('"abc-def".length')).resolves.toStrictEqual(7)
+	await expect(FormulaEvaluate('"abc-def".substring(2,5)')).resolves.toStrictEqual('c-d')
+	await expect(FormulaEvaluate('"The quick brown fox jumps over the lazy dog. If the dog reacted, was it really lazy?".replaceAll("dog", "monkey")')).resolves.toStrictEqual('The quick brown fox jumps over the lazy monkey. If the monkey reacted, was it really lazy?')
+	await expect(FormulaEvaluate('"abc aa".replace("a", "x")')).rejects.toThrowError()
+})
