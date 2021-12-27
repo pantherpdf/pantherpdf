@@ -12,7 +12,7 @@ import PropertyBorder, { Border, genBorderCss } from './PropertyBorder'
 import BoxName from './BoxName'
 import Trans from '../translation'
 import InputApplyOnEnter, { WidthOptions, WidthRegex } from './InputApplyOnEnter'
-import PropertyFont, { PropertyFontGenCss, TFont } from './PropertyFont'
+import PropertyFont, { PropertyFontExtractStyle, PropertyFontGenCss, TFont } from './PropertyFont'
 import { LoadGoogleFontCss } from './GoogleFonts'
 import useStateDelayed from '../useStateDelayed'
 
@@ -164,8 +164,9 @@ export const Frame: Widget = {
 
 	compile: async (dt: FrameData, helpers): Promise<FrameCompiled> => {
 		const dt2: FrameCompiled = JSON.parse(JSON.stringify({...dt, children: []}))
-		if (dt.font.family) {
-			helpers.reportCompiled.fontsUsed.push(dt.font.family)
+		const style = PropertyFontExtractStyle(dt.font)
+		if (style) {
+			helpers.reportCompiled.fontsUsed.push(style)
 		}
 		dt2.children = await helpers.compileChildren(dt.children, helpers)
 		return dt2
@@ -173,8 +174,9 @@ export const Frame: Widget = {
 
 	Render: function(props) {
 		const item = props.item as FrameData
-		if (item.font.family) {
-			LoadGoogleFontCss(item.font.family)
+		const fontStyle = PropertyFontExtractStyle(item.font)
+		if (fontStyle) {
+			LoadGoogleFontCss(fontStyle)
 		}
 		return <BoxName {...props} style={genStyle(item, false)} name={Frame.name}>
 			{props.renderWidgets(item.children, props.wid)}

@@ -71,9 +71,9 @@ test('fonts used', async () => {
 		children: [],
 	}
 	report.properties.font = {
-		family: 'arial',
+		family: 'Arial',
 	}
 	const obj = { }
 	const compiled = await compile(report, obj)
-	expect(compiled.fontsUsed).toContain('arial')
+	expect(compiled.fontsUsed).toStrictEqual([{name: 'Arial', weight: 400, italic: false}])
 })

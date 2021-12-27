@@ -39,7 +39,7 @@ test('should include google font', async () => {
 	}
 	const compiled = await compile(report, {})
 	const html = makeHtml(compiled)
-	expect(html.indexOf('https://fonts.googleapis.com/css?family=Roboto+Mono')!=-1 || html.indexOf('https://fonts.googleapis.com/css?family=Roboto%20Mono')!=-1)
+	expect(html.indexOf('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400&display=swap') !== -1 || html.indexOf('https://fonts.googleapis.com/css2?family=Roboto%20Mono:ital,wght@0,400&display=swap') !== -1)
 })
 
 

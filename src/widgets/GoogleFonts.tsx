@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import type { TFontStyle } from './PropertyFont'
 
 
 async function load(apiKey: string) {
@@ -61,8 +62,7 @@ export function GoogleFontSelector(props: FontSelectorProps) {
 }
 
 
-export function GoogleFontCssUrl(fontFamily: string): string | undefined {
-	const f2 = fontFamily.toLowerCase().trim()
+export function GoogleFontUrlImport(arr: TFontStyle[]): string | undefined {
 	const systemFonts = [
 		'',
 		'arial',
@@ -75,23 +75,111 @@ export function GoogleFontCssUrl(fontFamily: string): string | undefined {
 		'cambria',
 		'comic sans ms',
 	]
-	if (systemFonts.indexOf(f2) !== -1) {
+	const group: {[key: string]: TFontStyle[]} = {}
+	for (const obj of arr) {
+		const name2 = obj.name.toLowerCase()
+		if (systemFonts.indexOf(name2) !== -1) {
+			continue
+		}
+		if (!(obj.name in group)) {
+			group[obj.name] = []
+		}
+		const exists = group[obj.name].find(x => x.weight === obj.weight && x.italic === obj.italic)
+		if (!exists) {
+			group[obj.name].push(obj)
+		}
+	}
+	// sort values
+	const families = Object.keys(group).sort()
+	let url = ''
+	for (const name of families) {
+		const values = group[name]
+		values.sort((a, b) => {
+			if (!a.italic && b.italic) {
+				return -1
+			}
+			if (a.italic && !b.italic) {
+				return 1
+			}
+			return a.weight - b.weight
+		})
+		url += url.length === 0 ? '?' : '&'
+		url += `family=${encodeURIComponent(name)}:ital,wght@`
+		url += values.map(v => `${v.italic?'1':'0'},${v.weight}`).join(';')
+	}
+	if (url.length === 0) {
 		return undefined
 	}
-	return `https://fonts.googleapis.com/css?family=${encodeURIComponent(fontFamily.trim())}`
+	return `https://fonts.googleapis.com/css2${url}&display=swap`
 }
 
 
-const didLoad: string[] = []
-export function LoadGoogleFontCss(fontFamily: string): void {
-	if (didLoad.indexOf(fontFamily) !== -1) {
-		return
+export function destructGoogleFontUrl(url: string): TFontStyle[] {
+	if (!url.startsWith('https://fonts.googleapis.com/css2')) {
+		throw new Error('url doesnt look like Google Font url')
 	}
-	didLoad.push(fontFamily)
+	const urlObj = new URL(url)
+	url = urlObj.search
+	if (url.startsWith('?')) {
+		url = url.substring(1)
+	}
+	const parts = url
+		.split('&')
+		.filter(v => v.startsWith('family='))
+		.map(v => v.substring(7))
+	const arr: TFontStyle[] = []
+	for (const val of parts) {
+		const idxAt = val.indexOf('@')
+		if (idxAt === -1) {
+			const name = decodeURIComponent(val.replaceAll('+', ' '))
+			arr.push({name, italic: false, weight: 400})
+			continue
+		}
+		const untilAt = val.substring(0, idxAt)
+		const idxColon = untilAt.indexOf(':')
+		if (idxColon === -1) {
+			throw new Error('missing colon')
+		}
+		const name = decodeURIComponent(untilAt.substring(0, idxColon).replaceAll('+', ' '))
+		const keys = untilAt.substring(idxColon + 1).split(',')
+		const idxItal = keys.indexOf('ital')
+		const idxWeight = keys.indexOf('wght')
+		const vals = val
+			.substring(idxAt+1)
+			.split(';')
+			.map(x => x.trim())
+			.filter(x => x.length)
+			.map(v => {
+				const vals2 = v.split(',')
+				while (vals2.length < keys.length) {
+					vals2.push('')
+				}
+				return vals2
+			})
+		
+		for (const v of vals) {
+			const weight = (idxWeight !== -1 ? parseFloat(v[idxWeight]) : undefined) || 400
+			const italic = v[idxItal] === '1'
+			arr.push({name, weight, italic})
+		}
+	}
+	return arr
+}
+
+
+export function LoadGoogleFontCss(obj: TFontStyle): void {
+	const els = global.window.document.getElementsByTagName('link')
+	for (const el of els) {
+		const arr = destructGoogleFontUrl(el.href)
+		const exists = arr.find(x => x.name === obj.name && x.weight === obj.weight && x.italic === obj.italic)
+		if (exists) {
+			return
+		}
+	}
 	if (typeof global.window === 'undefined') {
 		throw new Error('LoadGoogleFontCss() is only available on browser.')
 	}
-	const url = GoogleFontCssUrl(fontFamily)
+	const url = GoogleFontUrlImport([obj])
 	if (!url) {
 		return
 	}

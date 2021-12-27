@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import type { TFont } from './widgets/PropertyFont'
+import type { TFont, TFontStyle } from './widgets/PropertyFont'
 
 // helper for converting tuple into type
 type Narrowable = string | number | boolean | symbol | object | {} | void | null | undefined;
@@ -70,7 +70,7 @@ export interface TDataCompiled {
 
 export interface TReportCompiled extends Omit<TReport, 'children'> {
 	children: TDataCompiled[],
-	fontsUsed: string[],
+	fontsUsed: TFontStyle[],
 	globalCss: string,
 }
 

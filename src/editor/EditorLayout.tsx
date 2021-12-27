@@ -7,7 +7,7 @@ import React from 'react'
 import { defaultReportCss, TData } from '../types'
 import { GeneralProps } from './types'
 import Trans, { TransName } from '../translation'
-import { PropertyFontGenCss } from '../widgets/PropertyFont'
+import { PropertyFontExtractStyle, PropertyFontGenCss } from '../widgets/PropertyFont'
 import ObjectExplorer from './ObjectExplorer'
 import DataTransform from './DataTransform'
 import EditWidgetNew from './EditWidgetNew'
@@ -103,8 +103,9 @@ function RenderContent(props: GeneralProps) {
 	const t = props.report.target
 	if (t === 'pdf' || t === 'html') {
 		const style = {...defaultReportCss, ...PropertyFontGenCss(props.report.properties.font || {})}
-		if (props.report.properties.font?.family) {
-			LoadGoogleFontCss(props.report.properties.font.family)
+		const fontStyle = props.report.properties.font ? PropertyFontExtractStyle(props.report.properties.font) : undefined
+		if (fontStyle) {
+			LoadGoogleFontCss(fontStyle)
 		}
 		let width = props.report.properties.paperWidth || 210
 		style.maxWidth = `${width * 800/210}px`

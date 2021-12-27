@@ -84,5 +84,5 @@ test('TextHtml should include google font', async () => {
 	}
 	const compiled = await compile(report, {})
 	const html = makeHtml(compiled)
-	expect(html).toContain('https://fonts.googleapis.com/css?family=Lato')
+	expect(html).toContain('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400&display=swap')
 })

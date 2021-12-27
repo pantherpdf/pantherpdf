@@ -10,8 +10,7 @@ import type { ItemRendeFinalHelper } from './types'
 import getWidget from '../widgets/allWidgets'
 import styleToCssString from 'react-style-object-to-css'
 import { PropertyFontGenCss } from '../widgets/PropertyFont'
-import { GoogleFontCssUrl } from '../widgets/GoogleFonts'
-import { encodeHtml } from '../widgets/HtmlParser'
+import { GoogleFontUrlImport } from '../widgets/GoogleFonts'
 
 
 function escapeHtml(unsafe: string): string {
@@ -58,12 +57,8 @@ export default function makeHtml(report: TReportCompiled, externalHelpers: {[key
 	// render content
 	const htmlContent = makeHtmlContent(report, externalHelpers)
 
-	const fonts = new Set(report.fontsUsed)
-	const fontUrls = [...fonts]
-	.map(x => GoogleFontCssUrl(x) || '')
-	.filter(x => x.length > 0)
-	.map(x => `<link rel="stylesheet" href="${encodeHtml(x)}">`)
-	.join('\n')
+	const fontUrl = GoogleFontUrlImport(report.fontsUsed)
+	const fontHtml = fontUrl ? `<link rel="stylesheet" href="${fontUrl}"></link>` : ''
 
 	const html = `<!DOCTYPE html>
 <html lang="en-US">
@@ -156,7 +151,7 @@ body {
 }
 ${report.globalCss}
 </style>
-${fontUrls}
+${fontHtml}
 </head>
 <body>
 ${htmlContent}

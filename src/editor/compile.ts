@@ -8,6 +8,7 @@ import type { TReportCompiled, TDataCompiled } from '../types'
 import FormulaEvaluate from '../formula/formula'
 import getWidget from '../widgets/allWidgets'
 import { CompileHelper } from './types'
+import { PropertyFontExtractStyle, TFont } from '../widgets/PropertyFont'
 
 type TOvrr = [string, unknown]
 
@@ -67,8 +68,11 @@ export default async function compile(report: TReport, data: unknown, api: ApiEn
 		globalCss: '',
 	}
 	dt2 = JSON.parse(JSON.stringify(dt2))
-	if (dt2.properties.font?.family) {
-		dt2.fontsUsed.push(dt2.properties.font.family)
+	if (dt2.properties.font) {
+		const style = PropertyFontExtractStyle(dt2.properties.font)
+		if (style) {
+			dt2.fontsUsed.push(style)
+		}
 	}
 
 	if (dt2.properties.fileName) {

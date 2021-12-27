@@ -14,12 +14,14 @@ test('Frame should include google font', async () => {
 	const helper: NewItemProps = { report: sampleReport }
 	const el = await Frame.newItem(helper) as FrameData
 	el.font.family = 'Lato'
+	el.font.weight = 'bold'
+	el.font.style = 'italic'
 	const report: TReport = {
 		...sampleReport,
 		children: [el],
 	}
 	const compiled = await compile(report, {})
-	expect(compiled.fontsUsed).toContain('Lato')
+	expect(compiled.fontsUsed).toStrictEqual([{name: 'Lato', weight: 700, italic: true}])
 })
 
 

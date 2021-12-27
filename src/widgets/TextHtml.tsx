@@ -13,7 +13,7 @@ import React, { useEffect, useState, CSSProperties } from 'react'
 import { TData, TDataCompiled } from '../types'
 import type { ItemRendeProps, Widget } from '../editor/types'
 import BoxName from './BoxName'
-import PropertyFont, { PropertyFontGenCss, TFont } from './PropertyFont'
+import PropertyFont, { PropertyFontExtractStyle, PropertyFontGenCss, TFont } from './PropertyFont'
 import FormulaEvaluate from '../formula/formula'
 import { faAlignCenter, faAlignJustify, faAlignLeft, faAlignRight, faBold, faItalic, faTag, faUnderline, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -757,8 +757,9 @@ export const TextHtml: Widget = {
 	},
 
 	compile: async (dt: TextHtmlData, helper): Promise<TextHtmlCompiled> => {
-		if (dt.font.family) {
-			helper.reportCompiled.fontsUsed.push(dt.font.family)
+		const style = PropertyFontExtractStyle(dt.font)
+		if (style) {
+			helper.reportCompiled.fontsUsed.push(style)
 		}
 		// combine parts
 		let html = ''
@@ -796,8 +797,9 @@ export const TextHtml: Widget = {
 		const item = props.item as TextHtmlData
 		const css = PropertyFontGenCss(item.font)
 		css.minHeight = '20px'
-		if (item.font.family) {
-			LoadGoogleFontCss(item.font.family)
+		const font2 = PropertyFontExtractStyle(item.font)
+		if (font2) {
+			LoadGoogleFontCss(font2)
 		}
 		
 		return <BoxName

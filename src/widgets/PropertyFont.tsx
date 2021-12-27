@@ -29,6 +29,13 @@ export interface TFont {
 }
 
 
+export interface TFontStyle {
+	name: string,
+	weight: number,
+	italic: boolean,
+}
+
+
 const weightName: {[key in TWeightOption]: string} = {
 	'normal': Trans('font-weight-normal'),
 	'bold': Trans('font-weight-bold'),
@@ -41,6 +48,21 @@ const weightName: {[key in TWeightOption]: string} = {
 	'700': '700',
 	'800': '800',
 	'900': '900',
+}
+
+
+const WeightOptionToNumeric: {[key in TWeightOption]: number} = {
+	'normal': 400,
+	'bold': 700,
+	'100': 100,
+	'200': 200,
+	'300': 300,
+	'400': 400,
+	'500': 500,
+	'600': 600,
+	'700': 700,
+	'800': 800,
+	'900': 900,
 }
 
 
@@ -90,6 +112,19 @@ export function PropertyFontGenCss(obj: TFont): CSSProperties {
 		css.color = obj.color
 	}
 	return css
+}
+
+
+export function PropertyFontExtractStyle(obj: TFont): TFontStyle | undefined {
+	if (!obj.family) {
+		return undefined
+	}
+	const w = obj.weight || 'normal'
+	return {
+		name: obj.family,
+		weight: WeightOptionToNumeric[w],
+		italic: obj.style === 'italic',
+	}
 }
 
 
