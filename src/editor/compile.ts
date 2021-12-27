@@ -8,7 +8,7 @@ import type { TReportCompiled, TDataCompiled } from '../types'
 import FormulaEvaluate from '../formula/formula'
 import getWidget from '../widgets/allWidgets'
 import { CompileHelper } from './types'
-import { PropertyFontExtractStyle, TFont } from '../widgets/PropertyFont'
+import { PropertyFontExtractStyle } from '../widgets/PropertyFont'
 
 type TOvrr = [string, unknown]
 
