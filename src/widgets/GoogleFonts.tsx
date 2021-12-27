@@ -116,7 +116,9 @@ export function GoogleFontUrlImport(arr: TFontStyle[]): string | undefined {
 
 export function destructGoogleFontUrl(url: string): TFontStyle[] {
 	if (!url.startsWith('https://fonts.googleapis.com/css2')) {
-		throw new Error('url doesnt look like Google Font url')
+		// url doesnt look like Google Font url
+		// cant be favicon.ico or something else
+		return []
 	}
 	const urlObj = new URL(url)
 	url = urlObj.search
@@ -170,6 +172,9 @@ export function destructGoogleFontUrl(url: string): TFontStyle[] {
 export function LoadGoogleFontCss(obj: TFontStyle): void {
 	const els = global.window.document.getElementsByTagName('link')
 	for (const el of els) {
+		if (el.rel !== 'stylesheet') {
+			continue
+		}
 		const arr = destructGoogleFontUrl(el.href)
 		const exists = arr.find(x => x.name === obj.name && x.weight === obj.weight && x.italic === obj.italic)
 		if (exists) {
