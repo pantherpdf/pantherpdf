@@ -88,16 +88,16 @@ export default function Container() {
 
 	const url = new URL(window.location.href)
 	const params = new URLSearchParams(url.search);
-	const homeUrl = params.get('home')
+	const homeUrl = params.get('homeUrl')
 	const reportUrl = params.get('report')
 	const auth = params.get('auth')
-	const reportEditable = params.get('reportEditable')===null || params.get('reportEditable') === '1' || params.get('reportEditable') === 'true'
+	const reportEditable = params.get('editable')===null || params.get('editable') === '1' || params.get('editable') === 'true'
 	const loadLocalReport = params.get('loadLocalReport') === '1' || params.get('loadLocalReport') === 'true'
-	const generatePdfUrl = params.get('generatePdf')
+	const generatePdfUrl = params.get('generate')
 	const filesUrl = params.get('files')
 	const filesDownloadUrl = params.get('filesDownload')
 	const lang = params.get('lang')
-	const googleFontApiKey = params.get('googleFontApiKey') || undefined
+	const googleFontApiKey = params.get('googleFontKey') || undefined
 	if (filesUrl && filesUrl.indexOf(':name') === -1) {
 		throw new Error('Missing :name in url files')
 	}
@@ -305,7 +305,7 @@ export default function Container() {
 		
 		// redirect
 		if (homeUrl) {
-			window.location.replace(homeUrl)
+			window.top?.location.replace(homeUrl)
 		}
 		else {
 			setReport(undefined)
