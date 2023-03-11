@@ -94,7 +94,7 @@ export default function VarEditor(props: GeneralProps) {
 			</tbody>
 		</table>
 		<button
-			className='btn btn-outline-primary'
+			className='btn btn-outline-secondary'
 			onClick={() => changeVar(undefined, 'var', '0')}
 		>
 			<FontAwesomeIcon icon={faPlus} className='me-2' />

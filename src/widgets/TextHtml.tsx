@@ -190,10 +190,6 @@ function TagEditor(props: ItemRendeProps) {
 	const arrAdjusts = [...listOfAdjusts].sort((a,b) => a.category <= b.category ? -1 : 1)
 	
 	return <>
-		<div className='section-name'>
-			{Trans('tag')}
-		</div>
-
 		{/* FORMULA */}
 		<div>
 			<label htmlFor='tag-value'>
@@ -235,6 +231,28 @@ function TagEditor(props: ItemRendeProps) {
 				</option>
 			</React.Fragment>)}
 		</select>
+	</>
+}
+
+
+function TagEditorContainer(props: ItemRendeProps) {
+	return <>
+		<div className='section-name'>
+			{Trans('tag')}
+		</div>
+		<button
+			className='btn btn-outline-secondary ms-2'
+			title={Trans('insert tag')}
+			draggable='true'
+			onDragStart={(e) => {
+				e.dataTransfer.setData('text/plain', 'insert-tag')
+			}}
+			onClick={() => insertTag(props.wid)}
+		>
+			<FontAwesomeIcon icon={faTag} className='me-2' />
+			{Trans('insert tag')}
+		</button>
+		<TagEditor {...props} />
 	</>
 }
 
@@ -889,17 +907,6 @@ export const TextHtml: Widget = {
 						<FontAwesomeIcon icon={faUnderline} />
 					</button>
 				</div>
-				<button
-					className='btn btn-outline-secondary ms-2'
-					title={Trans('tag insert')}
-					draggable='true'
-					onDragStart={(e) => {
-						e.dataTransfer.setData('text/plain', 'insert-tag')
-					}}
-					onClick={() => insertTag(props.wid)}
-				>
-					<FontAwesomeIcon icon={faTag} />
-				</button>
 			</div>
 
 			<div className='hform'>
@@ -942,7 +949,7 @@ export const TextHtml: Widget = {
 				</select>
 			</div>
 
-			<TagEditor {...props} />
+			<TagEditorContainer {...props} />
 		</>
 	},
 

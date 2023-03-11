@@ -58,7 +58,7 @@ export const Condition: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as ConditionData
 		return <>
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='Condition-formula'>
 					{Trans('formula')}
 				</label>

@@ -7,19 +7,101 @@
 import React, { useState } from 'react'
 import { GeneralProps } from './types'
 import type { TargetOption, TReport } from '../types'
+import { ReportTypeGuard } from '../types'
 import Trans from '../translation'
 import PropertyFont, { TFont } from '../widgets/PropertyFont'
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter'
 import Property4SideInput, { Value as Property4SideInputValue } from '../widgets/Property4SideInput'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faUpload, faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
 import VarEditor from './VarEditor'
+import packageJson from '../../package.json'
+import { saveAs } from 'file-saver'
+import style from './EditWidgets.module.css'
 
 
 // hack to get array of possible values
 // because I can only import types from shared
 const TargetOptionTmpObj: {[key in TargetOption]: number} = { 'pdf': 1, 'html': 1, 'json': 1, 'csv-utf-8': 1, 'csv-windows-1250': 1, }
 const TargetOptionTmpKeys = Object.keys(TargetOptionTmpObj)
+
+
+function fileReportUpload(arr: TReport[], setArr: React.Dispatch<React.SetStateAction<TReport[]>>) {
+	const el = document.createElement('input')
+	el.type = 'file'
+	el.accept = 'application/json'
+	el.addEventListener('change', () => {
+		if (!el.files)
+			return
+		const fl = el.files[0]
+		const fr = new FileReader()
+		fr.addEventListener('load', e3 => {
+			if (!e3.target || typeof e3.target.result !== 'string') {
+				throw new Error('Bad value')
+			}
+			let dt
+			try {
+				dt = JSON.parse(e3.target.result)
+			}
+			catch(e) {
+				alert(Trans('upload bad file')+' '+(String(e)))
+				return
+			}
+			if (!ReportTypeGuard(dt)) {
+				alert('Bad data')
+				return
+			}
+			const myVersion = packageJson.version.split('.')[0]
+			const docVersion = dt.version.split('.')[0]
+			if (docVersion !== myVersion) {
+				alert(`Bad version. Expected ${myVersion} but got ${docVersion}`)
+				return
+			}
+			let n = arr.length
+			setArr([...arr, dt])
+			alert(Trans('upload finished', [(n+1).toString()]))
+		});
+		fr.readAsText(fl);
+	})
+	el.click()
+}
+
+
+function ShowUpload(props: GeneralProps) {
+	const [arr, setArr] = useState<TReport[]>([]);
+
+	function fileDownload() {
+		let blob = new Blob([JSON.stringify(props.report,null,4)], {type: 'application/json'});
+		saveAs(blob, props.report._id+'.json');
+	}
+
+	function dragStartFile(e: React.DragEvent<HTMLDivElement>, dt: TReport) {
+		return props.dragWidgetStart(e, {type:'widgets', widgets:dt.children})
+	}
+
+	return <>
+		<div className="btn-group" role="group">
+			<button className='btn btn-outline-secondary' onClick={fileDownload}>
+				<FontAwesomeIcon icon={faDownload} fixedWidth className='me-2' />
+				{Trans('export')}
+			</button>
+			<button className='btn btn-outline-secondary' onClick={() => fileReportUpload(arr, setArr)}>
+				<FontAwesomeIcon icon={faUpload} fixedWidth className='me-2' />
+				{Trans('import')}
+			</button>
+		</div>
+		{arr.length > 0 && <hr />}
+		{arr.map((r,idx) => <div
+			key={idx}
+			draggable={true}
+			onDragStart={(e) => dragStartFile(e, r)}
+			onDragEnd={props.dragWidgetEnd}
+			className={style.widget}
+		>
+			{r.name}&nbsp;
+		</div>)}
+	</>
+}
 
 
 export default function ReportSettings(props: GeneralProps) {
@@ -66,7 +148,7 @@ export default function ReportSettings(props: GeneralProps) {
 
 	const margin: Property4SideInputValue = props.report.properties.margin ? props.report.properties.margin : [0,0,0,0]
 	return <>
-		<div className='hform'>
+		<div className='vform'>
 			<label htmlFor='report-name'>
 				{Trans('name')}
 			</label>
@@ -97,7 +179,7 @@ export default function ReportSettings(props: GeneralProps) {
 		</div>
 		
 		<div className='mb-3'>
-			<button className='btn btn-sm btn-outline-primary' onClick={() => setShowMore(!showMore)}>
+			<button className='btn btn-sm btn-outline-secondary' onClick={() => setShowMore(!showMore)}>
 				<FontAwesomeIcon icon={showMore ? faCaretUp : faCaretDown} className='me-2' />
 				{Trans(showMore ? 'show less' : 'show more')}
 			</button>
@@ -105,7 +187,7 @@ export default function ReportSettings(props: GeneralProps) {
 
 		{showMore && <>
 			
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='fileName'>
 					{Trans('fileName')}
 				</label>
@@ -117,13 +199,16 @@ export default function ReportSettings(props: GeneralProps) {
 
 			<div className='hform'>
 				<label htmlFor='lang'>
-					{Trans('lang')} <small className='text-muted'>{Trans('lang 2 letter code')}</small>
+					{Trans('lang')}
 				</label>
-				<InputApplyOnEnter
-					id='lang'
-					value={props.report.properties.lang||''}
-					onChange={val=>(typeof val==='string'&&val.length>0)?changeProperty('lang',val):deleteProperty('lang')}
-				/>
+				<div>
+					<InputApplyOnEnter
+						id='lang'
+						value={props.report.properties.lang||''}
+						onChange={val=>(typeof val==='string'&&val.length>0)?changeProperty('lang',val):deleteProperty('lang')}
+					/>
+					<small className='text-muted'>{Trans('lang 2 letter iso code')}</small>
+				</div>
 			</div>
 
 			{props.report.target === 'pdf' && <>
@@ -176,6 +261,11 @@ export default function ReportSettings(props: GeneralProps) {
 			</>}
 
 			<VarEditor {...props} />
+
+			<div className='section-name'>
+				{Trans('import export')}
+			</div>
+			<ShowUpload {...props} />
 		</>}
 			
 	</>

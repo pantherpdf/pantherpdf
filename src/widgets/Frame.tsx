@@ -194,7 +194,7 @@ export const Frame: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as FrameData
 		return <>
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='Frame-width'>
 					{Trans('width')}
 					<small className='text-muted ms-1'>
@@ -209,7 +209,7 @@ export const Frame: Widget = {
 				/>
 			</div>
 
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='Frame-height'>
 					{Trans('height')}
 					<small className='text-muted ms-1'>

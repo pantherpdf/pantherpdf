@@ -69,7 +69,7 @@ export const SetVar: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as SetVarData
 		return <>
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='SetVar-source'>
 					{Trans('source data')}
 				</label>
@@ -83,7 +83,7 @@ export const SetVar: Widget = {
 				</div>
 			</div>
 
-			<div className='hform mb-0'>
+			<div className='vform mb-0'>
 				<label htmlFor='SetVar-varName'>
 					{Trans('varName')}
 				</label>

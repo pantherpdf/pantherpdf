@@ -139,14 +139,14 @@ const CSV: TTransformWidget = {
 
 			<div className="btn-group mt-3" role="group">
 				<button
-					className='btn btn-outline-primary'
+					className='btn btn-outline-secondary'
 					onClick={() => addRow(item, props.setItem)}
 				>
 					<FontAwesomeIcon icon={faPlus} className='me-2' />
 					{Trans('add row')}
 				</button>
 				<button
-					className='btn btn-outline-primary'
+					className='btn btn-outline-secondary'
 					onClick={() => addCol(item, props.setItem)}
 				>
 					<FontAwesomeIcon icon={faPlus} className='me-2' />

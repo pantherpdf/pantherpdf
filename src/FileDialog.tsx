@@ -14,10 +14,31 @@ import FileSelect from './FileSelect'
 import Trans from './translation'
 
 
-// check browser support for fetch stream upload
-// it enabled upload progress bar
+// check browser support for fetch stream upload (upload progress bar)
 // Chrome 92 requires experimental flag #enable-experimental-web-platform-features
-const supportsRequestStreams: boolean = typeof window!=='undefined' && window.Request!==undefined && window.ReadableStream!==undefined && !new window.Request('', { body: new window.ReadableStream(), method: 'POST' }).headers.has('Content-Type');
+interface RequestInit2 extends RequestInit {
+	// https://fetch.spec.whatwg.org/#dom-requestinit-duplex
+	duplex: any;
+}
+const supportsRequestStreams = (() => {
+	// https://developer.chrome.com/articles/fetch-streaming-requests/#feature-detection
+	if (typeof window === 'undefined' || window.Request === undefined) {
+		return false;
+	}
+	let duplexAccessed = false;
+
+	const init: RequestInit2 = {
+		body: new ReadableStream(),
+		method: 'POST',
+		get duplex() {
+			duplexAccessed = true;
+			return 'half';
+		},
+	};
+	const hasContentType = new window.Request('', init).headers.has('Content-Type');
+
+	return duplexAccessed && !hasContentType;
+})();
 
 
 export async function uploadFile(url: string, file: File, headers: {[key:string]: string}, cbProgress: (prc: number) => void) {
@@ -102,7 +123,7 @@ interface TFileUpload extends TFileShort {
 
 export default function FileDialog(props: Props) {
 	const [files, setFiles] = useState<TFileUpload[]>([])
-	const [loading, setLoading] = useState<boolean>(true)
+	const [loading, setLoading] = useState<boolean>(false)
 
 
 	// shared upload code
@@ -214,8 +235,10 @@ export default function FileDialog(props: Props) {
 	// load files
 	useEffect(() => {
 		if (!props.api.files) {
+			setLoading(false)
 			return
 		}
+		setLoading(true)
 		props.api.files().then(js => {
 			setFiles(js.files)
 			setLoading(false)

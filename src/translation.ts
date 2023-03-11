@@ -44,6 +44,9 @@ const tr2 = {
 	'widgets': { en:'Widgets', sl:'Gradniki' },
 	'predefined': { en:'Predefined', sl:'Predefinirano' },
 	'file': { en:'File', sl:'Datoteka' },
+	'import export': { en:'Import/Export', sl:'Uvozi/Izvozi' },
+	'import': { en:'Import', sl:'Uvozi' },
+	'export': { en:'Export', sl:'Izvozi' },
 
 	'invalid value': { en:'invalid value', sl:'Neveljavna vrednost' },
 
@@ -61,7 +64,7 @@ const tr2 = {
 	'margin bottom': { en:'Margin Bottom', sl:'Odmik Spodaj' },
 	'padding': { en:'Padding', sl:'Odmik noter' },
 	'lang': { en:'Language', sl:'Jezik' },
-	'lang 2 letter code': { en:'2 letter code', sl:'koda 2 črke' },
+	'lang 2 letter iso code': { en:'2 letter ISO code', sl:'koda ISO 2 črke' },
 	'users lang': { en:'User Language', sl:'Uporabnikov jezik' },
 	'new name': { en:'New name', sl:'Novo ime' },
 	'delete report': { en: 'Delete report', sl:'Izbriši poročilo' },
@@ -106,7 +109,7 @@ const tr2 = {
 	'delete confirm': { en: 'Are you sure to delete {0}?', sl: 'Ali si prepričan da želiš izbrisati {0}?' },
 
 	'tag': { en: 'Tag', sl: 'Podatek' },
-	'tag insert': { en: 'Insert tag', sl: 'Vstavi podatek' },
+	'insert tag': { en: 'Insert tag', sl: 'Vstavi podatek' },
 
 	'varName': { en: 'Variable', sl: 'Spremenljivka' },
 	'repeat - current item is this var': { en: 'Current item will be accessible with this variable', sl: 'Trenutni element bo dostopen s to spremenljivko' },

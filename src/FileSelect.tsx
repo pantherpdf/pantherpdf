@@ -73,7 +73,7 @@ export default function FileSelect(props: Props) {
 			</div>
 			<div className='text-center mt-2'>
 				<button
-					className='btn btn-sm btn-outline-primary'
+					className='btn btn-sm btn-outline-secondary'
 					onClick={selectFileClick}
 				>
 					{Trans('drop-select files')}

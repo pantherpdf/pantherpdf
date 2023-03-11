@@ -7,14 +7,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Trans, { TransName } from '../translation'
 import style from './EditWidgets.module.css'
-import { saveAs } from 'file-saver'
-import { ReportTypeGuard, TReport, TReportShort } from '../types'
+import { TReport, TReportShort } from '../types'
 import { Widget, GeneralProps, NewItemProps } from './types'
 import { allWidgets } from '../widgets/allWidgets'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDownload, faMinus, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { Overlay, Tooltip } from 'react-bootstrap'
-import packageJson from '../../package.json'
 
 interface ExpandableProps {
 	name: string,
@@ -150,122 +148,20 @@ function ShowWidgets(props: GeneralProps) {
 }
 
 
-/*
-function ShowPredefined(props: GeneralProps) {
-	const predefined: {name: string, data: TData}[] = []
-	return <>{predefined.map((w,idx) => {
-		return <div
-			key={idx}
-			draggable={true}
-			onDragStart={e => props.dragWidgetStart(e, {type:'widget', widget:w.data})}
-			onDragEnd={e => props.dragWidgetEnd(e)}
-			className={style.widget}
-		>
-			{TransName(w.name)}
-		</div>
-	})}</>
-}
-*/
-
-
-function fileReportUpload(arr: TReport[], setArr: React.Dispatch<React.SetStateAction<TReport[]>>) {
-	const el = document.createElement('input')
-	el.type = 'file'
-	el.accept = 'application/json'
-	el.addEventListener('change', () => {
-		if (!el.files)
-			return
-		const fl = el.files[0]
-		const fr = new FileReader()
-		fr.addEventListener('load', e3 => {
-			if (!e3.target || typeof e3.target.result !== 'string') {
-				throw new Error('Bad value')
-			}
-			let dt
-			try {
-				dt = JSON.parse(e3.target.result)
-			}
-			catch(e) {
-				alert(Trans('upload bad file')+' '+(String(e)))
-				return
-			}
-			if (!ReportTypeGuard(dt)) {
-				alert('Bad data')
-				return
-			}
-			const myVersion = packageJson.version.split('.')[0]
-			const docVersion = dt.version.split('.')[0]
-			if (docVersion !== myVersion) {
-				alert(`Bad version. Expected ${myVersion} but got ${docVersion}`)
-				return
-			}
-			let n = arr.length
-			setArr([...arr, dt])
-			alert(Trans('upload finished', [(n+1).toString()]))
-		});
-		fr.readAsText(fl);
-	})
-	el.click()
-}
-
-
-function ShowUpload(props: GeneralProps) {
-	const [arr, setArr] = useState<TReport[]>([]);
-
-	function fileDownload() {
-		let blob = new Blob([JSON.stringify(props.report,null,4)], {type: 'application/json'});
-		saveAs(blob, props.report._id+'.json');
-	}
-
-	function dragStartFile(e: React.DragEvent<HTMLDivElement>, dt: TReport) {
-		return props.dragWidgetStart(e, {type:'widgets', widgets:dt.children})
-	}
-
-	return <>
-		<div className="btn-group" role="group">
-			<button className='btn btn-primary' onClick={fileDownload}>
-				<FontAwesomeIcon icon={faDownload} fixedWidth className='me-2' />
-				{Trans('download')}
-			</button>
-			<button className='btn btn-outline-primary' onClick={() => fileReportUpload(arr, setArr)}>
-				<FontAwesomeIcon icon={faUpload} fixedWidth className='me-2' />
-				{Trans('upload')}
-			</button>
-		</div>
-		<hr />
-		{arr.map((r,idx) => <div
-			key={idx}
-			draggable={true}
-			onDragStart={(e) => dragStartFile(e, r)}
-			onDragEnd={props.dragWidgetEnd}
-			className={style.widget}
-		>
-			{r.name}&nbsp;
-		</div>)}
-	</>
-}
-
-
 export default function EditWidgetNew(props: GeneralProps) {
-	if (props.report.target !== 'pdf') {
+	if (props.report.target !== 'pdf' && props.report.target !== 'html') {
 		return <div className='text-muted'><small>{Trans('no widgets available for target -name-', [props.report.target])}</small></div>
 	}
 	return <>
-		<Expandable name={Trans('widgets')} defaultExpanded={true}>
-			<ShowWidgets {...props} />
-		</Expandable>
-		{/*
-		<Expandable name={Trans('predefined')}>
-			<ShowPredefined {...props} />
-		</Expandable>
-		*/}
+		<div className='section-name'>
+			{Trans('widgets')}
+		</div>
+		<ShowWidgets {...props} />
+
 		{!!props.api.allReports && (
 		<Expandable name={Trans('reports')}>
 			<ShowReports {...props} />
 		</Expandable>
 		)}
-		<Expandable name={Trans('file')}>
-			<ShowUpload {...props} />
-		</Expandable>
 	</>
 }

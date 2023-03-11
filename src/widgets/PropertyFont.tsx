@@ -179,7 +179,7 @@ export default function PropertyFont(props: Props) {
 		}
 		
 		return <button
-			className="btn btn-sm btn-primary"
+			className="btn btn-sm btn-outline-secondary"
 		>
 			<FontAwesomeIcon icon={faFont} className='me-2' />
 			{Trans('font')}

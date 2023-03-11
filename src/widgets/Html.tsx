@@ -64,7 +64,7 @@ export const Html: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as HtmlData
 		return <>
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='Html-source'>
 					{Trans('source data')}
 				</label>

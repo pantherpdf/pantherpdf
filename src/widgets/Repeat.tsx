@@ -142,7 +142,7 @@ export const Repeat: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as RepeatData
 		return <>
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='Repeat-source'>
 					{Trans('source data')}
 				</label>
@@ -156,7 +156,7 @@ export const Repeat: Widget = {
 				</div>
 			</div>
 
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='Repeat-varName'>
 					{Trans('varName')}
 				</label>

@@ -80,7 +80,7 @@ export const FirstMatch: Widget = {
 	RenderProperties: function(props) {
 		const item = props.item as FirstMatchData
 		return <>
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='FirstMatch-source'>
 					{Trans('source data')}
 				</label>
@@ -94,7 +94,7 @@ export const FirstMatch: Widget = {
 				</div>
 			</div>
 
-			<div className='hform mb-0'>
+			<div className='vform mb-0'>
 				<label htmlFor='FirstMatch-condition'>
 					{Trans('condition')}
 				</label>
@@ -111,7 +111,7 @@ export const FirstMatch: Widget = {
 				{Trans('current item is in var -name-', [item.varName])}
 			</small>
 
-			<div className='hform mb-0'>
+			<div className='vform mb-0'>
 				<label htmlFor='FirstMatch-varName' className='d-block'>
 					{Trans('varName')}
 				</label>

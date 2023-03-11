@@ -198,7 +198,7 @@ export const Image: Widget = {
 		const item = props.item as ImageData
 		const [showModal, setShowModal] = useState<boolean>(false)
 		return <>
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='img-formula'>
 					{Trans('formula')}
 				</label>
@@ -212,7 +212,7 @@ export const Image: Widget = {
 				</div>
 			</div>
 
-			<div className='hform'>
+			<div className='vform'>
 				<div>
 					<label htmlFor='img-url'>
 						{Trans('url')}

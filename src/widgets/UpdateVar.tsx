@@ -132,7 +132,7 @@ export const UpdateVar: Widget = {
 		const varData = vars.find(v => v.name === 'data' && v.owner === undefined)
 		const varReport = vars.find(v => v.name === 'report' && v.owner === undefined)
 		return <>
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='UpdateVar-varName'>
 					{Trans('varName')}
 				</label>
@@ -154,7 +154,7 @@ export const UpdateVar: Widget = {
 				</select>
 			</div>
 
-			<div className='hform'>
+			<div className='vform'>
 				<label htmlFor='UpdateVar-Formula'>
 					{Trans('formula')}
 				</label>

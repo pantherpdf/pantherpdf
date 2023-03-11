@@ -1,23 +1,7 @@
-$white: rgb(56, 56, 56);
-$gray-100: rgb(14, 14, 14);
-$gray-200: rgb(47, 48, 49);
-$gray-300: rgb(65, 67, 70);
-$gray-400: rgb(94, 98, 102);
-$gray-500: rgb(93, 98, 102);
-$gray-600: rgb(132, 136, 139);
-$gray-700: rgb(166, 174, 182);
-$gray-800: rgb(189, 199, 209);
-$gray-900: rgb(209, 220, 231);
-$black: rgb(226, 228, 236);
-$info: rgb(105, 207, 247);  // table-info bg
-
+$white: rgb(243, 243, 248);
 
 $input-btn-padding-y: 0.2rem;
 $input-btn-padding-x: 0.4rem;
-$input-bg: $gray-200;
-
-$modal-backdrop-bg: black;
-$body-color: white;
 
 @import "~bootstrap/scss/bootstrap";
 
@@ -36,24 +20,25 @@ body {
 
 // make scrollbar dark
 :root {
-	color-scheme: dark;
+	color-scheme: light;
 }
 
 .section-name {
 	color: $black;
-	background-color: $gray-200;
+	background-color: #eee;
 	padding: 0.7rem;
 	font-weight: bold;
 	margin: 1rem 0;
 	display: block;
+	border-radius: 4px;
 }
 
-.hform {
-	display: flex;
+.hform, .vform {
 	margin-bottom: 0.5rem;
 }
-.hform > *:nth-child(1) {
-	flex: 0 0 10rem;
+.hform {
+	display: flex;
 }
-/*.hform-input > *:nth-child(1) {
-}*/
+.hform > *:nth-child(1) {
+	flex: 0 0 7rem;
+}

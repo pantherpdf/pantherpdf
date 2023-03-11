@@ -11,7 +11,7 @@ import { Dropdown, Button, ButtonGroup, Modal } from 'react-bootstrap'
 import Trans, { TransName } from '../translation'
 import getTransform, { allTransforms } from '../transforms/allTransforms'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowDown, faArrowUp, faEdit, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faArrowDown, faArrowUp, faEdit, faFolderOpen, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons'
 import ObjectExplorer from './ObjectExplorer'
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter'
 
@@ -220,12 +220,13 @@ export default function DataTransform(props: GeneralProps) {
 	const editCmp = showEdit ? getTransform(showEdit.data.type) : null
 
 	return <>
-		<div className='d-flex'>
+		<div className='section-name d-flex'>
 			<label htmlFor='source-url' className='flex-fill'>
 				{Trans('source data')}
 			</label>
 			{!!props.overrideSourceData && <button
 				className='btn btn-link py-0'
+				style={{color: '#666'}}
 				onClick={async () => {
 					if (!props.overrideSourceData) {
 						return
@@ -244,7 +245,7 @@ export default function DataTransform(props: GeneralProps) {
 				}}
 				title={Trans('load local json file')}
 			>
-				<FontAwesomeIcon icon={props.isOverridenSourceData ? faTimes : faArrowUp} />
+				<FontAwesomeIcon icon={props.isOverridenSourceData ? faTimes : faFolderOpen} />
 			</button>}
 		</div>
 		<InputApplyOnEnter
@@ -257,7 +258,9 @@ export default function DataTransform(props: GeneralProps) {
 			placeholder='https://www.example.com/data.js(on)'
 		/>
 
-
+		<div className='section-name'>
+			{Trans('transform')}
+		</div>
 		{props.report.transforms.map((item, idx) => <TransformItem
 			{...props}
 			item={item}
@@ -327,7 +330,7 @@ export default function DataTransform(props: GeneralProps) {
 				<Button variant="secondary" onClick={() => setShowEdit(null)}>
 					{Trans('cancel')}
 				</Button>
-				<Button variant="primary" onClick={editSave}>
+				<Button variant="secondary" onClick={editSave}>
 					{Trans('save')}
 				</Button>
 			</Modal.Footer>
