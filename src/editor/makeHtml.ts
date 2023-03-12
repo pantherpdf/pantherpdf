@@ -3,64 +3,72 @@
  * Compiled report -> html
  */
 
-
-import type { CSSProperties } from 'react'
-import { defaultReportCss, TReportCompiled } from '../types'
-import type { ItemRendeFinalHelper } from './types'
-import getWidget from '../widgets/allWidgets'
-import styleToCssString from 'react-style-object-to-css'
-import { PropertyFontGenCss } from '../widgets/PropertyFont'
-import { GoogleFontUrlImport } from '../widgets/GoogleFonts'
-
+import type { CSSProperties } from 'react';
+import { defaultReportCss, TReportCompiled } from '../types';
+import type { ItemRendeFinalHelper } from './types';
+import getWidget from '../widgets/allWidgets';
+import styleToCssString from 'react-style-object-to-css';
+import { PropertyFontGenCss } from '../widgets/PropertyFont';
+import { GoogleFontUrlImport } from '../widgets/GoogleFonts';
 
 function escapeHtml(unsafe: string): string {
-	return unsafe
-		.replace(/&/g, "&amp;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;")
-		.replace(/"/g, "&quot;")
-		.replace(/'/g, "&#039;");
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
+export function makeHtmlContent(
+  report: TReportCompiled,
+  externalHelpers: { [key: string]: any } = {},
+) {
+  const helper: ItemRendeFinalHelper = {
+    renderItem: (item, helper) => {
+      const w = getWidget(item.type);
+      return w.RenderFinal({ ...helper, item });
+    },
+    renderChildren: (chs, helper) => {
+      if (!Array.isArray(chs)) {
+        throw new Error('Bad childs array');
+      }
+      let txt = '';
+      for (const item of chs) {
+        const w = getWidget(item.type);
+        txt += w.RenderFinal({ ...helper, item });
+      }
+      return txt;
+    },
+    escapeHtml,
+    styleToStringAttribute: (css: CSSProperties) =>
+      escapeHtml(styleToCssString(css).trim()),
+    externalHelpers,
+  };
 
-export function makeHtmlContent(report: TReportCompiled, externalHelpers: {[key: string]: any}={}) {
-	const helper: ItemRendeFinalHelper = {
-		renderItem: (item, helper) => {
-			const w = getWidget(item.type)
-			return w.RenderFinal({...helper, item})
-		},
-		renderChildren: (chs, helper) => {
-			if (!Array.isArray(chs)) {
-				throw new Error('Bad childs array')
-			}
-			let txt = ''
-			for (const item of chs) {
-				const w = getWidget(item.type)
-				txt += w.RenderFinal({...helper, item})
-			}
-			return txt
-		},
-		escapeHtml,
-		styleToStringAttribute: (css: CSSProperties) => escapeHtml(styleToCssString(css).trim()),
-		externalHelpers,
-	}
-
-	return helper.renderChildren(report.children, helper)
+  return helper.renderChildren(report.children, helper);
 }
 
+export default function makeHtml(
+  report: TReportCompiled,
+  externalHelpers: { [key: string]: any } = {},
+): string {
+  // prepare css
+  const cssObj: CSSProperties = {
+    ...defaultReportCss,
+    ...PropertyFontGenCss(report.properties.font || {}),
+  };
+  const css = styleToCssString(cssObj);
 
-export default function makeHtml(report: TReportCompiled, externalHelpers: {[key: string]: any}={}): string {
-	// prepare css
-	const cssObj: CSSProperties = {...defaultReportCss, ...PropertyFontGenCss(report.properties.font || {})}
-	const css = styleToCssString(cssObj)
+  // render content
+  const htmlContent = makeHtmlContent(report, externalHelpers);
 
-	// render content
-	const htmlContent = makeHtmlContent(report, externalHelpers)
+  const fontUrl = GoogleFontUrlImport(report.fontsUsed);
+  const fontHtml = fontUrl
+    ? `<link rel="stylesheet" href="${fontUrl}"></link>`
+    : '';
 
-	const fontUrl = GoogleFontUrlImport(report.fontsUsed)
-	const fontHtml = fontUrl ? `<link rel="stylesheet" href="${fontUrl}"></link>` : ''
-
-	const html = `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="en-US">
 <head>
 <meta charset="utf-8">
@@ -157,6 +165,6 @@ ${fontHtml}
 ${htmlContent}
 </body>
 </html>
-`
-	return html
+`;
+  return html;
 }
