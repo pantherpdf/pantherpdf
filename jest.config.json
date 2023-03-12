@@ -1,0 +1,17 @@
+{
+  "snapshotSerializers": [
+    "jest-serializer-html"
+  ],
+  "testMatch": [
+    "<rootDir>/src/**/*.(test).{js,jsx,ts,tsx}"
+  ],
+  "verbose": true,
+  "transform": {
+    "^.+\\.(ts|tsx)?$": "ts-jest",
+    "\\.(js|jsx)$": ["babel-jest", { "configFile": "./babel.config.test.json" }]
+  },
+  "transformIgnorePatterns": ["/node_modules/(?!react-colorful/)"],
+  "moduleNameMapper": {
+    "\\.css$": "<rootDir>/src/styles.css.mock.ts"
+  }
+}

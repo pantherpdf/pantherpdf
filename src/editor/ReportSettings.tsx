@@ -24,6 +24,7 @@ import VarEditor from './VarEditor';
 import packageJson from '../../package.json';
 import { saveAs } from 'file-saver';
 import style from './EditWidgets.module.css';
+import globalStyle from '../globalStyle.module.css';
 
 // hack to get array of possible values
 // because I can only import types from shared
@@ -191,7 +192,7 @@ export default function ReportSettings(props: GeneralProps) {
     : [0, 0, 0, 0];
   return (
     <>
-      <div className="vform">
+      <div className={globalStyle.vform}>
         <label htmlFor="report-name">{Trans('name')}</label>
         <div className="input-group">
           <InputApplyOnEnter
@@ -205,7 +206,7 @@ export default function ReportSettings(props: GeneralProps) {
         </div>
       </div>
 
-      <div className="hform">
+      <div className={globalStyle.hform}>
         <label htmlFor="target">{Trans('target')}</label>
         <select
           className="form-select"
@@ -236,7 +237,7 @@ export default function ReportSettings(props: GeneralProps) {
 
       {showMore && (
         <>
-          <div className="vform">
+          <div className={globalStyle.vform}>
             <label htmlFor="fileName">{Trans('fileName')}</label>
             <div className="input-group">
               <span className="input-group-text fst-italic">ƒ</span>
@@ -252,7 +253,7 @@ export default function ReportSettings(props: GeneralProps) {
             </div>
           </div>
 
-          <div className="hform">
+          <div className={globalStyle.hform}>
             <label htmlFor="lang">{Trans('lang')}</label>
             <div>
               <InputApplyOnEnter
@@ -272,7 +273,7 @@ export default function ReportSettings(props: GeneralProps) {
 
           {props.report.target === 'pdf' && (
             <>
-              <div className="hform">
+              <div className={globalStyle.hform}>
                 <label>{Trans('font')}</label>
                 <div className="input-group">
                   <PropertyFont
@@ -287,14 +288,14 @@ export default function ReportSettings(props: GeneralProps) {
                 </div>
               </div>
 
-              <div className="section-name">
+              <div className={globalStyle.section}>
                 {Trans('paper')}
                 <small className="text-muted ms-2">
                   {Trans('0 means default')}
                 </small>
               </div>
 
-              <div className="hform">
+              <div className={globalStyle.hform}>
                 <label htmlFor="paperWidth">{Trans('width')}</label>
                 <div className="input-group">
                   <InputApplyOnEnter
@@ -316,7 +317,7 @@ export default function ReportSettings(props: GeneralProps) {
                 </div>
               </div>
 
-              <div className="hform">
+              <div className={globalStyle.hform}>
                 <label htmlFor="paperHeight">{Trans('height')}</label>
                 <div className="input-group">
                   <InputApplyOnEnter
@@ -338,7 +339,7 @@ export default function ReportSettings(props: GeneralProps) {
                 </div>
               </div>
 
-              <div className="section-name">
+              <div className={globalStyle.section}>
                 {Trans('margin')}
                 <small className="text-muted ms-2">mm</small>
               </div>
@@ -348,7 +349,7 @@ export default function ReportSettings(props: GeneralProps) {
 
           <VarEditor {...props} />
 
-          <div className="section-name">{Trans('import export')}</div>
+          <div className={globalStyle.section}>{Trans('import export')}</div>
           <ShowUpload {...props} />
         </>
       )}

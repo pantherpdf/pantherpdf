@@ -72,7 +72,7 @@ export default function toPostFix(expr: TExpr[]): TExpr[] {
       }
       stack.push(part);
     } else {
-      console.assert('Never happen. Unknown type.');
+      throw new Error('Unknown type.');
     }
   }
   return expr2.concat(stack.reverse());

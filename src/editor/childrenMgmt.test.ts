@@ -194,12 +194,12 @@ test('updateDestAfterRemove bottom->up', () => {
   expect(d2).toStrictEqual([1, 2, 3, 4]);
 });
 
-test('updateDestAfterRemove bottom->up', () => {
+test('updateDestAfterRemove bottom->up 2', () => {
   const d2 = updateDestAfterRemove([1, 2, 3, 4], [1, 2, 4, 5, 6]);
   expect(d2).toStrictEqual([1, 2, 3, 4]);
 });
 
-test('updateDestAfterRemove', () => {
+test('updateDestAfterRemove 2', () => {
   const d2 = updateDestAfterRemove([1, 2, 3, 4], [1, 2, 2]);
   expect(d2).toStrictEqual([1, 2, 2, 4]);
 });
@@ -214,12 +214,12 @@ test('updateDestAfterRemove bad ids', () => {
   expect(() => updateDestAfterRemove([1, 2], [])).toThrow();
 });
 
-test('updateDestAfterRemove', () => {
+test('updateDestAfterRemove 3', () => {
   const d2 = updateDestAfterRemove([0, 0, 1], [0, 1]);
   expect(d2).toStrictEqual([0, 0, 1]);
 });
 
-test('updateDestAfterRemove', () => {
+test('updateDestAfterRemove 4', () => {
   const d2 = updateDestAfterRemove([0], [0, 1]);
   expect(d2).toStrictEqual([0]);
 });

@@ -21,6 +21,7 @@ import { extractFiles } from '../FileSelect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { LoadGoogleFontCss } from '../widgets/GoogleFonts';
+import globalStyle from '../globalStyle.module.css';
 
 interface PropertiesHeaderProps extends GeneralProps {
   name: string | { [key: string]: string };
@@ -28,7 +29,7 @@ interface PropertiesHeaderProps extends GeneralProps {
 }
 function PropertiesHeader(props: PropertiesHeaderProps) {
   return (
-    <div className="d-flex section-name">
+    <div className={`${globalStyle.section} d-flex`}>
       <div className="flex-fill">{TransName(props.name)}</div>
       {!!props.onDelete && (
         <button

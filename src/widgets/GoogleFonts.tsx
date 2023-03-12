@@ -178,7 +178,7 @@ export function destructGoogleFontUrl(url: string): TFontStyle[] {
 }
 
 export function LoadGoogleFontCss(obj: TFontStyle): void {
-  const els = global.window.document.getElementsByTagName('link');
+  const els = window.document.getElementsByTagName('link');
   for (const el of els) {
     if (el.rel !== 'stylesheet') {
       continue;
@@ -194,15 +194,15 @@ export function LoadGoogleFontCss(obj: TFontStyle): void {
       return;
     }
   }
-  if (typeof global.window === 'undefined') {
+  if (typeof window.document === 'undefined') {
     throw new Error('LoadGoogleFontCss() is only available on browser.');
   }
   const url = GoogleFontUrlImport([obj]);
   if (!url) {
     return;
   }
-  const link = global.document.createElement('link');
+  const link = window.document.createElement('link');
   link.rel = 'stylesheet';
   link.href = url;
-  global.document.head.appendChild(link);
+  window.document.head.appendChild(link);
 }

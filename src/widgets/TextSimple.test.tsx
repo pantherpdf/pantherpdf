@@ -39,7 +39,7 @@ test('text formula==false should be empty string', async () => {
   expect(p2.data).toBe('');
 });
 
-test('text formula==false should be empty string', async () => {
+test('text formula==false should be empty string 2', async () => {
   const dt: TextSimpleData = {
     type: 'TextSimple',
     formula: 'data.dt',

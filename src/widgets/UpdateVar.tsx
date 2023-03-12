@@ -11,6 +11,7 @@ import InputApplyOnEnter from './InputApplyOnEnter';
 import { findInList } from '../editor/childrenMgmt';
 import Trans from '../translation';
 import { SetVarData } from './SetVar';
+import globalStyle from '../globalStyle.module.css';
 
 interface GetAllVars {
   name: string;
@@ -142,7 +143,7 @@ export const UpdateVar: Widget = {
     );
     return (
       <>
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <label htmlFor="UpdateVar-varName">{Trans('varName')}</label>
           <select
             className="form-select"
@@ -173,7 +174,7 @@ export const UpdateVar: Widget = {
           </select>
         </div>
 
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <label htmlFor="UpdateVar-Formula">{Trans('formula')}</label>
           <div className="input-group">
             <span className="input-group-text fst-italic">ƒ</span>

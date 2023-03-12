@@ -10,6 +10,7 @@ import { IHelpers } from '../formula/types';
 import FormulaEvaluate from '../formula/formula';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
 import Trans from '../translation';
+import globalStyle from '../globalStyle.module.css';
 
 export interface FilterData extends TTransformData {
   type: 'Filter';
@@ -62,7 +63,7 @@ const Filter: TTransformWidget = {
     const item = props.item as FilterData;
     return (
       <>
-        <div className="hform">
+        <div className={globalStyle.hform}>
           <label htmlFor="trans-edit-field">{Trans('field')}</label>
           <div className="input-group mb-3">
             <span className="input-group-text fst-italic">ƒ</span>
@@ -74,7 +75,7 @@ const Filter: TTransformWidget = {
           </div>
         </div>
 
-        <div className="hform mb-0">
+        <div className={`${globalStyle.hform} mb-0`}>
           <label htmlFor="trans-edit-condition">{Trans('condition')}</label>
           <div className="input-group">
             <span className="input-group-text fst-italic">ƒ</span>

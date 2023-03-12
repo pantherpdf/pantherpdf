@@ -5,6 +5,7 @@ import Trans from '../translation';
 import { TReport } from '../types';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
 import { GeneralProps } from './types';
+import globalStyle from '../globalStyle.module.css';
 
 const reservedVars = ['data', 'report'];
 
@@ -45,7 +46,7 @@ export default function VarEditor(props: GeneralProps) {
 
   return (
     <div className="mt-3">
-      <div className="section-name">{Trans('variables')}</div>
+      <div className={globalStyle.section}>{Trans('variables')}</div>
       <table className="table table-sm">
         <thead>
           <tr>

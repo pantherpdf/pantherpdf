@@ -9,6 +9,7 @@ import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
 import InputApplyOnEnter from './InputApplyOnEnter';
 import Trans, { TransName, trKeys } from '../translation';
+import globalStyle from '../globalStyle.module.css';
 
 const RepeatDirections = tuple('rows', 'columns', 'grid');
 type RepeatDirection = (typeof RepeatDirections)[number];
@@ -157,7 +158,7 @@ export const Repeat: Widget = {
     const item = props.item as RepeatData;
     return (
       <>
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <label htmlFor="Repeat-source">{Trans('source data')}</label>
           <div className="input-group">
             <span className="input-group-text fst-italic">ƒ</span>
@@ -169,7 +170,7 @@ export const Repeat: Widget = {
           </div>
         </div>
 
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <label htmlFor="Repeat-varName">{Trans('varName')}</label>
           <InputApplyOnEnter
             id="Repeat-varName"
@@ -184,7 +185,7 @@ export const Repeat: Widget = {
           {Trans('repeat - index name', [`${item.varName}_i`])}
         </small>
 
-        <div className="hform">
+        <div className={globalStyle.hform}>
           <label htmlFor="Repeat-direction">
             {Trans('repeat - direction')}
           </label>

@@ -36,6 +36,7 @@ import InputApplyOnEnter from './InputApplyOnEnter';
 import style from './TextHtml.module.css';
 import { LoadGoogleFontCss } from './GoogleFonts';
 import { Element_, parse, extractText } from './HtmlParser';
+import globalStyle from '../globalStyle.module.css';
 
 const listOfEditors: Editor[] = [];
 const listOfSelectionCallbacks: (() => void)[] = [];
@@ -247,7 +248,7 @@ function TagEditor(props: ItemRendeProps) {
 function TagEditorContainer(props: ItemRendeProps) {
   return (
     <>
-      <div className="section-name">{Trans('tag')}</div>
+      <div className={globalStyle.section}>{Trans('tag')}</div>
       <button
         className="btn btn-outline-secondary ms-2"
         title={Trans('insert tag')}
@@ -880,7 +881,7 @@ export const TextHtml: Widget = {
     ];
     return (
       <>
-        <div className="hform">
+        <div className={globalStyle.hform}>
           <label>{Trans('font')}</label>
           <PropertyFont
             value={item.font}
@@ -929,7 +930,7 @@ export const TextHtml: Widget = {
           </div>
         </div>
 
-        <div className="hform">
+        <div className={globalStyle.hform}>
           <label htmlFor="TextHtml-fontSize">{Trans('font-size')}</label>
           <select
             className="form-select"

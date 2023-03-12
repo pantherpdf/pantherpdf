@@ -10,6 +10,7 @@ import { faCode } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
 import InputApplyOnEnter from './InputApplyOnEnter';
 import Trans from '../translation';
+import globalStyle from '../globalStyle.module.css';
 
 export interface HtmlData extends TData {
   type: 'Html';
@@ -63,7 +64,7 @@ export const Html: Widget = {
     const item = props.item as HtmlData;
     return (
       <>
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <label htmlFor="Html-source">{Trans('source data')}</label>
           <div className="input-group">
             <span className="input-group-text fst-italic">ƒ</span>

@@ -9,6 +9,7 @@ import { faHandRock } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
 import InputApplyOnEnter from './InputApplyOnEnter';
 import Trans, { TransName } from '../translation';
+import globalStyle from '../globalStyle.module.css';
 
 export interface FirstMatchData extends TData {
   type: 'FirstMatch';
@@ -85,7 +86,7 @@ export const FirstMatch: Widget = {
     const item = props.item as FirstMatchData;
     return (
       <>
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <label htmlFor="FirstMatch-source">{Trans('source data')}</label>
           <div className="input-group mb-3">
             <span className="input-group-text fst-italic">ƒ</span>
@@ -97,7 +98,7 @@ export const FirstMatch: Widget = {
           </div>
         </div>
 
-        <div className="vform mb-0">
+        <div className={`${globalStyle.vform} mb-0`}>
           <label htmlFor="FirstMatch-condition">{Trans('condition')}</label>
           <div className="input-group">
             <span className="input-group-text fst-italic">ƒ</span>
@@ -112,7 +113,7 @@ export const FirstMatch: Widget = {
           {Trans('current item is in var -name-', [item.varName])}
         </small>
 
-        <div className="vform mb-0">
+        <div className={`${globalStyle.vform} mb-0`}>
           <label htmlFor="FirstMatch-varName" className="d-block">
             {Trans('varName')}
           </label>

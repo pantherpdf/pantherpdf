@@ -10,6 +10,7 @@ import PropertyBorder, { Border, genBorderCss } from './PropertyBorder';
 import Trans from '../translation';
 import BoxName from './BoxName';
 import PropertySlider from './PropertySlider';
+import globalStyle from '../globalStyle.module.css';
 
 export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
 export type TBorderStyle = (typeof TBorderStyles)[number];
@@ -87,7 +88,7 @@ export const Separator: Widget = {
         <PropertySlider
           id="sep-marginTop"
           label={Trans('margin top')}
-          labelClassName="section-name"
+          labelClassName={globalStyle.section}
           min={0}
           max={40}
           value={item.marginTop}
@@ -97,7 +98,7 @@ export const Separator: Widget = {
         <PropertySlider
           id="sep-marginBottom"
           label={Trans('margin bottom')}
-          labelClassName="section-name"
+          labelClassName={globalStyle.section}
           min={0}
           max={40}
           value={item.marginBottom}

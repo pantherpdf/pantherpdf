@@ -9,6 +9,7 @@ import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
 import InputApplyOnEnter from './InputApplyOnEnter';
 import Trans, { TransName } from '../translation';
+import globalStyle from '../globalStyle.module.css';
 
 export interface ConditionData extends TData {
   type: 'Condition';
@@ -61,7 +62,7 @@ export const Condition: Widget = {
     const item = props.item as ConditionData;
     return (
       <>
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <label htmlFor="Condition-formula">{Trans('formula')}</label>
           <div className="input-group mb-3">
             <span className="input-group-text fst-italic">ƒ</span>

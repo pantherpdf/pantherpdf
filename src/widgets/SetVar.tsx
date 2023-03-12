@@ -9,6 +9,7 @@ import { faHammer } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
 import InputApplyOnEnter from './InputApplyOnEnter';
 import Trans, { TransName } from '../translation';
+import globalStyle from '../globalStyle.module.css';
 
 export interface SetVarData extends TData {
   type: 'SetVar';
@@ -70,7 +71,7 @@ export const SetVar: Widget = {
     const item = props.item as SetVarData;
     return (
       <>
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <label htmlFor="SetVar-source">{Trans('source data')}</label>
           <div className="input-group mb-3">
             <span className="input-group-text fst-italic">ƒ</span>
@@ -82,7 +83,7 @@ export const SetVar: Widget = {
           </div>
         </div>
 
-        <div className="vform mb-0">
+        <div className={`${globalStyle.vform} mb-0`}>
           <label htmlFor="SetVar-varName">{Trans('varName')}</label>
           <InputApplyOnEnter
             id="SetVar-varName"

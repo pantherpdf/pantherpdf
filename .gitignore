@@ -9,3 +9,5 @@
 
 /build/
 /build-package/
+/dist/
+/.parcel-cache/

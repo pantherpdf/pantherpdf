@@ -12,6 +12,7 @@ import { allWidgets } from '../widgets/allWidgets';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Overlay, Tooltip } from 'react-bootstrap';
+import globalStyle from '../globalStyle.module.css';
 
 interface ExpandableProps {
   name: string;
@@ -24,7 +25,7 @@ function Expandable(props: ExpandableProps) {
   return (
     <div>
       <div
-        className={'section-name d-flex ' + style.header}
+        className={`${globalStyle.section} d-flex ${style.header}`}
         onClick={() => setExpanded(!expanded)}
       >
         <span className="mr-3" style={{ fontSize: '110%' }}>
@@ -182,7 +183,7 @@ export default function EditWidgetNew(props: GeneralProps) {
   }
   return (
     <>
-      <div className="section-name">{Trans('widgets')}</div>
+      <div className={globalStyle.section}>{Trans('widgets')}</div>
       <ShowWidgets {...props} />
 
       {!!props.api.allReports && (

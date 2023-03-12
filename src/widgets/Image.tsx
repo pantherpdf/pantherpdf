@@ -17,6 +17,7 @@ import { Modal } from 'react-bootstrap';
 import FileDialog from '../FileDialog';
 import Trans from '../translation';
 import base64ArrayBuffer from './base64ArrayBuffer';
+import globalStyle from '../globalStyle.module.css';
 
 export interface ImageData extends TData {
   type: 'Image';
@@ -225,7 +226,7 @@ export const Image: Widget = {
     const [showModal, setShowModal] = useState<boolean>(false);
     return (
       <>
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <label htmlFor="img-formula">{Trans('formula')}</label>
           <div className="input-group">
             <span className="input-group-text fst-italic">ƒ</span>
@@ -237,7 +238,7 @@ export const Image: Widget = {
           </div>
         </div>
 
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <div>
             <label htmlFor="img-url">{Trans('url')}</label>
             <button
@@ -255,9 +256,9 @@ export const Image: Widget = {
           />
         </div>
 
-        <div className="section-name">{Trans('size')}</div>
+        <div className={globalStyle.section}>{Trans('size')}</div>
 
-        <div className="hform mb-0">
+        <div className={`${globalStyle.hform} mb-0`}>
           <label htmlFor="width">{Trans('width')}</label>
           <InputApplyOnEnter
             id="width"
@@ -276,7 +277,7 @@ export const Image: Widget = {
         </div>
         <small className="text-muted d-block mb-3">{WidthOptions}</small>
 
-        <div className="hform mb-0">
+        <div className={`${globalStyle.hform} mb-0`}>
           <label htmlFor="height">{Trans('height')}</label>
           <InputApplyOnEnter
             id="height"
@@ -295,7 +296,7 @@ export const Image: Widget = {
         </div>
         <small className="text-muted d-block mb-3">{WidthOptions}</small>
 
-        <div className="hform mb-0">
+        <div className={`${globalStyle.hform} mb-0`}>
           <label htmlFor="fit">{Trans('img-fit')}</label>
           <select
             value={
@@ -320,7 +321,7 @@ export const Image: Widget = {
           </select>
         </div>
 
-        <div className="section-name">{Trans('align')}</div>
+        <div className={globalStyle.section}>{Trans('align')}</div>
         <div className="text-center">
           <PropertyAlign
             value={item.align}

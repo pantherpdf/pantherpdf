@@ -7,6 +7,7 @@ import Trans, { trKeys } from '../translation';
 import { tuple } from '../types';
 import InputApplyOnEnter from './InputApplyOnEnter';
 import PropertyColor from './PropertyColor';
+import globalStyle from '../globalStyle.module.css';
 
 export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
 export type TBorderStyle = (typeof TBorderStyles)[number];
@@ -35,7 +36,7 @@ interface BorderEditorProps {
 export default function BorderEditor(props: BorderEditorProps) {
   return (
     <>
-      <div className="hform">
+      <div className={globalStyle.hform}>
         <label htmlFor={props.id ? `${props.id}-width` : undefined}>
           {Trans('width')}
           <span className="ms-2 text-muted">[px]</span>
@@ -56,7 +57,7 @@ export default function BorderEditor(props: BorderEditorProps) {
 
       {props.value.width > 0 && (
         <>
-          <div className="hform">
+          <div className={globalStyle.hform}>
             <label htmlFor={props.id ? `${props.id}-style` : undefined}>
               {Trans('border-style')}
             </label>

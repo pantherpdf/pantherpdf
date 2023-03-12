@@ -42,12 +42,12 @@ test('should include google font', async () => {
     'https://fonts.googleapis.com/css2?family=Roboto%20Mono:ital,wght@0,400&display=swap';
   expect(
     html.indexOf(expectedUrl1) !== -1 || html.indexOf(expectedUrl2) !== -1,
-  );
+  ).toBeTruthy();
 });
 
 test('should include globalCss', async () => {
   const compiled = await compile(sampleReport, {});
   compiled.globalCss = '.abc-def-123-456 { font-weight: bold }';
   const html = makeHtml(compiled);
-  expect(html.indexOf('.abc-def-123-456 { font-weight: bold }') !== -1);
+  expect(html.indexOf('.abc-def-123-456 { font-weight: bold }')).not.toBe(-1);
 });

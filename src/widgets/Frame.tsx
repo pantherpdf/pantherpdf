@@ -21,6 +21,7 @@ import PropertyFont, {
 } from './PropertyFont';
 import { LoadGoogleFontCss } from './GoogleFonts';
 import useStateDelayed from '../useStateDelayed';
+import globalStyle from '../globalStyle.module.css';
 
 interface Properties {
   margin: [number, number, number, number];
@@ -134,7 +135,7 @@ function Property4SideRange(props: Property4SideRangeProps) {
 
   return (
     <div>
-      <div className="section-name">
+      <div className={globalStyle.section}>
         {props.label}
         <small className="ms-2 text-muted">
           {value[0]}, {value[1]}, {value[2]}, {value[3]} px
@@ -208,7 +209,7 @@ export const Frame: Widget = {
     const item = props.item as FrameData;
     return (
       <>
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <label htmlFor="Frame-width">
             {Trans('width')}
             <small className="text-muted ms-1">[{WidthOptions}]</small>
@@ -221,7 +222,7 @@ export const Frame: Widget = {
           />
         </div>
 
-        <div className="vform">
+        <div className={globalStyle.vform}>
           <label htmlFor="Frame-height">
             {Trans('height')}
             <small className="text-muted ms-1">[{WidthOptions}]</small>
@@ -282,7 +283,7 @@ export const Frame: Widget = {
           onChange={val => props.setItem({ ...props.item, padding: val })}
         />
 
-        <div className="section-name">{Trans('border')}</div>
+        <div className={globalStyle.section}>{Trans('border')}</div>
 
         <div className="form-check mb-3">
           <input
@@ -316,7 +317,9 @@ export const Frame: Widget = {
               : [item.border, item.border, item.border, item.border];
             return (
               <React.Fragment key={side}>
-                <div className="section-name">{Trans(`border-${side}`)}</div>
+                <div className={globalStyle.section}>
+                  {Trans(`border-${side}`)}
+                </div>
                 <PropertyBorder
                   id={`Frame-border-${side}`}
                   value={val2[idx]}
@@ -337,8 +340,8 @@ export const Frame: Widget = {
           />
         )}
 
-        <div className="section-name">{Trans('other')}</div>
-        <div className="hform">
+        <div className={globalStyle.section}>{Trans('other')}</div>
+        <div className={globalStyle.hform}>
           <label>{Trans('font')}</label>
           <PropertyFont
             value={item.font}

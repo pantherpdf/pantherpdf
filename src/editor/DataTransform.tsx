@@ -21,6 +21,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import ObjectExplorer from './ObjectExplorer';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
+import globalStyle from '../globalStyle.module.css';
 
 /**
  * Function for calling all transformations
@@ -265,7 +266,7 @@ export default function DataTransform(props: GeneralProps) {
 
   return (
     <>
-      <div className="section-name d-flex">
+      <div className={`${globalStyle.section} d-flex`}>
         <label htmlFor="source-url" className="flex-fill">
           {Trans('source data')}
         </label>
@@ -306,7 +307,7 @@ export default function DataTransform(props: GeneralProps) {
         placeholder="https://www.example.com/data.js(on)"
       />
 
-      <div className="section-name">{Trans('transform')}</div>
+      <div className={globalStyle.section}>{Trans('transform')}</div>
       {props.report.transforms.map((item, idx) => (
         <TransformItem
           {...props}
