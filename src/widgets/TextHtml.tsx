@@ -945,7 +945,7 @@ export const TextHtml: Widget = {
               document.execCommand('fontSize', false, '7');
               var fontElements = document.getElementsByTagName('font');
               for (let i = 0, len = fontElements.length; i < len; ++i) {
-                const el = fontElements[i];
+                const el: any = fontElements[i]; // using deprecated api
                 if (!isNodeInside(el, editor.elementRef)) {
                   continue;
                 }
