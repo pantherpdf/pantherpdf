@@ -49,9 +49,14 @@ async function evalJs(code: string): Promise<unknown> {
   //const getData = module.default
   //return getData()
 
-  // eslint-disable-next-line
-	const a = eval(code)
-  const data = await a;
+  // eval() did not work with Parcel.
+  // https://parceljs.org/features/scope-hoisting/#avoid-eval
+  // Parcel cannot rename any of the variables within the scope where eval() is used.
+  //const data = await eval(code)
+
+  // eslint-disable-next-line no-new-func
+  const func = new Function(code);
+  const data = await func();
   return data;
 }
 
@@ -62,11 +67,18 @@ export async function getDataFromUrl(
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
     throw new Error('Only absolute url is allowed');
   }
-  const r = await fetch(url, {
-    headers: {
-      Accept: 'text/javascript, application/json',
-    },
-  });
+  let r: Response;
+  try {
+    r = await fetch(url, {
+      headers: {
+        Accept: 'text/javascript, application/json',
+      },
+    });
+  } catch (err) {
+    throw new Error(
+      `Error while requesting data from url "${url}". Error: ${String(err)}`,
+    );
+  }
   if (r.status !== 200) {
     throw new Error(`Bad response status: ${r.status}`);
   }
