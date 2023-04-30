@@ -3,11 +3,17 @@
  * Managing global state, prepare GeneralProps, drag-drop functions
  */
 
-import React, { ReactNode, useRef } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 import { useState } from 'react';
 import getWidget from '../widgets/allWidgets';
-import { TReport, TData, ApiEndpoints, FileUploadData } from '../types';
-import { GeneralProps, NewItemProps, TDragObj } from './types';
+import { TReport, TData, FileUploadData } from '../types';
+import {
+  EditorProps,
+  GeneralProps,
+  NewItemProps,
+  TDragObj,
+  TSourceData,
+} from './types';
 import style from './Editor.module.css';
 import Layout from './EditorLayout';
 import {
@@ -20,18 +26,8 @@ import {
 } from './childrenMgmt';
 import { extractFiles } from '../FileSelect';
 import { Image as ImageWidget, ImageData } from '../widgets/Image';
-
-interface EditorProps {
-  report: TReport;
-  setReport: (val: TReport) => Promise<void>;
-  deleteReport?: () => void;
-  api: ApiEndpoints;
-
-  getOriginalSourceData: () => Promise<unknown>;
-  setOverrideSourceData?: (dt: unknown) => void;
-  isOverridenSourceData: boolean;
-  data: { data: unknown; errorMsg?: string };
-}
+import { transformData } from './DataTransform';
+import retrieveOriginalSourceData from './retrieveOriginalSourceData';
 
 export function dropImpl(
   report: TReport,
@@ -95,7 +91,39 @@ export function dropImpl(
 
 export default function Editor(props: EditorProps) {
   const [selected, setSelected] = useState<number[] | null>(null);
+  const [data, setData] = useState<TSourceData>({ data: undefined });
+  const [overrideSourceData, setSourceDataOverride] = useState<
+    string | undefined
+  >(undefined);
   const dragObj = useRef<TDragObj | null>(null);
+
+  // refresh data
+  useEffect(() => {
+    (async function () {
+      try {
+        const dt1 = await getOrigSourceInternal();
+        const dt2 = await transformData(dt1, props.report.transforms, true);
+        setData({ data: dt2 });
+      } catch (e) {
+        setData({ data: undefined, errorMsg: String(e) });
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [overrideSourceData, props.report.dataUrl, props.report.transforms]);
+
+  async function getOrigSourceInternal(): Promise<unknown> {
+    if (typeof props.sourceData !== 'undefined') {
+      return props.sourceData;
+    }
+    if (overrideSourceData !== undefined) {
+      return JSON.parse(overrideSourceData);
+    }
+    return retrieveOriginalSourceData({
+      reportDataUrl: props.report.dataUrl,
+      api: props.api,
+      allowUnsafeJsEval: true,
+    });
+  }
 
   let props2: GeneralProps;
 
@@ -274,18 +302,22 @@ export default function Editor(props: EditorProps) {
   }
 
   props2 = {
-    getOriginalSourceData: props.getOriginalSourceData,
-    overrideSourceData: props.setOverrideSourceData,
-    isOverridenSourceData: props.isOverridenSourceData,
-    data: props.data,
-    api: props.api,
-
-    report: props.report,
-    setReport: props.setReport,
-    deleteReport: props.deleteReport,
+    ...props,
 
     selected,
     setSelected,
+    ...(typeof props.sourceData === 'undefined'
+      ? {
+          setSourceDataOverride: (data: unknown) => {
+            const dt =
+              typeof data !== 'undefined' ? JSON.stringify(data) : undefined;
+            setSourceDataOverride(dt);
+          },
+        }
+      : {}),
+    getSourceData: getOrigSourceInternal,
+    isSourceDataOverriden: !!overrideSourceData,
+    data,
 
     renderWidget,
     renderWidgets,

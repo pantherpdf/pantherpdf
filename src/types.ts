@@ -168,6 +168,17 @@ export interface FileUploadData {
   mimeType: string;
 }
 
+export interface GeneratePdfRequest {
+  reportId: string;
+  dataUrl?: string;
+  data?: unknown;
+}
+
+export interface GeneratePdfResponse {
+  fileName: string;
+  data: Uint8Array;
+}
+
 export type FilesResponseBase = { files: TFileShort[] };
 export interface ApiEndpoints {
   reportGet?: (id: string) => Promise<TReport>;
@@ -184,6 +195,7 @@ export interface ApiEndpoints {
   ) => Promise<{ data: ArrayBuffer; mimeType: string }>;
   allReports?: () => Promise<TReportShort[]>;
   googleFontApiKey?: string;
+  generatePdf?: (req: GeneratePdfRequest) => Promise<GeneratePdfResponse>;
 }
 
 export const defaultReportCss: CSSProperties = {
