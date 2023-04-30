@@ -267,3 +267,34 @@ test('buildin properties', async () => {
     FormulaEvaluate('"abc aa".replace("a", "x")'),
   ).rejects.toThrowError();
 });
+
+test('class member function', async () => {
+  class Person {
+    public name: string;
+    constructor(name: string) {
+      this.name = name;
+    }
+  }
+  class Employee extends Person {
+    public job: string;
+    constructor(name: string, job: string) {
+      super(name);
+      this.job = job;
+    }
+    public GetJobUppercase(): string {
+      return this.job.toUpperCase();
+    }
+  }
+  const obj = new Employee('Alice', 'Iceberg mover');
+  const helper: IHelpers = {
+    getVar: async (name: string) => {
+      if (name === 'data') {
+        return obj;
+      }
+      return undefined;
+    },
+  };
+  await expect(FormulaEvaluate('data.GetJobUppercase()', helper)).resolves.toBe(
+    'ICEBERG MOVER',
+  );
+});
