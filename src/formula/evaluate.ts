@@ -1,5 +1,6 @@
 import { TExpr, IHelpers, TOperators, EvaluateError } from './types';
 import { constants, functions } from './constantsAndFunctions';
+import { isPropertyAllowed } from './isPropertyAllowed';
 
 let cacheFunctions: string[] | undefined;
 let cacheConstants: string[] | undefined;
@@ -157,36 +158,6 @@ export function evaluateOperator(
   );
 }
 
-function isBuiltInPropertyAllowed(value: any, key: string): boolean {
-  let allowed: string[];
-  // array
-  if (Array.isArray(value)) {
-    allowed = ['length', 'slice', 'join'];
-  }
-
-  // undefined
-  else if (typeof value === 'object' && !value) {
-    return false;
-  }
-
-  // object
-  else if (typeof value === 'object') {
-    allowed = [];
-  }
-
-  // string
-  else if (typeof value === 'string') {
-    allowed = ['length', 'replaceAll', 'substring'];
-  }
-
-  // other
-  else {
-    return false;
-  }
-
-  return allowed.indexOf(key) !== -1;
-}
-
 export default async function evaluatePostfix(
   expr: TExpr[],
   helpers?: IHelpers,
@@ -301,7 +272,7 @@ export default async function evaluatePostfix(
             value = await value[key2];
           }
           //
-          else if (isBuiltInPropertyAllowed(value, key2)) {
+          else if (isPropertyAllowed(value, key2)) {
             const prevVal = value;
             value = value[key2];
             if (typeof value === 'function') {

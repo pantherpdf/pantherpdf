@@ -6,6 +6,7 @@
 import React, { Component } from 'react';
 import style from './ObjectExplorer.module.css';
 import Trans from '../translation';
+import { getAllPublicObjectKeys } from '../formula/isPropertyAllowed';
 
 interface Props {
   data: unknown;
@@ -218,11 +219,12 @@ export default class ObjectExplorer extends Component<Props, State> {
         </div>
       );
     }
-    return Object.keys(data).map(key => {
-      if (key.substr(0, 2) === '$$') {
-        return null;
+    return getAllPublicObjectKeys(data).map(key => {
+      let value = data[key];
+      if (typeof value === 'function') {
+        value = value.bind(data);
       }
-      return this.renderItemExpand(key, key, data[key]);
+      return this.renderItemExpand(key, key, value);
     });
   }
 
