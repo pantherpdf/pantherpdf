@@ -9,10 +9,10 @@ import compile from './editor/compile';
 import makeHtml from './editor/makeHtml';
 import { PropertyFontGenCss } from './widgets/PropertyFont';
 import { transformData } from './editor/DataTransform';
-import getOriginalSourceData from './editor/getOriginalSourceData';
-import type { DataTypes, DataObj } from './editor/getOriginalSourceData';
-import Container from './Container';
+import retrieveOriginalSourceData from './editor/retrieveOriginalSourceData';
+import type { DataTypes, DataObj } from './editor/retrieveOriginalSourceData';
 import globalStyle from './globalStyle.module.css';
+import type { EditorProps } from './editor/types';
 
 const StyleSection = globalStyle.section;
 const StyleHForm = globalStyle.hform;
@@ -20,15 +20,16 @@ const StyleVForm = globalStyle.vform;
 
 export * from './types';
 export * from './editor/generateTarget';
+export * from './translation';
 export {
-  Container,
   Editor,
+  EditorProps,
   FileDialog,
   compile,
   makeHtml,
   PropertyFontGenCss,
   transformData,
-  getOriginalSourceData,
+  retrieveOriginalSourceData,
   uploadFile,
   DataTypes,
   DataObj,

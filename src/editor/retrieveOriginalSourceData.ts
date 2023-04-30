@@ -1,9 +1,9 @@
-import { ApiEndpoints, TReport } from '../types';
+import { ApiEndpoints } from '../types';
 
 export type DataTypes = 'as-is' | 'javascript' | 'url';
 export type DataObj = { value: unknown; type: DataTypes };
 interface Args {
-  report: TReport;
+  reportDataUrl: string;
   api: ApiEndpoints;
   data?: DataObj;
   allowUnsafeJsEval?: boolean;
@@ -94,21 +94,20 @@ export async function getDataFromUrl(
   throw new Error('unsupported data content-type');
 }
 
-export default async function getOriginalSourceData(
+export default async function retrieveOriginalSourceData(
   args: Args,
 ): Promise<unknown> {
-  const { report, api, data, allowUnsafeJsEval = false } = args;
+  const { reportDataUrl, api, data, allowUnsafeJsEval = false } = args;
 
   if (data) {
     return dataFromObj(data.value, data.type, allowUnsafeJsEval);
   }
-  if (report.dataUrl.length > 0) {
-    let url = report.dataUrl;
-    if (url.startsWith('local/')) {
+  if (reportDataUrl.length > 0) {
+    if (reportDataUrl.startsWith('local/')) {
       if (!api.filesDownload) {
         throw new Error('missing api filesDownload');
       }
-      const obj = await api.filesDownload(url.substring(6));
+      const obj = await api.filesDownload(reportDataUrl.substring(6));
       if (
         obj.mimeType === 'text/javascript' ||
         obj.mimeType === 'application/javascript'
@@ -122,7 +121,7 @@ export default async function getOriginalSourceData(
       }
       throw new Error('unsupported data content-type');
     }
-    return getDataFromUrl(url, allowUnsafeJsEval);
+    return getDataFromUrl(reportDataUrl, allowUnsafeJsEval);
   }
   return undefined;
 }

@@ -1,6 +1,8 @@
 import { ApiEndpoints, TargetOption, TReport, TReportCompiled } from '../types';
 import compile from './compile';
-import getOriginalSourceData, { DataObj } from './getOriginalSourceData';
+import retrieveOriginalSourceData, {
+  DataObj,
+} from './retrieveOriginalSourceData';
 import { transformData } from './DataTransform';
 import makeHtml from './makeHtml';
 import { encode } from './encoding';
@@ -127,17 +129,21 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
   } = props;
 
   const tDataBefore = logPerformance ? performance.now() : 0;
-  const source = await getOriginalSourceData({
-    report,
+  const source = await retrieveOriginalSourceData({
+    reportDataUrl: report.dataUrl,
     api,
     data,
     allowUnsafeJsEval,
   });
-  const inputData = await transformData(source, report, allowUnsafeJsEval);
+  const inputData = await transformData(
+    source,
+    report.transforms,
+    allowUnsafeJsEval,
+  );
   const tDataAfter = logPerformance ? performance.now() : 0;
   if (logPerformance) {
     console.log(
-      `getOriginalSourceData() + transformData() took ${(
+      `retrieveOriginalSourceData() + transformData() took ${(
         tDataAfter - tDataBefore
       ).toFixed(0)}ms`,
     );

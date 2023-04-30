@@ -2,10 +2,12 @@
  * @jest-environment node
  */
 
-import getOriginalSourceData, { DataObj } from './getOriginalSourceData';
+import retrieveOriginalSourceData, {
+  DataObj,
+} from './retrieveOriginalSourceData';
 import { sampleReport } from './sampleReport';
 
-test('getOriginalSourceData javascript', async () => {
+test('retrieveOriginalSourceData javascript', async () => {
   const report = JSON.parse(JSON.stringify(sampleReport));
   const api = {};
   const input: DataObj = {
@@ -17,8 +19,8 @@ test('getOriginalSourceData javascript', async () => {
 			return abc(5, 4)
 		`,
   };
-  const data = await getOriginalSourceData({
-    report,
+  const data = await retrieveOriginalSourceData({
+    reportDataUrl: report.dataUrl,
     api,
     data: input,
     allowUnsafeJsEval: true,
@@ -27,6 +29,10 @@ test('getOriginalSourceData javascript', async () => {
 
   // allowUnsafeJsEval default is false, should reject
   await expect(
-    getOriginalSourceData({ report, api, data: input }),
+    retrieveOriginalSourceData({
+      reportDataUrl: report.dataUrl,
+      api,
+      data: input,
+    }),
   ).rejects.toThrow();
 });

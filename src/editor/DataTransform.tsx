@@ -31,15 +31,15 @@ import globalStyle from '../globalStyle.module.css';
  */
 export async function transformData(
   inputData: unknown,
-  report: TReport,
+  transforms: TTransformData[],
   allowUnsafeJsEval: boolean,
   len?: number,
 ) {
   if (len === undefined) {
-    len = report.transforms.length;
+    len = transforms.length;
   }
   for (let i = 0; i < len; ++i) {
-    const w = report.transforms[i];
+    const w = transforms[i];
     const comp = getTransform(w.type);
     inputData = await comp.transform(inputData, w, allowUnsafeJsEval);
   }
@@ -166,7 +166,7 @@ export default function DataTransform(props: GeneralProps) {
   async function doShowData(len: number) {
     let dt;
     try {
-      dt = await props.getOriginalSourceData();
+      dt = await props.getSourceData();
     } catch (e) {
       let msg = String(e);
       if (msg.trim().length === 0) {
@@ -178,7 +178,7 @@ export default function DataTransform(props: GeneralProps) {
 
     let dt2;
     try {
-      dt2 = await transformData(dt, props.report, true, len);
+      dt2 = await transformData(dt, props.report.transforms, true, len);
     } catch (e) {
       let msg = String(e);
       if (msg.trim().length === 0) {
@@ -270,29 +270,29 @@ export default function DataTransform(props: GeneralProps) {
         <label htmlFor="source-url" className="flex-fill">
           {Trans('source data')}
         </label>
-        {!!props.overrideSourceData && (
+        {!!props.setSourceDataOverride && (
           <button
             className="btn btn-link py-0"
             style={{ color: '#666' }}
             onClick={async () => {
-              if (!props.overrideSourceData) {
+              if (!props.setSourceDataOverride) {
                 return;
               }
-              if (props.isOverridenSourceData) {
+              if (props.isSourceDataOverriden) {
                 // remove
-                props.overrideSourceData(undefined);
+                props.setSourceDataOverride(undefined);
               } else {
                 // select file and replace
                 const dt = await uploadOverrideSourceData();
                 if (dt) {
-                  props.overrideSourceData(dt);
+                  props.setSourceDataOverride(dt);
                 }
               }
             }}
             title={Trans('load local json file')}
           >
             <FontAwesomeIcon
-              icon={props.isOverridenSourceData ? faTimes : faFolderOpen}
+              icon={props.isSourceDataOverriden ? faTimes : faFolderOpen}
             />
           </button>
         )}

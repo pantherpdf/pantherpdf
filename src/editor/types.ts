@@ -20,6 +20,23 @@ export interface TFontAwesomeIcon {
   fontawesome: IconDefinition;
 }
 
+export interface TSourceData {
+  data: unknown;
+  errorMsg?: string;
+}
+
+export interface EditorProps {
+  report: TReport;
+  setReport: (val: TReport) => Promise<void>;
+  api: ApiEndpoints;
+  sourceData?: unknown;
+
+  isBackendBusy?: boolean;
+  hasUndoRedo: boolean;
+  undo?: () => void;
+  redo?: () => void;
+}
+
 // to help construct tests
 // to force specific children type
 export type ForceChildren<T> =
@@ -28,29 +45,20 @@ export type ForceChildren<T> =
 
 export type ReportForceChildren<T> = TReport & { children: ForceChildren<T>[] };
 
-export interface TSourceData {
-  data: unknown;
-  errorMsg?: string;
-}
-
 export type TDragObj =
   | { type: 'wid'; wid: number[] }
   | { type: 'widget'; widget: TData }
   | { type: 'widgets'; widgets: TData[] };
 
-export interface GeneralProps {
-  getOriginalSourceData: () => Promise<unknown>;
-  overrideSourceData?: (data: unknown) => void;
-  isOverridenSourceData: boolean;
-  data: TSourceData;
-  api: ApiEndpoints;
-
-  report: TReport;
-  setReport: (report: TReport) => Promise<void>;
-  deleteReport?: () => void;
-
+// remove sourceData and replace it with getSourceData() that is also able to fetch from url
+export interface GeneralProps extends Omit<EditorProps, 'sourceData'> {
   selected: number[] | null;
   setSelected: React.Dispatch<React.SetStateAction<number[] | null>>;
+
+  getSourceData: () => Promise<unknown>;
+  setSourceDataOverride?: (dt: unknown) => void;
+  isSourceDataOverriden: boolean;
+  data: TSourceData;
 
   renderWidget: (child: TData, parents: number[]) => ReactNode;
   renderWidgets: (children: TData[], parents: number[]) => ReactNode;

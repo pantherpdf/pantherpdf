@@ -10,6 +10,7 @@ import {
   PropertyFontExtractStyle,
   PropertyFontGenCss,
 } from '../widgets/PropertyFont';
+import EditorMenu from './EditorMenu';
 import ObjectExplorer from './ObjectExplorer';
 import DataTransform from './DataTransform';
 import EditWidgetNew from './EditWidgetNew';
@@ -45,22 +46,9 @@ function PropertiesHeader(props: PropertiesHeaderProps) {
 
 function Properties(props: GeneralProps) {
   if (!props.selected) {
-    function deleteReport() {
-      if (!props.deleteReport) {
-        return;
-      }
-      if (!window.confirm(Trans('delete report question'))) {
-        return;
-      }
-      return props.deleteReport();
-    }
     return (
       <>
-        <PropertiesHeader
-          {...props}
-          name={Trans('report')}
-          onDelete={props.deleteReport ? deleteReport : undefined}
-        />
+        <PropertiesHeader {...props} name={Trans('report')} />
         <ReportSettings {...props} />
       </>
     );
@@ -190,7 +178,7 @@ export default function Layout(
   function onDrop(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
     e.stopPropagation();
-    if (!props.overrideSourceData) {
+    if (!props.setSourceDataOverride) {
       return;
     }
     const arr = extractFiles(e.dataTransfer);
@@ -205,8 +193,8 @@ export default function Layout(
           return;
         }
         const dt = JSON.parse(e2.target.result);
-        if (props.overrideSourceData) {
-          props.overrideSourceData(dt);
+        if (props.setSourceDataOverride) {
+          props.setSourceDataOverride(dt);
         }
       };
       reader.readAsText(f);
@@ -218,6 +206,7 @@ export default function Layout(
 
   return (
     <>
+      <EditorMenu {...props} />
       <div className={style.box1}>
         <EditWidgetNew {...props} />
       </div>
