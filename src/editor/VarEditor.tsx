@@ -65,11 +65,13 @@ export default function VarEditor(props: GeneralProps) {
                 />
               </td>
               <td>
-                <InputApplyOnEnter
-                  value={v.formula}
-                  onChange={val => changeVar(idx, undefined, String(val))}
-                  placeholder="ƒ"
-                />
+                <div className="input-group">
+                  <span className="input-group-text fst-italic">ƒ</span>
+                  <InputApplyOnEnter
+                    value={v.formula}
+                    onChange={val => changeVar(idx, undefined, String(val))}
+                  />
+                </div>
               </td>
               <td>
                 <button
