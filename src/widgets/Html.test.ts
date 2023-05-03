@@ -4,7 +4,7 @@
 
 import { HtmlData, HtmlCompiled } from './Html';
 import compile, { compileComponent } from '../editor/compile';
-import { makeHtmlContent } from '../editor/makeHtml';
+import { renderToHtmlContent } from '../editor/renderToHtml';
 import { sampleReport } from '../editor/sampleReport';
 import { ReportForceChildren } from '../editor/types';
 
@@ -27,7 +27,7 @@ test('html render', async () => {
 
   const data = { desc: '<p>Hello</p>' };
   const compiled = await compile(report, data);
-  const html = makeHtmlContent(compiled);
+  const html = renderToHtmlContent(compiled);
   expect(html).toMatchSnapshot();
 });
 

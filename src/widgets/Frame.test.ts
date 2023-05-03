@@ -6,7 +6,7 @@ import { Frame, FrameData } from './Frame';
 import compile from '../editor/compile';
 import { sampleReport } from '../editor/sampleReport';
 import type { TReport } from '../types';
-import { makeHtmlContent } from '../editor/makeHtml';
+import { renderToHtmlContent } from '../editor/renderToHtml';
 import type { NewItemProps } from '../editor/types';
 
 test('Frame should include google font', async () => {
@@ -34,7 +34,7 @@ test('Frame should include page break property', async () => {
     children: [el],
   };
   const compiled = await compile(report, {});
-  const html = makeHtmlContent(compiled);
+  const html = renderToHtmlContent(compiled);
   expect(html.replace(/\s/g, '')).toContain('page-break-inside:avoid');
 });
 
@@ -46,6 +46,6 @@ test('Frame should not add whitespace around outer div', async () => {
     children: [el],
   };
   const compiled = await compile(report, {});
-  const html = makeHtmlContent(compiled);
+  const html = renderToHtmlContent(compiled);
   expect(html.trim()).toBe(html);
 });

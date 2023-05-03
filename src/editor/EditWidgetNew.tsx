@@ -6,7 +6,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Trans, { TransName } from '../translation';
 import style from './EditWidgets.module.css';
-import { TReport, TReportShort } from '../types';
+import { TReport, ApiReportMetaData } from '../types';
 import { Widget, GeneralProps, NewItemProps } from './types';
 import { allWidgets } from '../widgets/allWidgets';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -41,7 +41,7 @@ function Expandable(props: ExpandableProps) {
 }
 
 function ShowReports(props: GeneralProps) {
-  const [allReports, setAllReports] = useState<TReportShort[]>([]);
+  const [allReports, setAllReports] = useState<ApiReportMetaData[]>([]);
   useEffect(() => {
     if (props.api.allReports) {
       props.api.allReports().then(arr => setAllReports(arr));

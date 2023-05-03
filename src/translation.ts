@@ -218,7 +218,7 @@ export type trKeys = keyof typeof tr2;
 
 let currentLang = 'en';
 
-export function setCurrentLanguage(lang: string): void {
+export function setEditorLanguage(lang: string): void {
   currentLang = lang;
 }
 

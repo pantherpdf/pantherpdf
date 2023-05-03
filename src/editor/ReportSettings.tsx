@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { GeneralProps } from './types';
 import type { TargetOption, TReport } from '../types';
-import { ReportTypeGuard } from '../types';
+import { isReport } from '../types';
 import Trans from '../translation';
 import PropertyFont, { TFont } from '../widgets/PropertyFont';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
@@ -61,7 +61,7 @@ function fileReportUpload(
         alert(Trans('upload bad file') + ' ' + String(e));
         return;
       }
-      if (!ReportTypeGuard(dt)) {
+      if (!isReport(dt)) {
         alert('Bad data');
         return;
       }

@@ -12,9 +12,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Modal } from 'react-bootstrap';
 import compile from './compile';
-import makeHtml from './makeHtml';
-import type { GeneratePdfRequest } from '../types';
+import renderToHtml from './renderToHtml';
 import { saveAs } from 'file-saver';
+import generateTarget from './generateTarget';
 
 const homeUrl = '/';
 
@@ -31,20 +31,18 @@ export default function EditorMenu(props: GeneralProps) {
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
   async function genPdfWrapper() {
-    if (!props.api.generatePdf) {
-      throw new Error('Api doesnt offer to generate pdf');
-    }
-    const rq: GeneratePdfRequest = {
-      reportId: props.report._id,
-      ...(props.isSourceDataOverriden
-        ? { data: await props.getSourceData() }
-        : {}),
-    };
+    setIsDownloading(true);
     try {
-      setIsDownloading(true);
-      const res = await props.api.generatePdf(rq);
-      const blob = new Blob([res.data], { type: 'application/pdf' });
-      saveAs(blob, res.fileName);
+      const res = await generateTarget({
+        report: props.report,
+        api: props.api,
+        targetOverride: 'pdf',
+        ...(props.isSourceDataOverriden
+          ? { data: { type: 'as-is', value: await props.getSourceData() } }
+          : {}),
+      });
+      const blob = new Blob([res.body], { type: 'application/pdf' });
+      saveAs(blob, res.filename);
     } catch (e) {
       alert(`Error: ${String(e)}`);
     }
@@ -57,7 +55,7 @@ export default function EditorMenu(props: GeneralProps) {
     try {
       if (props.report.target === 'pdf' || props.report.target === 'html') {
         const c = await compile(props.report, data, props.api, {});
-        const html = makeHtml(c);
+        const html = renderToHtml(c);
         setShownModalPrint({ html });
       }
       //

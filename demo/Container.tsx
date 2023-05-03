@@ -1,8 +1,7 @@
-import React from 'react';
-import { useState } from 'react';
-import { TReport, EditorProps, Editor } from '../src/index';
+import React, { useState } from 'react';
+import { Report, EditorProps, Editor } from '../src/index';
 
-const sampleReport: TReport = {
+const sampleReport: Report = {
   _id: 'abc-def-123',
   name: 'Report 1',
   target: 'pdf',
@@ -50,12 +49,12 @@ class Employee extends Person {
 const sampleData = new Employee('Alice', 30, 'Iceberg mover');
 
 export default function Container() {
-  const [report, setReport] = useState<TReport>(sampleReport);
+  const [report, setReport] = useState<Report>(sampleReport);
 
-  const [undoStack, setUndoStack] = useState<TReport[]>([sampleReport]);
+  const [undoStack, setUndoStack] = useState<Report[]>([sampleReport]);
   const [undoNext, setUndoNext] = useState<number>(1);
 
-  async function setReport2(val: TReport) {
+  async function setReport2(val: Report) {
     setReport(val);
     const newUndoStack = [...undoStack];
     newUndoStack.splice(undoNext);

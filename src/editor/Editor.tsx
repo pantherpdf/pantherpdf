@@ -3,10 +3,9 @@
  * Managing global state, prepare GeneralProps, drag-drop functions
  */
 
-import React, { ReactNode, useEffect, useRef } from 'react';
-import { useState } from 'react';
+import React, { ReactNode, useState, useEffect, useRef } from 'react';
 import getWidget from '../widgets/allWidgets';
-import { TReport, TData, FileUploadData } from '../types';
+import { TReport, TData, ApiUploadMetaData } from '../types';
 import {
   EditorProps,
   GeneralProps,
@@ -29,66 +28,11 @@ import { Image as ImageWidget, ImageData } from '../widgets/Image';
 import { transformData } from './DataTransform';
 import retrieveOriginalSourceData from './retrieveOriginalSourceData';
 
-export function dropImpl(
-  report: TReport,
-  current: TDragObj,
-  dest: number[],
-  copy: boolean,
-): TReport | null {
-  if (dest.length === 0) {
-    throw new Error('dest does not exist');
-  }
-
-  let toInsert: TData | TData[];
-  let report2: TReport = report;
-  if (current.type === 'wid') {
-    const dragObj3 = current.wid;
-    if (copy) {
-      toInsert = findInList(report2, dragObj3);
-      toInsert = JSON.parse(JSON.stringify(toInsert));
-    }
-    // calc destination id
-    else {
-      // detect if dragging item to one of its childs
-      let dest2;
-      try {
-        dest2 = updateDestAfterRemove(dest, dragObj3);
-      } catch (e) {
-        return null;
-      }
-      toInsert = findInList(report2, dragObj3);
-      // remove from list
-      report2 = removeFromList(report2, dragObj3);
-      // update destination id
-      dest = dest2;
-    }
-  }
-  //
-  else if (current.type === 'widget') {
-    toInsert = current.widget;
-  }
-  //
-  else if (current.type === 'widgets') {
-    toInsert = current.widgets;
-  }
-  //
-  else {
-    throw new Error('unknown dragObj2 type');
-  }
-
-  // insert
-  if (!Array.isArray(toInsert)) {
-    report2 = insertIntoList(report2, dest, toInsert);
-  } else {
-    for (const toInsert2 of toInsert) {
-      report2 = insertIntoList(report2, dest, toInsert2);
-      dest[dest.length - 1] += 1;
-    }
-  }
-
-  return report2;
-}
-
+/**
+ * Entrypoint to report editor
+ *
+ * See EditorProps for more information
+ */
 export default function Editor(props: EditorProps) {
   const [selected, setSelected] = useState<number[] | null>(null);
   const [data, setData] = useState<TSourceData>({ data: undefined });
@@ -156,7 +100,7 @@ export default function Editor(props: EditorProps) {
         return;
       }
       const f = files[0];
-      const dt: FileUploadData = {
+      const dt: ApiUploadMetaData = {
         name: f.name,
         modifiedTime:
           new Date(f.lastModified).toISOString().substring(0, 19) + 'Z',
@@ -316,7 +260,8 @@ export default function Editor(props: EditorProps) {
         }
       : {}),
     getSourceData: getOrigSourceInternal,
-    isSourceDataOverriden: !!overrideSourceData,
+    isSourceDataOverriden:
+      !!overrideSourceData || typeof props.sourceData !== 'undefined',
     data,
 
     renderWidget,
@@ -327,4 +272,64 @@ export default function Editor(props: EditorProps) {
   };
 
   return <Layout {...props2} dragOver={dragOver} />;
+}
+
+export function dropImpl(
+  report: TReport,
+  current: TDragObj,
+  dest: number[],
+  copy: boolean,
+): TReport | null {
+  if (dest.length === 0) {
+    throw new Error('dest does not exist');
+  }
+
+  let toInsert: TData | TData[];
+  let report2: TReport = report;
+  if (current.type === 'wid') {
+    const dragObj3 = current.wid;
+    if (copy) {
+      toInsert = findInList(report2, dragObj3);
+      toInsert = JSON.parse(JSON.stringify(toInsert));
+    }
+    // calc destination id
+    else {
+      // detect if dragging item to one of its childs
+      let dest2;
+      try {
+        dest2 = updateDestAfterRemove(dest, dragObj3);
+      } catch (e) {
+        return null;
+      }
+      toInsert = findInList(report2, dragObj3);
+      // remove from list
+      report2 = removeFromList(report2, dragObj3);
+      // update destination id
+      dest = dest2;
+    }
+  }
+  //
+  else if (current.type === 'widget') {
+    toInsert = current.widget;
+  }
+  //
+  else if (current.type === 'widgets') {
+    toInsert = current.widgets;
+  }
+  //
+  else {
+    throw new Error('unknown dragObj2 type');
+  }
+
+  // insert
+  if (!Array.isArray(toInsert)) {
+    report2 = insertIntoList(report2, dest, toInsert);
+  } else {
+    for (const toInsert2 of toInsert) {
+      report2 = insertIntoList(report2, dest, toInsert2);
+      dest[dest.length - 1] += 1;
+    }
+  }
+
+  return report2;
 }

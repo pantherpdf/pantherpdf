@@ -1,7 +1,9 @@
 import { ApiEndpoints } from '../types';
 
-export type DataTypes = 'as-is' | 'javascript' | 'url';
-export type DataObj = { value: unknown; type: DataTypes };
+export type DataObj =
+  | { type: 'as-is'; value: unknown }
+  | { type: 'javascript'; code: string }
+  | { type: 'url'; url: string };
 interface Args {
   reportDataUrl: string;
   api: ApiEndpoints;
@@ -10,29 +12,22 @@ interface Args {
 }
 
 async function dataFromObj(
-  value: unknown,
-  type: DataTypes,
+  obj: DataObj,
   allowUnsafeJsEval: boolean,
 ): Promise<unknown> {
-  if (type === 'as-is') {
-    return value;
+  if (obj.type === 'as-is') {
+    return obj.value;
   }
 
-  if (type === 'javascript') {
+  if (obj.type === 'javascript') {
     if (!allowUnsafeJsEval) {
       throw new Error('Evaluating JS is disabled');
     }
-    if (typeof value !== 'string') {
-      throw new Error('JS code should be string');
-    }
-    return evalJs(value);
+    return evalJs(obj.code);
   }
 
-  if (type === 'url') {
-    if (typeof value !== 'string') {
-      throw new Error('JS code should be string');
-    }
-    return getDataFromUrl(value, allowUnsafeJsEval);
+  if (obj.type === 'url') {
+    return getDataFromUrl(obj.url, allowUnsafeJsEval);
   }
 
   throw new Error('Unknown data type');
@@ -85,11 +80,11 @@ export async function getDataFromUrl(
   const ct = (r.headers.get('Content-Type') || '').split(';')[0].trim();
   if (ct === 'text/javascript' || ct === 'application/javascript') {
     const code = await r.text();
-    return dataFromObj(code, 'javascript', allowUnsafeJsEval);
+    return dataFromObj({ type: 'javascript', code }, allowUnsafeJsEval);
   }
   if (ct === 'application/json') {
     const data = await r.json();
-    return dataFromObj(data, 'as-is', allowUnsafeJsEval);
+    return dataFromObj({ type: 'as-is', value: data }, allowUnsafeJsEval);
   }
   throw new Error('unsupported data content-type');
 }
@@ -100,7 +95,7 @@ export default async function retrieveOriginalSourceData(
   const { reportDataUrl, api, data, allowUnsafeJsEval = false } = args;
 
   if (data) {
-    return dataFromObj(data.value, data.type, allowUnsafeJsEval);
+    return dataFromObj(data, allowUnsafeJsEval);
   }
   if (reportDataUrl.length > 0) {
     if (reportDataUrl.startsWith('local/')) {
@@ -113,11 +108,11 @@ export default async function retrieveOriginalSourceData(
         obj.mimeType === 'application/javascript'
       ) {
         const code = new TextDecoder('utf-8').decode(obj.data);
-        return dataFromObj(code, 'javascript', allowUnsafeJsEval);
+        return dataFromObj({ type: 'javascript', code }, allowUnsafeJsEval);
       }
       if (obj.mimeType === 'application/json') {
         const data = new TextDecoder('utf-8').decode(obj.data);
-        return dataFromObj(data, 'as-is', allowUnsafeJsEval);
+        return dataFromObj({ type: 'as-is', value: data }, allowUnsafeJsEval);
       }
       throw new Error('unsupported data content-type');
     }

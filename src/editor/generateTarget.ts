@@ -1,10 +1,10 @@
-import { ApiEndpoints, TargetOption, TReport, TReportCompiled } from '../types';
+import { ApiEndpoints, TargetOption, TReport } from '../types';
 import compile from './compile';
 import retrieveOriginalSourceData, {
   DataObj,
 } from './retrieveOriginalSourceData';
 import { transformData } from './DataTransform';
-import makeHtml from './makeHtml';
+import renderToHtml from './renderToHtml';
 import { encode } from './encoding';
 
 function escapeCsv(txt: string): string {
@@ -15,12 +15,8 @@ function assertUnreachableTarget(_x: never): never {
   throw new Error('Unsupported target');
 }
 
-export function makeCsv(
-  rows: string[][],
-  encoding: 'utf-8' | 'cp1250',
-): Uint8Array {
+function makeCsv(rows: string[][], newLine: string): string {
   let out = '';
-  const newLine = encoding === 'utf-8' ? '\n' : '\r\n';
   const cellEnclosing = '"';
   const collSeparator = ';';
 
@@ -33,8 +29,7 @@ export function makeCsv(
     }
     out += newLine;
   }
-
-  return encode(out, encoding);
+  return out;
 }
 
 export function checkCsvFormat(data: any): data is string[][] {
@@ -101,27 +96,34 @@ function correctExtension(
   return `report${extTarget}`;
 }
 
-interface FileOutput {
-  body: Uint8Array;
+export interface FileOutput {
+  body: string | Uint8Array;
   contentType: string;
   filename: string;
 }
 
-interface Args {
+export interface GenerateTargetArgs {
   report: TReport;
   api: ApiEndpoints;
-  makePdf: (report: TReportCompiled, html: string) => Promise<Uint8Array>;
   data?: DataObj;
   logPerformance?: boolean;
   allowUnsafeJsEval?: boolean;
   targetOverride?: TargetOption;
 }
 
-export async function generateTarget(props: Args): Promise<FileOutput> {
+/**
+ * Generate target
+ *
+ * Input: report, source data
+ * Output: html, json, csv ...
+ * Pdf output is not supported. Use html and then convert to pdf.
+ */
+export default async function generateTarget(
+  props: GenerateTargetArgs,
+): Promise<FileOutput> {
   const {
     report,
     api,
-    makePdf,
     data,
     logPerformance = false,
     allowUnsafeJsEval = false,
@@ -160,48 +162,41 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
 
   const target = targetOverride || report.target;
 
-  // PDF
-  if (target === 'pdf') {
+  // PDF, html
+  if (target === 'pdf' || target === 'html') {
     const tMakeHtmlBefore = logPerformance ? performance.now() : 0;
-    const html = makeHtml(reportCompiled);
+    const html = renderToHtml(reportCompiled);
     const tMakeHtmlAfter = logPerformance ? performance.now() : 0;
     if (logPerformance) {
       console.log(
-        `makeHtml() took ${(tMakeHtmlAfter - tMakeHtmlBefore).toFixed(0)}ms`,
+        `renderToHtml() took ${(tMakeHtmlAfter - tMakeHtmlBefore).toFixed(
+          0,
+        )}ms`,
       );
     }
-
+    if (target === 'html') {
+      return {
+        body: html,
+        contentType: 'text/html; charset=utf-8',
+        filename: correctExtension(
+          reportCompiled.properties.fileName,
+          reportCompiled.target,
+          target,
+        ),
+      };
+    }
+    // PDF
+    if (!api.generatePdf) {
+      throw new Error('generatePdf() not available');
+    }
     const tPdfBefore = logPerformance ? performance.now() : 0;
-    const body = await makePdf(reportCompiled, html);
+    const pdf = await api.generatePdf(html, reportCompiled.properties);
     const tPdfAfter = logPerformance ? performance.now() : 0;
     if (logPerformance) {
       console.log(`makePdf() took ${(tPdfAfter - tPdfBefore).toFixed(0)}ms`);
     }
-
     return {
-      body: body,
-      contentType: 'application/pdf',
-      filename: correctExtension(
-        reportCompiled.properties.fileName,
-        reportCompiled.target,
-        target,
-      ),
-    };
-  }
-
-  // html
-  if (target === 'html') {
-    const tMakeHtmlBefore = logPerformance ? performance.now() : 0;
-    const html = makeHtml(reportCompiled);
-    const tMakeHtmlAfter = logPerformance ? performance.now() : 0;
-    if (logPerformance) {
-      console.log(
-        `makeHtml() took ${(tMakeHtmlAfter - tMakeHtmlBefore).toFixed(0)}ms`,
-      );
-    }
-    const encoder = new TextEncoder();
-    return {
-      body: encoder.encode(html),
+      body: pdf,
       contentType: 'text/html; charset=utf-8',
       filename: correctExtension(
         reportCompiled.properties.fileName,
@@ -214,9 +209,8 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
   // JSON
   if (target === 'json') {
     const contents = JSON.stringify(inputData);
-    const encoder = new TextEncoder();
     return {
-      body: encoder.encode(contents),
+      body: contents,
       contentType: 'application/json',
       filename: correctExtension(
         reportCompiled.properties.fileName,
@@ -231,7 +225,7 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
     if (!checkCsvFormat(inputData)) {
       throw new Error('data (transformed) is not CSV compatible');
     }
-    const csv = makeCsv(inputData, 'utf-8');
+    const csv = makeCsv(inputData, '\n');
     return {
       body: csv,
       contentType: 'text/csv; charset=utf-8',
@@ -248,9 +242,10 @@ export async function generateTarget(props: Args): Promise<FileOutput> {
     if (!checkCsvFormat(inputData)) {
       throw new Error('data (transformed) is not CSV compatible');
     }
-    const csv = makeCsv(inputData, 'cp1250');
+    const csv = makeCsv(inputData, '\r\n');
+    const csvBytes = encode(csv, 'cp1250');
     return {
-      body: csv,
+      body: csvBytes,
       contentType: 'text/csv; charset=windows-1250',
       filename: correctExtension(
         reportCompiled.properties.fileName,

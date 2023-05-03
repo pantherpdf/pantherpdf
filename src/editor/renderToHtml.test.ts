@@ -7,7 +7,7 @@ import type { ReportForceChildren } from './types';
 import type { TReport } from '../types';
 import type { TextSimpleData } from '../widgets/TextSimple';
 import { sampleReport } from './sampleReport';
-import makeHtml, { makeHtmlContent } from './makeHtml';
+import renderToHtml, { renderToHtmlContent } from './renderToHtml';
 
 test('text', async () => {
   const report: ReportForceChildren<TextSimpleData> = {
@@ -19,7 +19,7 @@ test('text', async () => {
 
   const obj = { num: 123 };
   const compiled = await compile(report, obj);
-  const html = makeHtmlContent(compiled);
+  const html = renderToHtmlContent(compiled);
   expect(html).toMatchSnapshot();
 });
 
@@ -35,7 +35,7 @@ test('should include google font', async () => {
     },
   };
   const compiled = await compile(report, {});
-  const html = makeHtml(compiled);
+  const html = renderToHtml(compiled);
   const expectedUrl1 =
     'https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400&display=swap';
   const expectedUrl2 =
@@ -48,6 +48,6 @@ test('should include google font', async () => {
 test('should include globalCss', async () => {
   const compiled = await compile(sampleReport, {});
   compiled.globalCss = '.abc-def-123-456 { font-weight: bold }';
-  const html = makeHtml(compiled);
+  const html = renderToHtml(compiled);
   expect(html.indexOf('.abc-def-123-456 { font-weight: bold }')).not.toBe(-1);
 });

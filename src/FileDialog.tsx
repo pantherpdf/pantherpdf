@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
-import type { TFileShort, FileUploadData } from './types';
+import type { ApiFileMetaData, ApiUploadMetaData } from './types';
 import type { ApiEndpoints } from './types';
 import FileSelect from './FileSelect';
 import Trans from './translation';
@@ -44,67 +44,6 @@ const supportsRequestStreams = (() => {
   return duplexAccessed && !hasContentType;
 })();
 
-export async function uploadFile(
-  url: string,
-  file: File,
-  headers: { [key: string]: string },
-  cbProgress: (prc: number) => void,
-) {
-  let r: Response;
-
-  if (!supportsRequestStreams) {
-    // old way, without progress
-    r = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: file,
-    });
-  } else {
-    // fetch stream upload
-    // report progress
-    let bytesConsumed = 0;
-    const totalSize = file.size;
-    const fileReader: ReadableStreamDefaultReader = (
-      file.stream() as any
-    ).getReader();
-    const stream = new ReadableStream({
-      async pull(c) {
-        const r = await fileReader.read();
-        if (r.done) {
-          c.close();
-        } else {
-          let prc = bytesConsumed / totalSize;
-          cbProgress(prc);
-          bytesConsumed += r.value.length;
-          c.enqueue(r.value);
-        }
-      },
-    });
-
-    r = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: stream,
-      allowHTTP1ForStreamingUpload: true, // non-standard, but required by Chrome for HTTP/1
-    } as any);
-  }
-
-  // error handler
-  if (!r.ok) {
-    let msg: string = '';
-    try {
-      const js = await r.json();
-      if (typeof js === 'object' && 'msg' in js && typeof js.msg === 'string') {
-        msg = js.msg;
-      }
-    } catch (e) {}
-    if (msg.length === 0) {
-      msg = 'Unknown error';
-    }
-    throw new Error(msg);
-  }
-}
-
 interface Props {
   mode: 'value' | 'link';
   value?: string | undefined;
@@ -122,7 +61,7 @@ interface Upload {
   file: File;
 }
 
-interface TFileUpload extends TFileShort {
+interface TFileUpload extends ApiFileMetaData {
   upload?: Upload;
 }
 
@@ -222,7 +161,7 @@ export default function FileDialog(props: Props) {
     }
 
     try {
-      const dt: FileUploadData = {
+      const dt: ApiUploadMetaData = {
         name: f.name,
         modifiedTime: f.modifiedTime,
         mimeType: f.mimeType,
@@ -260,8 +199,8 @@ export default function FileDialog(props: Props) {
       return;
     }
     setLoading(true);
-    props.api.files().then(js => {
-      setFiles(js.files);
+    props.api.files().then(resFiles => {
+      setFiles(resFiles);
       setLoading(false);
     });
   }, [props.api]);

@@ -9,7 +9,7 @@ import { ForceChildren } from '../editor/types';
 import { sampleReport } from '../editor/sampleReport';
 import { TReport } from '../types';
 import { TextHtmlData, ValueInternalFromEditor } from './TextHtml';
-import { makeHtmlContent } from '../editor/makeHtml';
+import { renderToHtmlContent } from '../editor/renderToHtml';
 import { FrameData } from './Frame';
 
 test('text', async () => {
@@ -54,7 +54,7 @@ test('complete rows', async () => {
   expect(children[0].children[0][0].type).toBe('TextHtml');
   expect(children[0].children[0][0].value).toBe('1');
 
-  const html = makeHtmlContent(report2);
+  const html = renderToHtmlContent(report2);
   expect(html).toMatchSnapshot();
 });
 
@@ -75,7 +75,7 @@ test('repeat columns', async () => {
   const report: TReport = { ...sampleReport, children: [rpt] };
 
   const report2 = await compile(report, {});
-  const html = makeHtmlContent(report2);
+  const html = renderToHtmlContent(report2);
   expect(html).toMatchSnapshot();
 });
 
@@ -103,7 +103,7 @@ test('complete grid', async () => {
   expect(children[0].children[0][0].type).toBe('TextHtml');
   expect(children[0].children[0][0].value).toBe('1');
 
-  const html = makeHtmlContent(report2);
+  const html = renderToHtmlContent(report2);
   expect(html).toMatchSnapshot();
 });
 
@@ -132,7 +132,7 @@ test('grid - products', async () => {
   const report: TReport = { ...sampleReport, children: [rpt] };
   const report2 = await compile(report, {});
 
-  const html = makeHtmlContent(report2);
+  const html = renderToHtmlContent(report2);
   expect(html).toMatchSnapshot();
   expect(report2.globalCss.replace(/\s/g, '')).toContain(
     '.grid-with-frame>div{display:inline-block;vertical-align:top;}',

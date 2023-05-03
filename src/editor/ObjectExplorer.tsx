@@ -95,7 +95,7 @@ export default class ObjectExplorer extends Component<Props, State> {
 
   renderItemExpand(name: string, key: string, dt: unknown) {
     const canExpand =
-      dt && (typeof dt === 'object' || typeof dt === 'function');
+      !!dt && (typeof dt === 'object' || typeof dt === 'function');
     return (
       <div key={key}>
         <div className={style.row}>

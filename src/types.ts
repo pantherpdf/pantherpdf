@@ -44,6 +44,18 @@ export interface TVariable {
   formula: string;
 }
 
+export interface TReportProperties {
+  font?: TFont;
+  margin?: [number, number, number, number];
+  fileName?: string;
+  paperWidth?: number;
+  paperHeight?: number;
+  lang?: string;
+}
+
+/**
+ * Report type
+ */
 export interface TReport {
   _id: string;
   name: string;
@@ -53,19 +65,15 @@ export interface TReport {
   version: string;
   children: TData[];
   transforms: TTransformData[];
-  properties: {
-    font?: TFont;
-    margin?: [number, number, number, number];
-    fileName?: string;
-    paperWidth?: number;
-    paperHeight?: number;
-    lang?: string;
-  };
+  properties: TReportProperties;
   dataUrl: string;
   variables: TVariable[];
 }
 
-export interface TReportShort {
+/**
+ * Report short summary
+ */
+export interface ApiReportMetaData {
   _id: string;
   name: string;
   target: TargetOption;
@@ -98,7 +106,10 @@ export function TDataTypeGuard(r: any): r is TData {
   return true;
 }
 
-export function ReportTypeGuard(r: any): r is TReport {
+/**
+ * Type guard for TReport interface
+ */
+export function isReport(r: any): r is TReport {
   if (typeof r != 'object' || !r) {
     return false;
   }
@@ -154,48 +165,69 @@ export function ReportTypeGuard(r: any): r is TReport {
   return true;
 }
 
-export interface TFileShort {
+/** Meta data when uploading a file */
+export interface ApiUploadMetaData {
+  /** File name */
   name: string;
-  mimeType: string;
-  uploadTime: string;
+  /** ISO format, UTC timezone */
   modifiedTime: string;
+  /** Media type */
+  mimeType: string;
+}
+
+/** Full meta data of a file */
+export interface ApiFileMetaData extends ApiUploadMetaData {
+  /** ISO format, UTC timezone */
+  uploadTime: string;
+  /** File size in bytes */
   size: number;
 }
 
-export interface FileUploadData {
-  name: string;
-  modifiedTime: string;
-  mimeType: string;
-}
-
-export interface GeneratePdfRequest {
-  reportId: string;
-  dataUrl?: string;
-  data?: unknown;
-}
-
-export interface GeneratePdfResponse {
-  fileName: string;
-  data: Uint8Array;
-}
-
-export type FilesResponseBase = { files: TFileShort[] };
+/** Access to optional external services */
 export interface ApiEndpoints {
+  /**
+   * Get a list of all reports.
+   *
+   * Used to copy or embed one report into another.
+   */
+  allReports?: () => Promise<ApiReportMetaData[]>;
+
+  /** Load full report to be copied or embedded */
   reportGet?: (id: string) => Promise<TReport>;
-  files?: () => Promise<FilesResponseBase>;
+
+  /**
+   * Get a list of files
+   *
+   * Used primarily to share images between reports.
+   */
+  files?: () => Promise<ApiFileMetaData[]>;
+
+  /** Delete a file */
   filesDelete?: (name: string) => Promise<void>;
+
+  /** Upload a file */
   filesUpload?: (
     file: File,
-    data: FileUploadData,
-    cbProgress: (prc: number) => void,
+    metaData: ApiUploadMetaData,
+    progressCallback: (prc: number) => void,
   ) => Promise<void>;
+
+  /** Url to a file. Used in browser and when rendering a pdf. */
   filesDownloadUrl?: (name: string) => string;
+
+  /** Download a file */
   filesDownload?: (
     name: string,
   ) => Promise<{ data: ArrayBuffer; mimeType: string }>;
-  allReports?: () => Promise<TReportShort[]>;
+
+  /** To access metadata for all families served by Google Fonts */
   googleFontApiKey?: string;
-  generatePdf?: (req: GeneratePdfRequest) => Promise<GeneratePdfResponse>;
+
+  /** Used to generate PDF by generateTarget() and by print preview */
+  generatePdf?: (
+    html: string,
+    properties: TReportProperties,
+  ) => Promise<Uint8Array>;
 }
 
 export const defaultReportCss: CSSProperties = {

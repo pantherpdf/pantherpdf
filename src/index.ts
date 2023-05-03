@@ -3,37 +3,47 @@
 /// <reference types="./global" />
 /// <reference types="./react-style-object-to-css" />
 
-import FileDialog, { uploadFile } from './FileDialog';
 import Editor from './editor/Editor';
-import compile from './editor/compile';
-import makeHtml from './editor/makeHtml';
-import { PropertyFontGenCss } from './widgets/PropertyFont';
-import { transformData } from './editor/DataTransform';
-import retrieveOriginalSourceData from './editor/retrieveOriginalSourceData';
-import type { DataTypes, DataObj } from './editor/retrieveOriginalSourceData';
-import globalStyle from './globalStyle.module.css';
 import type { EditorProps } from './editor/types';
+import generateTarget from './editor/generateTarget';
+import type { GenerateTargetArgs, FileOutput } from './editor/generateTarget';
+import { isReport } from './types';
+import type {
+  TReport,
+  ApiReportMetaData,
+  ApiEndpoints,
+  ApiFileMetaData,
+  TReportProperties,
+  ApiUploadMetaData,
+} from './types';
+import { setEditorLanguage } from './translation';
+import { DataObj } from './editor/retrieveOriginalSourceData';
 
-const StyleSection = globalStyle.section;
-const StyleHForm = globalStyle.hform;
-const StyleVForm = globalStyle.vform;
+type Report = TReport;
+type SourceData = DataObj;
+type ReportProperties = TReportProperties;
 
-export * from './types';
-export * from './editor/generateTarget';
-export * from './translation';
 export {
+  // Frontend: React component
   Editor,
+  // Backend
+  generateTarget,
+  // Other
+  isReport,
+  setEditorLanguage,
+};
+
+export type {
   EditorProps,
-  FileDialog,
-  compile,
-  makeHtml,
-  PropertyFontGenCss,
-  transformData,
-  retrieveOriginalSourceData,
-  uploadFile,
-  DataTypes,
-  DataObj,
-  StyleSection,
-  StyleHForm,
-  StyleVForm,
+  GenerateTargetArgs,
+  FileOutput,
+  SourceData,
+  //
+  Report,
+  ReportProperties,
+  //
+  ApiEndpoints,
+  ApiReportMetaData,
+  ApiFileMetaData,
+  ApiUploadMetaData,
 };

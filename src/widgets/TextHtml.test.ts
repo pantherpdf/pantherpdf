@@ -9,7 +9,7 @@ import {
   extractTag,
 } from './TextHtml';
 import compile, { compileComponent } from '../editor/compile';
-import makeHtml, { makeHtmlContent } from '../editor/makeHtml';
+import renderToHtml, { renderToHtmlContent } from '../editor/renderToHtml';
 import { ReportForceChildren } from '../editor/types';
 import { sampleReport } from '../editor/sampleReport';
 
@@ -88,7 +88,7 @@ test('TextHtml should render html', async () => {
     ],
   };
   const compiled = await compile(report, {});
-  const html = makeHtmlContent(compiled);
+  const html = renderToHtmlContent(compiled);
   expect(html).toMatchSnapshot();
 });
 
@@ -105,7 +105,7 @@ test('TextHtml should include google font', async () => {
     ],
   };
   const compiled = await compile(report, {});
-  const html = makeHtml(compiled);
+  const html = renderToHtml(compiled);
   expect(html).toContain(
     'https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400&display=swap',
   );

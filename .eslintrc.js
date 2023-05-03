@@ -11,6 +11,8 @@ module.exports = {
   rules: {
     'prettier/prettier': ['error', prettierOptions],
     curly: ['error', 'all'],
+    // disable false positives:
+    'testing-library/render-result-naming-convention': 'off',
   },
   overrides: [
     {

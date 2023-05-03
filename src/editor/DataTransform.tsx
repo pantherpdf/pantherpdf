@@ -402,8 +402,10 @@ export default function DataTransform(props: GeneralProps) {
           <Modal.Title>{Trans('data')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {showData?.data && <ObjectExplorer data={showData.data} />}
-          {showData?.errorMsg && <div>{showData?.errorMsg}</div>}
+          <>
+            {showData?.data && <ObjectExplorer data={showData.data} />}
+            {showData?.errorMsg && <div>{showData?.errorMsg}</div>}
+          </>
         </Modal.Body>
       </Modal>
     </>

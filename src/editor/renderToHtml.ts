@@ -1,5 +1,5 @@
 /**
- * makeHtml.ts
+ * renderToHtml.ts
  * Compiled report -> html
  */
 
@@ -20,7 +20,7 @@ function escapeHtml(unsafe: string): string {
     .replace(/'/g, '&#039;');
 }
 
-export function makeHtmlContent(
+export function renderToHtmlContent(
   report: TReportCompiled,
   externalHelpers: { [key: string]: any } = {},
 ) {
@@ -49,7 +49,7 @@ export function makeHtmlContent(
   return helper.renderChildren(report.children, helper);
 }
 
-export default function makeHtml(
+export default function renderToHtml(
   report: TReportCompiled,
   externalHelpers: { [key: string]: any } = {},
 ): string {
@@ -61,7 +61,7 @@ export default function makeHtml(
   const css = styleToCssString(cssObj);
 
   // render content
-  const htmlContent = makeHtmlContent(report, externalHelpers);
+  const htmlContent = renderToHtmlContent(report, externalHelpers);
 
   const fontUrl = GoogleFontUrlImport(report.fontsUsed);
   const fontHtml = fontUrl

@@ -25,15 +25,40 @@ export interface TSourceData {
   errorMsg?: string;
 }
 
+/**
+ * Properties for Editor component
+ *
+ * Editor is a controlled component. It takes its current value through `report`
+ * and notifies changes through a callback `setReport`.
+ */
 export interface EditorProps {
+  /** Current value */
   report: TReport;
+
+  /**
+   * Callback that report has changed
+   *
+   * Parent component needs to immediately update state to keep cursor in text
+   * editor properly working.
+   */
   setReport: (val: TReport) => Promise<void>;
+
+  /** API to external services for pdf generation, loading images, ... */
   api: ApiEndpoints;
+
+  /** Optional source data to use while editing a report */
   sourceData?: unknown;
 
+  /** Flag to indicate progress while saving a report to a DB */
   isBackendBusy?: boolean;
+
+  /** Show undo and redo buttons */
   hasUndoRedo: boolean;
+
+  /** Undo callback. Should not be defined when undo is not possible. */
   undo?: () => void;
+
+  /** Redo callback. Should not be defined when redo is not possible. */
   redo?: () => void;
 }
 
@@ -55,9 +80,16 @@ export interface GeneralProps extends Omit<EditorProps, 'sourceData'> {
   selected: number[] | null;
   setSelected: React.Dispatch<React.SetStateAction<number[] | null>>;
 
+  /** Get unmodified source data */
   getSourceData: () => Promise<unknown>;
+
+  /** Override source data */
   setSourceDataOverride?: (dt: unknown) => void;
+
+  /** true when user uploads her own data or data is supplied via EditorProps.sourceData */
   isSourceDataOverriden: boolean;
+
+  /** Transformed data */
   data: TSourceData;
 
   renderWidget: (child: TData, parents: number[]) => ReactNode;

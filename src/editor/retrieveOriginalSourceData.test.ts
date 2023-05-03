@@ -12,7 +12,7 @@ test('retrieveOriginalSourceData javascript', async () => {
   const api = {};
   const input: DataObj = {
     type: 'javascript',
-    value: `
+    code: `
 			async function abc(n1, n2) {
 				return n1 + n2
 			}
