@@ -223,6 +223,13 @@ export interface ApiEndpoints {
   /** To access metadata for all families served by Google Fonts */
   googleFontApiKey?: string;
 
+  /**
+   * Evaluate custom JavaScript code
+   *
+   * Code must be an expression. Something which evaluates to a value.
+   */
+  evaluateJavaScript?: (code: string) => Promise<unknown>;
+
   /** Used to generate PDF by generateTarget() and by print preview */
   generatePdf?: (
     html: string,

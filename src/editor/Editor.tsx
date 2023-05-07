@@ -46,7 +46,7 @@ export default function Editor(props: EditorProps) {
     (async function () {
       try {
         const dt1 = await getOrigSourceInternal();
-        const dt2 = await transformData(dt1, props.report.transforms, true);
+        const dt2 = await transformData(dt1, props.report.transforms);
         setData({ data: dt2 });
       } catch (e) {
         setData({ data: undefined, errorMsg: String(e) });
@@ -65,7 +65,6 @@ export default function Editor(props: EditorProps) {
     return retrieveOriginalSourceData({
       reportDataUrl: props.report.dataUrl,
       api: props.api,
-      allowUnsafeJsEval: true,
     });
   }
 

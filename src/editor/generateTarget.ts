@@ -107,7 +107,6 @@ export interface GenerateTargetArgs {
   api: ApiEndpoints;
   data?: DataObj;
   logPerformance?: boolean;
-  allowUnsafeJsEval?: boolean;
   targetOverride?: TargetOption;
 }
 
@@ -121,27 +120,15 @@ export interface GenerateTargetArgs {
 export default async function generateTarget(
   props: GenerateTargetArgs,
 ): Promise<FileOutput> {
-  const {
-    report,
-    api,
-    data,
-    logPerformance = false,
-    allowUnsafeJsEval = false,
-    targetOverride,
-  } = props;
+  const { report, api, data, logPerformance = false, targetOverride } = props;
 
   const tDataBefore = logPerformance ? performance.now() : 0;
   const source = await retrieveOriginalSourceData({
     reportDataUrl: report.dataUrl,
     api,
     data,
-    allowUnsafeJsEval,
   });
-  const inputData = await transformData(
-    source,
-    report.transforms,
-    allowUnsafeJsEval,
-  );
+  const inputData = await transformData(source, report.transforms);
   const tDataAfter = logPerformance ? performance.now() : 0;
   if (logPerformance) {
     console.log(

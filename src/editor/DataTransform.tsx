@@ -32,7 +32,6 @@ import globalStyle from '../globalStyle.module.css';
 export async function transformData(
   inputData: unknown,
   transforms: TTransformData[],
-  allowUnsafeJsEval: boolean,
   len?: number,
 ) {
   if (len === undefined) {
@@ -41,7 +40,7 @@ export async function transformData(
   for (let i = 0; i < len; ++i) {
     const w = transforms[i];
     const comp = getTransform(w.type);
-    inputData = await comp.transform(inputData, w, allowUnsafeJsEval);
+    inputData = await comp.transform(inputData, w);
   }
   return inputData;
 }
@@ -178,7 +177,7 @@ export default function DataTransform(props: GeneralProps) {
 
     let dt2;
     try {
-      dt2 = await transformData(dt, props.report.transforms, true, len);
+      dt2 = await transformData(dt, props.report.transforms, len);
     } catch (e) {
       let msg = String(e);
       if (msg.trim().length === 0) {
