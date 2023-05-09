@@ -16,8 +16,6 @@ import renderToHtml from './renderToHtml';
 import { saveAs } from 'file-saver';
 import generateTarget from './generateTarget';
 
-const homeUrl = '/';
-
 export default function EditorMenu(props: GeneralProps) {
   const [shownModalPrint, setShownModalPrint] = useState<
     | { html: string }
@@ -93,14 +91,14 @@ export default function EditorMenu(props: GeneralProps) {
         <div className="container">
           <div className="d-flex py-2">
             <ul className="nav flex-grow-1">
-              {homeUrl && (
+              {props.homeLink && (
                 <li>
                   <a
-                    href={homeUrl}
+                    href={props.homeLink.url}
                     target="_parent"
                     className="nav-link px-3 link-secondary"
                   >
-                    Kelgrand Reports
+                    {props.homeLink.text}
                   </a>
                 </li>
               )}

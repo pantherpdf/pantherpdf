@@ -60,6 +60,12 @@ export interface EditorProps {
 
   /** Redo callback. Should not be defined when redo is not possible. */
   redo?: () => void;
+
+  /** Link to home button */
+  homeLink?: {
+    text: string;
+    url: string;
+  };
 }
 
 // to help construct tests
