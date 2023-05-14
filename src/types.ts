@@ -226,7 +226,8 @@ export interface ApiEndpoints {
   /**
    * Evaluate custom JavaScript code
    *
-   * Code must be an expression. Something which evaluates to a value.
+   * Code must include a return statement.
+   * e.g. `function makeIt() { return { hello: 'world' }; } return makeIt();`
    */
   evaluateJavaScript?: (code: string) => Promise<unknown>;
 
