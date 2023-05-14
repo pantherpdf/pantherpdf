@@ -126,4 +126,5 @@ test('generateTarget pdf', async () => {
   expect(result.body[1]).toBe(2);
   expect(result.body[2]).toBe(3);
   expect(result.body[3]).toBe(4);
+  expect(result.contentType).toBe('application/pdf');
 });

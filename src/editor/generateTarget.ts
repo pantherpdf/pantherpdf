@@ -184,7 +184,7 @@ export default async function generateTarget(
     }
     return {
       body: pdf,
-      contentType: 'text/html; charset=utf-8',
+      contentType: 'application/pdf',
       filename: correctExtension(
         reportCompiled.properties.fileName,
         reportCompiled.target,
