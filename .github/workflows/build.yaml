@@ -1,0 +1,20 @@
+name: Build and lint
+
+on: [push]
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - run: npm install
+      - run: npm run build
+      - run: npm run test
+      - run: npm run lint
+      - run: npm run typecheck

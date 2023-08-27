@@ -74,12 +74,11 @@
   "scripts": {
     "build": "parcel build",
     "start": "parcel serve demo/index.html --public-url / --dist-dir build",
-    "test": "jest --watch",
-    "typeCheck": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "typecheck": "tsc --noEmit",
     "eslint": "eslint --ext js,ts,tsx",
-    "lint": "npm run eslint src",
-    "lint:fix": "npm run eslint --fix src",
-    "ci": "npm run build && npm run test && npm run lint && npm run typeCheck"
+    "lint": "npm run eslint src"
   },
   "browserslist": {
     "production": [
