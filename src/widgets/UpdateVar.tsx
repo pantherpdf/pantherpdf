@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { TData, TDataCompiled, TReport } from '../types';
+import { Item, ItemCompiled, Report } from '../types';
 import type { Widget } from '../editor/types';
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
@@ -17,7 +17,7 @@ interface GetAllVars {
   name: string;
   owner: SetVarData | undefined;
 }
-function getAllVars(report: TReport, wid: number[]): GetAllVars[] {
+function getAllVars(report: Report, wid: number[]): GetAllVars[] {
   wid = [...wid];
   // return array to keep correct order
   const arr: GetAllVars[] = [];
@@ -44,20 +44,20 @@ function getAllVars(report: TReport, wid: number[]): GetAllVars[] {
   return arr;
 }
 
-export interface UpdateVarData extends TData {
+export interface UpdateVarData extends Item {
   type: 'UpdateVar';
   varName: string;
   formula: string;
 }
 
-export interface UpdateVarCompiled extends TDataCompiled {
+export interface UpdateVarCompiled extends ItemCompiled {
   type: 'UpdateVar';
 }
 
 export const UpdateVar: Widget = {
   id: 'UpdateVar',
   name: { en: 'Update Variable', sl: 'Spremeni Spremenljivko' },
-  icon: { fontawesome: faPlusSquare },
+  icon: faPlusSquare,
 
   newItem: async (): Promise<UpdateVarData> => {
     return {
@@ -89,7 +89,7 @@ export const UpdateVar: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as UpdateVarData;
     function Impl() {
       const vars = getAllVars(props.report, props.wid);
@@ -131,7 +131,7 @@ export const UpdateVar: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     return '';
   },
 

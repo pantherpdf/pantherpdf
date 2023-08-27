@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { TData, TDataCompiled } from '../types';
+import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faHandRock } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
@@ -11,22 +11,22 @@ import InputApplyOnEnter from './InputApplyOnEnter';
 import Trans, { TransName } from '../translation';
 import globalStyle from '../globalStyle.module.css';
 
-export interface FirstMatchData extends TData {
+export interface FirstMatchData extends Item {
   type: 'FirstMatch';
   source: string;
   condition: string;
   varName: string;
 }
 
-export interface FirstMatchCompiled extends TDataCompiled {
+export interface FirstMatchCompiled extends ItemCompiled {
   type: 'FirstMatch';
-  children: TDataCompiled[];
+  children: ItemCompiled[];
 }
 
 export const FirstMatch: Widget = {
   id: 'FirstMatch',
   name: { en: 'FirstMatch', sl: 'Prvi ustrezen' },
-  icon: { fontawesome: faHandRock },
+  icon: faHandRock,
 
   newItem: async (): Promise<FirstMatchData> => {
     return {
@@ -66,7 +66,7 @@ export const FirstMatch: Widget = {
     return result;
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as FirstMatchData;
     return (
       <BoxName
@@ -78,7 +78,7 @@ export const FirstMatch: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as FirstMatchCompiled;
     return props.renderChildren(item.children, props);
   },

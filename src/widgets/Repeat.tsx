@@ -3,7 +3,7 @@
  */
 
 import React, { CSSProperties } from 'react';
-import { TData, TDataCompiled, tuple } from '../types';
+import { Item, ItemCompiled, tuple } from '../types';
 import type { Widget } from '../editor/types';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
@@ -19,16 +19,16 @@ const RepeatDirectionTrans: { [key in RepeatDirection]: trKeys } = {
   grid: 'repeat - direction grid',
 };
 
-export interface RepeatData extends TData {
+export interface RepeatData extends Item {
   type: 'Repeat';
   source: string;
   varName: string;
   direction: RepeatDirection;
 }
 
-export interface RepeatCompiled extends TDataCompiled {
+export interface RepeatCompiled extends ItemCompiled {
   type: 'Repeat';
-  children: TDataCompiled[][];
+  children: ItemCompiled[][];
   direction: RepeatDirection;
   addChildElement: boolean;
 }
@@ -36,7 +36,7 @@ export interface RepeatCompiled extends TDataCompiled {
 export const Repeat: Widget = {
   id: 'Repeat',
   name: { en: 'Repeat', sl: 'Ponavljaj' },
-  icon: { fontawesome: faEllipsisV },
+  icon: faEllipsisV,
 
   newItem: async (): Promise<RepeatData> => {
     return {
@@ -55,7 +55,7 @@ export const Repeat: Widget = {
         `Repeat: expected source to be array but got ${typeof value}`,
       );
     }
-    const children: TDataCompiled[][] = [];
+    const children: ItemCompiled[][] = [];
     for (let i = 0; i < value.length; ++i) {
       helper.formulaHelper.push(dt.varName, value[i]);
       helper.formulaHelper.push(dt.varName + '_i', i);
@@ -94,7 +94,7 @@ export const Repeat: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as RepeatData;
     return (
       <BoxName {...props} name={`${TransName(Repeat.name)} - ${item.varName}`}>
@@ -104,7 +104,7 @@ export const Repeat: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as RepeatCompiled;
     if (item.direction === 'rows') {
       // maybe add to cssItem:

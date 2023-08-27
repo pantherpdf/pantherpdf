@@ -5,12 +5,12 @@
 
 import React from 'react';
 import { TransName } from '../translation';
-import { ItemRendeProps, TName } from '../editor/types';
+import { ItemRenderEditorProps, Name } from '../editor/types';
 import style from './BoxName.module.css';
 
-export interface BoxNameProps extends ItemRendeProps {
+export interface BoxNameProps extends ItemRenderEditorProps {
   className?: string;
-  name: TName;
+  name: Name;
   children: React.ReactNode;
   style?: React.CSSProperties;
   visible?: boolean;

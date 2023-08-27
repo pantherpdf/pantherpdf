@@ -4,7 +4,7 @@
 
 import { compileTest, renderToHtmlContentTest } from '../unitTestHelpers';
 import type { ReportForceChildren } from './types';
-import type { TReport } from '../types';
+import type { Report } from '../types';
 import type { TextSimpleData } from '../widgets/TextSimple';
 import { sampleReport } from './sampleReport';
 import renderToHtml from './renderToHtml';
@@ -25,7 +25,7 @@ test('text', async () => {
 });
 
 test('should include google font', async () => {
-  const report: TReport = {
+  const report: Report = {
     ...sampleReport,
     children: [],
   };

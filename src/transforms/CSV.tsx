@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { TTransformData } from '../types';
-import { TTransformWidget } from '../editor/types';
+import { TransformItem } from '../types';
+import { Transform } from '../editor/types';
 import { IHelpers } from '../formula/types';
 import FormulaEvaluate from '../formula/formula';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
@@ -17,12 +17,12 @@ interface CSVRow {
   source: string;
   cols: string[];
 }
-export interface CSVData extends TTransformData {
+export interface CSVData extends TransformItem {
   type: 'CSV';
   rows: CSVRow[];
 }
 
-const CSV: TTransformWidget = {
+const CSV: Transform = {
   id: 'CSV',
   name: 'CSV',
 
@@ -40,7 +40,7 @@ const CSV: TTransformWidget = {
     return obj;
   },
 
-  transform: async (dt, item2: TTransformData) => {
+  transform: async (dt, item2: TransformItem) => {
     const item = item2 as CSVData;
     const arr: string[][] = [];
     const helper: IHelpers & { vars: {} } = {
@@ -83,7 +83,7 @@ const CSV: TTransformWidget = {
     return arr;
   },
 
-  Editor: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as CSVData;
     return (
       <>

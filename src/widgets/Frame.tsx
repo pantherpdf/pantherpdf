@@ -3,7 +3,7 @@
  */
 
 import React, { CSSProperties } from 'react';
-import { TData, TDataCompiled } from '../types';
+import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faBorderStyle } from '@fortawesome/free-solid-svg-icons';
 import PropertyColor from './PropertyColor';
@@ -33,9 +33,9 @@ interface Properties {
   pageBreakAvoid?: boolean;
   font: TFont;
 }
-export type FrameData = TData & Properties;
-export type FrameCompiled = TDataCompiled &
-  Properties & { children: TDataCompiled[] };
+export type FrameData = Item & Properties;
+export type FrameCompiled = ItemCompiled &
+  Properties & { children: ItemCompiled[] };
 
 function genStyle(
   item: FrameData | FrameCompiled,
@@ -154,7 +154,7 @@ function Property4SideRange(props: Property4SideRangeProps) {
 export const Frame: Widget = {
   id: 'Frame',
   name: { en: 'Frame', sl: 'Okvir' },
-  icon: { fontawesome: faBorderStyle },
+  icon: faBorderStyle,
 
   newItem: async (): Promise<FrameData> => {
     return {
@@ -185,7 +185,7 @@ export const Frame: Widget = {
     return dt2;
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as FrameData;
     const fontStyle = PropertyFontExtractStyle(item.font);
     if (fontStyle) {
@@ -198,7 +198,7 @@ export const Frame: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as FrameCompiled;
     const style = genStyle(item, true);
     return `<div style="${props.styleToStringAttribute(style)}">

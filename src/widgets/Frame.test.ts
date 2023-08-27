@@ -4,17 +4,17 @@
 
 import { Frame, FrameData } from './Frame';
 import { sampleReport } from '../editor/sampleReport';
-import type { TReport } from '../types';
+import type { Report } from '../types';
 import { compileTest, renderToHtmlContentTest } from '../unitTestHelpers';
-import type { NewItemProps } from '../editor/types';
+import type { ItemNewProps } from '../editor/types';
 
 test('Frame should include google font', async () => {
-  const helper: NewItemProps = { report: sampleReport };
+  const helper: ItemNewProps = { report: sampleReport };
   const el = (await Frame.newItem(helper)) as FrameData;
   el.font.family = 'Lato';
   el.font.weight = 'bold';
   el.font.style = 'italic';
-  const report: TReport = {
+  const report: Report = {
     ...sampleReport,
     children: [el],
   };
@@ -25,10 +25,10 @@ test('Frame should include google font', async () => {
 });
 
 test('Frame should include page break property', async () => {
-  const helper: NewItemProps = { report: sampleReport };
+  const helper: ItemNewProps = { report: sampleReport };
   const el = (await Frame.newItem(helper)) as FrameData;
   el.pageBreakAvoid = true;
-  const report: TReport = {
+  const report: Report = {
     ...sampleReport,
     children: [el],
   };
@@ -38,9 +38,9 @@ test('Frame should include page break property', async () => {
 });
 
 test('Frame should not add whitespace around outer div', async () => {
-  const helper: NewItemProps = { report: sampleReport };
+  const helper: ItemNewProps = { report: sampleReport };
   const el = (await Frame.newItem(helper)) as FrameData;
-  const report: TReport = {
+  const report: Report = {
     ...sampleReport,
     children: [el],
   };

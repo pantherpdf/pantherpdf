@@ -3,18 +3,18 @@
  */
 
 import React from 'react';
-import { TData, TDataCompiled } from '../types';
+import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
 import InputApplyOnEnter from './InputApplyOnEnter';
 
-export interface TextSimpleData extends TData {
+export interface TextSimpleData extends Item {
   type: 'TextSimple';
   formula: string;
 }
 
-export interface TextSimpleCompiled extends TDataCompiled {
+export interface TextSimpleCompiled extends ItemCompiled {
   type: 'TextSimple';
   data: string;
 }
@@ -22,7 +22,7 @@ export interface TextSimpleCompiled extends TDataCompiled {
 export const TextSimple: Widget = {
   id: 'TextSimple',
   name: { en: 'Text Simple', sl: 'Besedilo Simple' },
-  icon: { fontawesome: faAlignLeft },
+  icon: faAlignLeft,
 
   newItem: async (): Promise<TextSimpleData> => {
     return {
@@ -42,7 +42,7 @@ export const TextSimple: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as TextSimpleData;
     return (
       <BoxName {...props} name={TextSimple.name}>
@@ -51,7 +51,7 @@ export const TextSimple: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as TextSimpleCompiled;
     return `<div>${props.escapeHtml(item.data)}</div>\n`;
   },

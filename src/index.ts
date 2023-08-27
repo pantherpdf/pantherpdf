@@ -7,40 +7,35 @@ import Editor from './editor/Editor';
 import type {
   CompileHelper,
   EditorProps,
-  ItemRendeFinalHelper,
-  ItemRendeFinalProps,
-  ItemRendeProps,
-  NewItemProps,
-  TFontAwesomeIcon,
-  TName,
-  TransformRendeProps,
-  TTransformWidget,
+  ItemRenderPreviewHelper,
+  ItemRenderPreviewProps,
+  ItemRenderEditorProps,
+  ItemNewProps,
+  Name,
+  TransformRenderProps,
+  Transform,
   Widget,
 } from './editor/types';
 import generateTarget from './editor/generateTarget';
 import type { GenerateTargetArgs, FileOutput } from './editor/generateTarget';
 import { isReport } from './types';
 import type {
-  TReport,
+  Report,
   ApiReportMetaData,
   ApiEndpoints,
   ApiFileMetaData,
-  TReportProperties,
+  ReportProperties,
   ApiUploadMetaData,
   TargetOption,
-  TTransformData,
-  TData,
-  TDataCompiled,
+  TransformItem,
+  Item,
+  ItemCompiled,
 } from './types';
 import { setEditorLanguage } from './translation';
-import { DataObj } from './editor/retrieveOriginalSourceData';
+import { SourceData } from './editor/retrieveOriginalSourceData';
 import { defaultTransforms } from './transforms/allTransforms';
 import BoxName, { BoxNameProps } from './widgets/BoxName';
 import { defaultWidgets } from './widgets/allWidgets';
-
-type Report = TReport;
-type SourceData = DataObj;
-type ReportProperties = TReportProperties;
 
 export {
   // Frontend: React component
@@ -71,20 +66,19 @@ export type {
   ApiUploadMetaData,
   TargetOption,
   //
-  TTransformWidget,
-  TTransformData,
-  TransformRendeProps,
+  Transform,
+  TransformItem,
+  TransformRenderProps,
   //
   Widget,
-  TData,
-  TDataCompiled,
-  NewItemProps,
-  CompileHelper, // check field names
-  ItemRendeProps,
-  ItemRendeFinalProps,
-  ItemRendeFinalHelper,
+  Item,
+  ItemCompiled,
+  CompileHelper,
+  ItemNewProps,
+  ItemRenderEditorProps,
+  ItemRenderPreviewProps,
+  ItemRenderPreviewHelper,
   BoxNameProps,
   //
-  TName,
-  TFontAwesomeIcon,
+  Name,
 };

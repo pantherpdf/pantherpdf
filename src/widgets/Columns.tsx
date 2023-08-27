@@ -3,7 +3,7 @@
  */
 
 import React, { CSSProperties } from 'react';
-import { TData, TDataCompiled } from '../types';
+import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faColumns, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
@@ -14,19 +14,19 @@ import InputApplyOnEnter, {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Trans from '../translation';
 
-export interface ColumnsCtData extends TData {
+export interface ColumnsCtData extends Item {
   type: 'ColumnsCt';
 }
 
-export interface ColumnsCtCompiled extends TDataCompiled {
+export interface ColumnsCtCompiled extends ItemCompiled {
   type: 'ColumnsCt';
-  children: TDataCompiled[];
+  children: ItemCompiled[];
 }
 
 export const ColumnsCt: Widget = {
   id: 'ColumnsCt',
   name: { en: 'ColumnsCt', sl: 'StolpciCt' },
-  icon: { fontawesome: faColumns },
+  icon: faColumns,
 
   newItem: async (): Promise<ColumnsCtData> => {
     return {
@@ -42,12 +42,12 @@ export const ColumnsCt: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     // handled by Columns
     return null;
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     // handled by Columns
     return '';
   },
@@ -61,12 +61,12 @@ export const ColumnsCt: Widget = {
   canDrag: false,
 };
 
-export interface ColumnsData extends TData {
+export interface ColumnsData extends Item {
   type: 'Columns';
   widths: string[];
 }
 
-export interface ColumnsCompiled extends TDataCompiled {
+export interface ColumnsCompiled extends ItemCompiled {
   type: 'Columns';
   widths: string[];
   children: ColumnsCtCompiled[];
@@ -94,7 +94,7 @@ function colStyle(w: string): CSSProperties {
 export const Columns: Widget = {
   id: 'Columns',
   name: { en: 'Columns', sl: 'Stolpci' },
-  icon: { fontawesome: faColumns },
+  icon: faColumns,
 
   newItem: async (props): Promise<ColumnsData> => {
     return {
@@ -119,7 +119,7 @@ export const Columns: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as ColumnsData;
     const baseStyle: CSSProperties = {
       border: '1px solid #ccc',
@@ -148,7 +148,7 @@ export const Columns: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as ColumnsCompiled;
     let out = '<div style="display: flex;">\n';
     for (let idx = 0; idx < item.children.length; ++idx) {

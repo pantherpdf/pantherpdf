@@ -3,17 +3,17 @@
  */
 
 import React from 'react';
-import { TData, TDataCompiled } from '../types';
+import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faGripLines } from '@fortawesome/free-solid-svg-icons';
 
-export type PageBreakData = TData & { type: 'PageBreak' };
-export type PageBreakCompiled = TDataCompiled & { type: 'PageBreak' };
+export type PageBreakData = Item & { type: 'PageBreak' };
+export type PageBreakCompiled = ItemCompiled & { type: 'PageBreak' };
 
 export const PageBreak: Widget = {
   id: 'PageBreak',
   name: { en: 'Page Break', sl: 'Prelom Strani' },
-  icon: { fontawesome: faGripLines },
+  icon: faGripLines,
 
   newItem: async (): Promise<PageBreakData> => {
     return {
@@ -28,7 +28,7 @@ export const PageBreak: Widget = {
     };
   },
 
-  Render: function () {
+  RenderEditor: function () {
     return (
       <hr
         style={{
@@ -42,7 +42,7 @@ export const PageBreak: Widget = {
     );
   },
 
-  RenderFinal: function () {
+  RenderPreview: function () {
     return '<div style="page-break-before: always"></div>\n';
   },
 

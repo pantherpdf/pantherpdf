@@ -9,7 +9,7 @@ import { compileComponentTest, compileTest } from '../unitTestHelpers';
 import { ForceChildren } from '../editor/types';
 import { RepeatData } from './Repeat';
 import { sampleReport } from '../editor/sampleReport';
-import { TReport } from '../types';
+import { Report } from '../types';
 
 test('UpdateVar SetVar', async () => {
   const dt: ForceChildren<
@@ -43,7 +43,7 @@ test('UpdateVar SetVar', async () => {
 });
 
 test('UpdateVar reportVar', async () => {
-  const report = JSON.parse(JSON.stringify(sampleReport)) as TReport;
+  const report = JSON.parse(JSON.stringify(sampleReport)) as Report;
   report.children = [
     { type: 'TextSimple', formula: 'ccc', children: [] },
     {

@@ -1,17 +1,17 @@
-import { TName } from '../editor/types';
+import { Name } from '../editor/types';
 import { TransName } from '../translation';
 
-interface TAdjust {
+interface Adjust {
   id: string;
   category: string;
-  name?: TName;
+  name?: Name;
   func: (data: unknown, args: unknown[]) => string;
 }
 
 const lang = 'en'; // todo
 // todo translate names
 
-const n1: TAdjust = {
+const n1: Adjust = {
   id: 'num, 0 dec, local',
   category: 'number',
   func: val => {
@@ -21,7 +21,7 @@ const n1: TAdjust = {
     return val.toLocaleString(lang, { maximumFractionDigits: 0 });
   },
 };
-const n2: TAdjust = {
+const n2: Adjust = {
   id: 'num, 2 dec, local',
   category: 'number',
   func: val => {
@@ -34,7 +34,7 @@ const n2: TAdjust = {
     });
   },
 };
-const n3: TAdjust = {
+const n3: Adjust = {
   id: 'num, auto dec, local',
   category: 'number',
   func: val => {
@@ -44,7 +44,7 @@ const n3: TAdjust = {
     return val.toLocaleString(lang);
   },
 };
-const n4: TAdjust = {
+const n4: Adjust = {
   id: 'num, 0 dec',
   category: 'number',
   func: val => {
@@ -54,7 +54,7 @@ const n4: TAdjust = {
     return val.toLocaleString('en-GB', { maximumFractionDigits: 0 });
   },
 };
-const n5: TAdjust = {
+const n5: Adjust = {
   id: 'num, 2 dec',
   category: 'number',
   func: val => {
@@ -67,7 +67,7 @@ const n5: TAdjust = {
     });
   },
 };
-const n6: TAdjust = {
+const n6: Adjust = {
   id: 'num, auto dec',
   category: 'number',
   func: val => {
@@ -78,7 +78,7 @@ const n6: TAdjust = {
   },
 };
 
-const n7: TAdjust = {
+const n7: Adjust = {
   id: 'angle, 0 dec, local',
   category: 'number',
   func: val => {
@@ -91,7 +91,7 @@ const n7: TAdjust = {
   },
 };
 
-const n8: TAdjust = {
+const n8: Adjust = {
   id: 'date and time, local',
   category: 'date',
   func: val => {
@@ -101,7 +101,7 @@ const n8: TAdjust = {
     return new Date(val).toLocaleString(lang);
   },
 };
-const n9: TAdjust = {
+const n9: Adjust = {
   id: 'date and time no sec, local',
   category: 'date',
   func: val => {
@@ -117,7 +117,7 @@ const n9: TAdjust = {
     });
   },
 };
-const n10: TAdjust = {
+const n10: Adjust = {
   id: 'date, local',
   category: 'date',
   func: val => {
@@ -127,7 +127,7 @@ const n10: TAdjust = {
     return new Date(val).toLocaleDateString(lang);
   },
 };
-const n11: TAdjust = {
+const n11: Adjust = {
   id: 'time, local',
   category: 'date',
   func: val => {
@@ -137,7 +137,7 @@ const n11: TAdjust = {
     return new Date(val).toLocaleTimeString(lang);
   },
 };
-const n12: TAdjust = {
+const n12: Adjust = {
   id: 'time no sec, local',
   category: 'date',
   func: val => {
@@ -151,7 +151,7 @@ const n12: TAdjust = {
   },
 };
 
-const n13: TAdjust = {
+const n13: Adjust = {
   id: 'name',
   category: 'general',
   func: val => {
@@ -169,7 +169,7 @@ const n13: TAdjust = {
     return TransName(val as string | { [key: string]: string }, lang);
   },
 };
-const n14: TAdjust = {
+const n14: Adjust = {
   id: 'json',
   category: 'general',
   func: val => {
@@ -220,7 +220,7 @@ const n14: TAdjust = {
   },
 };
 
-export const listOfAdjusts: TAdjust[] = [
+export const listOfAdjusts: Adjust[] = [
   n1,
   n2,
   n3,

@@ -2,7 +2,7 @@ import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import Trans from '../translation';
-import { TReport } from '../types';
+import { Report } from '../types';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
 import { GeneralProps } from './types';
 import globalStyle from '../globalStyle.module.css';
@@ -15,7 +15,7 @@ export default function VarEditor(props: GeneralProps) {
     name: string | undefined,
     formula: string | undefined,
   ): Promise<void> {
-    const report: TReport = { ...props.report };
+    const report: Report = { ...props.report };
     report.variables = [...report.variables];
     if (idx !== undefined) {
       if (name || formula) {

@@ -4,21 +4,21 @@
  */
 
 import React from 'react';
-import { TTransformData } from '../types';
-import { TTransformWidget } from '../editor/types';
+import { TransformItem } from '../types';
+import { Transform } from '../editor/types';
 import { IHelpers } from '../formula/types';
 import FormulaEvaluate from '../formula/formula';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
 import Trans from '../translation';
 import globalStyle from '../globalStyle.module.css';
 
-export interface FilterData extends TTransformData {
+export interface FilterData extends TransformItem {
   type: 'Filter';
   field: string;
   condition: string;
 }
 
-const Filter: TTransformWidget = {
+const Filter: Transform = {
   id: 'Filter',
   name: 'Filter',
 
@@ -32,7 +32,7 @@ const Filter: TTransformWidget = {
     return obj;
   },
 
-  transform: async (dt, item2: TTransformData) => {
+  transform: async (dt, item2: TransformItem) => {
     const item = item2 as FilterData;
     if (item.field.length === 0 || item.condition.length === 0) {
       return dt;
@@ -60,7 +60,7 @@ const Filter: TTransformWidget = {
     return dt;
   },
 
-  Editor: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as FilterData;
     return (
       <>

@@ -4,7 +4,7 @@
 
 import { compileTest } from '../unitTestHelpers';
 import type { ReportForceChildren } from './types';
-import type { TReport } from '../types';
+import type { Report } from '../types';
 import type { TextSimpleData, TextSimpleCompiled } from '../widgets/TextSimple';
 import { sampleReport } from './sampleReport';
 
@@ -57,7 +57,7 @@ test('text', async () => {
 });
 
 test('fonts used', async () => {
-  const report: TReport = {
+  const report: Report = {
     ...sampleReport,
     children: [],
   };

@@ -3,7 +3,7 @@
  */
 
 import React, { useState, CSSProperties } from 'react';
-import { TData, TDataCompiled } from '../types';
+import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faEllipsisH, faImage } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
@@ -19,7 +19,7 @@ import Trans from '../translation';
 import base64ArrayBuffer from './base64ArrayBuffer';
 import globalStyle from '../globalStyle.module.css';
 
-export interface ImageData extends TData {
+export interface ImageData extends Item {
   type: 'Image';
   url: string;
   formula: string;
@@ -29,7 +29,7 @@ export interface ImageData extends TData {
   fit?: 'fill' | 'contain' | 'cover';
 }
 
-export interface ImageCompiled extends TDataCompiled {
+export interface ImageCompiled extends ItemCompiled {
   type: 'Image';
   data: string;
   align?: TAlign;
@@ -45,7 +45,7 @@ let imgState = 0;
 export const Image: Widget = {
   id: 'Image',
   name: { en: 'Image', sl: 'Slika' },
-  icon: { fontawesome: faImage },
+  icon: faImage,
 
   newItem: async (): Promise<ImageData> => {
     return {
@@ -96,7 +96,7 @@ export const Image: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as ImageData;
 
     const cssImg: CSSProperties = {
@@ -167,7 +167,7 @@ export const Image: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as ImageCompiled;
     const cssImg: CSSProperties = {
       display: 'inline-block',

@@ -6,8 +6,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Trans, { TransName } from '../translation';
 import style from './EditWidgets.module.css';
-import { TReport, ApiReportMetaData } from '../types';
-import { Widget, GeneralProps, NewItemProps } from './types';
+import { Report, ApiReportMetaData } from '../types';
+import { Widget, GeneralProps, ItemNewProps } from './types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Overlay, Tooltip } from 'react-bootstrap';
@@ -54,7 +54,7 @@ function ShowReports(props: GeneralProps) {
     if (!props.api.reportGet) {
       return;
     }
-    let js: TReport;
+    let js: Report;
     try {
       js = await props.api.reportGet(id);
     } catch (e) {
@@ -122,7 +122,7 @@ function ShowWidgets(props: GeneralProps) {
     e: React.DragEvent<HTMLDivElement>,
     w: Widget,
   ) {
-    const propsNewItem: NewItemProps = {
+    const propsNewItem: ItemNewProps = {
       report: props.report,
     };
     const obj = await w.newItem(propsNewItem);
@@ -144,11 +144,7 @@ function ShowWidgets(props: GeneralProps) {
             className={`${style.widget} bg`}
             onClick={e => showTooltip(w.id, e.currentTarget)}
           >
-            <FontAwesomeIcon
-              icon={w.icon.fontawesome}
-              fixedWidth
-              className="me-2"
-            />
+            <FontAwesomeIcon icon={w.icon} fixedWidth className="me-2" />
             {TransName(w.name)}
           </div>
         );

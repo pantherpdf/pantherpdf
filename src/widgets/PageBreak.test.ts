@@ -5,13 +5,13 @@
 import { PageBreak, PageBreakData } from './PageBreak';
 import { compileTest, renderToHtmlContentTest } from '../unitTestHelpers';
 import { sampleReport } from '../editor/sampleReport';
-import type { TReport } from '../types';
-import type { NewItemProps } from '../editor/types';
+import type { Report } from '../types';
+import type { ItemNewProps } from '../editor/types';
 
 test('PageBreak should include css page-break-before', async () => {
-  const helper: NewItemProps = { report: sampleReport };
+  const helper: ItemNewProps = { report: sampleReport };
   const el = (await PageBreak.newItem(helper)) as PageBreakData;
-  const report: TReport = {
+  const report: Report = {
     ...sampleReport,
     children: [el],
   };

@@ -14,7 +14,7 @@ import {
 } from './childrenMgmt';
 import { sampleReport } from './sampleReport';
 import { ReportForceChildren } from './types';
-import { TReport } from '../types';
+import { Report } from '../types';
 
 test('findInList', () => {
   let r: ReportForceChildren<RepeatData | TextSimpleData>;
@@ -74,7 +74,7 @@ test('removeFromList simple', () => {
 });
 
 test('removeFromList', () => {
-  let r: TReport;
+  let r: Report;
   r = { ...sampleReport };
   // prettier-ignore
   const t0: TextSimpleData = { type:'TextSimple', formula:'rp0', children:[] };
@@ -109,8 +109,8 @@ test('removeFromList', () => {
 });
 
 test('insertIntoList', () => {
-  let r: TReport;
-  let r_old: TReport;
+  let r: Report;
+  let r_old: Report;
   r = { ...sampleReport };
   // prettier-ignore
   const t0: TextSimpleData = { type:'TextSimple', formula:'rp0', children:[] };
@@ -231,7 +231,7 @@ test('idCmp', () => {
 });
 
 test('updateItem', () => {
-  let r: TReport;
+  let r: Report;
   r = { ...sampleReport };
   // prettier-ignore
   const t0: TextSimpleData = { type: 'TextSimple', formula: 'rp0', children: [] };

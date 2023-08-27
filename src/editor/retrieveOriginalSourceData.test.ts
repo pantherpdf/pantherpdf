@@ -4,7 +4,7 @@
 
 import { ApiEndpoints } from '../types';
 import retrieveOriginalSourceData, {
-  DataObj,
+  SourceData,
 } from './retrieveOriginalSourceData';
 import { sampleReport } from './sampleReport';
 
@@ -17,7 +17,7 @@ test('retrieveOriginalSourceData javascript', async () => {
       return await func();
     },
   };
-  const input: DataObj = {
+  const input: SourceData = {
     type: 'javascript',
     code: `
 			async function abc(n1, n2) {

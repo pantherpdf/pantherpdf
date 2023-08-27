@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { TData, TDataCompiled, tuple } from '../types';
+import { Item, ItemCompiled, tuple } from '../types';
 import type { Widget } from '../editor/types';
 import { faArrowsAltV } from '@fortawesome/free-solid-svg-icons';
 import PropertySlider from './PropertySlider';
@@ -17,13 +17,13 @@ export type TBorderStyle = (typeof TBorderStyles)[number];
 interface Properties {
   height: number;
 }
-export type SpacerData = TData & Properties;
-export type SpacerCompiled = TDataCompiled & Properties;
+export type SpacerData = Item & Properties;
+export type SpacerCompiled = ItemCompiled & Properties;
 
 export const Spacer: Widget = {
   id: 'Spacer',
   name: { en: 'Spacer', sl: 'Presledek' },
-  icon: { fontawesome: faArrowsAltV },
+  icon: faArrowsAltV,
 
   newItem: async (): Promise<SpacerData> => {
     return {
@@ -39,7 +39,7 @@ export const Spacer: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as SpacerData;
     return (
       <BoxName {...props} name={Spacer.name}>
@@ -48,7 +48,7 @@ export const Spacer: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as SpacerCompiled;
     return `<div style="height: ${item.height}px"></div>\n`;
   },

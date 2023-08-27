@@ -4,8 +4,8 @@
  */
 
 import type { CSSProperties } from 'react';
-import { defaultReportCss, TReportCompiled } from '../types';
-import type { ItemRendeFinalHelper, Widget } from './types';
+import { defaultReportCss, ReportCompiled } from '../types';
+import type { ItemRenderPreviewHelper, Widget } from './types';
 import { getWidget } from '../widgets/allWidgets';
 import styleToCssString from 'react-style-object-to-css';
 import { PropertyFontGenCss } from '../widgets/PropertyFont';
@@ -21,14 +21,14 @@ function escapeHtml(unsafe: string): string {
 }
 
 export function renderToHtmlContent(
-  report: TReportCompiled,
+  report: ReportCompiled,
   widgets: Widget[],
   externalHelpers: { [key: string]: any } = {},
 ) {
-  const helper: ItemRendeFinalHelper = {
+  const helper: ItemRenderPreviewHelper = {
     renderItem: (item, helper) => {
       const w = getWidget(widgets, item.type);
-      return w.RenderFinal({ ...helper, item });
+      return w.RenderPreview({ ...helper, item });
     },
     renderChildren: (chs, helper) => {
       if (!Array.isArray(chs)) {
@@ -37,7 +37,7 @@ export function renderToHtmlContent(
       let txt = '';
       for (const item of chs) {
         const w = getWidget(widgets, item.type);
-        txt += w.RenderFinal({ ...helper, item });
+        txt += w.RenderPreview({ ...helper, item });
       }
       return txt;
     },
@@ -51,7 +51,7 @@ export function renderToHtmlContent(
 }
 
 export default function renderToHtml(
-  report: TReportCompiled,
+  report: ReportCompiled,
   widgets: Widget[],
   externalHelpers: { [key: string]: any } = {},
 ): string {

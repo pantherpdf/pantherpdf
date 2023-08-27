@@ -11,7 +11,7 @@ import {
 } from '../unitTestHelpers';
 import { ForceChildren } from '../editor/types';
 import { sampleReport } from '../editor/sampleReport';
-import { TReport } from '../types';
+import { Report } from '../types';
 import { TextHtmlData, ValueInternalFromEditor } from './TextHtml';
 import { FrameData } from './Frame';
 
@@ -47,7 +47,7 @@ test('complete rows', async () => {
     varName: 'item',
     direction: 'rows',
   };
-  const report: TReport = { ...sampleReport, children: [rpt] };
+  const report: Report = { ...sampleReport, children: [rpt] };
   const report2 = await compileTest(report, {});
 
   const children = report2.children as any;
@@ -75,7 +75,7 @@ test('repeat columns', async () => {
     varName: 'item',
     direction: 'columns',
   };
-  const report: TReport = { ...sampleReport, children: [rpt] };
+  const report: Report = { ...sampleReport, children: [rpt] };
 
   const report2 = await compileTest(report, {});
   const html = renderToHtmlContentTest(report2);
@@ -96,7 +96,7 @@ test('complete grid', async () => {
     varName: 'item',
     direction: 'grid',
   };
-  const report: TReport = { ...sampleReport, children: [rpt] };
+  const report: Report = { ...sampleReport, children: [rpt] };
   const report2 = await compileTest(report, {});
 
   const children = report2.children as any;
@@ -132,7 +132,7 @@ test('grid - products', async () => {
     varName: 'item',
     direction: 'grid',
   };
-  const report: TReport = { ...sampleReport, children: [rpt] };
+  const report: Report = { ...sampleReport, children: [rpt] };
   const report2 = await compileTest(report, {});
 
   const html = renderToHtmlContentTest(report2);

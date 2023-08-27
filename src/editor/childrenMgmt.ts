@@ -3,10 +3,10 @@
  * Functions for managing children. Mostly for drag-drop support.
  */
 
-import { TReport, TData } from '../types';
+import { Report, Item } from '../types';
 
-export function findArrayInList(report: TReport, wid: number[]): TData[] {
-  let arr: TData[] = report.children;
+export function findArrayInList(report: Report, wid: number[]): Item[] {
+  let arr: Item[] = report.children;
   for (const id of wid) {
     if (id >= arr.length) {
       throw new Error('bad id');
@@ -16,7 +16,7 @@ export function findArrayInList(report: TReport, wid: number[]): TData[] {
   return arr;
 }
 
-export function findInList(report: TReport, wid: number[]): TData {
+export function findInList(report: Report, wid: number[]): Item {
   if (wid.length === 0) {
     throw new Error('empty wid');
   }
@@ -29,13 +29,13 @@ export function findInList(report: TReport, wid: number[]): TData {
   return arr[id];
 }
 
-export function removeFromList(report: TReport, wid: number[]): TReport {
+export function removeFromList(report: Report, wid: number[]): Report {
   if (wid.length === 0) {
     throw new Error('bad wid');
   }
 
-  const r: TReport = { ...report, children: [...report.children] };
-  let lst: TData[] = r.children;
+  const r: Report = { ...report, children: [...report.children] };
+  let lst: Item[] = r.children;
 
   for (let i = 0; i < wid.length; ++i) {
     const id = wid[i];
@@ -61,16 +61,16 @@ export function removeFromList(report: TReport, wid: number[]): TReport {
 }
 
 export function insertIntoList(
-  report: TReport,
+  report: Report,
   wid: number[],
-  obj: TData,
-): TReport {
+  obj: Item,
+): Report {
   if (wid.length === 0) {
     throw new Error('bad wid');
   }
 
-  const r: TReport = { ...report, children: [...report.children] };
-  let lst: TData[] = r.children;
+  const r: Report = { ...report, children: [...report.children] };
+  let lst: Item[] = r.children;
 
   for (let i = 0; i < wid.length; ++i) {
     const id = wid[i];
@@ -140,11 +140,7 @@ export function idCmp(id1: number[], id2: number[]): boolean {
   return true;
 }
 
-export function updateItem(
-  report: TReport,
-  wid: number[],
-  obj: TData,
-): TReport {
+export function updateItem(report: Report, wid: number[], obj: Item): Report {
   const r = { ...report };
   r.children = [...r.children];
   let chs = r.children;

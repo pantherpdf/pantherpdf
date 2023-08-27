@@ -1,16 +1,19 @@
 import { ApiEndpoints } from '../types';
 
-export type DataObj =
+export type SourceData =
   | { type: 'as-is'; value: unknown }
   | { type: 'javascript'; code: string }
   | { type: 'url'; url: string };
 interface Args {
   reportDataUrl: string;
   api: ApiEndpoints;
-  data?: DataObj;
+  data?: SourceData;
 }
 
-async function dataFromObj(obj: DataObj, api: ApiEndpoints): Promise<unknown> {
+async function dataFromObj(
+  obj: SourceData,
+  api: ApiEndpoints,
+): Promise<unknown> {
   if (obj.type === 'as-is') {
     return obj.value;
   }

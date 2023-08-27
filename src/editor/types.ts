@@ -3,24 +3,25 @@
  * types used in report editor
  */
 
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import type { FunctionComponent, ReactNode, CSSProperties } from 'react';
 import type { FormulaHelper } from './compile';
 import {
-  TReport,
-  TData,
-  TTransformData,
+  Report,
+  Item,
+  TransformItem,
   ApiEndpoints,
-  TDataCompiled,
-  TReportCompiled,
+  ItemCompiled,
+  ReportCompiled,
 } from '../types';
 
-export type TName = string | { [key: string]: string };
-export interface TFontAwesomeIcon {
-  fontawesome: IconDefinition;
-}
+/**
+ * Name is used for translating strings.
+ * It can be `string` or `object` with 2-letter ISO language keys.
+ */
+export type Name = string | { [key: string]: string };
 
-export interface TSourceData {
+export interface SourceData {
   data: unknown;
   errorMsg?: string;
 }
@@ -33,7 +34,7 @@ export interface TSourceData {
  */
 export interface EditorProps {
   /** Current value */
-  report: TReport;
+  report: Report;
 
   /**
    * Callback that report has changed
@@ -41,7 +42,7 @@ export interface EditorProps {
    * Parent component needs to immediately update state to keep cursor in text
    * editor properly working.
    */
-  setReport: (val: TReport) => Promise<void>;
+  setReport: (val: Report) => Promise<void>;
 
   /** API to external services for pdf generation, loading images, ... */
   api: ApiEndpoints;
@@ -68,7 +69,7 @@ export interface EditorProps {
   };
 
   /** Override default transforms */
-  transforms?: TTransformWidget[];
+  transforms?: Transform[];
 
   /** Override default widgets */
   widgets?: Widget[];
@@ -80,12 +81,12 @@ export type ForceChildren<T> =
   | T
   | { [key: string]: unknown; children: ForceChildren<T>[] };
 
-export type ReportForceChildren<T> = TReport & { children: ForceChildren<T>[] };
+export type ReportForceChildren<T> = Report & { children: ForceChildren<T>[] };
 
 export type TDragObj =
   | { type: 'wid'; wid: number[] }
-  | { type: 'widget'; widget: TData }
-  | { type: 'widgets'; widgets: TData[] };
+  | { type: 'widget'; widget: Item }
+  | { type: 'widgets'; widgets: Item[] };
 
 // remove sourceData and replace it with getSourceData() that is also able to fetch from url
 export interface GeneralProps extends Omit<EditorProps, 'sourceData'> {
@@ -102,10 +103,10 @@ export interface GeneralProps extends Omit<EditorProps, 'sourceData'> {
   isSourceDataOverriden: boolean;
 
   /** Transformed data */
-  data: TSourceData;
+  data: SourceData;
 
-  renderWidget: (child: TData, parents: number[]) => ReactNode;
-  renderWidgets: (children: TData[], parents: number[]) => ReactNode;
+  renderWidget: (child: Item, parents: number[]) => ReactNode;
+  renderWidgets: (children: Item[], parents: number[]) => ReactNode;
   dragWidgetStart: (
     e: React.DragEvent<HTMLDivElement>,
     dragObj: TDragObj,
@@ -113,74 +114,101 @@ export interface GeneralProps extends Omit<EditorProps, 'sourceData'> {
   dragWidgetEnd: (e: React.DragEvent<HTMLDivElement>) => void;
   drop: (e: React.DragEvent<HTMLDivElement>, dest: number[]) => void;
 
-  transforms: TTransformWidget[];
+  transforms: Transform[];
   widgets: Widget[];
 }
 
-export interface ItemRendeProps extends GeneralProps {
-  item: TData;
-  setItem: (itm: TData) => void;
+export interface ItemRenderEditorProps extends GeneralProps {
+  item: Item;
+  setItem: (itm: Item) => void;
   wid: number[];
 }
 
-export interface ItemRendeFinalHelper {
-  renderItem: (item: TDataCompiled, helper: ItemRendeFinalHelper) => string;
+export interface ItemRenderPreviewHelper {
+  renderItem: (item: ItemCompiled, helper: ItemRenderPreviewHelper) => string;
   renderChildren: (
-    chs: TDataCompiled[],
-    helper: ItemRendeFinalHelper,
+    chs: ItemCompiled[],
+    helper: ItemRenderPreviewHelper,
   ) => string;
   externalHelpers: { [key: string]: any };
   escapeHtml: (txt: string) => string;
   styleToStringAttribute: (style: CSSProperties) => string;
 }
 
-export interface ItemRendeFinalProps extends ItemRendeFinalHelper {
-  item: TDataCompiled;
+export interface ItemRenderPreviewProps extends ItemRenderPreviewHelper {
+  item: ItemCompiled;
 }
 
 export interface CompileHelper {
   formulaHelper: FormulaHelper;
   evalFormula: (txt: string) => Promise<unknown>;
   compileChildren: (
-    arr1: TData[],
+    children: Item[],
     helper: CompileHelper,
-  ) => Promise<TDataCompiled[]>;
+  ) => Promise<ItemCompiled[]>;
+
+  /** Hierarchical index for current item */
   wid: number[];
-  report: TReport;
-  reportCompiled: TReportCompiled;
+
+  report: Report;
+  reportCompiled: ReportCompiled;
   api: ApiEndpoints;
   externalHelpers: { [key: string]: any };
   variables: { [key: string]: unknown };
 }
 
-export interface NewItemProps {
-  report: TReport;
+export interface ItemNewProps {
+  report: Report;
 }
 
+/** Building blocks for editor */
 export interface Widget {
+  /** Unique widget id (type) */
   id: string;
-  name: TName;
-  icon: TFontAwesomeIcon;
-  newItem: (props: NewItemProps) => Promise<TData>;
-  compile: (dt: any, helper: CompileHelper) => Promise<TDataCompiled>;
-  RenderProperties?: FunctionComponent<ItemRendeProps>;
-  Render: FunctionComponent<ItemRendeProps>;
-  RenderFinal: (props: ItemRendeFinalProps) => string;
+
+  /** Human friendly name */
+  name: Name;
+
+  icon: IconDefinition;
+
+  /** Create new instance of this widget */
+  newItem: (props: ItemNewProps) => Promise<Item>;
+
+  /** Compile item */
+  compile: (item: any, helper: CompileHelper) => Promise<ItemCompiled>;
+
+  /** Render properties editor */
+  RenderProperties?: FunctionComponent<ItemRenderEditorProps>;
+
+  /** Render item inside editor */
+  RenderEditor: FunctionComponent<ItemRenderEditorProps>;
+
+  /** Render item for final report */
+  RenderPreview: (props: ItemRenderPreviewProps) => string;
+
+  /**
+   * Can user add this widget to report? Default true.
+   * Useful for helper Widgets which user should not manually manipulate.
+   */
   canAdd?: boolean;
+
+  /** Can user drag this widget to report (inside editor)? Default true. */
   canDrag?: boolean;
+
+  /** Can user select Item by clicking ot it? Default true. */
   canSelect?: boolean;
 }
 
-export interface TransformRendeProps extends GeneralProps {
-  item: TTransformData;
-  setItem: (itm: TTransformData) => void;
+export interface TransformRenderProps extends GeneralProps {
+  item: TransformItem;
+  setItem: (itm: TransformItem) => void;
   index: number;
 }
 
-export interface TTransformWidget {
+export interface Transform {
   id: string;
-  name: TName;
-  newItem: () => Promise<TTransformData>;
-  transform: (dt: unknown, item: TTransformData) => Promise<unknown>;
-  Editor: FunctionComponent<TransformRendeProps>;
+  name: Name;
+  newItem: () => Promise<TransformItem>;
+  transform: (dt: unknown, item: TransformItem) => Promise<unknown>;
+  RenderEditor: FunctionComponent<TransformRenderProps>;
 }

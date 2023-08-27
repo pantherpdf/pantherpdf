@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { GeneralProps } from './types';
-import type { TargetOption, TReport } from '../types';
+import type { TargetOption, Report } from '../types';
 import { isReport } from '../types';
 import Trans from '../translation';
 import PropertyFont, { TFont } from '../widgets/PropertyFont';
@@ -38,8 +38,8 @@ const TargetOptionTmpObj: { [key in TargetOption]: number } = {
 const TargetOptionTmpKeys = Object.keys(TargetOptionTmpObj);
 
 function fileReportUpload(
-  arr: TReport[],
-  setArr: React.Dispatch<React.SetStateAction<TReport[]>>,
+  arr: Report[],
+  setArr: React.Dispatch<React.SetStateAction<Report[]>>,
 ) {
   const el = document.createElement('input');
   el.type = 'file';
@@ -81,7 +81,7 @@ function fileReportUpload(
 }
 
 function ShowUpload(props: GeneralProps) {
-  const [arr, setArr] = useState<TReport[]>([]);
+  const [arr, setArr] = useState<Report[]>([]);
 
   function fileDownload() {
     let blob = new Blob([JSON.stringify(props.report, null, 4)], {
@@ -90,7 +90,7 @@ function ShowUpload(props: GeneralProps) {
     saveAs(blob, props.report._id + '.json');
   }
 
-  function dragStartFile(e: React.DragEvent<HTMLDivElement>, dt: TReport) {
+  function dragStartFile(e: React.DragEvent<HTMLDivElement>, dt: Report) {
     return props.dragWidgetStart(e, { type: 'widgets', widgets: dt.children });
   }
 
@@ -130,12 +130,12 @@ export default function ReportSettings(props: GeneralProps) {
 
   async function changeTarget(e: React.ChangeEvent<HTMLSelectElement>) {
     const value = e.currentTarget.value;
-    const obj: TReport = { ...props.report, target: value as TargetOption };
+    const obj: Report = { ...props.report, target: value as TargetOption };
     return props.setReport(obj);
   }
 
   async function changeFont(value: TFont) {
-    const obj: TReport = {
+    const obj: Report = {
       ...props.report,
       properties: { ...props.report.properties },
     };
@@ -148,7 +148,7 @@ export default function ReportSettings(props: GeneralProps) {
   }
 
   async function changeMargin(value: Property4SideInputValue) {
-    const obj: TReport = {
+    const obj: Report = {
       ...props.report,
       properties: { ...props.report.properties },
     };
@@ -160,7 +160,7 @@ export default function ReportSettings(props: GeneralProps) {
     key: keyof typeof props.report.properties,
     value: string | number,
   ) {
-    const obj: TReport = {
+    const obj: Report = {
       ...props.report,
       properties: { ...props.report.properties },
     };
@@ -179,7 +179,7 @@ export default function ReportSettings(props: GeneralProps) {
   }
 
   async function deleteProperty(key: keyof typeof props.report.properties) {
-    const obj: TReport = {
+    const obj: Report = {
       ...props.report,
       properties: { ...props.report.properties },
     };

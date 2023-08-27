@@ -3,7 +3,7 @@
  */
 
 import React, { CSSProperties } from 'react';
-import { TData, TDataCompiled, tuple } from '../types';
+import { Item, ItemCompiled, tuple } from '../types';
 import type { Widget } from '../editor/types';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import PropertyBorder, { Border, genBorderCss } from './PropertyBorder';
@@ -20,8 +20,8 @@ interface Properties {
   marginBottom: number;
   border: Border;
 }
-export type SeparatorData = TData & Properties;
-export type SeparatorCompiled = TDataCompiled & Properties;
+export type SeparatorData = Item & Properties;
+export type SeparatorCompiled = ItemCompiled & Properties;
 
 function GenStyle(item: SeparatorData | SeparatorCompiled): CSSProperties {
   return {
@@ -39,7 +39,7 @@ function GenStyle(item: SeparatorData | SeparatorCompiled): CSSProperties {
 export const Separator: Widget = {
   id: 'Separator',
   name: { en: 'Separator', sl: 'Črta' },
-  icon: { fontawesome: faMinus },
+  icon: faMinus,
 
   newItem: async (): Promise<SeparatorData> => {
     return {
@@ -61,7 +61,7 @@ export const Separator: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as SeparatorData;
     return (
       <BoxName {...props} name={Separator.name}>
@@ -70,7 +70,7 @@ export const Separator: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as SeparatorCompiled;
     const style = GenStyle(item);
     return `<hr style="${props.styleToStringAttribute(style)}" />\n`;

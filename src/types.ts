@@ -9,10 +9,19 @@ export const tuple = <T extends Narrowable[]>(...args: T) => args;
 
 export type WithId<T> = T & { _id: string };
 
-export interface TData {
+/**
+ * Instance of a Widget.
+ * Reports are made out of multiple items. It contains data like text,
+ * font-size, image url, margins etc.
+ */
+export interface Item {
   [key: string]: unknown;
+
+  /** Id of a Widget */
   type: string;
-  children: TData[];
+
+  /** Subitems */
+  children: Item[];
 }
 
 export const TargetOptions = tuple(
@@ -33,7 +42,7 @@ export function TargetOptionTypeGuard(r: any): r is TargetOption {
   return true;
 }
 
-export interface TTransformData {
+export interface TransformItem {
   [key: string]: unknown;
   type: string;
   comment: string;
@@ -44,7 +53,7 @@ export interface TVariable {
   formula: string;
 }
 
-export interface TReportProperties {
+export interface ReportProperties {
   font?: TFont;
   margin?: [number, number, number, number];
   fileName?: string;
@@ -56,16 +65,16 @@ export interface TReportProperties {
 /**
  * Report type
  */
-export interface TReport {
+export interface Report {
   _id: string;
   name: string;
   email: string;
   time: string;
   target: TargetOption;
   version: string;
-  children: TData[];
-  transforms: TTransformData[];
-  properties: TReportProperties;
+  children: Item[];
+  transforms: TransformItem[];
+  properties: ReportProperties;
   dataUrl: string;
   variables: TVariable[];
 }
@@ -80,18 +89,18 @@ export interface ApiReportMetaData {
   version: string;
 }
 
-export interface TDataCompiled {
+export interface ItemCompiled {
   [key: string]: unknown;
   type: string;
 }
 
-export interface TReportCompiled extends Omit<TReport, 'children'> {
-  children: TDataCompiled[];
+export interface ReportCompiled extends Omit<Report, 'children'> {
+  children: ItemCompiled[];
   fontsUsed: TFontStyle[];
   globalCss: string;
 }
 
-export function TDataTypeGuard(r: any): r is TData {
+export function ItemTypeGuard(r: any): r is Item {
   if (typeof r.type !== 'string' || r.type.length === 0) {
     return false;
   }
@@ -99,7 +108,7 @@ export function TDataTypeGuard(r: any): r is TData {
     return false;
   }
   for (const ch of r.children) {
-    if (!TDataTypeGuard(ch)) {
+    if (!ItemTypeGuard(ch)) {
       return false;
     }
   }
@@ -107,9 +116,9 @@ export function TDataTypeGuard(r: any): r is TData {
 }
 
 /**
- * Type guard for TReport interface
+ * Type guard for Report interface
  */
-export function isReport(r: any): r is TReport {
+export function isReport(r: any): r is Report {
   if (typeof r != 'object' || !r) {
     return false;
   }
@@ -135,7 +144,7 @@ export function isReport(r: any): r is TReport {
     return false;
   }
   for (const ch of r.children) {
-    if (!TDataTypeGuard(ch)) {
+    if (!ItemTypeGuard(ch)) {
       return false;
     }
   }
@@ -193,7 +202,7 @@ export interface ApiEndpoints {
   allReports?: () => Promise<ApiReportMetaData[]>;
 
   /** Load full report to be copied or embedded */
-  reportGet?: (id: string) => Promise<TReport>;
+  reportGet?: (id: string) => Promise<Report>;
 
   /**
    * Get a list of files
@@ -234,7 +243,7 @@ export interface ApiEndpoints {
   /** Used to generate PDF by generateTarget() and by print preview */
   generatePdf?: (
     html: string,
-    properties: TReportProperties,
+    properties: ReportProperties,
   ) => Promise<Uint8Array>;
 }
 

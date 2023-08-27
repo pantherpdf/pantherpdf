@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { TData, TDataCompiled } from '../types';
+import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
@@ -12,12 +12,12 @@ import InputApplyOnEnter from './InputApplyOnEnter';
 import Trans from '../translation';
 import globalStyle from '../globalStyle.module.css';
 
-export interface HtmlData extends TData {
+export interface HtmlData extends Item {
   type: 'Html';
   source: string;
 }
 
-export interface HtmlCompiled extends TDataCompiled {
+export interface HtmlCompiled extends ItemCompiled {
   type: 'Html';
   data: string;
 }
@@ -25,7 +25,7 @@ export interface HtmlCompiled extends TDataCompiled {
 export const Html: Widget = {
   id: 'Html',
   name: { en: 'Html', sl: 'Html' },
-  icon: { fontawesome: faCode },
+  icon: faCode,
 
   newItem: async (): Promise<HtmlData> => {
     return {
@@ -45,7 +45,7 @@ export const Html: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as HtmlData;
     return (
       <BoxName {...props} name={Html.name}>
@@ -54,7 +54,7 @@ export const Html: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as HtmlCompiled;
     return `<div>
 			${item.data}

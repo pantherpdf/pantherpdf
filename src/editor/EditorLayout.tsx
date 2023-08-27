@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { defaultReportCss, TData } from '../types';
+import { defaultReportCss, Item } from '../types';
 import { GeneralProps } from './types';
 import Trans, { TransName } from '../translation';
 import {
@@ -75,7 +75,7 @@ function Properties(props: GeneralProps) {
       <comp.RenderProperties
         {...props}
         item={selected}
-        setItem={(itm: TData) => {
+        setItem={(itm: Item) => {
           const r2 = updateItem(props.report, wid, itm);
           return props.setReport(r2);
         }}

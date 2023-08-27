@@ -1,6 +1,6 @@
-import { TReport } from '../types';
+import { Report } from '../types';
 
-export const sampleReport: TReport = {
+export const sampleReport: Report = {
   _id: 'abc-def-123',
   name: 'Report 1',
   target: 'pdf',

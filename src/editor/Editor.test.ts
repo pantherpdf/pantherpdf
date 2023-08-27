@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { TReport } from '../types';
+import { Report } from '../types';
 import { RepeatData } from '../widgets/Repeat';
 import { TextSimpleData } from '../widgets/TextSimple';
 import { dropImpl } from './Editor';
@@ -10,7 +10,7 @@ import { sampleReport } from './sampleReport';
 import { TDragObj } from './types';
 
 test('dropImpl copy existing widget to the end of doc', () => {
-  const r = JSON.parse(JSON.stringify(sampleReport)) as TReport;
+  const r = JSON.parse(JSON.stringify(sampleReport)) as Report;
   const c2: TextSimpleData = { type: 'TextSimple', children: [], formula: '' };
   const c1: RepeatData = {
     type: 'Repeat',
@@ -30,7 +30,7 @@ test('dropImpl copy existing widget to the end of doc', () => {
 });
 
 test('dropImpl move existing widget to the end of doc', () => {
-  const r = JSON.parse(JSON.stringify(sampleReport)) as TReport;
+  const r = JSON.parse(JSON.stringify(sampleReport)) as Report;
   const c2: TextSimpleData = { type: 'TextSimple', children: [], formula: '' };
   const c1: RepeatData = {
     type: 'Repeat',

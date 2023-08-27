@@ -1,12 +1,12 @@
-import { ApiEndpoints, TargetOption, TReport } from '../types';
+import { ApiEndpoints, TargetOption, Report } from '../types';
 import compile from './compile';
 import retrieveOriginalSourceData, {
-  DataObj,
+  SourceData,
 } from './retrieveOriginalSourceData';
 import { transformData } from './DataTransform';
 import renderToHtml from './renderToHtml';
 import { encode } from './encoding';
-import { TTransformWidget, Widget } from './types';
+import { Transform, Widget } from './types';
 import { defaultTransforms } from '../transforms/allTransforms';
 import { defaultWidgets } from '../widgets/allWidgets';
 
@@ -106,12 +106,12 @@ export interface FileOutput {
 }
 
 export interface GenerateTargetArgs {
-  report: TReport;
+  report: Report;
   api: ApiEndpoints;
-  data?: DataObj;
+  data?: SourceData;
   logPerformance?: boolean;
   targetOverride?: TargetOption;
-  transforms?: TTransformWidget[];
+  transforms?: Transform[];
   widgets?: Widget[];
 }
 
@@ -120,7 +120,7 @@ export interface GenerateTargetArgs {
  *
  * Input: report, source data
  * Output: html, json, csv ...
- * Pdf output is not supported. Use html and then convert to pdf.
+ * Pdf output is not directly supported. Use html and then convert to pdf.
  */
 export default async function generateTarget(
   props: GenerateTargetArgs,

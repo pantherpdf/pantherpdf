@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { TData, TDataCompiled } from '../types';
+import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
@@ -11,20 +11,20 @@ import InputApplyOnEnter from './InputApplyOnEnter';
 import Trans, { TransName } from '../translation';
 import globalStyle from '../globalStyle.module.css';
 
-export interface ConditionData extends TData {
+export interface ConditionData extends Item {
   type: 'Condition';
   formula: string;
 }
 
-export interface ConditionCompiled extends TDataCompiled {
+export interface ConditionCompiled extends ItemCompiled {
   type: 'Condition';
-  children: TDataCompiled[];
+  children: ItemCompiled[];
 }
 
 export const Condition: Widget = {
   id: 'Condition',
   name: { en: 'Condition', sl: 'Pogoj' },
-  icon: { fontawesome: faCodeBranch },
+  icon: faCodeBranch,
 
   newItem: async (): Promise<ConditionData> => {
     return {
@@ -42,7 +42,7 @@ export const Condition: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as ConditionData;
     return (
       <BoxName
@@ -54,7 +54,7 @@ export const Condition: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as ConditionCompiled;
     return props.renderChildren(item.children, props);
   },

@@ -3,7 +3,7 @@
  */
 
 import generateTarget from './generateTarget';
-import { ApiEndpoints, TReport, TReportProperties } from '../types';
+import { ApiEndpoints, Report, ReportProperties } from '../types';
 import { sampleReport } from './sampleReport';
 import { CSV, CSVData } from '../transforms/CSV';
 
@@ -16,7 +16,7 @@ test('generateTarget CSV CP1250', async () => {
     },
   ];
 
-  const report: TReport = JSON.parse(JSON.stringify(sampleReport));
+  const report: Report = JSON.parse(JSON.stringify(sampleReport));
   report.target = 'csv-windows-1250';
   report.transforms.push(transCsv);
   report.properties.fileName = '"abc.def"';
@@ -46,7 +46,7 @@ test('generateTarget CSV newlines', async () => {
     },
   ];
 
-  const report: TReport = JSON.parse(JSON.stringify(sampleReport));
+  const report: Report = JSON.parse(JSON.stringify(sampleReport));
   report.target = 'csv-utf-8';
   report.transforms.push(transCsv);
   report.properties.fileName = '"abc.def"';
@@ -76,7 +76,7 @@ test('generateTarget override', async () => {
     },
   ];
 
-  const report: TReport = JSON.parse(JSON.stringify(sampleReport));
+  const report: Report = JSON.parse(JSON.stringify(sampleReport));
   report.target = 'csv-utf-8';
   report.transforms.push(transCsv);
   report.properties.fileName = '"abc.csv"';
@@ -102,7 +102,7 @@ test('generateTarget override', async () => {
 });
 
 test('generateTarget pdf', async () => {
-  const report: TReport = JSON.parse(JSON.stringify(sampleReport));
+  const report: Report = JSON.parse(JSON.stringify(sampleReport));
   report.properties.fileName = 'data[1].abc + ".pdf"';
 
   const data = [
@@ -110,7 +110,7 @@ test('generateTarget pdf', async () => {
     { abc: 'č', def: '€' },
   ];
   const api: ApiEndpoints = {
-    generatePdf: async (html: string, properties: TReportProperties) => {
+    generatePdf: async (html: string, properties: ReportProperties) => {
       return new Uint8Array([1, 2, 3, 4]);
     },
   };

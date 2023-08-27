@@ -3,8 +3,8 @@
  * Compile sourceData and report - evaluate all formulas
  */
 
-import { TReport, TData, ApiEndpoints } from '../types';
-import type { TReportCompiled } from '../types';
+import { Report, Item, ApiEndpoints } from '../types';
+import type { ReportCompiled } from '../types';
 import FormulaEvaluate from '../formula/formula';
 import { getWidget } from '../widgets/allWidgets';
 import { CompileHelper, Widget } from './types';
@@ -42,12 +42,12 @@ export class FormulaHelper {
 }
 
 export default async function compile(
-  report: TReport,
+  report: Report,
   data: unknown,
   widgets: Widget[],
   api: ApiEndpoints,
   externalHelpers: { [key: string]: any } = {},
-): Promise<TReportCompiled> {
+): Promise<ReportCompiled> {
   // make a copy, to support changing
   report = JSON.parse(JSON.stringify(report));
 
@@ -66,7 +66,7 @@ export default async function compile(
     formulaHelper.push(v.name, getVarValue);
   }
 
-  let dt2: TReportCompiled = {
+  let dt2: ReportCompiled = {
     ...report,
     children: [],
     fontsUsed: [],
@@ -103,11 +103,11 @@ export default async function compile(
       return FormulaEvaluate(txt, { getVar });
     },
 
-    compileChildren: async (arr1: TData[], helper: CompileHelper) => {
+    compileChildren: async (children: Item[], helper: CompileHelper) => {
       // dont use promise.all() because order of execution matters and some async operation could change it
       const arr2 = [];
-      for (let i = 0; i < arr1.length; ++i) {
-        const ch = arr1[i];
+      for (let i = 0; i < children.length; ++i) {
+        const ch = children[i];
         const helper2 = { ...helper, wid: [...helper.wid, i] };
         const dt = await getWidget(widgets, ch.type).compile(ch, helper2);
         arr2.push(dt);

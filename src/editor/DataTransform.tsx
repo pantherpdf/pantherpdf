@@ -1,11 +1,11 @@
 /**
  * DataTransform.tsx
- * Manage data transformations. Add, delete, edit TTransformWidget.
+ * Manage data transformations. Add, delete, edit Transform.
  */
 
 import React, { useState } from 'react';
-import { TReport, TTransformData } from '../types';
-import { GeneralProps, TTransformWidget } from './types';
+import { Report, TransformItem } from '../types';
+import { GeneralProps, Transform } from './types';
 import { Dropdown, Button, ButtonGroup, Modal } from 'react-bootstrap';
 import Trans, { TransName } from '../translation';
 import { getTransform } from '../transforms/allTransforms';
@@ -30,9 +30,9 @@ import globalStyle from '../globalStyle.module.css';
  * @param {len} number - Number of transformations to apply
  */
 export async function transformData(
-  allTrans: TTransformWidget[],
+  allTrans: Transform[],
   inputData: unknown,
-  transformData: TTransformData[],
+  transformData: TransformItem[],
   len?: number,
 ) {
   if (len === undefined) {
@@ -47,7 +47,7 @@ export async function transformData(
 }
 
 interface TransformItemProps extends GeneralProps {
-  item: TTransformData;
+  item: TransformItem;
   index: number;
   showData: (len: number) => void;
   up: (idx: number) => void;
@@ -55,7 +55,7 @@ interface TransformItemProps extends GeneralProps {
   itemDelete: (idx: number) => void;
   openEditor: (idx: number) => void;
 }
-function TransformItem(props: TransformItemProps) {
+function TransformItemEditor(props: TransformItemProps) {
   const comp = getTransform(props.transforms, props.item.type);
   return (
     <Dropdown as={ButtonGroup} className="d-flex" size="sm">
@@ -149,10 +149,10 @@ async function uploadOverrideSourceData(): Promise<unknown> {
 
 interface TEdit {
   index: number;
-  data: TTransformData;
+  data: TransformItem;
 }
 
-interface TSourceDataShow {
+interface SourceDataShow {
   length?: number;
   data: unknown;
   errorMsg?: string;
@@ -161,7 +161,7 @@ interface TSourceDataShow {
 export default function DataTransform(props: GeneralProps) {
   const [shownModalInsert, setShownModalInsert] = useState<boolean>(false);
   const [showEdit, setShowEdit] = useState<TEdit | null>(null);
-  const [showData, setShowData] = useState<TSourceDataShow | null>(null);
+  const [showData, setShowData] = useState<SourceDataShow | null>(null);
 
   async function doShowData(len: number) {
     let dt;
@@ -198,7 +198,7 @@ export default function DataTransform(props: GeneralProps) {
   async function itemAdd(key: string) {
     const cmp = getTransform(props.transforms, key);
     const dt = await cmp.newItem();
-    const report2: TReport = {
+    const report2: Report = {
       ...props.report,
       transforms: [...props.report.transforms, dt],
     };
@@ -211,7 +211,7 @@ export default function DataTransform(props: GeneralProps) {
   }
 
   async function itemUp(idx: number) {
-    const report2: TReport = {
+    const report2: Report = {
       ...props.report,
       transforms: [...props.report.transforms],
     };
@@ -222,7 +222,7 @@ export default function DataTransform(props: GeneralProps) {
   }
 
   async function itemDown(idx: number) {
-    const report2: TReport = {
+    const report2: Report = {
       ...props.report,
       transforms: [...props.report.transforms],
     };
@@ -233,7 +233,7 @@ export default function DataTransform(props: GeneralProps) {
   }
 
   async function itemDelete(idx: number) {
-    const report2: TReport = {
+    const report2: Report = {
       ...props.report,
       transforms: [...props.report.transforms],
     };
@@ -252,7 +252,7 @@ export default function DataTransform(props: GeneralProps) {
     if (!showEdit) {
       return;
     }
-    const report2: TReport = {
+    const report2: Report = {
       ...props.report,
       transforms: [...props.report.transforms],
     };
@@ -261,7 +261,7 @@ export default function DataTransform(props: GeneralProps) {
     setShowEdit(null);
   }
 
-  function editChange(data: TTransformData) {
+  function editChange(data: TransformItem) {
     if (showEdit) {
       setShowEdit({ ...showEdit, data });
     }
@@ -308,7 +308,7 @@ export default function DataTransform(props: GeneralProps) {
         id="source-url"
         value={props.report.dataUrl}
         onChange={val => {
-          const report2: TReport = { ...props.report, dataUrl: String(val) };
+          const report2: Report = { ...props.report, dataUrl: String(val) };
           props.setReport(report2);
         }}
         placeholder="https://www.example.com/data.js(on)"
@@ -316,7 +316,7 @@ export default function DataTransform(props: GeneralProps) {
 
       <div className={globalStyle.section}>{Trans('transform')}</div>
       {props.report.transforms.map((item, idx) => (
-        <TransformItem
+        <TransformItemEditor
           {...props}
           item={item}
           index={idx}
@@ -370,7 +370,7 @@ export default function DataTransform(props: GeneralProps) {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <editCmp.Editor
+              <editCmp.RenderEditor
                 {...props}
                 index={showEdit.index}
                 item={showEdit.data}

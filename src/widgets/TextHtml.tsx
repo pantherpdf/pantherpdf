@@ -8,8 +8,8 @@
 // - insert tag, delete nbsp space after tag and press enter
 
 import React, { useEffect, useState, CSSProperties } from 'react';
-import { TData, TDataCompiled } from '../types';
-import type { ItemRendeProps, Widget } from '../editor/types';
+import { Item, ItemCompiled } from '../types';
+import type { ItemRenderEditorProps, Widget } from '../editor/types';
 import BoxName from './BoxName';
 import PropertyFont, {
   PropertyFontExtractStyle,
@@ -165,7 +165,7 @@ function getSelectedTagPid(wid: number[]): number[] | null {
   return getPidFromNode(btn, x.elementRef);
 }
 
-function TagEditor(props: ItemRendeProps) {
+function TagEditor(props: ItemRenderEditorProps) {
   const [btnId, setBtnId] = useState<number[] | null>(null);
 
   // subscribe to selection change
@@ -245,7 +245,7 @@ function TagEditor(props: ItemRendeProps) {
   );
 }
 
-function TagEditorContainer(props: ItemRendeProps) {
+function TagEditorContainer(props: ItemRenderEditorProps) {
   return (
     <>
       <div className={globalStyle.section}>{Trans('tag')}</div>
@@ -621,13 +621,13 @@ class Editor extends React.Component<EditorProps, EditorState> {
 type TextHtmlDataValue =
   | { type: 'html'; value: string }
   | { type: 'formula'; value: string; adjust?: string };
-export interface TextHtmlData extends TData {
+export interface TextHtmlData extends Item {
   type: 'TextHtml';
   value: TextHtmlDataValue[];
   font: TFont;
 }
 
-export interface TextHtmlCompiled extends TDataCompiled {
+export interface TextHtmlCompiled extends ItemCompiled {
   type: 'TextHtml';
   value: string;
   font: TFont;
@@ -770,7 +770,7 @@ export function ValueInternalFromEditor(html: string): TextHtmlDataValue[] {
 export const TextHtml: Widget = {
   id: 'TextHtml',
   name: { en: 'Text', sl: 'Besedilo' },
-  icon: { fontawesome: faAlignLeft },
+  icon: faAlignLeft,
 
   newItem: async (props): Promise<TextHtmlData> => {
     const valueTxt = `<div>${escapeHtml(
@@ -825,7 +825,7 @@ export const TextHtml: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as TextHtmlData;
     const css = PropertyFontGenCss(item.font);
     css.minHeight = '20px';
@@ -864,7 +864,7 @@ export const TextHtml: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as TextHtmlCompiled;
     const css = PropertyFontGenCss(item.font);
     return `<div style="${props.styleToStringAttribute(css)}">${

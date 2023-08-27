@@ -5,13 +5,13 @@
 
 import React, { ReactNode, useState, useEffect, useRef } from 'react';
 import { defaultWidgets, getWidget } from '../widgets/allWidgets';
-import { TReport, TData, ApiUploadMetaData } from '../types';
+import { Report, Item, ApiUploadMetaData } from '../types';
 import {
   EditorProps,
   GeneralProps,
-  NewItemProps,
+  ItemNewProps,
   TDragObj,
-  TSourceData,
+  SourceData,
 } from './types';
 import style from './Editor.module.css';
 import Layout from './EditorLayout';
@@ -36,7 +36,7 @@ import { defaultTransforms } from '../transforms/allTransforms';
  */
 export default function Editor(props: EditorProps) {
   const [selected, setSelected] = useState<number[] | null>(null);
-  const [data, setData] = useState<TSourceData>({ data: undefined });
+  const [data, setData] = useState<SourceData>({ data: undefined });
   const [overrideSourceData, setSourceDataOverride] = useState<
     string | undefined
   >(undefined);
@@ -119,7 +119,7 @@ export default function Editor(props: EditorProps) {
       } catch (e) {
         alert(`Error while uploading: ${String(e)}`);
       }
-      const newItemProps: NewItemProps = { report: props.report };
+      const newItemProps: ItemNewProps = { report: props.report };
       const img = (await ImageWidget.newItem(newItemProps)) as ImageData;
       img.url = `local/${f.name}`;
       const report2 = dropImpl(
@@ -182,7 +182,7 @@ export default function Editor(props: EditorProps) {
     );
   }
 
-  function renderWidget(child: TData, wid: number[]): ReactNode {
+  function renderWidget(child: Item, wid: number[]): ReactNode {
     const obj = getWidget(widgets, child.type);
 
     return (
@@ -195,10 +195,10 @@ export default function Editor(props: EditorProps) {
         onDragStart={e => dragWidgetStart(e, { type: 'wid', wid })}
         onDragEnd={e => dragWidgetEnd(e)}
       >
-        <obj.Render
+        <obj.RenderEditor
           {...props2}
           item={child}
-          setItem={(itm: TData) => {
+          setItem={(itm: Item) => {
             const r2 = updateItem(props2.report, wid, itm);
             return props2.setReport(r2);
           }}
@@ -208,7 +208,7 @@ export default function Editor(props: EditorProps) {
     );
   }
 
-  function renderWidgets(children: TData[], parents: number[]): ReactNode {
+  function renderWidgets(children: Item[], parents: number[]): ReactNode {
     return (
       <>
         {renderSpacer([...parents, 0])}
@@ -285,17 +285,17 @@ export default function Editor(props: EditorProps) {
 }
 
 export function dropImpl(
-  report: TReport,
+  report: Report,
   current: TDragObj,
   dest: number[],
   copy: boolean,
-): TReport | null {
+): Report | null {
   if (dest.length === 0) {
     throw new Error('dest does not exist');
   }
 
-  let toInsert: TData | TData[];
-  let report2: TReport = report;
+  let toInsert: Item | Item[];
+  let report2: Report = report;
   if (current.type === 'wid') {
     const dragObj3 = current.wid;
     if (copy) {

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { TData, TDataCompiled } from '../types';
+import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faHammer } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
@@ -11,22 +11,22 @@ import InputApplyOnEnter from './InputApplyOnEnter';
 import Trans, { TransName } from '../translation';
 import globalStyle from '../globalStyle.module.css';
 
-export interface SetVarData extends TData {
+export interface SetVarData extends Item {
   type: 'SetVar';
   source: string;
   varName: string;
   varValue: unknown;
 }
 
-export interface SetVarCompiled extends TDataCompiled {
+export interface SetVarCompiled extends ItemCompiled {
   type: 'SetVar';
-  children: TDataCompiled[];
+  children: ItemCompiled[];
 }
 
 export const SetVar: Widget = {
   id: 'SetVar',
   name: { en: 'SetVar', sl: 'Spremenljivka' },
-  icon: { fontawesome: faHammer },
+  icon: faHammer,
 
   newItem: async (): Promise<SetVarData> => {
     return {
@@ -54,7 +54,7 @@ export const SetVar: Widget = {
     };
   },
 
-  Render: function (props) {
+  RenderEditor: function (props) {
     const item = props.item as SetVarData;
     return (
       <BoxName {...props} name={`${TransName(SetVar.name)} - ${item.varName}`}>
@@ -63,7 +63,7 @@ export const SetVar: Widget = {
     );
   },
 
-  RenderFinal: function (props) {
+  RenderPreview: function (props) {
     const item = props.item as SetVarCompiled;
     return props.renderChildren(item.children, props);
   },
