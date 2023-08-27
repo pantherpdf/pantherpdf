@@ -8,7 +8,7 @@ import { TransName } from '../translation';
 import { ItemRendeProps, TName } from '../editor/types';
 import style from './BoxName.module.css';
 
-interface Props extends ItemRendeProps {
+export interface BoxNameProps extends ItemRendeProps {
   className?: string;
   name: TName;
   children: React.ReactNode;
@@ -16,7 +16,7 @@ interface Props extends ItemRendeProps {
   visible?: boolean;
 }
 
-export default function BoxName(props: Props) {
+export default function BoxName(props: BoxNameProps) {
   const cls = style.boxParent + ' ' + (props.className || '');
   return (
     <div className={cls} style={props.style}>

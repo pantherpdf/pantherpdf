@@ -34,6 +34,7 @@ export interface RepeatCompiled extends TDataCompiled {
 }
 
 export const Repeat: Widget = {
+  id: 'Repeat',
   name: { en: 'Repeat', sl: 'Ponavljaj' },
   icon: { fontawesome: faEllipsisV },
 

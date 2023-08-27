@@ -3,10 +3,9 @@
  */
 
 import { Frame, FrameData } from './Frame';
-import compile from '../editor/compile';
 import { sampleReport } from '../editor/sampleReport';
 import type { TReport } from '../types';
-import { renderToHtmlContent } from '../editor/renderToHtml';
+import { compileTest, renderToHtmlContentTest } from '../unitTestHelpers';
 import type { NewItemProps } from '../editor/types';
 
 test('Frame should include google font', async () => {
@@ -19,7 +18,7 @@ test('Frame should include google font', async () => {
     ...sampleReport,
     children: [el],
   };
-  const compiled = await compile(report, {});
+  const compiled = await compileTest(report, {});
   expect(compiled.fontsUsed).toStrictEqual([
     { name: 'Lato', weight: 700, italic: true },
   ]);
@@ -33,8 +32,8 @@ test('Frame should include page break property', async () => {
     ...sampleReport,
     children: [el],
   };
-  const compiled = await compile(report, {});
-  const html = renderToHtmlContent(compiled);
+  const compiled = await compileTest(report, {});
+  const html = renderToHtmlContentTest(compiled);
   expect(html.replace(/\s/g, '')).toContain('page-break-inside:avoid');
 });
 
@@ -45,7 +44,7 @@ test('Frame should not add whitespace around outer div', async () => {
     ...sampleReport,
     children: [el],
   };
-  const compiled = await compile(report, {});
-  const html = renderToHtmlContent(compiled);
+  const compiled = await compileTest(report, {});
+  const html = renderToHtmlContentTest(compiled);
   expect(html.trim()).toBe(html);
 });

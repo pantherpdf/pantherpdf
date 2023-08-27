@@ -4,7 +4,7 @@
 
 import { TextSimpleData } from './TextSimple';
 import { FirstMatchCompiled, FirstMatchData } from '../widgets/FirstMatch';
-import { compileComponent } from '../editor/compile';
+import { compileComponentTest } from '../unitTestHelpers';
 import { ForceChildren } from '../editor/types';
 
 test('FirstMatch', async () => {
@@ -18,7 +18,7 @@ test('FirstMatch', async () => {
     ],
   };
   const data = {};
-  const p = (await compileComponent(dt, data)) as FirstMatchCompiled;
+  const p = (await compileComponentTest(dt, data)) as FirstMatchCompiled;
   expect(p.children.length).toBe(1);
   expect(p.children[0].data).toBe('hello 4');
 });

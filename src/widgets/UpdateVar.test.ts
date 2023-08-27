@@ -5,7 +5,7 @@
 import { TextSimpleData } from './TextSimple';
 import { SetVarData } from '../widgets/SetVar';
 import { UpdateVarData } from '../widgets/UpdateVar';
-import compile, { compileComponent } from '../editor/compile';
+import { compileComponentTest, compileTest } from '../unitTestHelpers';
 import { ForceChildren } from '../editor/types';
 import { RepeatData } from './Repeat';
 import { sampleReport } from '../editor/sampleReport';
@@ -36,7 +36,7 @@ test('UpdateVar SetVar', async () => {
       { type: 'TextSimple', formula: 'ccc', children: [] },
     ],
   };
-  const p = await compileComponent(dt, {});
+  const p = await compileComponentTest(dt, {});
   const children = p.children as any;
   expect(children[0].data).toBe('1');
   expect(children[2].data).toBe('6');
@@ -57,7 +57,7 @@ test('UpdateVar reportVar', async () => {
     { type: 'TextSimple', formula: 'ccc', children: [] },
   ];
   report.variables.push({ name: 'ccc', formula: '5' });
-  const p = await compile(report, {});
+  const p = await compileTest(report, {});
   expect(p.children[0].data).toBe('5');
   expect(p.children[2].data).toBe('1215');
 });

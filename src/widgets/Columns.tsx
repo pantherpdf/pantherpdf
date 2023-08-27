@@ -24,6 +24,7 @@ export interface ColumnsCtCompiled extends TDataCompiled {
 }
 
 export const ColumnsCt: Widget = {
+  id: 'ColumnsCt',
   name: { en: 'ColumnsCt', sl: 'StolpciCt' },
   icon: { fontawesome: faColumns },
 
@@ -91,6 +92,7 @@ function colStyle(w: string): CSSProperties {
 }
 
 export const Columns: Widget = {
+  id: 'Columns',
   name: { en: 'Columns', sl: 'Stolpci' },
   icon: { fontawesome: faColumns },
 

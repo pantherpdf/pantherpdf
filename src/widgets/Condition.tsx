@@ -22,6 +22,7 @@ export interface ConditionCompiled extends TDataCompiled {
 }
 
 export const Condition: Widget = {
+  id: 'Condition',
   name: { en: 'Condition', sl: 'Pogoj' },
   icon: { fontawesome: faCodeBranch },
 

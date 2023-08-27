@@ -66,6 +66,12 @@ export interface EditorProps {
     text: string;
     url: string;
   };
+
+  /** Override default transforms */
+  transforms?: TTransformWidget[];
+
+  /** Override default widgets */
+  widgets?: Widget[];
 }
 
 // to help construct tests
@@ -106,6 +112,9 @@ export interface GeneralProps extends Omit<EditorProps, 'sourceData'> {
   ) => void;
   dragWidgetEnd: (e: React.DragEvent<HTMLDivElement>) => void;
   drop: (e: React.DragEvent<HTMLDivElement>, dest: number[]) => void;
+
+  transforms: TTransformWidget[];
+  widgets: Widget[];
 }
 
 export interface ItemRendeProps extends GeneralProps {
@@ -149,6 +158,7 @@ export interface NewItemProps {
 }
 
 export interface Widget {
+  id: string;
   name: TName;
   icon: TFontAwesomeIcon;
   newItem: (props: NewItemProps) => Promise<TData>;
@@ -168,6 +178,7 @@ export interface TransformRendeProps extends GeneralProps {
 }
 
 export interface TTransformWidget {
+  id: string;
   name: TName;
   newItem: () => Promise<TTransformData>;
   transform: (dt: unknown, item: TTransformData) => Promise<unknown>;

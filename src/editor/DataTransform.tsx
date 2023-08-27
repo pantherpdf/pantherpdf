@@ -5,10 +5,10 @@
 
 import React, { useState } from 'react';
 import { TReport, TTransformData } from '../types';
-import { GeneralProps } from './types';
+import { GeneralProps, TTransformWidget } from './types';
 import { Dropdown, Button, ButtonGroup, Modal } from 'react-bootstrap';
 import Trans, { TransName } from '../translation';
-import getTransform, { allTransforms } from '../transforms/allTransforms';
+import { getTransform } from '../transforms/allTransforms';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowDown,
@@ -30,16 +30,17 @@ import globalStyle from '../globalStyle.module.css';
  * @param {len} number - Number of transformations to apply
  */
 export async function transformData(
+  allTrans: TTransformWidget[],
   inputData: unknown,
-  transforms: TTransformData[],
+  transformData: TTransformData[],
   len?: number,
 ) {
   if (len === undefined) {
-    len = transforms.length;
+    len = transformData.length;
   }
   for (let i = 0; i < len; ++i) {
-    const w = transforms[i];
-    const comp = getTransform(w.type);
+    const w = transformData[i];
+    const comp = getTransform(allTrans, w.type);
     inputData = await comp.transform(inputData, w);
   }
   return inputData;
@@ -55,7 +56,7 @@ interface TransformItemProps extends GeneralProps {
   openEditor: (idx: number) => void;
 }
 function TransformItem(props: TransformItemProps) {
-  const comp = getTransform(props.item.type);
+  const comp = getTransform(props.transforms, props.item.type);
   return (
     <Dropdown as={ButtonGroup} className="d-flex" size="sm">
       <button
@@ -177,7 +178,12 @@ export default function DataTransform(props: GeneralProps) {
 
     let dt2;
     try {
-      dt2 = await transformData(dt, props.report.transforms, len);
+      dt2 = await transformData(
+        props.transforms,
+        dt,
+        props.report.transforms,
+        len,
+      );
     } catch (e) {
       let msg = String(e);
       if (msg.trim().length === 0) {
@@ -190,7 +196,7 @@ export default function DataTransform(props: GeneralProps) {
   }
 
   async function itemAdd(key: string) {
-    const cmp = getTransform(key);
+    const cmp = getTransform(props.transforms, key);
     const dt = await cmp.newItem();
     const report2: TReport = {
       ...props.report,
@@ -261,7 +267,9 @@ export default function DataTransform(props: GeneralProps) {
     }
   }
 
-  const editCmp = showEdit ? getTransform(showEdit.data.type) : null;
+  const editCmp = showEdit
+    ? getTransform(props.transforms, showEdit.data.type)
+    : null;
 
   return (
     <>
@@ -337,13 +345,12 @@ export default function DataTransform(props: GeneralProps) {
         </Modal.Header>
         <Modal.Body>
           <div className="list-group">
-            {Object.keys(allTransforms).map(key => {
-              const w = allTransforms[key];
+            {props.transforms.map(w => {
               return (
                 <button
                   className="btn list-group-item list-group-item-action"
-                  key={key}
-                  onClick={() => itemAdd(key)}
+                  key={w.id}
+                  onClick={() => itemAdd(w.id)}
                 >
                   {TransName(w.name)}
                 </button>

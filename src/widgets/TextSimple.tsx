@@ -20,6 +20,7 @@ export interface TextSimpleCompiled extends TDataCompiled {
 }
 
 export const TextSimple: Widget = {
+  id: 'TextSimple',
   name: { en: 'Text Simple', sl: 'Besedilo Simple' },
   icon: { fontawesome: faAlignLeft },
 

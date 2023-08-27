@@ -52,8 +52,8 @@ export default function EditorMenu(props: GeneralProps) {
     const data = props.data.data;
     try {
       if (props.report.target === 'pdf' || props.report.target === 'html') {
-        const c = await compile(props.report, data, props.api, {});
-        const html = renderToHtml(c);
+        const c = await compile(props.report, data, props.widgets, props.api);
+        const html = renderToHtml(c, props.widgets);
         setShownModalPrint({ html });
       }
       //

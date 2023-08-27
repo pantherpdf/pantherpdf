@@ -15,7 +15,7 @@ import ObjectExplorer from './ObjectExplorer';
 import DataTransform from './DataTransform';
 import EditWidgetNew from './EditWidgetNew';
 import style from './Editor.module.css';
-import getWidget from '../widgets/allWidgets';
+import { getWidget } from '../widgets/allWidgets';
 import { findInList, removeFromList, updateItem } from './childrenMgmt';
 import ReportSettings from './ReportSettings';
 import { extractFiles } from '../FileSelect';
@@ -65,7 +65,7 @@ function Properties(props: GeneralProps) {
 
   const wid = props.selected;
   const selected = findInList(props.report, wid);
-  const comp = getWidget(selected.type);
+  const comp = getWidget(props.widgets, selected.type);
   if (!comp.RenderProperties) {
     return <PropertiesHeader {...props} name={comp.name} onDelete={remove} />;
   }

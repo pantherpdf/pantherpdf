@@ -4,7 +4,7 @@
  */
 
 import React, { ReactNode, useState, useEffect, useRef } from 'react';
-import getWidget from '../widgets/allWidgets';
+import { defaultWidgets, getWidget } from '../widgets/allWidgets';
 import { TReport, TData, ApiUploadMetaData } from '../types';
 import {
   EditorProps,
@@ -27,6 +27,7 @@ import { extractFiles } from '../FileSelect';
 import { Image as ImageWidget, ImageData } from '../widgets/Image';
 import { transformData } from './DataTransform';
 import retrieveOriginalSourceData from './retrieveOriginalSourceData';
+import { defaultTransforms } from '../transforms/allTransforms';
 
 /**
  * Entrypoint to report editor
@@ -40,13 +41,21 @@ export default function Editor(props: EditorProps) {
     string | undefined
   >(undefined);
   const dragObj = useRef<TDragObj | null>(null);
+  const transforms = Array.isArray(props.transforms)
+    ? props.transforms
+    : defaultTransforms;
+  const widgets = Array.isArray(props.widgets) ? props.widgets : defaultWidgets;
 
   // refresh data
   useEffect(() => {
     (async function () {
       try {
         const dt1 = await getOrigSourceInternal();
-        const dt2 = await transformData(dt1, props.report.transforms);
+        const dt2 = await transformData(
+          transforms,
+          dt1,
+          props.report.transforms,
+        );
         setData({ data: dt2 });
       } catch (e) {
         setData({ data: undefined, errorMsg: String(e) });
@@ -174,7 +183,7 @@ export default function Editor(props: EditorProps) {
   }
 
   function renderWidget(child: TData, wid: number[]): ReactNode {
-    const obj = getWidget(child.type);
+    const obj = getWidget(widgets, child.type);
 
     return (
       <div
@@ -235,7 +244,7 @@ export default function Editor(props: EditorProps) {
     wid = [...wid];
     while (wid.length > 0) {
       const item = findInList(props.report, wid);
-      const obj = getWidget(item.type);
+      const obj = getWidget(widgets, item.type);
       if (typeof obj.canSelect === 'undefined' || obj.canSelect) {
         setSelected(wid);
         break;
@@ -268,6 +277,8 @@ export default function Editor(props: EditorProps) {
     dragWidgetStart,
     dragWidgetEnd,
     drop,
+    transforms,
+    widgets,
   };
 
   return <Layout {...props2} dragOver={dragOver} />;

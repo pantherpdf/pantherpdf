@@ -8,7 +8,6 @@ import Trans, { TransName } from '../translation';
 import style from './EditWidgets.module.css';
 import { TReport, ApiReportMetaData } from '../types';
 import { Widget, GeneralProps, NewItemProps } from './types';
-import { allWidgets } from '../widgets/allWidgets';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Overlay, Tooltip } from 'react-bootstrap';
@@ -94,13 +93,13 @@ function ShowReports(props: GeneralProps) {
 function ShowWidgets(props: GeneralProps) {
   const target = useRef<HTMLDivElement | null>(null);
   const tooltipTimer = useRef<number>(0);
-  const [showTooltipIdx, setShowTooltipIdx] = useState<number>(-1);
+  const [showTooltipId, setShowTooltipId] = useState<string | null>(null);
 
-  function showTooltip(idx: number, el: HTMLDivElement) {
+  function showTooltip(id: string, el: HTMLDivElement) {
     hideTooltip();
     tooltipTimer.current = window.setTimeout(hideTooltip, 2500);
     target.current = el;
-    setShowTooltipIdx(idx);
+    setShowTooltipId(id);
   }
 
   function hideTooltip() {
@@ -110,7 +109,7 @@ function ShowWidgets(props: GeneralProps) {
     clearTimeout(tooltipTimer.current);
     tooltipTimer.current = 0;
     target.current = null;
-    setShowTooltipIdx(-1);
+    setShowTooltipId(null);
   }
 
   useEffect(() => {
@@ -132,18 +131,18 @@ function ShowWidgets(props: GeneralProps) {
 
   return (
     <>
-      {Object.values(allWidgets).map((w, idx) => {
+      {props.widgets.map(w => {
         if (typeof w.canAdd !== 'undefined' && !w.canAdd) {
           return null;
         }
         return (
           <div
-            key={idx}
+            key={w.id}
             draggable={true}
             onDragStart={e => dragStartWidget(e, w)}
             onDragEnd={e => props.dragWidgetEnd(e)}
             className={`${style.widget} bg`}
-            onClick={e => showTooltip(idx, e.currentTarget)}
+            onClick={e => showTooltip(w.id, e.currentTarget)}
           >
             <FontAwesomeIcon
               icon={w.icon.fontawesome}
@@ -154,11 +153,7 @@ function ShowWidgets(props: GeneralProps) {
           </div>
         );
       })}
-      <Overlay
-        target={target.current}
-        show={showTooltipIdx !== -1}
-        placement="right"
-      >
+      <Overlay target={target.current} show={!!showTooltipId} placement="right">
         {props => (
           <Tooltip id="editWidgetNewWidgetTooltip" {...props}>
             {Trans('drag drop widgets')}

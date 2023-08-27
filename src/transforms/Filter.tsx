@@ -19,6 +19,7 @@ export interface FilterData extends TTransformData {
 }
 
 const Filter: TTransformWidget = {
+  id: 'Filter',
   name: 'Filter',
 
   newItem: async () => {

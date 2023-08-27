@@ -24,6 +24,7 @@ export interface FirstMatchCompiled extends TDataCompiled {
 }
 
 export const FirstMatch: Widget = {
+  id: 'FirstMatch',
   name: { en: 'FirstMatch', sl: 'Prvi ustrezen' },
   icon: { fontawesome: faHandRock },
 

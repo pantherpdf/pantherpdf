@@ -43,6 +43,7 @@ export interface ImageCompiled extends TDataCompiled {
 let imgState = 0;
 
 export const Image: Widget = {
+  id: 'Image',
   name: { en: 'Image', sl: 'Slika' },
   icon: { fontawesome: faImage },
 

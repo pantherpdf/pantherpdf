@@ -768,6 +768,7 @@ export function ValueInternalFromEditor(html: string): TextHtmlDataValue[] {
 }
 
 export const TextHtml: Widget = {
+  id: 'TextHtml',
   name: { en: 'Text', sl: 'Besedilo' },
   icon: { fontawesome: faAlignLeft },
 

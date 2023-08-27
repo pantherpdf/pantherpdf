@@ -8,10 +8,15 @@ import {
   ValueInternalFromEditor,
   extractTag,
 } from './TextHtml';
-import compile, { compileComponent } from '../editor/compile';
-import renderToHtml, { renderToHtmlContent } from '../editor/renderToHtml';
+import {
+  compileComponentTest,
+  compileTest,
+  renderToHtmlContentTest,
+} from '../unitTestHelpers';
+import renderToHtml from '../editor/renderToHtml';
 import { ReportForceChildren } from '../editor/types';
 import { sampleReport } from '../editor/sampleReport';
+import { defaultWidgets } from './allWidgets';
 
 test('parse TextHtml formula', async () => {
   const html = `aaa
@@ -51,7 +56,7 @@ test('TextHtml 2', async () => {
     font: {},
   };
   const data = { txt: '123' };
-  const p2 = await compileComponent(dt, data);
+  const p2 = await compileComponentTest(dt, data);
   expect(p2).toBeTruthy();
   expect(p2.type).toBe('TextHtml');
   const p = p2 as TextHtmlCompiled;
@@ -68,7 +73,7 @@ test('TextHtml Filter', async () => {
     font: {},
   };
   const data = { num: 123.123456789 };
-  const p2 = await compileComponent(dt, data);
+  const p2 = await compileComponentTest(dt, data);
   expect(p2).toBeTruthy();
   expect(p2.type).toBe('TextHtml');
   const p = p2 as TextHtmlCompiled;
@@ -87,8 +92,8 @@ test('TextHtml should render html', async () => {
       },
     ],
   };
-  const compiled = await compile(report, {});
-  const html = renderToHtmlContent(compiled);
+  const compiled = await compileTest(report, {});
+  const html = renderToHtmlContentTest(compiled);
   expect(html).toMatchSnapshot();
 });
 
@@ -104,8 +109,8 @@ test('TextHtml should include google font', async () => {
       },
     ],
   };
-  const compiled = await compile(report, {});
-  const html = renderToHtml(compiled);
+  const compiled = await compileTest(report, {});
+  const html = renderToHtml(compiled, defaultWidgets);
   expect(html).toContain(
     'https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400&display=swap',
   );

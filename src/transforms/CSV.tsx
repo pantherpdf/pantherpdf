@@ -23,6 +23,7 @@ export interface CSVData extends TTransformData {
 }
 
 const CSV: TTransformWidget = {
+  id: 'CSV',
   name: 'CSV',
 
   newItem: async () => {

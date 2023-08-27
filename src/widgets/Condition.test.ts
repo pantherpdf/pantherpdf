@@ -5,7 +5,7 @@
 import { TextSimpleData } from './TextSimple';
 import { ConditionCompiled, ConditionData } from '../widgets/Condition';
 import { ForceChildren } from '../editor/types';
-import { compileComponent } from '../editor/compile';
+import { compileComponentTest } from '../unitTestHelpers';
 
 test('Condition should show children when formula is truthy', async () => {
   const dt: ForceChildren<ConditionData | TextSimpleData> = {
@@ -14,7 +14,7 @@ test('Condition should show children when formula is truthy', async () => {
     children: [{ type: 'TextSimple', formula: '"hello"', children: [] }],
   };
   const data = { arr: ['1', '2'] };
-  const p = (await compileComponent(dt, data)) as ConditionCompiled;
+  const p = (await compileComponentTest(dt, data)) as ConditionCompiled;
   expect(p.children.length).toBe(1);
 });
 
@@ -25,6 +25,6 @@ test('Condition should show no childs when empty formula', async () => {
     children: [{ type: 'TextSimple', formula: '"hello"', children: [] }],
   };
   const data = { arr: ['1', '2'] };
-  const p = (await compileComponent(dt, data)) as ConditionCompiled;
+  const p = (await compileComponentTest(dt, data)) as ConditionCompiled;
   expect(p.children.length).toBe(0);
 });

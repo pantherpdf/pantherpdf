@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import compile from './compile';
+import { compileTest } from '../unitTestHelpers';
 import type { ReportForceChildren } from './types';
 import type { TReport } from '../types';
 import type { TextSimpleData, TextSimpleCompiled } from '../widgets/TextSimple';
@@ -17,7 +17,7 @@ test('text data', async () => {
   };
 
   const obj = { num: 123 };
-  const compiled = await compile(report, obj);
+  const compiled = await compileTest(report, obj);
 
   expect(compiled.children.length).toBe(1);
   expect(compiled.children[0].type).toBe('TextSimple');
@@ -38,7 +38,7 @@ test('text report', async () => {
   };
 
   const obj = { num: 123 };
-  const compiled = await compile(report, obj);
+  const compiled = await compileTest(report, obj);
 
   expect(compiled.children.length).toBe(1);
   expect(compiled.children[0].type).toBe('TextSimple');
@@ -53,7 +53,7 @@ test('text', async () => {
   };
 
   const obj = { num: 123 };
-  await expect(compile(report, obj)).rejects.toThrow();
+  await expect(compileTest(report, obj)).rejects.toThrow();
 });
 
 test('fonts used', async () => {
@@ -65,7 +65,7 @@ test('fonts used', async () => {
     family: 'Arial',
   };
   const obj = {};
-  const compiled = await compile(report, obj);
+  const compiled = await compileTest(report, obj);
   expect(compiled.fontsUsed).toStrictEqual([
     { name: 'Arial', weight: 400, italic: false },
   ]);

@@ -152,6 +152,7 @@ function Property4SideRange(props: Property4SideRangeProps) {
 }
 
 export const Frame: Widget = {
+  id: 'Frame',
   name: { en: 'Frame', sl: 'Okvir' },
   icon: { fontawesome: faBorderStyle },
 

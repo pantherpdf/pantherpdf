@@ -5,8 +5,8 @@
 
 import type { CSSProperties } from 'react';
 import { defaultReportCss, TReportCompiled } from '../types';
-import type { ItemRendeFinalHelper } from './types';
-import getWidget from '../widgets/allWidgets';
+import type { ItemRendeFinalHelper, Widget } from './types';
+import { getWidget } from '../widgets/allWidgets';
 import styleToCssString from 'react-style-object-to-css';
 import { PropertyFontGenCss } from '../widgets/PropertyFont';
 import { GoogleFontUrlImport } from '../widgets/GoogleFonts';
@@ -22,11 +22,12 @@ function escapeHtml(unsafe: string): string {
 
 export function renderToHtmlContent(
   report: TReportCompiled,
+  widgets: Widget[],
   externalHelpers: { [key: string]: any } = {},
 ) {
   const helper: ItemRendeFinalHelper = {
     renderItem: (item, helper) => {
-      const w = getWidget(item.type);
+      const w = getWidget(widgets, item.type);
       return w.RenderFinal({ ...helper, item });
     },
     renderChildren: (chs, helper) => {
@@ -35,7 +36,7 @@ export function renderToHtmlContent(
       }
       let txt = '';
       for (const item of chs) {
-        const w = getWidget(item.type);
+        const w = getWidget(widgets, item.type);
         txt += w.RenderFinal({ ...helper, item });
       }
       return txt;
@@ -51,6 +52,7 @@ export function renderToHtmlContent(
 
 export default function renderToHtml(
   report: TReportCompiled,
+  widgets: Widget[],
   externalHelpers: { [key: string]: any } = {},
 ): string {
   // prepare css
@@ -61,7 +63,7 @@ export default function renderToHtml(
   const css = styleToCssString(cssObj);
 
   // render content
-  const htmlContent = renderToHtmlContent(report, externalHelpers);
+  const htmlContent = renderToHtmlContent(report, widgets, externalHelpers);
 
   const fontUrl = GoogleFontUrlImport(report.fontsUsed);
   const fontHtml = fontUrl

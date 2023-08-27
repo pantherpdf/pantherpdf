@@ -23,6 +23,7 @@ export interface HtmlCompiled extends TDataCompiled {
 }
 
 export const Html: Widget = {
+  id: 'Html',
   name: { en: 'Html', sl: 'Html' },
   icon: { fontawesome: faCode },
 

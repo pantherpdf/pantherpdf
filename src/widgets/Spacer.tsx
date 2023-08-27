@@ -21,6 +21,7 @@ export type SpacerData = TData & Properties;
 export type SpacerCompiled = TDataCompiled & Properties;
 
 export const Spacer: Widget = {
+  id: 'Spacer',
   name: { en: 'Spacer', sl: 'Presledek' },
   icon: { fontawesome: faArrowsAltV },
 

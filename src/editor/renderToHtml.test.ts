@@ -2,12 +2,13 @@
  * @jest-environment node
  */
 
-import compile from './compile';
+import { compileTest, renderToHtmlContentTest } from '../unitTestHelpers';
 import type { ReportForceChildren } from './types';
 import type { TReport } from '../types';
 import type { TextSimpleData } from '../widgets/TextSimple';
 import { sampleReport } from './sampleReport';
-import renderToHtml, { renderToHtmlContent } from './renderToHtml';
+import renderToHtml from './renderToHtml';
+import { defaultWidgets } from '../widgets/allWidgets';
 
 test('text', async () => {
   const report: ReportForceChildren<TextSimpleData> = {
@@ -18,8 +19,8 @@ test('text', async () => {
   };
 
   const obj = { num: 123 };
-  const compiled = await compile(report, obj);
-  const html = renderToHtmlContent(compiled);
+  const compiled = await compileTest(report, obj);
+  const html = renderToHtmlContentTest(compiled);
   expect(html).toMatchSnapshot();
 });
 
@@ -34,8 +35,8 @@ test('should include google font', async () => {
       family: 'Roboto Mono',
     },
   };
-  const compiled = await compile(report, {});
-  const html = renderToHtml(compiled);
+  const compiled = await compileTest(report, {});
+  const html = renderToHtml(compiled, defaultWidgets);
   const expectedUrl1 =
     'https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400&display=swap';
   const expectedUrl2 =
@@ -46,8 +47,8 @@ test('should include google font', async () => {
 });
 
 test('should include globalCss', async () => {
-  const compiled = await compile(sampleReport, {});
+  const compiled = await compileTest(sampleReport, {});
   compiled.globalCss = '.abc-def-123-456 { font-weight: bold }';
-  const html = renderToHtml(compiled);
+  const html = renderToHtml(compiled, defaultWidgets);
   expect(html.indexOf('.abc-def-123-456 { font-weight: bold }')).not.toBe(-1);
 });

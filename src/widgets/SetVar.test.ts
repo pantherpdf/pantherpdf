@@ -4,7 +4,7 @@
 
 import { TextSimpleData } from './TextSimple';
 import { SetVarData } from '../widgets/SetVar';
-import { compileComponent } from '../editor/compile';
+import { compileComponentTest } from '../unitTestHelpers';
 import { ForceChildren } from '../editor/types';
 
 test('SetVar', async () => {
@@ -15,7 +15,7 @@ test('SetVar', async () => {
     children: [{ type: 'TextSimple', formula: 'ccc', children: [] }],
   };
   const data = { abc: { def: '123' } };
-  const p = await compileComponent(dt, data);
+  const p = await compileComponentTest(dt, data);
   const children = p.children as any;
   expect(children.length).toBe(1);
   expect(children[0].data).toBe('123');
@@ -30,5 +30,5 @@ test('SetVar check that childs of data are not accessible', async () => {
   };
   const data = { abc: { def: '123' } };
 
-  await expect(compileComponent(dt, data)).rejects.toThrow();
+  await expect(compileComponentTest(dt, data)).rejects.toThrow();
 });

@@ -6,6 +6,9 @@ import retrieveOriginalSourceData, {
 import { transformData } from './DataTransform';
 import renderToHtml from './renderToHtml';
 import { encode } from './encoding';
+import { TTransformWidget, Widget } from './types';
+import { defaultTransforms } from '../transforms/allTransforms';
+import { defaultWidgets } from '../widgets/allWidgets';
 
 function escapeCsv(txt: string): string {
   return txt.replaceAll('"', '""');
@@ -108,6 +111,8 @@ export interface GenerateTargetArgs {
   data?: DataObj;
   logPerformance?: boolean;
   targetOverride?: TargetOption;
+  transforms?: TTransformWidget[];
+  widgets?: Widget[];
 }
 
 /**
@@ -128,7 +133,17 @@ export default async function generateTarget(
     api,
     data,
   });
-  const inputData = await transformData(source, report.transforms);
+  const useTransforms = Array.isArray(props.transforms)
+    ? props.transforms
+    : defaultTransforms;
+  const useWidgets = Array.isArray(props.widgets)
+    ? props.widgets
+    : defaultWidgets;
+  const inputData = await transformData(
+    useTransforms,
+    source,
+    report.transforms,
+  );
   const tDataAfter = logPerformance ? performance.now() : 0;
   if (logPerformance) {
     console.log(
@@ -139,7 +154,7 @@ export default async function generateTarget(
   }
 
   const tCompileBefore = logPerformance ? performance.now() : 0;
-  const reportCompiled = await compile(report, inputData, api);
+  const reportCompiled = await compile(report, inputData, useWidgets, api);
   const tCompileAfter = logPerformance ? performance.now() : 0;
   if (logPerformance) {
     console.log(
@@ -152,7 +167,7 @@ export default async function generateTarget(
   // PDF, html
   if (target === 'pdf' || target === 'html') {
     const tMakeHtmlBefore = logPerformance ? performance.now() : 0;
-    const html = renderToHtml(reportCompiled);
+    const html = renderToHtml(reportCompiled, useWidgets);
     const tMakeHtmlAfter = logPerformance ? performance.now() : 0;
     if (logPerformance) {
       console.log(

@@ -3,7 +3,7 @@
  */
 
 import { TextSimpleData, TextSimpleCompiled } from './TextSimple';
-import { compileComponent } from '../editor/compile';
+import { compileComponentTest } from '../unitTestHelpers';
 
 test('text', async () => {
   const dt: TextSimpleData = {
@@ -12,7 +12,7 @@ test('text', async () => {
     children: [],
   };
   const data = { txt: '123' };
-  const p2 = await compileComponent(dt, data);
+  const p2 = await compileComponentTest(dt, data);
   expect(p2).toBeTruthy();
   expect(p2.type).toBe('TextSimple');
   const p = p2 as TextSimpleCompiled;
@@ -25,7 +25,7 @@ test('text formula==null should be empty string', async () => {
     formula: 'data.dt',
     children: [],
   };
-  const p2 = await compileComponent(dt, { dt: null });
+  const p2 = await compileComponentTest(dt, { dt: null });
   expect(p2.data).toBe('');
 });
 
@@ -35,7 +35,7 @@ test('text formula==false should be empty string', async () => {
     formula: 'data.dt',
     children: [],
   };
-  const p2 = await compileComponent(dt, { dt: false });
+  const p2 = await compileComponentTest(dt, { dt: false });
   expect(p2.data).toBe('');
 });
 
@@ -45,7 +45,7 @@ test('text formula==false should be empty string 2', async () => {
     formula: 'data.dt',
     children: [],
   };
-  const p2 = await compileComponent(dt, { dt: undefined });
+  const p2 = await compileComponentTest(dt, { dt: undefined });
   expect(p2.data).toBe('');
 });
 
@@ -55,6 +55,6 @@ test('text formula==0 should be "0"', async () => {
     formula: 'data.dt',
     children: [],
   };
-  const p2 = await compileComponent(dt, { dt: 0 });
+  const p2 = await compileComponentTest(dt, { dt: 0 });
   expect(p2.data).toBe('0');
 });

@@ -4,12 +4,15 @@
 
 import { TextSimpleData } from './TextSimple';
 import { RepeatData } from './Repeat';
-import compile, { compileComponent } from '../editor/compile';
+import {
+  compileComponentTest,
+  compileTest,
+  renderToHtmlContentTest,
+} from '../unitTestHelpers';
 import { ForceChildren } from '../editor/types';
 import { sampleReport } from '../editor/sampleReport';
 import { TReport } from '../types';
 import { TextHtmlData, ValueInternalFromEditor } from './TextHtml';
-import { renderToHtmlContent } from '../editor/renderToHtml';
 import { FrameData } from './Frame';
 
 test('text', async () => {
@@ -21,7 +24,7 @@ test('text', async () => {
     children: [{ type: 'TextSimple', formula: 'rp', children: [] }],
   };
   const data = { arr: ['1', '2'] };
-  const p = (await compileComponent(dt, data)) as any;
+  const p = (await compileComponentTest(dt, data)) as any;
   expect(p).toBeTruthy();
   expect(p.type).toBe('Repeat');
   expect(p.children[0][0].data).toBe('1');
@@ -45,7 +48,7 @@ test('complete rows', async () => {
     direction: 'rows',
   };
   const report: TReport = { ...sampleReport, children: [rpt] };
-  const report2 = await compile(report, {});
+  const report2 = await compileTest(report, {});
 
   const children = report2.children as any;
   expect(children[0].type).toBe('Repeat');
@@ -54,7 +57,7 @@ test('complete rows', async () => {
   expect(children[0].children[0][0].type).toBe('TextHtml');
   expect(children[0].children[0][0].value).toBe('1');
 
-  const html = renderToHtmlContent(report2);
+  const html = renderToHtmlContentTest(report2);
   expect(html).toMatchSnapshot();
 });
 
@@ -74,8 +77,8 @@ test('repeat columns', async () => {
   };
   const report: TReport = { ...sampleReport, children: [rpt] };
 
-  const report2 = await compile(report, {});
-  const html = renderToHtmlContent(report2);
+  const report2 = await compileTest(report, {});
+  const html = renderToHtmlContentTest(report2);
   expect(html).toMatchSnapshot();
 });
 
@@ -94,7 +97,7 @@ test('complete grid', async () => {
     direction: 'grid',
   };
   const report: TReport = { ...sampleReport, children: [rpt] };
-  const report2 = await compile(report, {});
+  const report2 = await compileTest(report, {});
 
   const children = report2.children as any;
   expect(children[0].type).toBe('Repeat');
@@ -103,7 +106,7 @@ test('complete grid', async () => {
   expect(children[0].children[0][0].type).toBe('TextHtml');
   expect(children[0].children[0][0].value).toBe('1');
 
-  const html = renderToHtmlContent(report2);
+  const html = renderToHtmlContentTest(report2);
   expect(html).toMatchSnapshot();
 });
 
@@ -130,9 +133,9 @@ test('grid - products', async () => {
     direction: 'grid',
   };
   const report: TReport = { ...sampleReport, children: [rpt] };
-  const report2 = await compile(report, {});
+  const report2 = await compileTest(report, {});
 
-  const html = renderToHtmlContent(report2);
+  const html = renderToHtmlContentTest(report2);
   expect(html).toMatchSnapshot();
   expect(report2.globalCss.replace(/\s/g, '')).toContain(
     '.grid-with-frame>div{display:inline-block;vertical-align:top;}',

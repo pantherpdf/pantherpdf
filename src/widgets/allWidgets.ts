@@ -19,7 +19,7 @@ import { Frame } from './Frame';
 import { SetVar } from './SetVar';
 import { UpdateVar } from './UpdateVar';
 
-export const allWidgets: { [key: string]: Widget } = {
+export const defaultWidgets: Widget[] = [
   TextSimple,
   TextHtml,
   Repeat,
@@ -35,12 +35,12 @@ export const allWidgets: { [key: string]: Widget } = {
   Frame,
   SetVar,
   UpdateVar,
-};
+];
 
-export default function getWidget(type: string): Widget {
-  const c = allWidgets[type];
-  if (c !== undefined) {
-    return c;
+export function getWidget(arr: Widget[], type: string): Widget {
+  const c = arr.find(x => x.id === type);
+  if (!c) {
+    throw new Error(`Missing widget ${type}`);
   }
-  throw new Error(`Missing widget ${type}`);
+  return c;
 }

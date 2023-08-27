@@ -4,10 +4,10 @@
  */
 
 import { TReport, TData, ApiEndpoints } from '../types';
-import type { TReportCompiled, TDataCompiled } from '../types';
+import type { TReportCompiled } from '../types';
 import FormulaEvaluate from '../formula/formula';
-import getWidget from '../widgets/allWidgets';
-import { CompileHelper } from './types';
+import { getWidget } from '../widgets/allWidgets';
+import { CompileHelper, Widget } from './types';
 import { PropertyFontExtractStyle } from '../widgets/PropertyFont';
 
 type TOvrr = [string, unknown];
@@ -44,7 +44,8 @@ export class FormulaHelper {
 export default async function compile(
   report: TReport,
   data: unknown,
-  api: ApiEndpoints = {},
+  widgets: Widget[],
+  api: ApiEndpoints,
   externalHelpers: { [key: string]: any } = {},
 ): Promise<TReportCompiled> {
   // make a copy, to support changing
@@ -108,7 +109,7 @@ export default async function compile(
       for (let i = 0; i < arr1.length; ++i) {
         const ch = arr1[i];
         const helper2 = { ...helper, wid: [...helper.wid, i] };
-        const dt = await getWidget(ch.type).compile(ch, helper2);
+        const dt = await getWidget(widgets, ch.type).compile(ch, helper2);
         arr2.push(dt);
       }
       return arr2;
@@ -124,25 +125,4 @@ export default async function compile(
     throw new Error('helper has overrides still left inside');
   }
   return dt2;
-}
-
-export async function compileComponent(
-  cmpData: object,
-  data: unknown,
-): Promise<TDataCompiled> {
-  const dt: TReport = {
-    _id: '',
-    target: 'pdf',
-    version: '1.0.0',
-    name: 'John Johnny',
-    email: 'admin@admin.com',
-    time: '2020-01-01T01:01:01Z',
-    children: [cmpData as TData],
-    transforms: [],
-    properties: {},
-    dataUrl: '',
-    variables: [],
-  };
-  const reportCompiled = await compile(dt, data);
-  return reportCompiled.children[0];
 }

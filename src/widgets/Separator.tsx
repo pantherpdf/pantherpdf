@@ -37,6 +37,7 @@ function GenStyle(item: SeparatorData | SeparatorCompiled): CSSProperties {
 }
 
 export const Separator: Widget = {
+  id: 'Separator',
   name: { en: 'Separator', sl: 'Črta' },
   icon: { fontawesome: faMinus },
 

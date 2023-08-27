@@ -3,10 +3,9 @@
  */
 
 import { PageBreak, PageBreakData } from './PageBreak';
-import compile from '../editor/compile';
+import { compileTest, renderToHtmlContentTest } from '../unitTestHelpers';
 import { sampleReport } from '../editor/sampleReport';
 import type { TReport } from '../types';
-import { renderToHtmlContent } from '../editor/renderToHtml';
 import type { NewItemProps } from '../editor/types';
 
 test('PageBreak should include css page-break-before', async () => {
@@ -16,7 +15,7 @@ test('PageBreak should include css page-break-before', async () => {
     ...sampleReport,
     children: [el],
   };
-  const compiled = await compile(report, {});
-  const html = renderToHtmlContent(compiled);
+  const compiled = await compileTest(report, {});
+  const html = renderToHtmlContentTest(compiled);
   expect(html.replace(/\s/g, '')).toContain('page-break-before:always');
 });

@@ -24,6 +24,7 @@ export interface SetVarCompiled extends TDataCompiled {
 }
 
 export const SetVar: Widget = {
+  id: 'SetVar',
   name: { en: 'SetVar', sl: 'Spremenljivka' },
   icon: { fontawesome: faHammer },
 

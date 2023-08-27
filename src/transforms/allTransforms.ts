@@ -1,21 +1,21 @@
 /**
  * allTransforms.tsx
- * list of all widgets
+ * list of all transforms
  */
 
 import type { TTransformWidget } from '../editor/types';
 import { Filter } from './Filter';
 import { CSV } from './CSV';
 
-export const allTransforms: { [key: string]: TTransformWidget } = {
-  Filter,
-  CSV,
-};
+export const defaultTransforms: TTransformWidget[] = [Filter, CSV];
 
-export default function getTransform(type: string): TTransformWidget {
-  const c = allTransforms[type];
-  if (c !== undefined) {
-    return c;
+export function getTransform(
+  arr: TTransformWidget[],
+  id: string,
+): TTransformWidget {
+  const obj = arr.find(x => x.id === id);
+  if (!obj) {
+    throw new Error(`Transform '${id}' does not exist`);
   }
-  throw new Error(`Missing transform ${type}`);
+  return obj;
 }

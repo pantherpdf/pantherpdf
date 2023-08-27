@@ -11,6 +11,7 @@ export type PageBreakData = TData & { type: 'PageBreak' };
 export type PageBreakCompiled = TDataCompiled & { type: 'PageBreak' };
 
 export const PageBreak: Widget = {
+  id: 'PageBreak',
   name: { en: 'Page Break', sl: 'Prelom Strani' },
   icon: { fontawesome: faGripLines },
 

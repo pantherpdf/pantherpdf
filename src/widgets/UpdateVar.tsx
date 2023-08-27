@@ -55,6 +55,7 @@ export interface UpdateVarCompiled extends TDataCompiled {
 }
 
 export const UpdateVar: Widget = {
+  id: 'UpdateVar',
   name: { en: 'Update Variable', sl: 'Spremeni Spremenljivko' },
   icon: { fontawesome: faPlusSquare },
 
