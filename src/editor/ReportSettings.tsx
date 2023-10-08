@@ -21,7 +21,6 @@ import {
   faCaretUp,
 } from '@fortawesome/free-solid-svg-icons';
 import VarEditor from './VarEditor';
-import packageJson from '../../package.json';
 import { saveAs } from 'file-saver';
 import style from './EditWidgets.module.css';
 import globalStyle from '../globalStyle.module.css';
@@ -65,12 +64,6 @@ function fileReportUpload(
         alert('Bad data');
         return;
       }
-      const myVersion = packageJson.version.split('.')[0];
-      const docVersion = dt.version.split('.')[0];
-      if (docVersion !== myVersion) {
-        alert(`Bad version. Expected ${myVersion} but got ${docVersion}`);
-        return;
-      }
       let n = arr.length;
       setArr([...arr, dt]);
       alert(Trans('upload finished', [(n + 1).toString()]));
@@ -87,7 +80,7 @@ function ShowUpload(props: GeneralProps) {
     let blob = new Blob([JSON.stringify(props.report, null, 4)], {
       type: 'application/json',
     });
-    saveAs(blob, props.report._id + '.json');
+    saveAs(blob, 'report.json');
   }
 
   function dragStartFile(e: React.DragEvent<HTMLDivElement>, dt: Report) {

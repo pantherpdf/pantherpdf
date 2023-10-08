@@ -78,7 +78,7 @@ function ShowReports(props: GeneralProps) {
           <div
             key={idx}
             draggable={true}
-            onDragStart={e => dragStartReport(e, r._id)}
+            onDragStart={e => dragStartReport(e, r.id)}
             onDragEnd={props.dragWidgetEnd}
             className={style.widget}
           >

@@ -66,12 +66,8 @@ export interface ReportProperties {
  * Report type
  */
 export interface Report {
-  _id: string;
   name: string;
-  email: string;
-  time: string;
   target: TargetOption;
-  version: string;
   children: Item[];
   transforms: TransformItem[];
   properties: ReportProperties;
@@ -83,10 +79,8 @@ export interface Report {
  * Report short summary
  */
 export interface ApiReportMetaData {
-  _id: string;
+  id: string;
   name: string;
-  target: TargetOption;
-  version: string;
 }
 
 export interface ItemCompiled {
@@ -122,12 +116,6 @@ export function isReport(r: any): r is Report {
   if (typeof r != 'object' || !r) {
     return false;
   }
-  if (typeof r._id !== 'string') {
-    return false;
-  }
-  if (typeof r.email !== 'string') {
-    return false;
-  }
   if (typeof r.name !== 'string') {
     return false;
   }
@@ -151,17 +139,7 @@ export function isReport(r: any): r is Report {
   if (typeof r.properties !== 'object' || !r.properties) {
     return false;
   }
-  // version
-  if (typeof r.version !== 'string') {
-    return false;
-  }
-  if (r.version.split('.').length !== 3) {
-    return false;
-  }
   //
-  if (typeof r.time !== 'string') {
-    return false;
-  }
   if (typeof r.dataUrl !== 'string') {
     return false;
   }

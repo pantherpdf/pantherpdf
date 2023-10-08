@@ -10,12 +10,8 @@ export async function compileComponentTest(
   data: unknown,
 ): Promise<ItemCompiled> {
   const dt: Report = {
-    _id: '',
     target: 'pdf',
-    version: '1.0.0',
     name: 'John Johnny',
-    email: 'admin@admin.com',
-    time: '2020-01-01T01:01:01Z',
     children: [cmpData as Item],
     transforms: [],
     properties: {},
