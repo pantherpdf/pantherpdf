@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
+ */
+
 function toColumnName(num: unknown) {
   if (typeof num !== 'number') {
     throw new Error('Not a number');

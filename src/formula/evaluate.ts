@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
+ */
+
 import { TExpr, IHelpers, TOperators, EvaluateError } from './types';
 import { constants, functions } from './constantsAndFunctions';
 import { isPropertyAllowed } from './isPropertyAllowed';

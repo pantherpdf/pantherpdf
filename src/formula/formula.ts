@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
+ */
+
 import { IHelpers } from './types';
 import parse from './parse';
 import toPostFix from './toPostFix';

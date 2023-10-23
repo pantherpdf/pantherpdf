@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
+ */
+
 export interface IHelpers {
   getVar?: (name: string) => Promise<unknown>;
   vars?: { [key: string]: unknown };

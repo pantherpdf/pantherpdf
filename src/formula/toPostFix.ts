@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
+ */
+
 import { TExpr, TExpr_operator, TOperators } from './types';
 
 const precedence: { [key in TOperators]: number } = {

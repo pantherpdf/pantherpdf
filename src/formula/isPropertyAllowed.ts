@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2023
+ * @license MIT
+ */
+
 const privateKeys = [
   'constructor',
   'hasOwnProperty',

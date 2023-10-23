@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
+ */
+
 import React, { useState, useEffect } from 'react';
 import type { TFontStyle } from './PropertyFont';
 

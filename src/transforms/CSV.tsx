@@ -1,6 +1,8 @@
 /**
- * CSV.tsx
- * Prepare 2D array - table for csv output
+ * @file Prepare 2D array - table for csv output
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import React from 'react';

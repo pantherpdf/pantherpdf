@@ -1,7 +1,9 @@
 {
-  "name": "kelgrand-reports",
-  "version": "4.0.1",
-  "private": true,
+  "name": "pantherpdf",
+  "version": "4.0.0-beta.1",
+  "keywords": ["report", "editor", "pdf", "wysiwyg"],
+  "homepage": "https://github.com/ibanic/pantherpdf",
+  "license": "MIT",
   "source": "src/index.ts",
   "main": "dist/index.js",
   "module": "dist/index.module.js",

@@ -1,6 +1,8 @@
 /**
- * EditWidgetNew.tsx
- * List of available widgets to build a report.
+ * @file Panel of available widgets to build a report.
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import React, { useEffect, useRef, useState } from 'react';

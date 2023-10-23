@@ -1,6 +1,8 @@
 /**
- * InputApplyOnEnter.tsx
- * Helper form input that calls onChange only when focus is lost or when user presses enter.
+ * @file Helper form input that calls onChange only when focus is lost or when user presses enter.
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import React, { useState, useEffect } from 'react';

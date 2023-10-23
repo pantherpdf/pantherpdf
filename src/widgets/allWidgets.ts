@@ -1,6 +1,8 @@
 /**
- * allWidgets.tsx
- * list of all widgets
+ * @file List of all widgets
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import type { Widget } from '../editor/types';

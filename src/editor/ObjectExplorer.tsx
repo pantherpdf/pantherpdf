@@ -1,6 +1,8 @@
 /**
- * ObjectExplorer.tsx
- * Visualize sourceData
+ * @file Visualize sourceData
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import React, { Component } from 'react';

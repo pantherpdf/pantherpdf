@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021-2023
+ * @license MIT
+ */
+
 import { ApiEndpoints } from '../types';
 
 export type SourceData =

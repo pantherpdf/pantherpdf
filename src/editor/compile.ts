@@ -1,6 +1,8 @@
 /**
- * compile.ts
- * Compile sourceData and report - evaluate all formulas
+ * @file Compile sourceData and report - evaluate all formulas
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import { Report, Item, ApiEndpoints } from '../types';

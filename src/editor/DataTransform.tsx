@@ -1,6 +1,8 @@
 /**
- * DataTransform.tsx
- * Manage data transformations. Add, delete, edit Transform.
+ * @file Manage data transformations. Add, delete, edit `Transform`s.
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import React, { useState } from 'react';

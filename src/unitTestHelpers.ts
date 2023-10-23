@@ -1,4 +1,9 @@
-/** Helpers used for unit tests */
+/**
+ * @file Helper functions used in unit tests
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2023
+ * @license MIT
+ */
 
 import { Item, ItemCompiled, Report, ReportCompiled } from './types';
 import { defaultWidgets } from './widgets/allWidgets';

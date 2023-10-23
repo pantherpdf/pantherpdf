@@ -1,6 +1,8 @@
 /**
- * types.ts
- * types used in report editor
+ * @file Types used in report editor
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -54,7 +56,7 @@ export interface EditorProps {
   isBackendBusy?: boolean;
 
   /** Show undo and redo buttons */
-  hasUndoRedo: boolean;
+  hasUndoRedo?: boolean;
 
   /** Undo callback. Should not be defined when undo is not possible. */
   undo?: () => void;

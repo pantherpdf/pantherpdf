@@ -1,6 +1,8 @@
 /**
- * ReportSettings.tsx
- * General settings/properties of a report
+ * @file General settings/properties of a report
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import React, { useState } from 'react';

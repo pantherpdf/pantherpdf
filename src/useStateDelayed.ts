@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
+ */
+
 import { useState, useEffect, useRef } from 'react';
 
 export default function useStateDelayed<Type>(

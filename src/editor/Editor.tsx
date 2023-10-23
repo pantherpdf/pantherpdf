@@ -1,6 +1,8 @@
 /**
- * Editor.tsx
- * Managing global state, prepare GeneralProps, drag-drop functions
+ * @file Managing global state, prepare GeneralProps, drag-drop functions
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import React, { ReactNode, useState, useEffect, useRef } from 'react';

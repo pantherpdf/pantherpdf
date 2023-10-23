@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
+ */
+
 import { namedChars } from './HtmlNamedChars';
 
 export function encodeHtml(unsafe: string): string {

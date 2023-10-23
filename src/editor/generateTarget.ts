@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
+ */
+
 import { ApiEndpoints, TargetOption, Report } from '../types';
 import compile from './compile';
 import retrieveOriginalSourceData, {

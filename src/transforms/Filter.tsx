@@ -1,6 +1,8 @@
 /**
- * Filter.tsx
- * filter array's items based on a condition
+ * @file Filter array's items based on a condition
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import React from 'react';

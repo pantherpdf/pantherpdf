@@ -1,6 +1,8 @@
 /**
- * renderToHtml.ts
- * Compiled report -> html
+ * @file Compiled report -> html
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import type { CSSProperties } from 'react';

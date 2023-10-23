@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2023
+ * @license MIT
+ */
+
 // Parcel processes each file individually,
 // so we need to explicitly reference .d.ts files
 /// <reference types="./global" />
@@ -37,6 +43,16 @@ import { defaultTransforms } from './transforms/allTransforms';
 import BoxName, { BoxNameProps } from './widgets/BoxName';
 import { defaultWidgets } from './widgets/allWidgets';
 
+const emptyReport: Report = {
+  name: 'My report',
+  target: 'pdf',
+  children: [],
+  transforms: [],
+  properties: {},
+  dataUrl: '',
+  variables: [],
+};
+
 export {
   // Frontend: React component
   Editor,
@@ -49,6 +65,8 @@ export {
   defaultTransforms,
   defaultWidgets,
   BoxName,
+  //
+  emptyReport,
 };
 
 export type {

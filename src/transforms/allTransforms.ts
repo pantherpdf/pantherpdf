@@ -1,6 +1,8 @@
 /**
- * allTransforms.tsx
- * list of all transforms
+ * @file List of all transforms
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import type { Transform } from '../editor/types';

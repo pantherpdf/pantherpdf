@@ -1,5 +1,7 @@
 /**
- * Frame.tsx
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import React, { CSSProperties } from 'react';

@@ -1,6 +1,8 @@
 /**
- * childrenMgmt.ts
- * Functions for managing children. Mostly for drag-drop support.
+ * @file Functions for managing children. Mostly for drag-drop support.
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import { Report, Item } from '../types';

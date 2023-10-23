@@ -1,6 +1,8 @@
 /**
- * FileDialog.tsx
- * User can browse, select, upload files.
+ * @file Component to enable user to browse, select, upload files.
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import React, { useState, useEffect } from 'react';

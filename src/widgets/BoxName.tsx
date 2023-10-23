@@ -1,6 +1,8 @@
 /**
- * BoxName.tsx
- * Show little name/type of a widget
+ * @file Show name/type of a widget in editor
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
  */
 
 import React from 'react';

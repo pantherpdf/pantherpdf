@@ -1,3 +1,9 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021
+ * @license MIT
+ */
+
 // cannot enforce type
 // otherwise its not object literal anymore and key type would be lost (it would be generic string)
 const tr2 = {
