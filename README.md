@@ -3,7 +3,7 @@
     <img src="docs/logo.png" alt="Logo" width="150" height="215">
   </a>
 
-  <h1 align="center">Panther PDF</h1>
+  <h1 align="center">PantherPDF</h1>
 
   <p align="center">
     WYSIWYG report editor + managed service for <strong>editing reports</strong> and <strong>generating PDFs</strong>.

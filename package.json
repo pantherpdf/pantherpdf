@@ -1,8 +1,8 @@
 {
   "name": "pantherpdf",
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0-beta.3",
   "keywords": ["report", "editor", "pdf", "wysiwyg"],
-  "homepage": "https://github.com/ibanic/pantherpdf",
+  "homepage": "https://www.pantherpdf.com/",
   "license": "MIT",
   "source": "src/index.ts",
   "main": "dist/index.js",
@@ -20,7 +20,7 @@
     }
   },
   "files": [
-    "dist/*.{js,mjs,ts,map}",
+    "dist/*.{js,mjs,ts,map,css}",
     "README.md",
     "package.json"
   ],
@@ -93,5 +93,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pantherpdf/pantherpdf.git"
   }
 }
