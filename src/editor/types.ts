@@ -44,7 +44,7 @@ export interface EditorProps {
    * Parent component needs to immediately update state to keep cursor in text
    * editor properly working.
    */
-  setReport: (val: Report) => Promise<void>;
+  setReport: (val: Report) => void | Promise<void>;
 
   /** API to external services for pdf generation, loading images, ... */
   api: ApiEndpoints;
@@ -59,10 +59,10 @@ export interface EditorProps {
   hasUndoRedo?: boolean;
 
   /** Undo callback. Should not be defined when undo is not possible. */
-  undo?: () => void;
+  undo?: () => void | Promise<void>;
 
   /** Redo callback. Should not be defined when redo is not possible. */
-  redo?: () => void;
+  redo?: () => void | Promise<void>;
 
   /** Link to home button */
   homeLink?: {

@@ -50,7 +50,7 @@ export default function Container() {
   const [undoStack, setUndoStack] = useState<Report[]>([sampleReport]);
   const [undoNext, setUndoNext] = useState<number>(1);
 
-  async function setReport2(val: Report) {
+  function setReport2(val: Report) {
     setReport(val);
     const newUndoStack = [...undoStack];
     newUndoStack.splice(undoNext);
@@ -59,12 +59,12 @@ export default function Container() {
     setUndoNext(undoNext + 1);
   }
 
-  async function undo() {
+  function undo() {
     setReport(undoStack[undoNext - 2]);
     setUndoNext(undoNext - 1);
   }
 
-  async function redo() {
+  function redo() {
     setReport(undoStack[undoNext]);
     setUndoNext(undoNext + 1);
   }
