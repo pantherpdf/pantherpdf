@@ -5,12 +5,12 @@
  * @license MIT
  */
 
-import generateTarget from './generateTarget';
+import generate from './generate';
 import { ApiEndpoints, Report, ReportProperties } from '../types';
 import { sampleReport } from './sampleReport';
 import { CSV, CSVData } from '../transforms/CSV';
 
-test('generateTarget CSV CP1250', async () => {
+test('generate CSV CP1250', async () => {
   const transCsv = (await CSV.newItem()) as CSVData;
   transCsv.rows = [
     {
@@ -29,18 +29,18 @@ test('generateTarget CSV CP1250', async () => {
     { abc: 'č', def: '€' },
   ];
   const api: ApiEndpoints = {};
-  const result = await generateTarget({
+  const result = await generate({
     report,
     api,
     data: { value: data, type: 'as-is' },
   });
-  expect(result.filename).toBe('abc.def');
+  expect(result.fileName).toBe('abc.def');
   expect(result.contentType).toBe('text/csv; charset=windows-1250');
   const b64 = Buffer.from(result.body).toString('base64');
   expect(b64).toBe('ImEiOyJiIg0KIugiOyKAIg0K');
 });
 
-test('generateTarget CSV newlines', async () => {
+test('generate CSV newlines', async () => {
   const transCsv = (await CSV.newItem()) as CSVData;
   transCsv.rows = [
     {
@@ -59,18 +59,18 @@ test('generateTarget CSV newlines', async () => {
     { abc: 'č', def: "';'" },
   ];
   const api: ApiEndpoints = {};
-  const result = await generateTarget({
+  const result = await generate({
     report,
     api,
     data: { value: data, type: 'as-is' },
   });
-  expect(result.filename).toBe('abc.def');
+  expect(result.fileName).toBe('abc.def');
   expect(result.contentType).toBe('text/csv; charset=utf-8');
   const b64 = Buffer.from(result.body).toString('base64');
   expect(b64).toBe('IiIiIjsiMQoyIgoixI0iOyInOyciCg==');
 });
 
-test('generateTarget override', async () => {
+test('generate override', async () => {
   const transCsv = (await CSV.newItem()) as CSVData;
   transCsv.rows = [
     {
@@ -89,13 +89,13 @@ test('generateTarget override', async () => {
     { abc: '3', def: '4' },
   ];
   const api: ApiEndpoints = {};
-  const result = await generateTarget({
+  const result = await generate({
     report,
     api,
     data: { value: data, type: 'as-is' },
-    targetOverride: 'json',
+    target: 'json',
   });
-  expect(result.filename).toBe('abc.json');
+  expect(result.fileName).toBe('abc.json');
   expect(result.contentType).toBe('application/json');
   expect(typeof result.body).toBe('string');
   expect(JSON.parse(result.body as string)).toEqual([
@@ -104,7 +104,7 @@ test('generateTarget override', async () => {
   ]);
 });
 
-test('generateTarget pdf', async () => {
+test('generate pdf', async () => {
   const report: Report = JSON.parse(JSON.stringify(sampleReport));
   report.properties.fileName = 'data[1].abc + ".pdf"';
 
@@ -117,12 +117,12 @@ test('generateTarget pdf', async () => {
       return new Uint8Array([1, 2, 3, 4]);
     },
   };
-  const result = await generateTarget({
+  const result = await generate({
     report,
     api,
     data: { value: data, type: 'as-is' },
   });
-  expect(result.filename).toBe('č.pdf');
+  expect(result.fileName).toBe('č.pdf');
   expect(result.body).toBeInstanceOf(Uint8Array);
   expect(result.body.length).toBe(4);
   expect(result.body[0]).toBe(1);

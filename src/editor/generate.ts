@@ -88,36 +88,63 @@ function targetExtension(type: TargetOption): string {
 }
 
 function correctExtension(
-  filename: string | undefined,
+  fileName: string | undefined,
   sourceType: TargetOption,
   targetType: TargetOption,
 ): string {
   const extTarget = targetExtension(targetType);
-  if (filename) {
+  if (fileName) {
     const extSource = targetExtension(sourceType);
-    if (extSource !== extTarget && filename.toLowerCase().endsWith(extSource)) {
+    if (extSource !== extTarget && fileName.toLowerCase().endsWith(extSource)) {
       return (
-        filename.substring(0, filename.length - extSource.length) + extTarget
+        fileName.substring(0, fileName.length - extSource.length) + extTarget
       );
     }
-    return filename;
+    return fileName;
   }
   return `report${extTarget}`;
 }
 
 export interface FileOutput {
+  /** Content */
   body: string | Uint8Array;
+
+  /** MIME type */
   contentType: string;
-  filename: string;
+
+  /**
+   * File name (e.g. report.pdf).
+   * Field is generated from `ReportProperties.fileName`
+   */
+  fileName: string;
 }
 
-export interface GenerateTargetArgs {
+export interface GenerateArgs {
+  /** Report to generate */
   report: Report;
+
+  /** API endpoints to use for generation */
   api: ApiEndpoints;
+
+  /** Source data for report */
   data?: SourceData;
+
+  /** Internal use only. May be removed in the future without any notice. */
   logPerformance?: boolean;
-  targetOverride?: TargetOption;
+
+  /** Override target (target is usually specified in a `Report`) */
+  target?: TargetOption;
+
+  /**
+   * Specify which transforms are available to this report.
+   * Include custom transform: `[...defaultTransforms, myCustomTransform]`
+   */
   transforms?: Transform[];
+
+  /**
+   * Specify which widgets are available to this report.
+   * Include custom widget: `[...defaultWidgets, myCustomWidget]`
+   */
   widgets?: Widget[];
 }
 
@@ -126,12 +153,13 @@ export interface GenerateTargetArgs {
  *
  * Input: report, source data
  * Output: html, json, csv ...
- * Pdf output is not directly supported. Use html and then convert to pdf.
+ * Note that PDF output is not directly supported by this library.
+ * @see ApiEndpoints.generatePdf()
  */
-export default async function generateTarget(
-  props: GenerateTargetArgs,
+export default async function generate(
+  props: GenerateArgs,
 ): Promise<FileOutput> {
-  const { report, api, data, logPerformance = false, targetOverride } = props;
+  const { report, api, data, logPerformance = false } = props;
 
   const tDataBefore = logPerformance ? performance.now() : 0;
   const source = await retrieveOriginalSourceData({
@@ -168,7 +196,7 @@ export default async function generateTarget(
     );
   }
 
-  const target = targetOverride || report.target;
+  const target = props.target || report.target;
 
   // PDF, html
   if (target === 'pdf' || target === 'html') {
@@ -186,7 +214,7 @@ export default async function generateTarget(
       return {
         body: html,
         contentType: 'text/html; charset=utf-8',
-        filename: correctExtension(
+        fileName: correctExtension(
           reportCompiled.properties.fileName,
           reportCompiled.target,
           target,
@@ -206,7 +234,7 @@ export default async function generateTarget(
     return {
       body: pdf,
       contentType: 'application/pdf',
-      filename: correctExtension(
+      fileName: correctExtension(
         reportCompiled.properties.fileName,
         reportCompiled.target,
         target,
@@ -220,7 +248,7 @@ export default async function generateTarget(
     return {
       body: contents,
       contentType: 'application/json',
-      filename: correctExtension(
+      fileName: correctExtension(
         reportCompiled.properties.fileName,
         reportCompiled.target,
         target,
@@ -237,7 +265,7 @@ export default async function generateTarget(
     return {
       body: csv,
       contentType: 'text/csv; charset=utf-8',
-      filename: correctExtension(
+      fileName: correctExtension(
         reportCompiled.properties.fileName,
         reportCompiled.target,
         target,
@@ -255,7 +283,7 @@ export default async function generateTarget(
     return {
       body: csvBytes,
       contentType: 'text/csv; charset=windows-1250',
-      filename: correctExtension(
+      fileName: correctExtension(
         reportCompiled.properties.fileName,
         reportCompiled.target,
         target,

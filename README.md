@@ -34,12 +34,26 @@ While free editor is limited to React framework only, managed editor is embedded
 using `<iframe>` into any framework. Service includes
 additional email and phone support. Check it out!
 
+## ⬇️ Installation
+```sh
+npm install --save pantherpdf
+```
+
+```sh
+yarn add pantherpdf
+```
+
+```sh
+pnpm add pantherpdf
+```
+
 ## 👩🏻‍💻 Usage
 Install peer dependencies
 ```sh
-npm install --save bootstrap react react-dom
+npm install --save react react-dom
 ```
 
+### Frontend
 ```tsx
 import React, { useState } from 'react';
 import { Report, Editor, ApiEndpoints, emptyReport } from 'pantherpdf';
@@ -58,9 +72,34 @@ function App() {
 }
 ```
 
+### Backend
+```ts
+import { generate, emptyReport, ApiEndpoints } from 'pantherpdf';
+
+const api: ApiEndpoints = {
+  generatePdf: (html, properties) => {
+    throw new Error('Implement PDF generator');
+  },
+};
+
+async function main()
+{
+  const report = {...emptyReport};
+  const data = {};
+
+  const result = await generate({ report, api, data });
+  console.log(`Size of a file: ${result.body.length}`);
+}
+main();
+```
+
 `Editor` is a controlled component. Data is supplied/updated using props
 `report` and `setReport`. It can be used to load and save data to/from database.
-See [demo/Container.tsx](demo/Container.tsx) for detailed example.
+
+### Examples
+- [demo/Container.tsx](demo/Container.tsx)
+- [NodeJS example](https://github.com/pantherpdf/example-nodejs)
+- [NextJS example](https://github.com/pantherpdf/example-nextjs)
 
 ## 👷🏻‍♂️ Development
 Use [demo project](demo/Container.tsx) for development.
@@ -79,7 +118,7 @@ visual building blocks for reports. Transforms are used for transforming
 source data before it is consumed by widgets. See property descriptions for
 each type for detailed explanation.
 
-Custom widgets have to be specified in `EditorProps` and `GenerateTargetArgs`.
+Custom widgets have to be specified in `EditorProps` and `GenerateArgs`.
 
 ```tsx
 import {
@@ -99,7 +138,7 @@ const editorProps: EditorProps = {
   widgets: [...defaultWidgets, myCustomWidget],
   transforms: [...defaultTransforms, myCustomTransform],
 };
-const generateArgs: GenerateTargetArgs = {
+const generateArgs: GenerateArgs = {
   /* ... */
   widgets: [...defaultWidgets, myCustomWidget],
   transforms: [...defaultTransforms, myCustomTransform],

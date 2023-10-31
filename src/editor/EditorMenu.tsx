@@ -20,7 +20,7 @@ import { Modal } from 'react-bootstrap';
 import compile from './compile';
 import renderToHtml from './renderToHtml';
 import { saveAs } from 'file-saver';
-import generateTarget from './generateTarget';
+import generate from './generate';
 
 export default function EditorMenu(props: GeneralProps) {
   const [shownModalPrint, setShownModalPrint] = useState<
@@ -37,16 +37,16 @@ export default function EditorMenu(props: GeneralProps) {
   async function genPdfWrapper() {
     setIsDownloading(true);
     try {
-      const res = await generateTarget({
+      const res = await generate({
         report: props.report,
         api: props.api,
-        targetOverride: 'pdf',
+        target: 'pdf',
         ...(props.isSourceDataOverriden
           ? { data: { type: 'as-is', value: await props.getSourceData() } }
           : {}),
       });
       const blob = new Blob([res.body], { type: 'application/pdf' });
-      saveAs(blob, res.filename);
+      saveAs(blob, res.fileName);
     } catch (e) {
       alert(`Error: ${String(e)}`);
     }

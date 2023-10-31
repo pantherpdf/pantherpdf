@@ -22,8 +22,8 @@ import type {
   Transform,
   Widget,
 } from './editor/types';
-import generateTarget from './editor/generateTarget';
-import type { GenerateTargetArgs, FileOutput } from './editor/generateTarget';
+import generate from './editor/generate';
+import type { GenerateArgs, FileOutput } from './editor/generate';
 import { isReport } from './types';
 import type {
   Report,
@@ -57,7 +57,7 @@ export {
   // Frontend: React component
   Editor,
   // Backend
-  generateTarget,
+  generate,
   // Other
   isReport,
   setEditorLanguage,
@@ -71,7 +71,7 @@ export {
 
 export type {
   EditorProps,
-  GenerateTargetArgs,
+  GenerateArgs,
   FileOutput,
   SourceData,
   //

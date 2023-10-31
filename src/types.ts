@@ -224,7 +224,7 @@ export interface ApiEndpoints {
    */
   evaluateJavaScript?: (code: string) => Promise<unknown>;
 
-  /** Used to generate PDF by generateTarget() and by print preview */
+  /** Used to generate PDF by generate() and by print preview */
   generatePdf?: (
     html: string,
     properties: ReportProperties,
