@@ -24,6 +24,7 @@ const tr2 = {
   'font-weight': { en: 'Weight', sl: 'Debelina' },
   'font-select-family': { en: 'Select Font Family', sl: 'Izberi Pisavo' },
   border: { en: 'Border', sl: 'Obroba' },
+  'border-width': { en: 'Width', sl: 'Debelina' },
   'border-style': { en: 'Style', sl: 'Stil' },
   'border-solid': { en: 'Solid', sl: 'Polna' },
   'border-dashed': { en: 'Dashed', sl: 'Črtkano' },
@@ -218,6 +219,10 @@ const tr2 = {
   'img-fit-fill': { en: 'Fill', sl: 'Zapolni' },
   'img-fit-contain': { en: 'Contain', sl: 'Pomanjšaj' },
   'img-fit-cover': { en: 'Cover', sl: 'Povečaj' },
+
+  'select image': { en: 'Select image', sl: 'Izberi sliko' },
+  close: { en: 'Close', sl: 'Zapri' },
+  error: { en: 'Error', sl: 'Napaka' },
 };
 
 export type trKeys = keyof typeof tr2;

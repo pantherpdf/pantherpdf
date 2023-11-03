@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { tuple } from '../types';
 import Trans, { trKeys } from '../translation';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 
 export const TAligns = tuple('left', 'center', 'right', 'justify');
 export type TAlign = (typeof TAligns)[number];
@@ -23,31 +25,33 @@ interface AlignProps {
   onChange: (value: TAlign | undefined) => void;
 }
 
+const dt: { value: TAlign; icon: IconDefinition; transKey: trKeys }[] = [
+  { value: 'left', icon: faAlignLeft, transKey: 'align-left' },
+  { value: 'center', icon: faAlignCenter, transKey: 'align-center' },
+  { value: 'right', icon: faAlignRight, transKey: 'align-right' },
+  { value: 'justify', icon: faAlignJustify, transKey: 'align-justify' },
+];
+
 export default function PropertyAlign(props: AlignProps) {
-  const dt: { value: TAlign; icon: IconDefinition; transKey: trKeys }[] = [
-    { value: 'left', icon: faAlignLeft, transKey: 'align-left' },
-    { value: 'center', icon: faAlignCenter, transKey: 'align-center' },
-    { value: 'right', icon: faAlignRight, transKey: 'align-right' },
-    { value: 'justify', icon: faAlignJustify, transKey: 'align-justify' },
-  ];
   return (
     <div>
-      <div className="btn-group">
+      <ToggleButtonGroup
+        exclusive
+        value={props.value}
+        onChange={(e, newVal) =>
+          props.onChange(newVal !== props.value ? newVal : undefined)
+        }
+      >
         {dt.map(x => (
-          <button
+          <ToggleButton
             key={x.value}
-            className={`btn btn-outline-secondary ${
-              x.value === props.value ? 'active' : ''
-            }`}
-            onClick={() =>
-              props.onChange(x.value !== props.value ? x.value : undefined)
-            }
-            title={Trans(x.transKey)}
+            value={x.value}
+            aria-label={Trans(x.transKey)}
           >
             <FontAwesomeIcon icon={x.icon} fixedWidth />
-          </button>
+          </ToggleButton>
         ))}
-      </div>
+      </ToggleButtonGroup>
     </div>
   );
 }

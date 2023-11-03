@@ -6,6 +6,8 @@
 
 import React from 'react';
 import InputApplyOnEnter from './InputApplyOnEnter';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
 
 export type Value = [number, number, number, number];
 
@@ -26,9 +28,7 @@ export default function Property4SideInput(props: Props) {
     };
     return (
       <InputApplyOnEnter
-        id={props.id ? `${props.id}-${idx}` : undefined}
-        style={st}
-        regex={props.regex}
+        component={TextField}
         value={props.value[idx]}
         onChange={val => {
           if (typeof val !== 'number') {
@@ -38,6 +38,10 @@ export default function Property4SideInput(props: Props) {
           arr[idx] = val;
           props.onChange(arr);
         }}
+        id={props.id ? `${props.id}-${idx}` : undefined}
+        style={st}
+        regex={props.regex}
+        size="small"
       />
     );
   }
@@ -45,10 +49,10 @@ export default function Property4SideInput(props: Props) {
   return (
     <div>
       <div style={{ textAlign: 'center' }}>{renderInput(0)}</div>
-      <div className="d-flex">
+      <Stack direction="row">
         {renderInput(3)}
         {renderInput(1)}
-      </div>
+      </Stack>
       <div style={{ textAlign: 'center' }}>{renderInput(2)}</div>
     </div>
   );

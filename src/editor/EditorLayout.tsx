@@ -16,7 +16,6 @@ import EditorMenu from './EditorMenu';
 import ObjectExplorer from './ObjectExplorer';
 import DataTransform from './DataTransform';
 import EditWidgetNew from './EditWidgetNew';
-import style from './Editor.module.css';
 import { getWidget } from '../widgets/allWidgets';
 import { findInList, removeFromList, updateItem } from './childrenMgmt';
 import ReportSettings from './ReportSettings';
@@ -24,7 +23,88 @@ import { extractFiles } from '../FileSelect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { LoadGoogleFontCss } from '../widgets/GoogleFonts';
-import globalStyle from '../globalStyle.module.css';
+import SectionName from '../components/SectionName';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import IconButton from '@mui/material/IconButton';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
+import Divider from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+
+const BoxMain = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  left: '20%',
+  top: '0', // keep 0, to prevent scroll bar from appearing when content is smaller than window
+  right: '20%',
+  minHeight: '100vh',
+  padding: '4rem 1rem 0 1rem',
+  backgroundColor: 'white',
+  '&:focus': {
+    outline: 'none',
+  },
+  [theme.breakpoints.down('md')]: {
+    left: '0',
+    right: '0',
+  },
+}));
+
+const BoxMenu = styled(Paper)(({ theme }) => ({
+  position: 'fixed',
+  left: '0',
+  right: '0',
+  top: '0',
+  height: '4rem',
+  zIndex: 10,
+  borderBottom: '1px solid #ddd',
+}));
+
+const Box1 = styled('div')(({ theme }) => ({
+  position: 'fixed',
+  overflowY: 'auto',
+  left: '0',
+  top: '4rem',
+  bottom: 'calc(50% + 10px)',
+  width: '20%',
+  padding: '0 0.5rem 10px 0.5rem',
+  display: 'none',
+  [theme.breakpoints.up('md')]: {
+    display: 'block',
+  },
+}));
+
+const Box2 = styled('div')(({ theme }) => ({
+  position: 'fixed',
+  overflowY: 'auto',
+  left: '0',
+  top: '50%',
+  bottom: '0',
+  width: '20%',
+  padding: '0 0.5rem',
+  display: 'none',
+  [theme.breakpoints.up('md')]: {
+    display: 'block',
+  },
+}));
+
+const Box3 = styled('div')(({ theme }) => ({
+  position: 'fixed',
+  overflowY: 'auto',
+  right: '0',
+  top: '4rem',
+  bottom: '0',
+  width: '20%',
+  padding: '0 0.5rem',
+  display: 'none',
+  [theme.breakpoints.up('md')]: {
+    display: 'block',
+  },
+}));
 
 interface PropertiesHeaderProps extends GeneralProps {
   name: string | { [key: string]: string };
@@ -32,17 +112,16 @@ interface PropertiesHeaderProps extends GeneralProps {
 }
 function PropertiesHeader(props: PropertiesHeaderProps) {
   return (
-    <div className={`${globalStyle.section} d-flex`}>
-      <div className="flex-fill">{TransName(props.name)}</div>
-      {!!props.onDelete && (
-        <button
-          className="btn btn-sm btn-outline-danger"
-          onClick={props.onDelete}
-        >
-          <FontAwesomeIcon icon={faTrash} />
-        </button>
-      )}
-    </div>
+    <SectionName
+      text={TransName(props.name)}
+      endElement={
+        !!props.onDelete && (
+          <IconButton size="small" color="error" onClick={props.onDelete}>
+            <FontAwesomeIcon icon={faTrash} />
+          </IconButton>
+        )
+      }
+    />
   );
 }
 
@@ -107,9 +186,9 @@ function RenderContent(props: GeneralProps) {
       <div style={style}>
         {props.renderWidgets(props.report.children, [])}
         {props.report.children.length === 0 && (
-          <div className="text-muted text-center">
+          <Typography color="GrayText" align="center">
             {Trans('drag drop widgets here')}
-          </div>
+          </Typography>
         )}
       </div>
     );
@@ -120,7 +199,12 @@ function RenderContent(props: GeneralProps) {
       const content = JSON.stringify(props.data.data);
       return <pre>{content}</pre>;
     } catch (e) {
-      return <div className="alert alert-danger">{String(e)}</div>;
+      return (
+        <Alert severity="error">
+          <AlertTitle>{Trans('error')}</AlertTitle>
+          {String(e)}
+        </Alert>
+      );
     }
   }
 
@@ -128,22 +212,25 @@ function RenderContent(props: GeneralProps) {
     const dt = props.data.data;
     if (!Array.isArray(dt)) {
       return (
-        <div className="alert alert-danger">
+        <Alert severity="error">
+          <AlertTitle>{Trans('error')}</AlertTitle>
           {Trans('data must be 2D array')}
-        </div>
+        </Alert>
       );
     }
     return (
-      <table className="table">
-        <tbody>
+      <Table>
+        <TableBody>
           {dt.map((row, idx) => (
-            <tr key={idx}>
+            <TableRow key={idx}>
               {Array.isArray(row) &&
-                row.map((cell, idx2) => <td key={idx2}>{String(cell)}</td>)}
-            </tr>
+                row.map((cell, idx2) => (
+                  <TableCell key={idx2}>{String(cell)}</TableCell>
+                ))}
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     );
   }
 
@@ -208,24 +295,39 @@ export default function Layout(
 
   return (
     <>
-      <EditorMenu {...props} />
-      <div className={style.box1}>
-        <EditWidgetNew {...props} />
-      </div>
-      <div className={style.box2} onDragOver={onDragOver} onDrop={onDrop}>
-        <DataTransform {...props} />
-        <hr />
-        {props.data.errorMsg ? (
-          <div>{props.data.errorMsg}</div>
-        ) : (
-          <ObjectExplorer data={props.data.data} />
-        )}
-      </div>
-      <div className={style.box3}>
-        <Properties {...props} />
-      </div>
-      <div
-        className={style.boxMain}
+      <BoxMenu elevation={0}>
+        <EditorMenu {...props} />
+      </BoxMenu>
+      <Box1>
+        <Stack spacing={2}>
+          <div />
+          <EditWidgetNew {...props} />
+          <div />
+        </Stack>
+      </Box1>
+      <Box2 onDragOver={onDragOver} onDrop={onDrop}>
+        <Stack spacing={2}>
+          <div />
+          <DataTransform {...props} />
+          <Divider />
+          {props.data.errorMsg ? (
+            <div>{props.data.errorMsg}</div>
+          ) : (
+            <div>
+              <ObjectExplorer data={props.data.data} />
+            </div>
+          )}
+          <div />
+        </Stack>
+      </Box2>
+      <Box3>
+        <Stack spacing={2}>
+          <div />
+          <Properties {...props} />
+          <div />
+        </Stack>
+      </Box3>
+      <BoxMain
         onClick={resetSelection}
         onDragOver={props.dragOver}
         onDrop={e => props.drop(e, [props.report.children.length])}
@@ -235,7 +337,7 @@ export default function Layout(
         <div>
           <RenderContent {...props} />
         </div>
-      </div>
+      </BoxMain>
     </>
   );
 }

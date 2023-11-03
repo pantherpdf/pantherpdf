@@ -6,13 +6,22 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
 import type { ApiFileMetaData, ApiUploadMetaData } from './types';
 import type { ApiEndpoints } from './types';
 import FileSelect from './FileSelect';
 import Trans from './translation';
+import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Alert from '@mui/material/Alert';
+import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
 
 // check browser support for fetch stream upload (upload progress bar)
 // Chrome 92 requires experimental flag #enable-experimental-web-platform-features
@@ -75,7 +84,7 @@ export default function FileDialog(props: Props) {
   function prepareUpload(fileUpload: File[]) {
     // remove big files
     fileUpload = fileUpload.filter((f, idx) => {
-      if (f.size > 5000000) {
+      if (f.size > 15_000_000) {
         alert(Trans('file -name- too big', [f.name]));
         return false;
       }
@@ -233,38 +242,47 @@ export default function FileDialog(props: Props) {
 
   return (
     <>
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>{Trans('name')}</th>
-            <th style={{ width: '220px' }}>{Trans('uploaded')}</th>
-            <th style={{ width: '220px' }}>{Trans('modified')}</th>
-            <th style={{ width: '100px' }}>{Trans('size')}</th>
-            <td style={{ width: '100px' }}></td>
-          </tr>
-        </thead>
-        <tbody>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>{Trans('name')}</TableCell>
+            <TableCell style={{ width: '220px' }}>
+              {Trans('uploaded')}
+            </TableCell>
+            <TableCell style={{ width: '220px' }}>
+              {Trans('modified')}
+            </TableCell>
+            <TableCell style={{ width: '100px' }}>{Trans('size')}</TableCell>
+            <TableCell style={{ width: '100px' }}></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {files.map(f => (
-            <tr key={f.name}>
-              <td>
+            <TableRow key={f.name}>
+              <TableCell>
                 {!f.upload ||
                 (f.upload.status === 'complete' && !f.upload.errorMsg) ? (
                   props.mode === 'link' && props.api.filesDownloadUrl ? (
-                    <a
+                    <Link
                       href={props.api.filesDownloadUrl(f.name)}
                       target="_blank"
                       rel="noreferrer"
-                      className="d-block"
+                      style={{ display: 'block' }}
                     >
                       {f.name}
-                    </a>
+                    </Link>
                   ) : (
-                    <button
-                      className="btn btn-link d-block w-100 text-start"
+                    <Link
+                      sx={{
+                        width: '100%',
+                        display: 'block',
+                        textAlign: 'left',
+                      }}
+                      component="button"
                       onClick={() => props.onChange && props.onChange(f.name)}
                     >
                       {f.name}
-                    </button>
+                    </Link>
                   )
                 ) : (
                   <span>{f.name}</span>
@@ -277,11 +295,11 @@ export default function FileDialog(props: Props) {
                     {f.upload.status === 'complete' && (
                       <>
                         {f.upload.errorMsg ? (
-                          <div className="text-danger">{f.upload.errorMsg}</div>
+                          <Alert severity="error">{f.upload.errorMsg}</Alert>
                         ) : (
-                          <div className="text-success">
+                          <Alert severity="success">
                             {Trans('upload complete')}
-                          </div>
+                          </Alert>
                         )}
                       </>
                     )}
@@ -291,65 +309,63 @@ export default function FileDialog(props: Props) {
                           {Trans('uploading...')}
                           <FontAwesomeIcon
                             icon={faSpinner}
-                            spin={true}
-                            className="ms-2"
+                            spin
+                            style={{ marginLeft: '0.5rem' }}
                           />
                         </div>
                         {supportsRequestStreams && (
-                          <div className="progress">
-                            <div
-                              className="progress-bar"
-                              role="progressbar"
-                              style={{
-                                width:
-                                  ((f.upload.progress || 0) * 100).toString() +
-                                  '%',
-                              }}
-                            />
-                          </div>
+                          <LinearProgress
+                            variant="determinate"
+                            value={(f.upload.progress || 0) * 100}
+                          />
                         )}
                       </>
                     )}
                   </>
                 )}
-              </td>
-              <td>
+              </TableCell>
+              <TableCell>
                 <small>{f.uploadTime}</small>
-              </td>
-              <td>
+              </TableCell>
+              <TableCell>
                 <small>{f.modifiedTime}</small>
-              </td>
-              <td>{f.size}</td>
-              <td>
-                <Dropdown>
-                  <Dropdown.Toggle
-                    style={{ maxWidth: '3rem' }}
-                    split
-                    variant="outline-secondary"
-                    size="sm"
-                  />
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => fileDelete(f.name)}>
-                      <FontAwesomeIcon
-                        icon={faTrash}
-                        className="me-2"
-                        fixedWidth
-                      />
-                      {Trans('delete')}
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </td>
-            </tr>
+              </TableCell>
+              <TableCell>{f.size}</TableCell>
+              <TableCell>
+                <Button
+                  onClick={() => fileDelete(f.name)}
+                  size="small"
+                  variant="outlined"
+                  startIcon={<FontAwesomeIcon icon={faTrash} fixedWidth />}
+                >
+                  {Trans('delete')}
+                </Button>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+          {files.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={5}>
+                <Typography align="center" color="GrayText" fontStyle="italic">
+                  <small>{Trans('empty')}</small>
+                </Typography>
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
 
       {loading && (
-        <FontAwesomeIcon icon={faSpinner} spin={true} className="ms-2" />
+        <FontAwesomeIcon
+          icon={faSpinner}
+          spin
+          style={{ marginLeft: '0.5rem' }}
+        />
       )}
 
-      <FileSelect onSelect={fls => prepareUpload(fls)} />
+      {props.api.filesUpload && (
+        <FileSelect onSelect={fls => prepareUpload(fls)} />
+      )}
     </>
   );
 }

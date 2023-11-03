@@ -5,6 +5,9 @@
  */
 
 import useStateDelayed from '../useStateDelayed';
+import Slider from '@mui/material/Slider';
+import InputLabel from '@mui/material/InputLabel';
+import Typography from '@mui/material/Typography';
 
 interface Props {
   min: number;
@@ -13,7 +16,6 @@ interface Props {
   onChange: (val: number) => void;
   id?: string;
   label?: string;
-  labelClassName?: string;
 }
 
 export default function PropertySlider(props: Props) {
@@ -25,20 +27,23 @@ export default function PropertySlider(props: Props) {
   return (
     <>
       {props.label && (
-        <label htmlFor={props.id} className={props.labelClassName}>
+        <InputLabel htmlFor={props.id}>
           {props.label}
-          <small className="text-muted ms-2">{value}px</small>
-        </label>
+          <Typography
+            component="span"
+            color="GrayText"
+            sx={{ marginLeft: 0.5 }}
+          >
+            <small>{value}px</small>
+          </Typography>
+        </InputLabel>
       )}
-      <input
-        type="range"
-        id={props.id}
+      <Slider
         min={props.min}
         max={props.max}
         value={value}
-        onChange={e => setValue(parseInt(e.currentTarget.value), 300)}
-        onMouseUp={e => setValue(parseInt(e.currentTarget.value), 0)}
-        className="form-range"
+        onChange={(e, newVal) => setValue(newVal as number, 300)}
+        id={props.id}
       />
     </>
   );

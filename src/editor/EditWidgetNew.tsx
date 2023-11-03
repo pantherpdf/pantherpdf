@@ -5,41 +5,20 @@
  * @license MIT
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Trans, { TransName } from '../translation';
-import style from './EditWidgets.module.css';
 import { Report, ApiReportMetaData } from '../types';
 import { Widget, GeneralProps, ItemNewProps } from './types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Overlay, Tooltip } from 'react-bootstrap';
-import globalStyle from '../globalStyle.module.css';
-
-interface ExpandableProps {
-  name: string;
-  defaultExpanded?: boolean;
-  children: React.ReactNode;
-}
-
-function Expandable(props: ExpandableProps) {
-  const [expanded, setExpanded] = useState(props.defaultExpanded || false);
-  return (
-    <div>
-      <div
-        className={`${globalStyle.section} d-flex ${style.header}`}
-        onClick={() => setExpanded(!expanded)}
-      >
-        <span className="mr-3" style={{ fontSize: '110%' }}>
-          <small className="me-2">
-            <FontAwesomeIcon icon={expanded ? faMinus : faPlus} fixedWidth />
-          </small>
-        </span>
-        <strong>{props.name}</strong>
-      </div>
-      {expanded && <div className="pl-2">{props.children}</div>}
-    </div>
-  );
-}
+import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
+import SectionName from '../components/SectionName';
+import Tooltip from '@mui/material/Tooltip';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Typography from '@mui/material/Typography';
 
 function ShowReports(props: GeneralProps) {
   const [allReports, setAllReports] = useState<ApiReportMetaData[]>([]);
@@ -69,61 +48,34 @@ function ShowReports(props: GeneralProps) {
   if (allReports.length === 0) {
     return (
       <>
-        <span className="text-muted">{Trans('empty')}</span>
+        <Typography color="GrayText">{Trans('empty')}</Typography>
       </>
     );
   }
   return (
     <>
-      {allReports.map((r, idx) => (
-        <React.Fragment key={idx}>
-          <div
-            key={idx}
-            draggable={true}
+      {allReports.map(r => (
+        <ListItem disablePadding key={r.id}>
+          <ListItemButton
+            disableRipple
+            draggable
             onDragStart={e => dragStartReport(e, r.id)}
             onDragEnd={props.dragWidgetEnd}
-            className={style.widget}
+            sx={{ py: 0.2 }}
           >
-            {TransName(r.name)}
-          </div>
-        </React.Fragment>
+            <ListItemIcon>
+              <FontAwesomeIcon icon={faFileAlt} fixedWidth />
+            </ListItemIcon>
+            <ListItemText primary={TransName(r.name)} />
+          </ListItemButton>
+        </ListItem>
       ))}
     </>
   );
 }
 
 function ShowWidgets(props: GeneralProps) {
-  const target = useRef<HTMLDivElement | null>(null);
-  const tooltipTimer = useRef<number>(0);
-  const [showTooltipId, setShowTooltipId] = useState<string | null>(null);
-
-  function showTooltip(id: string, el: HTMLDivElement) {
-    hideTooltip();
-    tooltipTimer.current = window.setTimeout(hideTooltip, 2500);
-    target.current = el;
-    setShowTooltipId(id);
-  }
-
-  function hideTooltip() {
-    if (tooltipTimer.current === 0) {
-      return;
-    }
-    clearTimeout(tooltipTimer.current);
-    tooltipTimer.current = 0;
-    target.current = null;
-    setShowTooltipId(null);
-  }
-
-  useEffect(() => {
-    return () => {
-      hideTooltip();
-    };
-  }, []);
-
-  async function dragStartWidget(
-    e: React.DragEvent<HTMLDivElement>,
-    w: Widget,
-  ) {
+  async function dragStartWidget(e: React.DragEvent<HTMLElement>, w: Widget) {
     const propsNewItem: ItemNewProps = {
       report: props.report,
     };
@@ -132,57 +84,60 @@ function ShowWidgets(props: GeneralProps) {
   }
 
   return (
-    <>
+    <List disablePadding>
       {props.widgets.map(w => {
         if (typeof w.canAdd !== 'undefined' && !w.canAdd) {
           return null;
         }
         return (
-          <div
+          <Tooltip
             key={w.id}
-            draggable={true}
-            onDragStart={e => dragStartWidget(e, w)}
-            onDragEnd={e => props.dragWidgetEnd(e)}
-            className={`${style.widget} bg`}
-            onClick={e => showTooltip(w.id, e.currentTarget)}
+            title={Trans('drag drop widgets')}
+            placement="left-start"
           >
-            <FontAwesomeIcon icon={w.icon} fixedWidth className="me-2" />
-            {TransName(w.name)}
-          </div>
+            <ListItem disablePadding>
+              <ListItemButton
+                disableRipple
+                draggable
+                onDragStart={e => dragStartWidget(e, w)}
+                onDragEnd={e => props.dragWidgetEnd(e)}
+                sx={{ py: 0.2 }}
+              >
+                <ListItemIcon>
+                  <FontAwesomeIcon icon={w.icon} fixedWidth />
+                </ListItemIcon>
+                <ListItemText primary={TransName(w.name)} />
+              </ListItemButton>
+            </ListItem>
+          </Tooltip>
         );
       })}
-      <Overlay target={target.current} show={!!showTooltipId} placement="right">
-        {props => (
-          <Tooltip id="editWidgetNewWidgetTooltip" {...props}>
-            {Trans('drag drop widgets')}
-          </Tooltip>
-        )}
-      </Overlay>
-    </>
+    </List>
   );
 }
 
 export default function EditWidgetNew(props: GeneralProps) {
   if (props.report.target !== 'pdf' && props.report.target !== 'html') {
     return (
-      <div className="text-muted">
+      <Typography color="GrayText">
         <small>
           {Trans('no widgets available for target -name-', [
             props.report.target,
           ])}
         </small>
-      </div>
+      </Typography>
     );
   }
   return (
     <>
-      <div className={globalStyle.section}>{Trans('widgets')}</div>
+      <SectionName text={Trans('widgets')} />
       <ShowWidgets {...props} />
 
       {!!props.api.allReports && (
-        <Expandable name={Trans('reports')}>
+        <>
+          <SectionName text={Trans('reports')} />
           <ShowReports {...props} />
-        </Expandable>
+        </>
       )}
     </>
   );

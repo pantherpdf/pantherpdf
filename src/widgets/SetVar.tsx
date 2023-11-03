@@ -9,9 +9,9 @@ import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faHammer } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
-import InputApplyOnEnter from './InputApplyOnEnter';
+import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
 import Trans, { TransName } from '../translation';
-import globalStyle from '../globalStyle.module.css';
+import TextField from '@mui/material/TextField';
 
 export interface SetVarData extends Item {
   type: 'SetVar';
@@ -74,29 +74,23 @@ export const SetVar: Widget = {
     const item = props.item as SetVarData;
     return (
       <>
-        <div className={globalStyle.vform}>
-          <label htmlFor="SetVar-source">{Trans('source data')}</label>
-          <div className="input-group mb-3">
-            <span className="input-group-text fst-italic">ƒ</span>
-            <InputApplyOnEnter
-              id="SetVar-source"
-              value={item.source}
-              onChange={val => props.setItem({ ...item, source: val })}
-            />
-          </div>
-        </div>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.source}
+          onChange={val => props.setItem({ ...item, source: val })}
+          label={Trans('source data')}
+          id="SetVar-source"
+          InputProps={inputFAdornment}
+        />
 
-        <div className={`${globalStyle.vform} mb-0`}>
-          <label htmlFor="SetVar-varName">{Trans('varName')}</label>
-          <InputApplyOnEnter
-            id="SetVar-varName"
-            value={item.varName}
-            onChange={val => props.setItem({ ...item, varName: val })}
-          />
-        </div>
-        <small className="text-muted d-block mb-3">
-          {Trans('repeat - current item is this var')}
-        </small>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.varName}
+          onChange={val => props.setItem({ ...item, varName: val })}
+          label={Trans('varName')}
+          id="SetVar-varName"
+          helperText={Trans('repeat - current item is this var')}
+        />
       </>
     );
   },

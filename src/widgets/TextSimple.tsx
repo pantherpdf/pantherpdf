@@ -9,7 +9,8 @@ import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
-import InputApplyOnEnter from './InputApplyOnEnter';
+import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
+import TextField from '@mui/material/TextField';
 
 export interface TextSimpleData extends Item {
   type: 'TextSimple';
@@ -62,14 +63,13 @@ export const TextSimple: Widget = {
     const item = props.item as TextSimpleData;
     return (
       <>
-        <div className="input-group mb-3">
-          <span className="input-group-text fst-italic">ƒ</span>
-          <InputApplyOnEnter
-            id="TextSimple-formula"
-            value={item.formula}
-            onChange={val => props.setItem({ ...item, formula: val })}
-          />
-        </div>
+        <InputApplyOnEnter
+          component={TextField}
+          id="TextSimple-formula"
+          value={item.formula}
+          onChange={val => props.setItem({ ...item, formula: val })}
+          InputProps={inputFAdornment}
+        />
       </>
     );
   },

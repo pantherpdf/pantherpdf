@@ -34,15 +34,67 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { listOfAdjusts } from './formulaAdjust';
 import Trans, { TransName, trKeys } from '../translation';
 import { idCmp } from '../editor/childrenMgmt';
-import InputApplyOnEnter from './InputApplyOnEnter';
-import style from './TextHtml.module.css';
+import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
 import { LoadGoogleFontCss } from './GoogleFonts';
 import { Element_, parse, extractText } from './HtmlParser';
-import globalStyle from '../globalStyle.module.css';
+import SectionName from '../components/SectionName';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import InputLabel from '@mui/material/InputLabel';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Divider from '@mui/material/Divider';
 
 const listOfEditors: Editor[] = [];
 const listOfSelectionCallbacks: (() => void)[] = [];
 const tagType = 'data';
+
+interface AlignOpt {
+  command: string;
+  icon: IconDefinition;
+  transKey: trKeys;
+}
+
+const alignOpt: AlignOpt[] = [
+  {
+    command: 'justifyLeft',
+    icon: faAlignLeft,
+    transKey: 'align-left',
+  },
+  {
+    command: 'justifyCenter',
+    icon: faAlignCenter,
+    transKey: 'align-center',
+  },
+  {
+    command: 'justifyRight',
+    icon: faAlignRight,
+    transKey: 'align-right',
+  },
+  {
+    command: 'justifyFull',
+    icon: faAlignJustify,
+    transKey: 'align-justify',
+  },
+];
+
+interface TextStyleOpt {
+  command: string;
+  icon: IconDefinition;
+  transKey: trKeys;
+}
+
+const textStyleOpt: TextStyleOpt[] = [
+  { command: 'bold', icon: faBold, transKey: 'font-weight-bold' },
+  { command: 'italic', icon: faItalic, transKey: 'font-style-italic' },
+  {
+    command: 'underline',
+    icon: faUnderline,
+    transKey: 'font-decoration-underline',
+  },
+];
 
 function editorGet(wid: number[]): Editor | undefined {
   return listOfEditors.find(edt => idCmp(edt.props.wid, wid));
@@ -203,46 +255,41 @@ function TagEditor(props: ItemRenderEditorProps) {
   return (
     <>
       {/* FORMULA */}
-      <div>
-        <label htmlFor="tag-value">{Trans('source data')}</label>
-      </div>
-      <div className="input-group mb-3">
-        <span className="input-group-text fst-italic">ƒ</span>
-        <InputApplyOnEnter
-          id="tag-value"
-          value={btn.innerText}
-          onChange={val => {
-            btn.innerText = String(val);
-            editor.sendChanges(true);
-          }}
-        />
-      </div>
+      <InputApplyOnEnter
+        component={TextField}
+        id="tag-value"
+        value={btn.innerText}
+        onChange={val => {
+          btn.innerText = String(val);
+          editor.sendChanges(true);
+        }}
+        label={Trans('source data')}
+        InputProps={inputFAdornment}
+      />
 
       {/* ADJUST */}
-      <label htmlFor="tag-adjust" className="d-block">
-        {Trans('adjust')}
-      </label>
-      <select
-        className="form-select"
+      <TextField
+        select
         value={btn.getAttribute('data-adjust') || ''}
         onChange={e => {
           btn.setAttribute('data-adjust', e.currentTarget.value);
           editor.sendChanges(true);
         }}
         id="tag-adjust"
+        label={Trans('adjust')}
       >
-        <option value=""></option>
+        <MenuItem value=""></MenuItem>
         {arrAdjusts.map((flt, idx) => (
           <React.Fragment key={flt.id}>
             {idx !== 0 && flt.category !== arrAdjusts[idx - 1].category && (
-              <option disabled>──────────</option>
+              <MenuItem disabled>──────────</MenuItem>
             )}
-            <option value={flt.id}>
+            <MenuItem value={flt.id}>
               {flt.name ? TransName(flt.name) : flt.id}
-            </option>
+            </MenuItem>
           </React.Fragment>
         ))}
-      </select>
+      </TextField>
     </>
   );
 }
@@ -250,19 +297,20 @@ function TagEditor(props: ItemRenderEditorProps) {
 function TagEditorContainer(props: ItemRenderEditorProps) {
   return (
     <>
-      <div className={globalStyle.section}>{Trans('tag')}</div>
-      <button
-        className="btn btn-outline-secondary ms-2"
+      <SectionName text={Trans('tag')} />
+      <Button
+        color="secondary"
+        variant="outlined"
         title={Trans('insert tag')}
         draggable="true"
         onDragStart={e => {
           e.dataTransfer.setData('text/plain', 'insert-tag');
         }}
         onClick={() => insertTag(props.wid)}
+        startIcon={<FontAwesomeIcon icon={faTag} />}
       >
-        <FontAwesomeIcon icon={faTag} className="me-2" />
         {Trans('insert tag')}
-      </button>
+      </Button>
       <TagEditor {...props} />
     </>
   );
@@ -591,10 +639,10 @@ class Editor extends React.Component<EditorProps, EditorState> {
 
   render() {
     return (
-      <div
+      <TextHtmlEditor
         ref={this.setElementRef.bind(this)}
-        contentEditable={true}
-        draggable={true}
+        contentEditable
+        draggable
         onDragStart={e => {
           e.preventDefault();
           e.stopPropagation();
@@ -608,7 +656,6 @@ class Editor extends React.Component<EditorProps, EditorState> {
           this.parentsRestoreDraggable(e.currentTarget);
           this.sendChanges(true);
         }}
-        className={style.editor}
         onDrop={e => {
           const dt = e.dataTransfer.getData('text/plain');
           if (dt === 'insert-tag') {
@@ -876,99 +923,82 @@ export const TextHtml: Widget = {
 
   RenderProperties: function (props) {
     const item = props.item as TextHtmlData;
-    const alignOpt: [string, string, IconDefinition, trKeys][] = [
-      ['left', 'justifyLeft', faAlignLeft, 'align-left'],
-      ['center', 'justifyCenter', faAlignCenter, 'align-center'],
-      ['right', 'justifyRight', faAlignRight, 'align-right'],
-      ['justify', 'justifyFull', faAlignJustify, 'align-justify'],
-    ];
     return (
       <>
-        <div className={globalStyle.hform}>
-          <label>{Trans('font')}</label>
-          <PropertyFont
-            value={item.font}
-            onChange={val => props.setItem({ ...props.item, font: val })}
-            googleFontApiKey={props.api.googleFontApiKey}
-          />
-        </div>
-        <hr />
-        <div className="mb-2">
-          <div className="btn-group">
-            {alignOpt.map(x => (
-              <button
-                key={x[0]}
-                className={`btn btn-outline-secondary`}
-                onClick={() => document.execCommand(x[1])}
-                title={Trans(x[3])}
-              >
-                <FontAwesomeIcon icon={x[2]} fixedWidth />
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="d-flex mb-3">
-          <div className="btn-group">
-            <button
-              className="btn btn-outline-secondary"
-              onClick={() => document.execCommand('bold')}
-              title={Trans('font-weight-bold')}
+        <InputLabel>{Trans('font')}</InputLabel>
+        <PropertyFont
+          value={item.font}
+          onChange={val => props.setItem({ ...props.item, font: val })}
+          googleFontApiKey={props.api.googleFontApiKey}
+        />
+        <Divider />
+        <ToggleButtonGroup
+          value={[]}
+          onChange={(e, newVal: string[]) => {
+            document.execCommand(newVal[0]);
+          }}
+        >
+          {alignOpt.map(x => (
+            <ToggleButton
+              key={x.command}
+              value={x.command}
+              aria-label={Trans(x.transKey)}
             >
-              <FontAwesomeIcon icon={faBold} />
-            </button>
-            <button
-              className="btn btn-outline-secondary"
-              onClick={() => document.execCommand('italic')}
-              title={Trans('font-style-italic')}
+              <FontAwesomeIcon icon={x.icon} fixedWidth />
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+        <ToggleButtonGroup
+          value={[]}
+          onChange={(e, newVal: string[]) => {
+            document.execCommand(newVal[0]);
+          }}
+        >
+          {textStyleOpt.map(x => (
+            <ToggleButton
+              key={x.command}
+              value={x.command}
+              aria-label={Trans(x.transKey)}
             >
-              <FontAwesomeIcon icon={faItalic} />
-            </button>
-            <button
-              className="btn btn-outline-secondary"
-              onClick={() => document.execCommand('underline')}
-              title={Trans('font-decoration-underline')}
-            >
-              <FontAwesomeIcon icon={faUnderline} />
-            </button>
-          </div>
-        </div>
+              <FontAwesomeIcon icon={x.icon} fixedWidth />
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
 
-        <div className={globalStyle.hform}>
-          <label htmlFor="TextHtml-fontSize">{Trans('font-size')}</label>
-          <select
-            className="form-select"
-            id="TextHtml-fontSize"
-            value=""
-            onChange={e => {
-              const val = `${e.currentTarget.value}pt`;
-              const editor = editorGet(props.wid);
-              if (val.length === 0 || !editor || !editor.elementRef) {
-                return;
+        <TextField
+          select
+          label={Trans('font-size')}
+          value=""
+          onChange={e => {
+            const val = `${e.target.value}pt`;
+            const editor = editorGet(props.wid);
+            if (val.length === 0 || !editor || !editor.elementRef) {
+              return;
+            }
+            document.execCommand('fontSize', false, '7');
+            var fontElements = document.getElementsByTagName('font');
+            for (let i = 0, len = fontElements.length; i < len; ++i) {
+              const el: any = fontElements[i]; // using deprecated api
+              if (!isNodeInside(el, editor.elementRef)) {
+                continue;
               }
-              document.execCommand('fontSize', false, '7');
-              var fontElements = document.getElementsByTagName('font');
-              for (let i = 0, len = fontElements.length; i < len; ++i) {
-                const el: any = fontElements[i]; // using deprecated api
-                if (!isNodeInside(el, editor.elementRef)) {
-                  continue;
-                }
-                if (el.size === '7') {
-                  el.removeAttribute('size');
-                  el.style.fontSize = val;
-                }
+              if (el.size === '7') {
+                el.removeAttribute('size');
+                el.style.fontSize = val;
               }
-            }}
-            title={Trans('font-size')}
-            style={{ maxWidth: '5rem' }}
-          >
-            <option value=""></option>
-            {['8', '10', '12', '14', '16', '18', '24', '36'].map(x => (
-              <option key={x} value={x}>
-                {x}
-              </option>
-            ))}
-          </select>
-        </div>
+            }
+          }}
+          id="TextHtml-fontSize"
+          sx={{ maxWidth: '5rem' }}
+          title={Trans('font-size')}
+        >
+          <MenuItem value=""></MenuItem>
+          {['8', '10', '12', '14', '16', '18', '24', '36'].map(x => (
+            <MenuItem key={x} value={x}>
+              {x}
+            </MenuItem>
+          ))}
+        </TextField>
 
         <TagEditorContainer {...props} />
       </>
@@ -977,3 +1007,32 @@ export const TextHtml: Widget = {
 
   canDrag: false,
 };
+
+const TextHtmlEditor = styled('div')({
+  borderRadius: '0.15rem',
+
+  '&:focus-visible': {
+    boxShadow: '0 0 3pt 2pt rgba(100,149,237,0.7)',
+    outline: 'none',
+  },
+
+  '& data': {
+    display: 'inline-block',
+    cursor: 'pointer',
+    outline: 'none',
+    border: '1px solid #949ea8',
+    borderRadius: '0.2rem',
+    color: 'inherit',
+    padding: '0 0.05rem',
+    backgroundColor: 'inherit',
+    fontWeight: 'inherit',
+    fontSize: 'inherit',
+    fontFamily: 'inherit',
+    fontStyle: 'inherit',
+    textAlign: 'inherit',
+    maxWidth: '100%',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    verticalAlign: 'top',
+  },
+});

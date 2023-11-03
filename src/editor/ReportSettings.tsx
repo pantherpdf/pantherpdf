@@ -5,13 +5,15 @@
  * @license MIT
  */
 
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import { GeneralProps } from './types';
 import type { TargetOption, Report } from '../types';
 import { isReport } from '../types';
 import Trans from '../translation';
 import PropertyFont, { TFont } from '../widgets/PropertyFont';
-import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
+import InputApplyOnEnter, {
+  inputFAdornment,
+} from '../widgets/InputApplyOnEnter';
 import Property4SideInput, {
   Value as Property4SideInputValue,
 } from '../widgets/Property4SideInput';
@@ -24,8 +26,19 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import VarEditor from './VarEditor';
 import { saveAs } from 'file-saver';
-import style from './EditWidgets.module.css';
-import globalStyle from '../globalStyle.module.css';
+import SectionName from '../components/SectionName';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
+import InputAdornment from '@mui/material/InputAdornment';
+
+const styleWidget: CSSProperties = {
+  padding: '3px 5px',
+  margin: '2px 0',
+  cursor: 'grab',
+};
 
 // hack to get array of possible values
 // because I can only import types from shared
@@ -37,6 +50,10 @@ const TargetOptionTmpObj: { [key in TargetOption]: number } = {
   'csv-windows-1250': 1,
 };
 const TargetOptionTmpKeys = Object.keys(TargetOptionTmpObj);
+
+const inputAdornmentMm = {
+  endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+};
 
 function fileReportUpload(
   arr: Report[],
@@ -91,27 +108,28 @@ function ShowUpload(props: GeneralProps) {
 
   return (
     <>
-      <div className="btn-group" role="group">
-        <button className="btn btn-outline-secondary" onClick={fileDownload}>
-          <FontAwesomeIcon icon={faDownload} fixedWidth className="me-2" />
-          {Trans('export')}
-        </button>
-        <button
-          className="btn btn-outline-secondary"
-          onClick={() => fileReportUpload(arr, setArr)}
+      <ButtonGroup color="secondary" variant="outlined">
+        <Button
+          onClick={fileDownload}
+          startIcon={<FontAwesomeIcon icon={faDownload} fixedWidth />}
         >
-          <FontAwesomeIcon icon={faUpload} fixedWidth className="me-2" />
+          {Trans('export')}
+        </Button>
+        <Button
+          onClick={() => fileReportUpload(arr, setArr)}
+          startIcon={<FontAwesomeIcon icon={faUpload} fixedWidth />}
+        >
           {Trans('import')}
-        </button>
-      </div>
-      {arr.length > 0 && <hr />}
+        </Button>
+      </ButtonGroup>
+      {arr.length > 0 && <Divider />}
       {arr.map((r, idx) => (
         <div
           key={idx}
-          draggable={true}
+          draggable
           onDragStart={e => dragStartFile(e, r)}
           onDragEnd={props.dragWidgetEnd}
-          className={style.widget}
+          style={styleWidget}
         >
           {r.name}&nbsp;
         </div>
@@ -123,8 +141,8 @@ function ShowUpload(props: GeneralProps) {
 export default function ReportSettings(props: GeneralProps) {
   const [showMore, setShowMore] = useState<boolean>(false);
 
-  async function changeTarget(e: React.ChangeEvent<HTMLSelectElement>) {
-    const value = e.currentTarget.value;
+  async function changeTarget(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
     const obj: Report = { ...props.report, target: value as TargetOption };
     return props.setReport(obj);
   }
@@ -187,164 +205,135 @@ export default function ReportSettings(props: GeneralProps) {
     : [0, 0, 0, 0];
   return (
     <>
-      <div className={globalStyle.vform}>
-        <label htmlFor="report-name">{Trans('name')}</label>
-        <div className="input-group">
-          <InputApplyOnEnter
-            id="report-name"
-            value={props.report.name}
-            onChange={val => {
-              const obj = { ...props.report, name: String(val) };
-              return props.setReport(obj);
-            }}
-          />
-        </div>
-      </div>
+      <InputApplyOnEnter
+        component={TextField}
+        value={props.report.name}
+        onChange={val => {
+          const obj = { ...props.report, name: String(val) };
+          return props.setReport(obj);
+        }}
+        id="report-name"
+        label={Trans('name')}
+        fullWidth
+      />
 
-      <div className={globalStyle.hform}>
-        <label htmlFor="target">{Trans('target')}</label>
-        <select
-          className="form-select"
-          id="target"
-          value={props.report.target}
-          onChange={changeTarget}
-        >
-          {TargetOptionTmpKeys.map(tp => (
-            <option key={tp} value={tp}>
-              {tp}
-            </option>
-          ))}
-        </select>
-      </div>
+      <TextField
+        id="target"
+        select
+        label={Trans('target')}
+        value={props.report.target}
+        onChange={changeTarget}
+        fullWidth
+      >
+        {TargetOptionTmpKeys.map(tp => (
+          <MenuItem key={tp} value={tp}>
+            {tp}
+          </MenuItem>
+        ))}
+      </TextField>
 
-      <div className="mb-3">
-        <button
-          className="btn btn-sm btn-outline-secondary"
-          onClick={() => setShowMore(!showMore)}
-        >
-          <FontAwesomeIcon
-            icon={showMore ? faCaretUp : faCaretDown}
-            className="me-2"
-          />
-          {Trans(showMore ? 'show less' : 'show more')}
-        </button>
-      </div>
+      <Button
+        size="small"
+        color="secondary"
+        variant="outlined"
+        onClick={() => setShowMore(!showMore)}
+        startIcon={
+          <FontAwesomeIcon icon={showMore ? faCaretUp : faCaretDown} />
+        }
+      >
+        {Trans(showMore ? 'show less' : 'show more')}
+      </Button>
 
       {showMore && (
         <>
-          <div className={globalStyle.vform}>
-            <label htmlFor="fileName">{Trans('fileName')}</label>
-            <div className="input-group">
-              <span className="input-group-text fst-italic">ƒ</span>
-              <InputApplyOnEnter
-                id="fileName"
-                value={props.report.properties.fileName || ''}
-                onChange={val =>
-                  typeof val === 'string' && val.length > 0
-                    ? changeProperty('fileName', val)
-                    : deleteProperty('fileName')
-                }
-              />
-            </div>
-          </div>
+          <InputApplyOnEnter
+            component={TextField}
+            value={props.report.properties.fileName || ''}
+            onChange={val =>
+              typeof val === 'string' && val.length > 0
+                ? changeProperty('fileName', val)
+                : deleteProperty('fileName')
+            }
+            label={Trans('fileName')}
+            id="fileName"
+            InputProps={inputFAdornment}
+            fullWidth
+          />
 
-          <div className={globalStyle.hform}>
-            <label htmlFor="lang">{Trans('lang')}</label>
-            <div>
-              <InputApplyOnEnter
-                id="lang"
-                value={props.report.properties.lang || ''}
-                onChange={val =>
-                  typeof val === 'string' && val.length > 0
-                    ? changeProperty('lang', val)
-                    : deleteProperty('lang')
-                }
-              />
-              <small className="text-muted">
-                {Trans('lang 2 letter iso code')}
-              </small>
-            </div>
-          </div>
+          <InputApplyOnEnter
+            component={TextField}
+            value={props.report.properties.lang || ''}
+            onChange={val =>
+              typeof val === 'string' && val.length > 0
+                ? changeProperty('lang', val)
+                : deleteProperty('lang')
+            }
+            label={Trans('lang')}
+            id="lang"
+            helperText={Trans('lang 2 letter iso code')}
+          />
 
           {props.report.target === 'pdf' && (
             <>
-              <div className={globalStyle.hform}>
-                <label>{Trans('font')}</label>
-                <div className="input-group">
-                  <PropertyFont
-                    value={
-                      props.report.properties.font
-                        ? props.report.properties.font
-                        : {}
-                    }
-                    onChange={changeFont}
-                    googleFontApiKey={props.api.googleFontApiKey}
-                  />
-                </div>
-              </div>
+              <PropertyFont
+                value={
+                  props.report.properties.font
+                    ? props.report.properties.font
+                    : {}
+                }
+                onChange={changeFont}
+                googleFontApiKey={props.api.googleFontApiKey}
+              />
 
-              <div className={globalStyle.section}>
-                {Trans('paper')}
-                <small className="text-muted ms-2">
-                  {Trans('0 means default')}
-                </small>
-              </div>
+              <SectionName
+                text={Trans('paper')}
+                secondaryText={Trans('0 means default')}
+              />
 
-              <div className={globalStyle.hform}>
-                <label htmlFor="paperWidth">{Trans('width')}</label>
-                <div className="input-group">
-                  <InputApplyOnEnter
-                    id="paperWidth"
-                    min="0"
-                    max="10000"
-                    value={
-                      props.report.properties.paperWidth
-                        ? props.report.properties.paperWidth
-                        : 0
-                    }
-                    onChange={val =>
-                      val
-                        ? changeProperty('paperWidth', val)
-                        : deleteProperty('paperWidth')
-                    }
-                  />
-                  <span className="input-group-text">mm</span>
-                </div>
-              </div>
+              <InputApplyOnEnter
+                component={TextField}
+                value={
+                  props.report.properties.paperWidth
+                    ? props.report.properties.paperWidth
+                    : 0
+                }
+                onChange={val =>
+                  val
+                    ? changeProperty('paperWidth', val)
+                    : deleteProperty('paperWidth')
+                }
+                type="number"
+                label={Trans('width')}
+                id="paperWidth"
+                InputProps={inputAdornmentMm}
+              />
 
-              <div className={globalStyle.hform}>
-                <label htmlFor="paperHeight">{Trans('height')}</label>
-                <div className="input-group">
-                  <InputApplyOnEnter
-                    id="paperHeight"
-                    min="0"
-                    max="10000"
-                    value={
-                      props.report.properties.paperHeight
-                        ? props.report.properties.paperHeight
-                        : 0
-                    }
-                    onChange={val =>
-                      val
-                        ? changeProperty('paperHeight', val)
-                        : deleteProperty('paperHeight')
-                    }
-                  />
-                  <span className="input-group-text">mm</span>
-                </div>
-              </div>
+              <InputApplyOnEnter
+                component={TextField}
+                value={
+                  props.report.properties.paperHeight
+                    ? props.report.properties.paperHeight
+                    : 0
+                }
+                onChange={val =>
+                  val
+                    ? changeProperty('paperHeight', val)
+                    : deleteProperty('paperHeight')
+                }
+                type="number"
+                label={Trans('height')}
+                id="paperHeight"
+                InputProps={inputAdornmentMm}
+              />
 
-              <div className={globalStyle.section}>
-                {Trans('margin')}
-                <small className="text-muted ms-2">mm</small>
-              </div>
+              <SectionName text={Trans('margin')} secondaryText="mm" />
               <Property4SideInput value={margin} onChange={changeMargin} />
             </>
           )}
 
           <VarEditor {...props} />
 
-          <div className={globalStyle.section}>{Trans('import export')}</div>
+          <SectionName text={Trans('import export')} />
           <ShowUpload {...props} />
         </>
       )}

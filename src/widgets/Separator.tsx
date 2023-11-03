@@ -12,7 +12,7 @@ import PropertyBorder, { Border, genBorderCss } from './PropertyBorder';
 import Trans from '../translation';
 import BoxName from './BoxName';
 import PropertySlider from './PropertySlider';
-import globalStyle from '../globalStyle.module.css';
+import SectionName from '../components/SectionName';
 
 export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
 export type TBorderStyle = (typeof TBorderStyles)[number];
@@ -88,20 +88,18 @@ export const Separator: Widget = {
           onChange={val => props.setItem({ ...props.item, border: val })}
         />
 
+        <SectionName text={Trans('margin top')} />
         <PropertySlider
           id="sep-marginTop"
-          label={Trans('margin top')}
-          labelClassName={globalStyle.section}
           min={0}
           max={40}
           value={item.marginTop}
           onChange={val => props.setItem({ ...props.item, marginTop: val })}
         />
 
+        <SectionName text={Trans('margin bottom')} />
         <PropertySlider
           id="sep-marginBottom"
-          label={Trans('margin bottom')}
-          labelClassName={globalStyle.section}
           min={0}
           max={40}
           value={item.marginBottom}

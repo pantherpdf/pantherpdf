@@ -15,6 +15,11 @@ import InputApplyOnEnter, {
 } from './InputApplyOnEnter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Trans from '../translation';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import InputBase from '@mui/material/InputBase';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 
 export interface ColumnsCtData extends Item {
   type: 'ColumnsCt';
@@ -173,16 +178,21 @@ export const Columns: Widget = {
     }
     return (
       <>
-        <label htmlFor="Columns-width" className="d-block">
+        <div>
           {Trans('width')}
-        </label>
-        <small className="text-muted d-block">{WidthOptions}</small>
-        <small className="text-muted d-block">
-          {Trans('columns - empty = auto')}
-        </small>
+          <br />
+          <Typography color="GrayText">
+            <small>
+              {WidthOptions}
+              <br />
+              {Trans('columns - empty = auto')}
+            </small>
+          </Typography>
+        </div>
         {item.widths.map((w, idx) => (
-          <div key={idx} className="input-group">
+          <Paper key={idx} sx={{ display: 'flex', alignItems: 'center' }}>
             <InputApplyOnEnter
+              component={InputBase}
               id={`Columns-width-${idx}`}
               value={w}
               onChange={val => {
@@ -191,10 +201,9 @@ export const Columns: Widget = {
                 props.setItem({ ...item, widths: arr });
               }}
               regex={WidthRegex}
-              style={{ flex: '1' }}
+              sx={{ ml: 1, flex: 1 }}
             />
-            <button
-              className="btn btn-outline-secondary"
+            <IconButton
               onClick={() => {
                 const ws = [...item.widths];
                 const chs = [...item.children];
@@ -205,12 +214,13 @@ export const Columns: Widget = {
               title={Trans('remove')}
             >
               <FontAwesomeIcon icon={faTimes} />
-            </button>
-          </div>
+            </IconButton>
+          </Paper>
         ))}
         <div>
-          <button
-            className="btn btn-secondary"
+          <Button
+            color="secondary"
+            variant="outlined"
             onClick={async () => {
               const ws = [...item.widths, ''];
               const chs = [
@@ -219,10 +229,10 @@ export const Columns: Widget = {
               ];
               props.setItem({ ...item, widths: ws, children: chs });
             }}
+            startIcon={<FontAwesomeIcon icon={faPlus} />}
           >
-            <FontAwesomeIcon icon={faPlus} className="me-2" />
             {Trans('columns add')}
-          </button>
+          </Button>
         </div>
       </>
     );

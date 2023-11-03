@@ -9,9 +9,9 @@ import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faHandRock } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
-import InputApplyOnEnter from './InputApplyOnEnter';
+import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
 import Trans, { TransName } from '../translation';
-import globalStyle from '../globalStyle.module.css';
+import TextField from '@mui/material/TextField';
 
 export interface FirstMatchData extends Item {
   type: 'FirstMatch';
@@ -89,46 +89,34 @@ export const FirstMatch: Widget = {
     const item = props.item as FirstMatchData;
     return (
       <>
-        <div className={globalStyle.vform}>
-          <label htmlFor="FirstMatch-source">{Trans('source data')}</label>
-          <div className="input-group mb-3">
-            <span className="input-group-text fst-italic">ƒ</span>
-            <InputApplyOnEnter
-              id="FirstMatch-source"
-              value={item.source}
-              onChange={val => props.setItem({ ...item, source: val })}
-            />
-          </div>
-        </div>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.source}
+          onChange={val => props.setItem({ ...item, source: val })}
+          label={Trans('source data')}
+          id="FirstMatch-source"
+          InputProps={inputFAdornment}
+        />
 
-        <div className={`${globalStyle.vform} mb-0`}>
-          <label htmlFor="FirstMatch-condition">{Trans('condition')}</label>
-          <div className="input-group">
-            <span className="input-group-text fst-italic">ƒ</span>
-            <InputApplyOnEnter
-              id="FirstMatch-condition"
-              value={item.condition}
-              onChange={val => props.setItem({ ...item, condition: val })}
-            />
-          </div>
-        </div>
-        <small className="text-muted d-block mb-3">
-          {Trans('current item is in var -name-', [item.varName])}
-        </small>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.condition}
+          onChange={val => props.setItem({ ...item, condition: val })}
+          label={Trans('condition')}
+          id="FirstMatch-condition"
+          InputProps={inputFAdornment}
+          helperText={Trans('current item is in var -name-', [item.varName])}
+        />
 
-        <div className={`${globalStyle.vform} mb-0`}>
-          <label htmlFor="FirstMatch-varName" className="d-block">
-            {Trans('varName')}
-          </label>
-          <InputApplyOnEnter
-            id="FirstMatch-varName"
-            value={item.varName}
-            onChange={val => props.setItem({ ...item, varName: val })}
-          />
-        </div>
-        <small className="text-muted d-block mb-3">
-          {Trans('repeat - current item is this var')}
-        </small>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.varName}
+          onChange={val => props.setItem({ ...item, varName: val })}
+          label={Trans('varName')}
+          id="FirstMatch-varName"
+          InputProps={inputFAdornment}
+          helperText={Trans('repeat - current item is this var')}
+        />
       </>
     );
   },

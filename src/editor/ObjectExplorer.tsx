@@ -6,9 +6,30 @@
  */
 
 import React, { Component } from 'react';
-import style from './ObjectExplorer.module.css';
 import Trans from '../translation';
 import { getAllPublicObjectKeys } from '../formula/isPropertyAllowed';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+
+const MyRow = styled('div')({
+  display: 'flex',
+  minWidth: '10rem',
+});
+const BtnCont = styled('div')({
+  width: '1.6rem',
+});
+const MyChild = styled('div')({
+  paddingLeft: '0.9rem',
+});
+const MyPre = styled('pre')({
+  margin: '0',
+});
+const MyIcon = styled('div')({
+  width: '1.4rem',
+});
 
 interface Props {
   data: unknown;
@@ -99,35 +120,32 @@ export default class ObjectExplorer extends Component<Props, State> {
     const canExpand =
       !!dt && (typeof dt === 'object' || typeof dt === 'function');
     return (
-      <div key={key}>
-        <div className={style.row}>
-          <div className={style.btnCont}>
-            {canExpand && !this.isExpanded(key) && (
-              <button
-                className="btn btn-sm pt-0"
+      <React.Fragment key={key}>
+        <MyRow>
+          <BtnCont>
+            {canExpand && (
+              <IconButton
+                size="small"
                 onClick={e => {
                   e.preventDefault();
-                  this.expand(key, dt);
+                  if (this.isExpanded(key)) {
+                    this.collapse(key, dt);
+                  } else {
+                    this.expand(key, dt);
+                  }
                 }}
               >
-                +
-              </button>
+                <FontAwesomeIcon
+                  icon={this.isExpanded(key) ? faMinus : faPlus}
+                  size="xs"
+                  fixedWidth
+                />
+              </IconButton>
             )}
-            {canExpand && this.isExpanded(key) && (
-              <button
-                className="btn btn-sm pt-0"
-                onClick={e => {
-                  e.preventDefault();
-                  this.collapse(key, dt);
-                }}
-              >
-                -
-              </button>
-            )}
-          </div>
-          <div className={style.icon}>
-            <span className="text-muted">{this.renderIcon(key, dt)}</span>
-          </div>
+          </BtnCont>
+          <MyIcon>
+            <Typography color="GrayText">{this.renderIcon(key, dt)}</Typography>
+          </MyIcon>
           <div
             style={{ flex: '1' }}
             onClick={e => {
@@ -142,15 +160,15 @@ export default class ObjectExplorer extends Component<Props, State> {
             {name}
           </div>
           {!canExpand && <ObjectExplorer data={dt} />}
-        </div>
+        </MyRow>
         {canExpand && this.isExpanded(key) && (
-          <div className={style.child}>
+          <MyChild>
             <ObjectExplorer
               data={typeof dt === 'function' ? this.state.funcResult[key] : dt}
             />
-          </div>
+          </MyChild>
         )}
-      </div>
+      </React.Fragment>
     );
   }
 
@@ -196,9 +214,9 @@ export default class ObjectExplorer extends Component<Props, State> {
       return (
         <div>
           <div>{'['}</div>
-          <div>
-            <small className="text-muted">{Trans('empty')}</small>
-          </div>
+          <Typography color="GrayText">
+            <small>{Trans('empty')}</small>
+          </Typography>
           <div>{']'}</div>
         </div>
       );
@@ -214,9 +232,9 @@ export default class ObjectExplorer extends Component<Props, State> {
       return (
         <div>
           <div>{'{'}</div>
-          <div>
-            <small className="text-muted">{Trans('empty')}</small>
-          </div>
+          <Typography color="GrayText">
+            <small>{Trans('empty')}</small>
+          </Typography>
           <div>{'}'}</div>
         </div>
       );
@@ -242,7 +260,7 @@ export default class ObjectExplorer extends Component<Props, State> {
   }
 
   renderOther() {
-    return <pre className={style.pre}>{JSON.stringify(this.state.data)}</pre>;
+    return <MyPre>{JSON.stringify(this.state.data)}</MyPre>;
   }
 
   render() {

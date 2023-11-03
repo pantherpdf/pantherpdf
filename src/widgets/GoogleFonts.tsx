@@ -6,6 +6,10 @@
 
 import React, { useState, useEffect } from 'react';
 import type { TFontStyle } from './PropertyFont';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
 async function load(apiKey: string) {
   const url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${encodeURIComponent(
@@ -53,23 +57,18 @@ export function GoogleFontSelector(props: FontSelectorProps) {
 
   const selected = props.value.toLowerCase();
   return (
-    <div>
+    <List sx={{ pt: 0, minWidth: '20rem' }}>
       {list.map(e => (
-        <div key={e.family}>
-          <div className="list-group list-group-flush">
-            <button
-              onClick={() => props.onChange(e.family)}
-              className={
-                'list-group-item list-group-item-action ' +
-                (e.family.toLowerCase() === selected ? 'active' : '')
-              }
-            >
-              {e.family}
-            </button>
-          </div>
-        </div>
+        <ListItem disableGutters key={e.family}>
+          <ListItemButton
+            onClick={() => props.onChange(e.family)}
+            selected={e.family.toLowerCase() === selected}
+          >
+            <ListItemText primary={e.family} />
+          </ListItemButton>
+        </ListItem>
       ))}
-    </div>
+    </List>
   );
 }
 

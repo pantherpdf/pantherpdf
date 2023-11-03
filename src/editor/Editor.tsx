@@ -5,7 +5,13 @@
  * @license MIT
  */
 
-import React, { ReactNode, useState, useEffect, useRef } from 'react';
+import React, {
+  ReactNode,
+  useState,
+  useEffect,
+  useRef,
+  CSSProperties,
+} from 'react';
 import { defaultWidgets, getWidget } from '../widgets/allWidgets';
 import { Report, Item, ApiUploadMetaData } from '../types';
 import {
@@ -15,7 +21,6 @@ import {
   TDragObj,
   SourceData,
 } from './types';
-import style from './Editor.module.css';
 import Layout from './EditorLayout';
 import {
   findInList,
@@ -31,6 +36,24 @@ import { transformData } from './DataTransform';
 import retrieveOriginalSourceData from './retrieveOriginalSourceData';
 import { defaultTransforms } from '../transforms/allTransforms';
 
+const styleDragHighlight: CSSProperties = {
+  backgroundColor: 'red',
+};
+
+const styleSpacer: CSSProperties = {
+  height: '0.5rem',
+  width: '100%',
+};
+
+const styleWidgetBox: CSSProperties = {
+  border: '1px dotted #ccc',
+};
+
+const styleSelected: CSSProperties = {
+  borderColor: '#ff0000',
+  borderStyle: 'solid',
+};
+
 /**
  * Entrypoint to report editor
  *
@@ -43,6 +66,7 @@ export default function Editor(props: EditorProps) {
     string | undefined
   >(undefined);
   const dragObj = useRef<TDragObj | null>(null);
+  const [dragHighlight, setDragHighlight] = useState<number[] | null>(null);
   const transforms = Array.isArray(props.transforms)
     ? props.transforms
     : defaultTransforms;
@@ -82,12 +106,12 @@ export default function Editor(props: EditorProps) {
   let props2: GeneralProps;
 
   async function drop(
-    e: React.DragEvent<HTMLDivElement>,
+    e: React.DragEvent<HTMLElement>,
     dest: number[],
   ): Promise<void> {
     e.preventDefault();
     e.stopPropagation();
-    e.currentTarget.classList.remove(style.dragging);
+    setDragHighlight(null);
 
     // widget
     if (dragObj.current) {
@@ -162,23 +186,23 @@ export default function Editor(props: EditorProps) {
     }
   }
 
-  function dragEnter(e: React.DragEvent<HTMLDivElement>): void {
-    if (dragObj.current) {
-      e.currentTarget.classList.add(style.dragging);
-    }
-  }
-
-  function dragLeave(e: React.DragEvent<HTMLDivElement>): void {
-    e.currentTarget.classList.remove(style.dragging);
+  function dragLeave() {
+    setDragHighlight(null);
   }
 
   function renderSpacer(parents: number[]): ReactNode {
     return (
       <div
-        className={style.spacer}
+        style={{
+          ...styleSpacer,
+          ...((dragHighlight &&
+            idCmp(dragHighlight, parents) &&
+            styleDragHighlight) ||
+            {}),
+        }}
         onDrop={e => drop(e, parents)}
         onDragOver={dragOver}
-        onDragEnter={dragEnter}
+        onDragEnter={() => setDragHighlight(parents)}
         onDragLeave={dragLeave}
       ></div>
     );
@@ -189,9 +213,10 @@ export default function Editor(props: EditorProps) {
 
     return (
       <div
-        className={`${style.widgetBox} ${
-          (selected && idCmp(selected, wid) && style.selected) || ''
-        }`}
+        style={{
+          ...styleWidgetBox,
+          ...((selected && idCmp(selected, wid) && styleSelected) || {}),
+        }}
         onClick={e => widgetMouseClick(e, wid)}
         draggable={typeof obj.canDrag === 'undefined' || obj.canDrag}
         onDragStart={e => dragWidgetStart(e, { type: 'wid', wid })}
@@ -225,20 +250,20 @@ export default function Editor(props: EditorProps) {
   }
 
   function dragWidgetStart(
-    e: React.DragEvent<HTMLDivElement>,
+    e: React.DragEvent<HTMLElement>,
     dragObj2: TDragObj,
   ): void {
     e.stopPropagation();
     dragObj.current = dragObj2;
   }
 
-  function dragWidgetEnd(e: React.DragEvent<HTMLDivElement>): void {
+  function dragWidgetEnd(e: React.DragEvent<HTMLElement>): void {
     e.stopPropagation();
     dragObj.current = null;
   }
 
   function widgetMouseClick(
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
     wid: number[],
   ) {
     e.preventDefault();

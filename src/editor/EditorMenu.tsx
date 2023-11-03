@@ -7,7 +7,6 @@
 import React, { useState } from 'react';
 import type { GeneralProps } from './types';
 import Trans from '../translation';
-import style from './EditorMenu.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPrint,
@@ -16,11 +15,21 @@ import {
   faUndo,
   faRedo,
 } from '@fortawesome/free-solid-svg-icons';
-import { Modal } from 'react-bootstrap';
 import compile from './compile';
 import renderToHtml from './renderToHtml';
 import { saveAs } from 'file-saver';
 import generate from './generate';
+import SimpleDialog from '../components/SimpleDialog';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Stack from '@mui/material/Stack';
+import Link from '@mui/material/Link';
 
 export default function EditorMenu(props: GeneralProps) {
   const [shownModalPrint, setShownModalPrint] = useState<
@@ -93,121 +102,104 @@ export default function EditorMenu(props: GeneralProps) {
 
   return (
     <>
-      <header className="mb-3 fixed-top bg">
-        <div className="container">
-          <div className="d-flex py-2">
-            <ul className="nav flex-grow-1">
-              {props.homeLink && (
-                <li>
-                  <a
-                    href={props.homeLink.url}
-                    target="_parent"
-                    className="nav-link px-3 link-secondary"
-                  >
-                    {props.homeLink.text}
-                  </a>
-                </li>
-              )}
-            </ul>
-            <div>
-              <button
-                type="button"
-                className="btn btn-outline-secondary me-3"
-                onClick={print}
-              >
-                {!isPrinting ? (
-                  <FontAwesomeIcon icon={faPrint} fixedWidth />
-                ) : (
-                  <FontAwesomeIcon icon={faSpinner} spin fixedWidth />
-                )}
-              </button>
-              {props.hasUndoRedo && (
-                <div className="btn-group" role="group">
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={props.undo}
-                    disabled={!props.undo}
-                  >
-                    <FontAwesomeIcon icon={faUndo} fixedWidth />
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={props.redo}
-                    disabled={!props.redo}
-                  >
-                    <FontAwesomeIcon icon={faRedo} fixedWidth />
-                  </button>
-                </div>
-              )}
-              {props.isBackendBusy && <FontAwesomeIcon icon={faSpinner} spin />}
-            </div>
-            <div className="flex-grow-1 d-flex justify-content-end">
-              <ul className="nav">
-                {/*<li><button className="btn nav-link px-3 link-secondary">Logout</button></li>*/}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </header>
-      <div style={{ height: '60px' }} />
+      <Stack
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        spacing={3}
+        sx={{ height: '100%' }}
+      >
+        {props.homeLink && (
+          <Link href={props.homeLink.url} target="_parent">
+            {props.homeLink.text}
+          </Link>
+        )}
+        <Button variant="contained" size="large" onClick={print}>
+          {!isPrinting ? (
+            <FontAwesomeIcon icon={faPrint} fixedWidth />
+          ) : (
+            <FontAwesomeIcon icon={faSpinner} spin fixedWidth />
+          )}
+        </Button>
+        {props.hasUndoRedo && (
+          <ButtonGroup variant="contained" size="large">
+            <Button onClick={props.undo} disabled={!props.undo}>
+              <FontAwesomeIcon icon={faUndo} fixedWidth />
+            </Button>
+            <Button onClick={props.redo} disabled={!props.redo}>
+              <FontAwesomeIcon icon={faRedo} fixedWidth />
+            </Button>
+          </ButtonGroup>
+        )}
+        {props.isBackendBusy && <FontAwesomeIcon icon={faSpinner} spin />}
+        {/*<Button variant="contained" onClick={print}>Logout</Button>*/}
+      </Stack>
 
       {/* Preview */}
-      <Modal
+      <SimpleDialog
         show={!!shownModalPrint}
         onHide={() => setShownModalPrint(undefined)}
-        dialogClassName={style.modalPreviewDialog}
-        contentClassName={style.modalPreviewContent}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
+        size="md"
+        title={
+          <>
             {Trans('preview')}
             {!!props.api.generatePdf && (
-              <button
-                className="btn btn-outline-secondary ms-2"
+              <Button
+                variant="outlined"
+                color="secondary"
+                sx={{ marginLeft: 0.5 }}
                 onClick={genPdfWrapper}
                 disabled={isDownloading}
+                startIcon={
+                  !isDownloading ? (
+                    <FontAwesomeIcon icon={faDownload} />
+                  ) : (
+                    <FontAwesomeIcon icon={faSpinner} spin />
+                  )
+                }
               >
-                {!isDownloading ? (
-                  <FontAwesomeIcon icon={faDownload} className="me-2" />
-                ) : (
-                  <FontAwesomeIcon icon={faSpinner} spin className="me-2" />
-                )}
                 {Trans('download')}
-              </button>
+              </Button>
             )}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+          </>
+        }
+      >
+        <>
           {!!shownModalPrint && 'html' in shownModalPrint && (
             <iframe
               srcDoc={shownModalPrint.html}
-              style={{ width: '100%', height: 'calc(100vh - 130px)' }}
-              title="preview"
+              style={{
+                width: '100%',
+                height: 'calc(100vh - 190px)',
+                border: 'none',
+              }}
+              title={Trans('preview')}
             />
           )}
           {!!shownModalPrint && 'csv' in shownModalPrint && (
-            <table className="table">
-              <tbody>
+            <Table>
+              <TableBody>
                 {shownModalPrint.csv.map((row, idx) => (
-                  <tr key={idx}>
+                  <TableRow key={idx}>
                     {row.map((cell, idx2) => (
-                      <td key={idx2}>{String(cell)}</td>
+                      <TableCell key={idx2}>{String(cell)}</TableCell>
                     ))}
-                  </tr>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           )}
           {!!shownModalPrint && 'json' in shownModalPrint && (
             <pre>{shownModalPrint.json}</pre>
           )}
           {!!shownModalPrint && 'errorMsg' in shownModalPrint && (
-            <div className="alert alert-danger">{shownModalPrint.errorMsg}</div>
+            <Alert severity="error">
+              <AlertTitle>{Trans('error')}</AlertTitle>
+              {shownModalPrint.errorMsg}
+            </Alert>
           )}
-        </Modal.Body>
-      </Modal>
+        </>
+      </SimpleDialog>
     </>
   );
 }

@@ -12,14 +12,19 @@ import BoxName from './BoxName';
 import InputApplyOnEnter, {
   WidthOptions,
   WidthRegex,
+  inputFAdornment,
 } from './InputApplyOnEnter';
 import PropertyAlign, { TAlign } from './PropertyAlign';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Modal } from 'react-bootstrap';
 import FileDialog from '../FileDialog';
 import Trans from '../translation';
 import base64ArrayBuffer from './base64ArrayBuffer';
-import globalStyle from '../globalStyle.module.css';
+import SimpleDialog from '../components/SimpleDialog';
+import SectionName from '../components/SectionName';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 
 export interface ImageData extends Item {
   type: 'Image';
@@ -139,21 +144,23 @@ export const Image: Widget = {
       cssImg.overflow = 'hidden';
       img = (
         <div style={cssImg}>
-          <span
-            className="font-monospace text-nowrap overflow-hidden"
+          <Typography
+            component="span"
+            fontFamily="monospace"
+            noWrap
             style={{ fontSize: '70%', opacity: '0.3' }}
           >
             {item.formula}
-          </span>
+          </Typography>
         </div>
       );
     }
     //
     else {
       img = (
-        <small className="d-block text-muted">
-          {Trans('no image selected')}
-        </small>
+        <Typography color="GrayText">
+          <small>{Trans('no image selected')}</small>
+        </Typography>
       );
     }
 
@@ -229,133 +236,126 @@ export const Image: Widget = {
     const [showModal, setShowModal] = useState<boolean>(false);
     return (
       <>
-        <div className={globalStyle.vform}>
-          <label htmlFor="img-formula">{Trans('formula')}</label>
-          <div className="input-group">
-            <span className="input-group-text fst-italic">ƒ</span>
-            <InputApplyOnEnter
-              id="img-formula"
-              value={item.formula}
-              onChange={val => props.setItem({ ...item, formula: val })}
-            />
-          </div>
-        </div>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.formula}
+          onChange={val => props.setItem({ ...item, formula: val })}
+          label={Trans('formula')}
+          id="img-formula"
+          InputProps={inputFAdornment}
+        />
 
-        <div className={globalStyle.vform}>
-          <div>
-            <label htmlFor="img-url">{Trans('url')}</label>
-            <button
-              className="btn btn-outline-secondary ms-3"
-              onClick={() => setShowModal(true)}
-            >
-              <FontAwesomeIcon icon={faEllipsisH} />
-            </button>
-          </div>
-          <InputApplyOnEnter
-            id="img-url"
-            value={item.url}
-            onChange={val => props.setItem({ ...item, url: val })}
-            placeholder="https://www.example.com/image.jpg"
-          />
-        </div>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.url}
+          onChange={val => props.setItem({ ...item, url: val })}
+          label={Trans('url')}
+          id="img-url"
+          InputProps={inputFAdornment}
+          placeholder="https://www.example.com/image.jpg"
+        />
+        {props.api.files && (
+          <Button
+            color="secondary"
+            variant="outlined"
+            onClick={() => setShowModal(true)}
+          >
+            <FontAwesomeIcon icon={faEllipsisH} />
+          </Button>
+        )}
 
-        <div className={globalStyle.section}>{Trans('size')}</div>
+        <SectionName text={Trans('size')} />
 
-        <div className={`${globalStyle.hform} mb-0`}>
-          <label htmlFor="width">{Trans('width')}</label>
-          <InputApplyOnEnter
-            id="width"
-            value={item.width || ''}
-            onChange={val => {
-              const val2: ImageData = { ...item };
-              if (val) {
-                val2.width = String(val);
-              } else {
-                delete val2.width;
-              }
-              return props.setItem(val2);
-            }}
-            regex={WidthRegex}
-          />
-        </div>
-        <small className="text-muted d-block mb-3">{WidthOptions}</small>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.width || ''}
+          onChange={val => {
+            const val2: ImageData = { ...item };
+            if (val) {
+              val2.width = String(val);
+            } else {
+              delete val2.width;
+            }
+            return props.setItem(val2);
+          }}
+          regex={WidthRegex}
+          label={Trans('width')}
+          id="img-width"
+          InputProps={inputFAdornment}
+          helperText={WidthOptions}
+        />
 
-        <div className={`${globalStyle.hform} mb-0`}>
-          <label htmlFor="height">{Trans('height')}</label>
-          <InputApplyOnEnter
-            id="height"
-            value={item.height || ''}
-            onChange={val => {
-              const val2: ImageData = { ...item };
-              if (val) {
-                val2.height = String(val);
-              } else {
-                delete val2.height;
-              }
-              return props.setItem(val2);
-            }}
-            regex={WidthRegex}
-          />
-        </div>
-        <small className="text-muted d-block mb-3">{WidthOptions}</small>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.height || ''}
+          onChange={val => {
+            const val2: ImageData = { ...item };
+            if (val) {
+              val2.height = String(val);
+            } else {
+              delete val2.height;
+            }
+            return props.setItem(val2);
+          }}
+          regex={WidthRegex}
+          label={Trans('height')}
+          id="img-height"
+          InputProps={inputFAdornment}
+          helperText={WidthOptions}
+        />
 
-        <div className={`${globalStyle.hform} mb-0`}>
-          <label htmlFor="fit">{Trans('img-fit')}</label>
-          <select
+        <TextField
+          select
+          label={Trans('img-fit')}
+          value={
+            !!item.fit && !!item.width && !!item.height ? item.fit : 'fill'
+          }
+          onChange={val => {
+            const val2: ImageData = { ...item };
+            if (val) {
+              val2.fit = val.target.value as any;
+            } else {
+              delete val2.fit;
+            }
+            return props.setItem(val2);
+          }}
+          id="Image-fit"
+          disabled={!item.width || !item.height}
+        >
+          <MenuItem value="fill">{Trans('img-fit-fill')}</MenuItem>
+          <MenuItem value="contain">{Trans('img-fit-contain')}</MenuItem>
+          <MenuItem value="cover">{Trans('img-fit-cover')}</MenuItem>
+        </TextField>
+
+        <SectionName text={Trans('align')} />
+        <PropertyAlign
+          value={item.align}
+          onChange={val => props.setItem({ ...item, align: val })}
+        />
+        <SimpleDialog
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          size="lg"
+          title={Trans('select image')}
+        >
+          <FileDialog
+            mode="value"
             value={
-              !!item.fit && !!item.width && !!item.height ? item.fit : 'fill'
+              item.url && item.url.startsWith('local/')
+                ? item.url.substring(6)
+                : ''
             }
             onChange={val => {
-              const val2: ImageData = { ...item };
-              if (val) {
-                val2.fit = val.target.value as any;
-              } else {
-                delete val2.fit;
-              }
-              return props.setItem(val2);
+              setShowModal(false);
+              props.setItem({
+                ...item,
+                url: val && val.length > 0 ? `local/${val}` : '',
+              });
             }}
-            className="form-select"
-            disabled={!item.width || !item.height}
-            id="fit"
-          >
-            <option value="fill">{Trans('img-fit-fill')}</option>
-            <option value="contain">{Trans('img-fit-contain')}</option>
-            <option value="cover">{Trans('img-fit-cover')}</option>
-          </select>
-        </div>
-
-        <div className={globalStyle.section}>{Trans('align')}</div>
-        <div className="text-center">
-          <PropertyAlign
-            value={item.align}
-            onChange={val => props.setItem({ ...item, align: val })}
+            api={props.api}
+            somethingChanged={() => (imgState += 1)}
           />
-        </div>
-
-        <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-          <Modal.Header closeButton>
-            <Modal.Title>Select image</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <FileDialog
-              mode="value"
-              value={
-                item.url && item.url.startsWith('local/')
-                  ? item.url.substring(6)
-                  : ''
-              }
-              onChange={val => {
-                setShowModal(false);
-                props.setItem({
-                  ...item,
-                  url: val && val.length > 0 ? `local/${val}` : '',
-                });
-              }}
-              api={props.api}
-              somethingChanged={() => (imgState += 1)}
-            />
-          </Modal.Body>
-        </Modal>
+        </SimpleDialog>
       </>
     );
   },

@@ -9,9 +9,11 @@ import { Item, ItemCompiled, tuple } from '../types';
 import type { Widget } from '../editor/types';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
-import InputApplyOnEnter from './InputApplyOnEnter';
+import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
 import Trans, { TransName, trKeys } from '../translation';
-import globalStyle from '../globalStyle.module.css';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 
 const RepeatDirections = tuple('rows', 'columns', 'grid');
 type RepeatDirection = (typeof RepeatDirections)[number];
@@ -161,52 +163,43 @@ export const Repeat: Widget = {
     const item = props.item as RepeatData;
     return (
       <>
-        <div className={globalStyle.vform}>
-          <label htmlFor="Repeat-source">{Trans('source data')}</label>
-          <div className="input-group">
-            <span className="input-group-text fst-italic">ƒ</span>
-            <InputApplyOnEnter
-              id="Repeat-source"
-              value={item.source}
-              onChange={val => props.setItem({ ...item, source: val })}
-            />
-          </div>
-        </div>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.source}
+          onChange={val => props.setItem({ ...item, source: val })}
+          label={Trans('source data')}
+          id="Repeat-source"
+          InputProps={inputFAdornment}
+        />
 
-        <div className={globalStyle.vform}>
-          <label htmlFor="Repeat-varName">{Trans('varName')}</label>
-          <InputApplyOnEnter
-            id="Repeat-varName"
-            value={item.varName}
-            onChange={val => props.setItem({ ...item, varName: val })}
-          />
-        </div>
-        <small className="text-muted d-block">
-          {Trans('repeat - current item is this var')}
-        </small>
-        <small className="text-muted d-block mb-3">
-          {Trans('repeat - index name', [`${item.varName}_i`])}
-        </small>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.varName}
+          onChange={val => props.setItem({ ...item, varName: val })}
+          label={Trans('varName')}
+          id="Repeat-varName"
+        />
 
-        <div className={globalStyle.hform}>
-          <label htmlFor="Repeat-direction">
-            {Trans('repeat - direction')}
-          </label>
-          <select
-            className="form-select"
-            value={item.direction}
-            onChange={e =>
-              props.setItem({ ...item, direction: e.currentTarget.value })
-            }
-            id="Repeat-direction"
-          >
-            {RepeatDirections.map(m => (
-              <option key={m} value={m}>
-                {Trans(RepeatDirectionTrans[m])}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Typography color="GrayText">
+          <small>{Trans('repeat - current item is this var')}</small>
+        </Typography>
+        <Typography color="GrayText">
+          <small>{Trans('repeat - index name', [`${item.varName}_i`])}</small>
+        </Typography>
+
+        <TextField
+          select
+          label={Trans('repeat - direction')}
+          value={item.direction}
+          onChange={e => props.setItem({ ...item, direction: e.target.value })}
+          id="Repeat-direction"
+        >
+          {RepeatDirections.map(m => (
+            <MenuItem key={m} value={m}>
+              {Trans(RepeatDirectionTrans[m])}
+            </MenuItem>
+          ))}
+        </TextField>
       </>
     );
   },

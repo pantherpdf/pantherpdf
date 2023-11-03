@@ -23,7 +23,15 @@ import PropertyFont, {
 } from './PropertyFont';
 import { LoadGoogleFontCss } from './GoogleFonts';
 import useStateDelayed from '../useStateDelayed';
-import globalStyle from '../globalStyle.module.css';
+import SectionName from '../components/SectionName';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Slider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 
 interface Properties {
   margin: [number, number, number, number];
@@ -113,43 +121,40 @@ function Property4SideRange(props: Property4SideRangeProps) {
   function renderInput(idx: number) {
     const st: CSSProperties = {
       width: '50%',
-      display: 'inline',
+      margin: '0 0.2rem',
     };
-    function setValueInput(val: string, delay: number) {
+    function setValueInput(val: number, delay: number) {
       const arr: Property4SideRangeValue = [...value];
-      arr[idx] = parseInt(val);
+      arr[idx] = val;
       return setValue(arr, delay);
     }
     return (
-      <input
-        type="range"
+      <Slider
         id={`${props.id}-${idx}`}
         style={st}
         min={props.min}
         max={props.max}
         value={value[idx]}
-        onChange={e => setValueInput(e.currentTarget.value, 300)}
-        onMouseUp={e => setValueInput(e.currentTarget.value, 0)}
-        className="form-range"
+        onChange={(e, newVal) => setValueInput(newVal as number, 300)}
       />
     );
   }
 
   return (
-    <div>
-      <div className={globalStyle.section}>
-        {props.label}
-        <small className="ms-2 text-muted">
-          {value[0]}, {value[1]}, {value[2]}, {value[3]} px
-        </small>
+    <>
+      <SectionName
+        text={props.label}
+        secondaryText={`${value[0]}, ${value[1]}, ${value[2]}, ${value[3]} px`}
+      />
+      <div>
+        <div style={{ textAlign: 'center' }}>{renderInput(0)}</div>
+        <Stack direction="row">
+          {renderInput(3)}
+          {renderInput(1)}
+        </Stack>
+        <div style={{ textAlign: 'center' }}>{renderInput(2)}</div>
       </div>
-      <div style={{ textAlign: 'center' }}>{renderInput(0)}</div>
-      <div className="d-flex">
-        {renderInput(3)}
-        {renderInput(1)}
-      </div>
-      <div style={{ textAlign: 'center' }}>{renderInput(2)}</div>
-    </div>
+    </>
   );
 }
 
@@ -212,55 +217,34 @@ export const Frame: Widget = {
     const item = props.item as FrameData;
     return (
       <>
-        <div className={globalStyle.vform}>
-          <label htmlFor="Frame-width">
-            {Trans('width')}
-            <small className="text-muted ms-1">[{WidthOptions}]</small>
-          </label>
-          <InputApplyOnEnter
-            id="Frame-width"
-            value={item.width || ''}
-            onChange={val => props.setItem({ ...item, width: String(val) })}
-            regex={WidthRegex}
-          />
-        </div>
+        <SizeInput
+          type="width"
+          value={item.width || ''}
+          onChange={val => props.setItem({ ...item, width: String(val) })}
+        />
+        <SizeInput
+          type="height"
+          value={item.height || ''}
+          onChange={val => props.setItem({ ...item, height: String(val) })}
+        />
 
-        <div className={globalStyle.vform}>
-          <label htmlFor="Frame-height">
-            {Trans('height')}
-            <small className="text-muted ms-1">[{WidthOptions}]</small>
-          </label>
-          <InputApplyOnEnter
-            id="Frame-height"
-            value={item.height || ''}
-            onChange={val => props.setItem({ ...item, height: String(val) })}
-            regex={WidthRegex}
-          />
-        </div>
-
-        <div className="form-check">
-          <input
-            type="checkbox"
-            id="Frame-backgroundColor-enable"
-            className="form-check-input"
-            checked={!!item.backgroundColor}
-            onChange={e => {
-              const obj: FrameData = { ...item };
-              if (e.currentTarget.checked) {
-                obj.backgroundColor = '#FFCCCC';
-              } else {
-                delete obj.backgroundColor;
-              }
-              props.setItem(obj);
-            }}
-          />
-          <label
-            className="form-check-label"
-            htmlFor="Frame-backgroundColor-enable"
-          >
-            {Trans('background')}
-          </label>
-        </div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={!!item.backgroundColor}
+              onChange={e => {
+                const obj: FrameData = { ...item };
+                if (e.target.checked) {
+                  obj.backgroundColor = '#FFCCCC';
+                } else {
+                  delete obj.backgroundColor;
+                }
+                props.setItem(obj);
+              }}
+            />
+          }
+          label={Trans('background')}
+        />
         {!!item.backgroundColor && (
           <PropertyColor
             value={item.backgroundColor}
@@ -286,31 +270,28 @@ export const Frame: Widget = {
           onChange={val => props.setItem({ ...props.item, padding: val })}
         />
 
-        <div className={globalStyle.section}>{Trans('border')}</div>
+        <SectionName text={Trans('border')} />
 
-        <div className="form-check mb-3">
-          <input
-            type="checkbox"
-            id="Frame-border-single"
-            className="form-check-input"
-            checked={Array.isArray(item.border)}
-            onChange={e => {
-              const obj: FrameData = { ...item };
-              if (e.currentTarget.checked) {
-                const brd: Border = !Array.isArray(item.border)
-                  ? item.border
-                  : { width: 1, color: '#cccccc', style: 'solid' };
-                obj.border = [{ ...brd }, { ...brd }, { ...brd }, { ...brd }];
-              } else {
-                obj.border = { width: 1, color: '#cccccc', style: 'solid' };
-              }
-              props.setItem(obj);
-            }}
-          />
-          <label className="form-check-label" htmlFor="Frame-border-single">
-            {Trans('border different sides')}
-          </label>
-        </div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={Array.isArray(item.border)}
+              onChange={e => {
+                const obj: FrameData = { ...item };
+                if (e.target.checked) {
+                  const brd: Border = !Array.isArray(item.border)
+                    ? item.border
+                    : { width: 1, color: '#cccccc', style: 'solid' };
+                  obj.border = [{ ...brd }, { ...brd }, { ...brd }, { ...brd }];
+                } else {
+                  obj.border = { width: 1, color: '#cccccc', style: 'solid' };
+                }
+                props.setItem(obj);
+              }}
+            />
+          }
+          label={Trans('border different sides')}
+        />
 
         {Array.isArray(item.border) &&
           ['top', 'right', 'bottom', 'left'].map((side2, idx) => {
@@ -320,9 +301,7 @@ export const Frame: Widget = {
               : [item.border, item.border, item.border, item.border];
             return (
               <React.Fragment key={side}>
-                <div className={globalStyle.section}>
-                  {Trans(`border-${side}`)}
-                </div>
+                <SectionName text={Trans(`border-${side}`)} />
                 <PropertyBorder
                   id={`Frame-border-${side}`}
                   value={val2[idx]}
@@ -343,32 +322,53 @@ export const Frame: Widget = {
           />
         )}
 
-        <div className={globalStyle.section}>{Trans('other')}</div>
-        <div className={globalStyle.hform}>
-          <label>{Trans('font')}</label>
-          <PropertyFont
-            value={item.font}
-            onChange={val => props.setItem({ ...props.item, font: val })}
-            googleFontApiKey={props.api.googleFontApiKey}
-          />
-        </div>
-        <div className="form-check">
-          <input
-            type="checkbox"
-            id="Frame-page-break-avoid"
-            className="form-check-input"
-            checked={!!item.pageBreakAvoid}
-            onChange={e => {
-              const obj: FrameData = { ...item };
-              obj.pageBreakAvoid = e.currentTarget.checked;
-              props.setItem(obj);
-            }}
-          />
-          <label className="form-check-label" htmlFor="Frame-page-break-avoid">
-            {Trans('page-break-avoid')}
-          </label>
-        </div>
+        <SectionName text={Trans('other')} />
+        <PropertyFont
+          value={item.font}
+          onChange={val => props.setItem({ ...props.item, font: val })}
+          googleFontApiKey={props.api.googleFontApiKey}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={!!item.pageBreakAvoid}
+              onChange={e => {
+                const obj: FrameData = { ...item };
+                obj.pageBreakAvoid = e.target.checked;
+                props.setItem(obj);
+              }}
+            />
+          }
+          label={Trans('page-break-avoid')}
+        />
       </>
     );
   },
 };
+
+interface SizeInputProps {
+  value: string | number;
+  onChange: (val: string | number) => void;
+  type: 'width' | 'height';
+}
+
+function SizeInput(props: SizeInputProps) {
+  const id = `Frame-${props.type}`;
+  return (
+    <FormControl fullWidth>
+      <InputLabel htmlFor={id}>
+        {Trans(props.type)}
+        <Typography component="span" sx={{ marginLeft: 0.25 }}>
+          <small>[{WidthOptions}]</small>
+        </Typography>
+      </InputLabel>
+      <InputApplyOnEnter
+        component={OutlinedInput}
+        value={props.value}
+        onChange={x => props.onChange(x)}
+        regex={WidthRegex}
+        id={id}
+      />
+    </FormControl>
+  );
+}

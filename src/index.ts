@@ -6,7 +6,6 @@
 
 // Parcel processes each file individually,
 // so we need to explicitly reference .d.ts files
-/// <reference types="./global" />
 /// <reference types="./react-style-object-to-css" />
 
 import Editor from './editor/Editor';
@@ -42,6 +41,7 @@ import { SourceData } from './editor/retrieveOriginalSourceData';
 import { defaultTransforms } from './transforms/allTransforms';
 import BoxName, { BoxNameProps } from './widgets/BoxName';
 import { defaultWidgets } from './widgets/allWidgets';
+import SectionName from './components/SectionName';
 
 const emptyReport: Report = {
   name: 'My report',
@@ -67,6 +67,8 @@ export {
   BoxName,
   //
   emptyReport,
+  //
+  SectionName,
 };
 
 export type {

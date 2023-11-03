@@ -9,9 +9,9 @@ import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
-import InputApplyOnEnter from './InputApplyOnEnter';
+import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
 import Trans, { TransName } from '../translation';
-import globalStyle from '../globalStyle.module.css';
+import TextField from '@mui/material/TextField';
 
 export interface ConditionData extends Item {
   type: 'Condition';
@@ -65,17 +65,14 @@ export const Condition: Widget = {
     const item = props.item as ConditionData;
     return (
       <>
-        <div className={globalStyle.vform}>
-          <label htmlFor="Condition-formula">{Trans('formula')}</label>
-          <div className="input-group mb-3">
-            <span className="input-group-text fst-italic">ƒ</span>
-            <InputApplyOnEnter
-              id="Condition-formula"
-              value={item.formula}
-              onChange={val => props.setItem({ ...item, formula: val })}
-            />
-          </div>
-        </div>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.formula}
+          onChange={val => props.setItem({ ...item, formula: val })}
+          label={Trans('formula')}
+          id="Condition-formula"
+          InputProps={inputFAdornment}
+        />
       </>
     );
   },

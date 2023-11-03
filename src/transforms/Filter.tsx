@@ -10,9 +10,12 @@ import { TransformItem } from '../types';
 import { Transform } from '../editor/types';
 import { IHelpers } from '../formula/types';
 import FormulaEvaluate from '../formula/formula';
-import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
+import InputApplyOnEnter, {
+  inputFAdornment,
+} from '../widgets/InputApplyOnEnter';
 import Trans from '../translation';
-import globalStyle from '../globalStyle.module.css';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import TextField from '@mui/material/TextField';
 
 export interface FilterData extends TransformItem {
   type: 'Filter';
@@ -23,6 +26,7 @@ export interface FilterData extends TransformItem {
 const Filter: Transform = {
   id: 'Filter',
   name: 'Filter',
+  icon: faBars,
 
   newItem: async () => {
     const obj: FilterData = {
@@ -66,32 +70,24 @@ const Filter: Transform = {
     const item = props.item as FilterData;
     return (
       <>
-        <div className={globalStyle.hform}>
-          <label htmlFor="trans-edit-field">{Trans('field')}</label>
-          <div className="input-group mb-3">
-            <span className="input-group-text fst-italic">ƒ</span>
-            <InputApplyOnEnter
-              id="trans-edit-field"
-              value={item.field}
-              onChange={val => props.setItem({ ...item, field: val })}
-            />
-          </div>
-        </div>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.field}
+          onChange={val => props.setItem({ ...item, field: val })}
+          label={Trans('field')}
+          id="trans-edit-field"
+          InputProps={inputFAdornment}
+        />
 
-        <div className={`${globalStyle.hform} mb-0`}>
-          <label htmlFor="trans-edit-condition">{Trans('condition')}</label>
-          <div className="input-group">
-            <span className="input-group-text fst-italic">ƒ</span>
-            <InputApplyOnEnter
-              id="trans-edit-condition"
-              value={item.condition}
-              onChange={val => props.setItem({ ...item, condition: val })}
-            />
-          </div>
-        </div>
-        <small className="text-muted mb-3">
-          {Trans('current item is in var -name-', ['item'])}
-        </small>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.condition}
+          onChange={val => props.setItem({ ...item, condition: val })}
+          label={Trans('condition')}
+          id="trans-edit-condition"
+          InputProps={inputFAdornment}
+          helperText={Trans('current item is in var -name-', ['item'])}
+        />
       </>
     );
   },

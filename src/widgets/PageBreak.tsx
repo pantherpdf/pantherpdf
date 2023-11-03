@@ -8,6 +8,7 @@ import React from 'react';
 import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faGripLines } from '@fortawesome/free-solid-svg-icons';
+import Divider from '@mui/material/Divider';
 
 export type PageBreakData = Item & { type: 'PageBreak' };
 export type PageBreakCompiled = ItemCompiled & { type: 'PageBreak' };
@@ -32,7 +33,7 @@ export const PageBreak: Widget = {
 
   RenderEditor: function () {
     return (
-      <hr
+      <Divider
         style={{
           height: '10px',
           margin: '0.3rem 0',

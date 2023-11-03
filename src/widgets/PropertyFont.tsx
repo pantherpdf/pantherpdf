@@ -6,15 +6,23 @@
 
 import React, { useState, CSSProperties } from 'react';
 import Trans from '../translation';
-import { Popover, OverlayTrigger, Modal } from 'react-bootstrap';
 import PropertyColor from './PropertyColor';
 import InputApplyOnEnter, {
   WidthRegex,
   WidthOptions,
 } from './InputApplyOnEnter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFont } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisH, faFont } from '@fortawesome/free-solid-svg-icons';
 import { GoogleFontSelector } from './GoogleFonts';
+import SimpleDialog from '../components/SimpleDialog';
+import Button from '@mui/material/Button';
+import Popover from '@mui/material/Popover';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Stack from '@mui/material/Stack';
 
 // prettier-ignore
 type Narrowable = string | number | boolean | symbol | object | {} | void | null | undefined;
@@ -139,9 +147,10 @@ interface Props {
 }
 export default function PropertyFont(props: Props) {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
   function handleInputChange(
-    event: React.FormEvent<HTMLSelectElement | HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     const target = event.target as any;
     let value1: string | boolean =
@@ -170,39 +179,40 @@ export default function PropertyFont(props: Props) {
     props.onChange(obj as TFont);
   }
 
+  function handleClick(e: React.MouseEvent<HTMLElement>) {
+    setAnchorEl(e.currentTarget);
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
   function renderBtn() {
     if (props.textButton) {
       return (
-        <button
-          className="btn link"
-          onClick={e => {
-            e.preventDefault();
-          }}
-        >
+        <Button variant="text" onClick={handleClick}>
           {Trans('font')}
-        </button>
+        </Button>
       );
     }
 
     if (props.iconButton) {
       return (
-        <button
-          className="btn link"
-          onClick={e => {
-            e.preventDefault();
-          }}
-          title={Trans('font')}
-        >
+        <Button variant="text" onClick={handleClick} title={Trans('font')}>
           <FontAwesomeIcon icon={faFont} fixedWidth />
-        </button>
+        </Button>
       );
     }
 
     return (
-      <button className="btn btn-sm btn-outline-secondary">
-        <FontAwesomeIcon icon={faFont} className="me-2" />
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={handleClick}
+        startIcon={<FontAwesomeIcon icon={faFont} />}
+      >
         {Trans('font')}
-      </button>
+      </Button>
     );
   }
 
@@ -213,166 +223,143 @@ export default function PropertyFont(props: Props) {
   const style = props.value.style || '';
   const color = props.value.color || '';
 
-  const popover = (
-    <Popover className="p-3" id={props.id || ''}>
-      <div className="d-flex">
-        <label htmlFor="family" style={{ width: '50%' }}>
-          {Trans('font-family')}
-        </label>
-        <div className="input-group">
+  return (
+    <>
+      {renderBtn()}
+
+      <Popover
+        id={props.id || ''}
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Stack direction="column" spacing={2} sx={{ p: 2 }}>
+          <Stack direction="row">
+            <InputApplyOnEnter
+              component={TextField}
+              value={family}
+              onChange={val => {
+                if (val && String(val).length > 0) {
+                  return props.onChange({
+                    ...props.value,
+                    family: String(val),
+                  });
+                } else {
+                  const val3: TFont = { ...props.value };
+                  delete val3.family;
+                  return props.onChange(val3);
+                }
+              }}
+              id="family"
+              label={Trans('font-family')}
+              fullWidth
+            />
+            {props.googleFontApiKey && (
+              <IconButton onClick={() => setShowModal(true)}>
+                <FontAwesomeIcon icon={faEllipsisH} />
+              </IconButton>
+            )}
+          </Stack>
           <InputApplyOnEnter
-            className="form-control"
-            value={family}
-            onChange={val => {
-              if (val && String(val).length > 0) {
-                return props.onChange({ ...props.value, family: String(val) });
-              } else {
-                const val3: TFont = { ...props.value };
-                delete val3.family;
-                return props.onChange(val3);
-              }
-            }}
-            id="family"
-          />
-          {props.googleFontApiKey && (
-            <button
-              className="btn btn-outline-secondary"
-              onClick={() => setShowModal(true)}
-            >
-              ...
-            </button>
-          )}
-        </div>
-      </div>
-      <div className="d-flex">
-        <label htmlFor="size" style={{ width: '50%' }}>
-          {Trans('font-size')}
-        </label>
-        <div>
-          <InputApplyOnEnter
-            id="size"
+            component={TextField}
             value={size}
             onChange={val =>
               props.onChange({ ...props.value, size: String(val) })
             }
+            id="size"
             regex={WidthRegex}
+            label={Trans('font-size')}
+            helperText={WidthOptions}
           />
-          <small className="text-muted">{WidthOptions}</small>
-        </div>
-      </div>
-      {size.length > 0 && (
-        <div className="d-flex">
-          <label htmlFor="lineHeight" style={{ width: '50%' }}>
-            {Trans('font-line-height')}
-          </label>
-          <select
-            className="form-select"
-            name="lineHeight"
-            id="lineHeight"
-            value={lineHeight}
-            onChange={e => {
-              const obj: TFont = { ...props.value };
-              if (e.currentTarget.value) {
-                obj.lineHeight = parseFloat(e.currentTarget.value);
-              } else {
-                delete obj.lineHeight;
-              }
-              props.onChange(obj);
-            }}
-          >
-            <option value=""></option>
-            {lineHeightOptions.map(w => (
-              <option value={w.value} key={w.value}>
-                {w.txt}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-      <div className="d-flex">
-        <label htmlFor="weight" style={{ width: '50%' }}>
-          {Trans('font-weight')}
-        </label>
-        <select
-          className="form-select"
-          name="weight"
-          id="weight"
-          value={weight}
-          onChange={handleInputChange}
-        >
-          <option value=""></option>
-          {WeightOptions.map(w => (
-            <option value={w} key={w}>
-              {weightName[w]}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="d-flex">
-        <label htmlFor="style" style={{ width: '50%' }}>
-          {Trans('font-style')}
-        </label>
-        <select
-          className="form-select"
-          name="style"
-          id="style"
-          value={style}
-          onChange={handleInputChange}
-        >
-          <option value=""></option>
-          {StyleOptions.map(w => (
-            <option value={w} key={w}>
-              {styleName[w]}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="d-flex">
-        <label htmlFor="color" style={{ width: '50%' }}>
-          {Trans('color')}
-        </label>
-        <div style={{ width: '100%' }}>
-          <div className="form-check">
-            <input
-              type="checkbox"
-              id="font-enable"
-              className="form-check-input"
-              checked={color.length > 0}
+          {size.length > 0 && (
+            <TextField
+              select
+              id="lineHeight"
+              value={lineHeight}
               onChange={e => {
-                if (e.target.checked) {
-                  props.onChange({ ...props.value, color: '#000000' });
+                const val = e.target.value;
+                const obj: TFont = { ...props.value };
+                if (val) {
+                  obj.lineHeight = parseFloat(val);
                 } else {
-                  const obj = { ...props.value };
-                  delete obj.color;
-                  props.onChange(obj);
+                  delete obj.lineHeight;
                 }
+                props.onChange(obj);
               }}
-            />
-            <label className="form-check-label" htmlFor="font-enable">
-              {Trans('enable')}
-            </label>
-          </div>
+              label={Trans('font-line-height')}
+            >
+              <MenuItem value=""></MenuItem>
+              {lineHeightOptions.map(w => (
+                <MenuItem value={w.value} key={w.value}>
+                  {w.txt}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+          <TextField
+            select
+            id="weight"
+            value={weight}
+            onChange={handleInputChange}
+            label={Trans('font-weight')}
+          >
+            <MenuItem value=""></MenuItem>
+            {WeightOptions.map(w => (
+              <MenuItem value={w} key={w}>
+                {weightName[w]}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            id="style"
+            value={style}
+            onChange={handleInputChange}
+            label={Trans('font-style')}
+          >
+            <MenuItem value=""></MenuItem>
+            {StyleOptions.map(w => (
+              <MenuItem value={w} key={w}>
+                {styleName[w]}
+              </MenuItem>
+            ))}
+          </TextField>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={color.length > 0}
+                onChange={e => {
+                  if (e.target.checked) {
+                    props.onChange({ ...props.value, color: '#000000' });
+                  } else {
+                    const obj = { ...props.value };
+                    delete obj.color;
+                    props.onChange(obj);
+                  }
+                }}
+              />
+            }
+            label={Trans('color')}
+          />
           {color.length > 0 && (
             <PropertyColor
               value={color}
               onChange={val => props.onChange({ ...props.value, color: val })}
             />
           )}
-        </div>
-      </div>
-    </Popover>
-  );
-  return (
-    <>
-      <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
-        {renderBtn()}
-      </OverlayTrigger>
+        </Stack>
+      </Popover>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>{Trans('font-select-family')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+      <SimpleDialog
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        title={Trans('font-select-family')}
+      >
+        <>
           {showModal && props.googleFontApiKey && (
             <GoogleFontSelector
               apiKey={props.googleFontApiKey}
@@ -389,8 +376,8 @@ export default function PropertyFont(props: Props) {
               }}
             />
           )}
-        </Modal.Body>
-      </Modal>
+        </>
+      </SimpleDialog>
     </>
   );
 }

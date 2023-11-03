@@ -4,16 +4,29 @@
  * @license MIT
  */
 
+import React from 'react';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
 import Trans from '../translation';
 import { Report } from '../types';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
 import { GeneralProps } from './types';
-import globalStyle from '../globalStyle.module.css';
+import SectionName from '../components/SectionName';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
 
 const reservedVars = ['data', 'report'];
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  paddingLeft: '0.1rem',
+  paddingRight: '0.1rem',
+}));
 
 export default function VarEditor(props: GeneralProps) {
   async function changeVar(
@@ -51,60 +64,73 @@ export default function VarEditor(props: GeneralProps) {
   }
 
   return (
-    <div className="mt-3">
-      <div className={globalStyle.section}>{Trans('variables')}</div>
-      <table className="table table-sm">
-        <thead>
-          <tr>
-            <th>{Trans('name')}</th>
-            <th style={{ width: '50%' }}>{Trans('var value')}</th>
-            <th style={{ width: '2rem' }}>{/* Delete */}</th>
-          </tr>
-        </thead>
-        <tbody>
+    <>
+      <SectionName text={Trans('variables')} />
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>{Trans('name')}</StyledTableCell>
+            <StyledTableCell sx={{ width: '50%' }}>
+              {Trans('var value')} <i>ƒ</i>
+            </StyledTableCell>
+            <StyledTableCell sx={{ width: '1.5rem' }}>
+              {/* Delete */}
+            </StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {props.report.variables.map((v, idx) => (
-            <tr key={v.name + idx}>
-              <td>
+            <TableRow key={v.name + idx}>
+              <StyledTableCell>
                 <InputApplyOnEnter
+                  component={TextField}
                   value={v.name}
                   onChange={val => changeVar(idx, String(val), undefined)}
+                  size="small"
+                  hiddenLabel
+                  fullWidth
+                  variant="filled"
                 />
-              </td>
-              <td>
-                <div className="input-group">
-                  <span className="input-group-text fst-italic">ƒ</span>
-                  <InputApplyOnEnter
-                    value={v.formula}
-                    onChange={val => changeVar(idx, undefined, String(val))}
-                  />
-                </div>
-              </td>
-              <td>
-                <button
-                  className="btn btn-sm btn-outline-secondary"
+              </StyledTableCell>
+              <StyledTableCell>
+                <InputApplyOnEnter
+                  component={TextField}
+                  value={v.formula}
+                  onChange={val => changeVar(idx, undefined, String(val))}
+                  size="small"
+                  hiddenLabel
+                  fullWidth
+                  variant="filled"
+                />
+              </StyledTableCell>
+              <StyledTableCell>
+                <Button
+                  color="secondary"
+                  variant="outlined"
                   onClick={() => changeVar(idx, undefined, undefined)}
                 >
                   <FontAwesomeIcon icon={faTrash} />
-                </button>
-              </td>
-            </tr>
+                </Button>
+              </StyledTableCell>
+            </TableRow>
           ))}
           {reservedVars.map(varName => (
-            <tr key={varName}>
-              <td>{varName}</td>
-              <td></td>
-              <td></td>
-            </tr>
+            <TableRow key={varName}>
+              <StyledTableCell>{varName}</StyledTableCell>
+              <StyledTableCell></StyledTableCell>
+              <StyledTableCell></StyledTableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-      <button
-        className="btn btn-outline-secondary"
+        </TableBody>
+      </Table>
+      <Button
+        color="secondary"
+        variant="outlined"
         onClick={() => changeVar(undefined, 'var', '0')}
+        startIcon={<FontAwesomeIcon icon={faPlus} />}
       >
-        <FontAwesomeIcon icon={faPlus} className="me-2" />
         {Trans('add var')}
-      </button>
-    </div>
+      </Button>
+    </>
   );
 }

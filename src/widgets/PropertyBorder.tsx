@@ -9,7 +9,8 @@ import Trans, { trKeys } from '../translation';
 import { tuple } from '../types';
 import InputApplyOnEnter from './InputApplyOnEnter';
 import PropertyColor from './PropertyColor';
-import globalStyle from '../globalStyle.module.css';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
 export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
 export type TBorderStyle = (typeof TBorderStyles)[number];
@@ -38,49 +39,40 @@ interface BorderEditorProps {
 export default function BorderEditor(props: BorderEditorProps) {
   return (
     <>
-      <div className={globalStyle.hform}>
-        <label htmlFor={props.id ? `${props.id}-width` : undefined}>
-          {Trans('width')}
-          <span className="ms-2 text-muted">[px]</span>
-        </label>
-        <InputApplyOnEnter
-          id={props.id ? `${props.id}-width` : undefined}
-          value={props.value.width}
-          step={1}
-          min={0}
-          onChange={val =>
-            props.onChange({
-              ...props.value,
-              width: typeof val === 'number' ? val : 0,
-            })
-          }
-        />
-      </div>
+      <InputApplyOnEnter
+        component={TextField}
+        value={props.value.width}
+        type="number"
+        onChange={val =>
+          props.onChange({
+            ...props.value,
+            width: typeof val === 'number' ? val : 0,
+          })
+        }
+        label={Trans('border-width')}
+        id={props.id ? `${props.id}-width` : undefined}
+      />
 
       {props.value.width > 0 && (
         <>
-          <div className={globalStyle.hform}>
-            <label htmlFor={props.id ? `${props.id}-style` : undefined}>
-              {Trans('border-style')}
-            </label>
-            <select
-              className="form-select"
-              id={props.id ? `${props.id}-style` : undefined}
-              value={props.value.style}
-              onChange={e =>
-                props.onChange({
-                  ...props.value,
-                  style: e.currentTarget.value as TBorderStyle,
-                })
-              }
-            >
-              {borderData.map(s => (
-                <option value={s.type} key={s.type}>
-                  {Trans(s.transKey)}
-                </option>
-              ))}
-            </select>
-          </div>
+          <TextField
+            select
+            label={Trans('border-style')}
+            id={props.id ? `${props.id}-style` : undefined}
+            value={props.value.style}
+            onChange={e =>
+              props.onChange({
+                ...props.value,
+                style: e.target.value as TBorderStyle,
+              })
+            }
+          >
+            {borderData.map(s => (
+              <MenuItem value={s.type} key={s.type}>
+                {Trans(s.transKey)}
+              </MenuItem>
+            ))}
+          </TextField>
 
           <PropertyColor
             value={props.value.color}

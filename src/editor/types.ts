@@ -109,12 +109,9 @@ export interface GeneralProps extends Omit<EditorProps, 'sourceData'> {
 
   renderWidget: (child: Item, parents: number[]) => ReactNode;
   renderWidgets: (children: Item[], parents: number[]) => ReactNode;
-  dragWidgetStart: (
-    e: React.DragEvent<HTMLDivElement>,
-    dragObj: TDragObj,
-  ) => void;
-  dragWidgetEnd: (e: React.DragEvent<HTMLDivElement>) => void;
-  drop: (e: React.DragEvent<HTMLDivElement>, dest: number[]) => void;
+  dragWidgetStart: (e: React.DragEvent<HTMLElement>, dragObj: TDragObj) => void;
+  dragWidgetEnd: (e: React.DragEvent<HTMLElement>) => void;
+  drop: (e: React.DragEvent<HTMLElement>, dest: number[]) => void;
 
   transforms: Transform[];
   widgets: Widget[];
@@ -210,6 +207,7 @@ export interface TransformRenderProps extends GeneralProps {
 export interface Transform {
   id: string;
   name: Name;
+  icon: IconDefinition;
   newItem: () => Promise<TransformItem>;
   transform: (dt: unknown, item: TransformItem) => Promise<unknown>;
   RenderEditor: FunctionComponent<TransformRenderProps>;

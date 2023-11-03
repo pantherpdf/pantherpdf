@@ -10,9 +10,10 @@ import { Item, ItemCompiled } from '../types';
 import type { Widget } from '../editor/types';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
-import InputApplyOnEnter from './InputApplyOnEnter';
+import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
 import Trans from '../translation';
-import globalStyle from '../globalStyle.module.css';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 export interface HtmlData extends Item {
   type: 'Html';
@@ -51,7 +52,7 @@ export const Html: Widget = {
     const item = props.item as HtmlData;
     return (
       <BoxName {...props} name={Html.name}>
-        <div className="font-monospace">{item.source}</div>
+        <Typography fontFamily="monospace">{item.source}</Typography>
       </BoxName>
     );
   },
@@ -67,17 +68,14 @@ export const Html: Widget = {
     const item = props.item as HtmlData;
     return (
       <>
-        <div className={globalStyle.vform}>
-          <label htmlFor="Html-source">{Trans('source data')}</label>
-          <div className="input-group">
-            <span className="input-group-text fst-italic">ƒ</span>
-            <InputApplyOnEnter
-              id="Html-source"
-              value={item.source}
-              onChange={val => props.setItem({ ...item, source: val })}
-            />
-          </div>
-        </div>
+        <InputApplyOnEnter
+          component={TextField}
+          value={item.source}
+          onChange={val => props.setItem({ ...item, source: val })}
+          label={Trans('source data')}
+          id="Html-source"
+          InputProps={inputFAdornment}
+        />
       </>
     );
   },

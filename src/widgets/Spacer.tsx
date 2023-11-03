@@ -11,7 +11,6 @@ import { faArrowsAltV } from '@fortawesome/free-solid-svg-icons';
 import PropertySlider from './PropertySlider';
 import Trans from '../translation';
 import BoxName from './BoxName';
-import globalStyle from '../globalStyle.module.css';
 
 export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
 export type TBorderStyle = (typeof TBorderStyles)[number];
@@ -59,16 +58,14 @@ export const Spacer: Widget = {
     const item = props.item as SpacerData;
     return (
       <>
-        <div className={globalStyle.hform}>
-          <PropertySlider
-            id="spacer-height"
-            label={Trans('height')}
-            min={3}
-            max={300}
-            value={item.height}
-            onChange={val => props.setItem({ ...item, height: val })}
-          />
-        </div>
+        <PropertySlider
+          id="spacer-height"
+          label={Trans('height')}
+          min={3}
+          max={300}
+          value={item.height}
+          onChange={val => props.setItem({ ...item, height: val })}
+        />
       </>
     );
   },

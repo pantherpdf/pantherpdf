@@ -50,7 +50,7 @@ pnpm add pantherpdf
 ## 👩🏻‍💻 Usage
 Install peer dependencies
 ```sh
-npm install --save react react-dom
+npm install --save @mui/material react react-dom
 ```
 
 ### Frontend
@@ -85,7 +85,7 @@ const api: ApiEndpoints = {
 async function main()
 {
   const report = {...emptyReport};
-  const data = {};
+  const data = { type: 'as-is', value: {} };
 
   const result = await generate({ report, api, data });
   console.log(`Size of a file: ${result.body.length}`);

@@ -6,10 +6,25 @@
 
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
 import InputApplyOnEnter from './InputApplyOnEnter';
-import style from './PropertyColor.module.css';
+import Paper from '@mui/material/Paper';
+import IconButton from '@mui/material/IconButton';
+import InputBase from '@mui/material/InputBase';
+
+const stylePopover: CSSProperties = {
+  position: 'absolute',
+  zIndex: '100',
+};
+
+const styleCover: CSSProperties = {
+  position: 'fixed',
+  top: '0',
+  right: '0',
+  bottom: '0',
+  left: '0',
+};
 
 interface Props {
   value: string;
@@ -47,9 +62,8 @@ export default function PropertyColor(props: Props) {
 
   return (
     <>
-      <div className="input-group mb-3">
-        <button
-          className="btn btn-outline-secondary"
+      <Paper sx={{ display: 'flex', alignItems: 'center' }}>
+        <IconButton
           style={{ backgroundColor: value }}
           onClick={() => setShow(!show)}
         >
@@ -57,8 +71,9 @@ export default function PropertyColor(props: Props) {
             icon={faEllipsisH}
             style={{ color: isColorDark ? 'white' : 'black' }}
           />
-        </button>
+        </IconButton>
         <InputApplyOnEnter
+          component={InputBase}
           value={props.value}
           onChange={val2 => {
             const val = String(val2).toUpperCase();
@@ -66,11 +81,12 @@ export default function PropertyColor(props: Props) {
             props.onChange(val);
           }}
           regex={/^#[0-9a-fA-F]{6}$/}
+          sx={{ ml: 1, flex: 1 }}
         />
-      </div>
+      </Paper>
       {show && (
-        <div className={style.popover}>
-          <div className={style.cover} onClick={() => setShow(false)} />
+        <div style={stylePopover}>
+          <div style={styleCover} onClick={() => setShow(false)} />
           <HexColorPicker color={value} onChange={setValue} />
         </div>
       )}

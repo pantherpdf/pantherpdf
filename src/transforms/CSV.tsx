@@ -13,7 +13,17 @@ import FormulaEvaluate from '../formula/formula';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
 import Trans from '../translation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTable, faTimes } from '@fortawesome/free-solid-svg-icons';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 
 interface CSVRow {
   source: string;
@@ -24,9 +34,15 @@ export interface CSVData extends TransformItem {
   rows: CSVRow[];
 }
 
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  paddingLeft: '0.1rem',
+  paddingRight: '0.1rem',
+}));
+
 const CSV: Transform = {
   id: 'CSV',
   name: 'CSV',
+  icon: faTable,
 
   newItem: async () => {
     const obj: CSVData = {
@@ -89,41 +105,46 @@ const CSV: Transform = {
     const item = props.item as CSVData;
     return (
       <>
-        <table className="table table-sm">
-          <tbody>
-            <tr>
-              <td className="table-info">{Trans('source data')}</td>
+        <Table size="small">
+          <TableBody>
+            <TableRow>
+              <StyledTableCell>{Trans('source data')}</StyledTableCell>
               {item.rows[0].cols.map((_, colIdx) => (
-                <td key={colIdx}>
-                  <div className="d-flex">
-                    <div className="flex-fill">{columnName(colIdx + 1)}</div>
-                    <button
-                      className="btn btn-sm btn-outline-secondary"
+                <StyledTableCell key={colIdx}>
+                  <Stack>
+                    <div style={{ flex: '1' }}>{columnName(colIdx + 1)}</div>
+                    <Button
+                      size="small"
+                      color="secondary"
+                      variant="outlined"
                       onClick={() => removeCol(item, props.setItem, colIdx)}
                       title={Trans('remove')}
                       disabled={item.rows[0].cols.length <= 1}
                     >
                       <FontAwesomeIcon icon={faTimes} />
-                    </button>
-                  </div>
-                </td>
+                    </Button>
+                  </Stack>
+                </StyledTableCell>
               ))}
-              <td></td>
-            </tr>
+              <StyledTableCell></StyledTableCell>
+            </TableRow>
             {item.rows.map((row, rowIdx) => (
-              <tr key={rowIdx}>
-                <td className="table-info">
+              <TableRow key={rowIdx}>
+                <StyledTableCell>
                   <InputApplyOnEnter
+                    component={TextField}
                     value={row.source}
                     onChange={val =>
                       updateSource(item, props.setItem, rowIdx, String(val))
                     }
                     placeholder="ƒ"
+                    size="small"
                   />
-                </td>
+                </StyledTableCell>
                 {row.cols.map((col, colIdx) => (
-                  <td key={colIdx}>
+                  <StyledTableCell key={colIdx}>
                     <InputApplyOnEnter
+                      component={TextField}
                       value={col}
                       onChange={val =>
                         updateCell(
@@ -135,44 +156,45 @@ const CSV: Transform = {
                         )
                       }
                       placeholder="ƒ"
+                      size="small"
                     />
-                  </td>
+                  </StyledTableCell>
                 ))}
-                <td>
-                  <button
-                    className="btn btn-sm btn-outline-secondary"
+                <StyledTableCell>
+                  <Button
+                    size="small"
+                    color="secondary"
+                    variant="outlined"
                     onClick={() => removeRow(item, props.setItem, rowIdx)}
                     title={Trans('remove')}
                     disabled={item.rows.length <= 1}
                   >
                     <FontAwesomeIcon icon={faTimes} />
-                  </button>
-                </td>
-              </tr>
+                  </Button>
+                </StyledTableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <small className="d-block text-muted">
-          {Trans('current item is in var -name-', ['item'])}
-        </small>
+        <Typography color="GrayText">
+          <small>{Trans('current item is in var -name-', ['item'])}</small>
+        </Typography>
 
-        <div className="btn-group mt-3" role="group">
-          <button
-            className="btn btn-outline-secondary"
+        <ButtonGroup color="secondary" variant="outlined">
+          <Button
             onClick={() => addRow(item, props.setItem)}
+            startIcon={<FontAwesomeIcon icon={faPlus} />}
           >
-            <FontAwesomeIcon icon={faPlus} className="me-2" />
             {Trans('add row')}
-          </button>
-          <button
-            className="btn btn-outline-secondary"
+          </Button>
+          <Button
             onClick={() => addCol(item, props.setItem)}
+            startIcon={<FontAwesomeIcon icon={faPlus} />}
           >
-            <FontAwesomeIcon icon={faPlus} className="me-2" />
             {Trans('add col')}
-          </button>
-        </div>
+          </Button>
+        </ButtonGroup>
       </>
     );
   },

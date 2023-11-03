@@ -7,26 +7,35 @@
 
 import React, { useState, useEffect } from 'react';
 import Trans from '../translation';
+import InputAdornment from '@mui/material/InputAdornment';
 
 export const WidthRegex = /^(?:|\d+(?:\.\d+)?(?:mm|cm|px|%|rem|em|vw|vh|))$/;
 export const WidthOptions = 'mm|cm|px|%|rem|em|vw|vh';
 
 type TAllowed = string | number;
-
-interface Props {
+type AbstractComponent =
+  | keyof JSX.IntrinsicElements
+  | React.JSXElementConstructor<any>;
+type Props<T extends AbstractComponent> = Omit<
+  React.ComponentProps<T>,
+  'value' | 'onChange' | 'regex'
+> & {
+  component: T;
   value: TAllowed;
-  step?: number;
-  min?: string | number;
-  max?: string | number;
   onChange: (val: TAllowed) => void;
   regex?: RegExp;
-  id?: string;
-  style?: React.CSSProperties;
-  placeholder?: string;
-  className?: string;
-}
+};
 
-export default function InputApplyOnEnter(props: Props) {
+export default function InputApplyOnEnter<T extends AbstractComponent>(
+  props: Props<T>,
+) {
+  const Cmp = props.component;
+  const props2: any = { ...props };
+  delete props2.component;
+  delete props2.value;
+  delete props2.onChange;
+  delete props2.regex;
+
   const [value, setValue] = useState<string>(String(props.value));
   const [origValue, setOrigValue] = useState<TAllowed>(props.value);
 
@@ -75,12 +84,11 @@ export default function InputApplyOnEnter(props: Props) {
   }
 
   return (
-    <input
-      {...props}
-      type={typeof props.value}
+    <Cmp
+      {...props2}
       value={value}
-      onChange={e => setValue(e.currentTarget.value)}
-      onKeyDown={e => {
+      onChange={(e: any) => setValue(e.target.value)}
+      onKeyDown={(e: any) => {
         if (e.key === 'Enter') {
           e.preventDefault();
           e.stopPropagation();
@@ -106,7 +114,18 @@ export default function InputApplyOnEnter(props: Props) {
           alert(Trans('invalid value'));
         }
       }}
-      className={`form-control ${props.className || ''}`}
     />
   );
 }
+
+export function FAdornment() {
+  return (
+    <InputAdornment position="start">
+      <i>ƒ</i>
+    </InputAdornment>
+  );
+}
+
+export const inputFAdornment = {
+  startAdornment: <FAdornment />,
+};

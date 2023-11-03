@@ -4,8 +4,17 @@
  * @license MIT
  */
 
-import React, { useRef } from 'react';
+import React, { CSSProperties, useRef } from 'react';
 import Trans from './translation';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+
+const boxStyle: CSSProperties = {
+  border: '3px dashed rgba(0,50,160,0.2)',
+  margin: '1rem 0',
+  padding: '1rem',
+};
 
 interface Props {
   onSelect: (files: File[]) => void;
@@ -68,26 +77,30 @@ export default function FileSelect(props: Props) {
 
   return (
     <>
-      <div
-        className="mt-4 mb-4 d-flex flex-column p-4"
-        style={{ border: '3px dashed rgba(0,50,160,0.2)' }}
+      <Stack
+        direction="column"
+        style={boxStyle}
         onDragOver={onDragOver}
         onDrop={onDrop}
       >
-        <div className="text-center">{Trans('drop-files here')}</div>
-        <div className="text-center mt-2 text-muted">{Trans('drop-or')}</div>
-        <div className="text-center mt-2">
-          <button
-            className="btn btn-sm btn-outline-secondary"
+        <Typography align="center">{Trans('drop-files here')}</Typography>
+        <Typography color="GrayText" align="center">
+          {Trans('drop-or')}
+        </Typography>
+        <Typography align="center">
+          <Button
+            size="small"
+            variant="outlined"
+            color="secondary"
             onClick={selectFileClick}
           >
             {Trans('drop-select files')}
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Typography>
+      </Stack>
       <input
         type="file"
-        className="d-none"
+        style={{ display: 'none' }}
         ref={selectFileElement}
         onChange={selectFileElementChange}
       />
