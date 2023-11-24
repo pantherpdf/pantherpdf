@@ -64,6 +64,7 @@ function App() {
   const [report, setReport] = useState<Report>(emptyReport);
   return (
     <Editor
+      layout="fullscreen"
       report={report}
       setReport={setReport}
       api={editorApi}

@@ -28,6 +28,27 @@ export interface SourceData {
   errorMsg?: string;
 }
 
+/** Navbar properties */
+export interface NavbarProps {
+  /** Show spinner in navbar (e.g. to indicate waiting on DB) */
+  isBackendBusy?: boolean;
+
+  /** Show undo and redo buttons */
+  hasUndoRedo?: boolean;
+
+  /** Undo callback. Set to undefined when undo is not possible. */
+  undo?: () => void | Promise<void>;
+
+  /** Redo callback. Set to undefined when redo is not possible. */
+  redo?: () => void | Promise<void>;
+
+  /** Component to display on the left side of navbar */
+  left?: React.ReactNode;
+
+  /** Component to display on the right side of navbar */
+  right?: React.ReactNode;
+}
+
 /**
  * Properties for Editor component
  *
@@ -35,6 +56,9 @@ export interface SourceData {
  * and notifies changes through a callback `setReport`.
  */
 export interface EditorProps {
+  /** Editor layout */
+  layout: 'fullscreen';
+
   /** Current value */
   report: Report;
 
@@ -52,29 +76,14 @@ export interface EditorProps {
   /** Optional source data to use while editing a report */
   sourceData?: unknown;
 
-  /** Flag to indicate progress while saving a report to a DB */
-  isBackendBusy?: boolean;
-
-  /** Show undo and redo buttons */
-  hasUndoRedo?: boolean;
-
-  /** Undo callback. Should not be defined when undo is not possible. */
-  undo?: () => void | Promise<void>;
-
-  /** Redo callback. Should not be defined when redo is not possible. */
-  redo?: () => void | Promise<void>;
-
-  /** Link to home button */
-  homeLink?: {
-    text: string;
-    url: string;
-  };
-
   /** Override default transforms */
   transforms?: Transform[];
 
   /** Override default widgets */
   widgets?: Widget[];
+
+  /** Navbar properties */
+  navbar?: NavbarProps;
 }
 
 // to help construct tests
@@ -115,6 +124,7 @@ export interface GeneralProps extends Omit<EditorProps, 'sourceData'> {
 
   transforms: Transform[];
   widgets: Widget[];
+  navbar: NavbarProps;
 }
 
 export interface ItemRenderEditorProps extends GeneralProps {

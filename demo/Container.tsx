@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Report, EditorProps, Editor } from '../src/index';
+import { Report, Editor } from '../src/index';
+import Typography from '@mui/material/Typography';
 
 const sampleReport: Report = {
   name: 'Report 1',
@@ -70,14 +71,27 @@ export default function Container() {
   }
 
   // show editor
-  const props2: EditorProps = {
-    report: report,
-    setReport: setReport2,
-    sourceData: sampleData,
-    api: {},
-    hasUndoRedo: true,
-    ...(undoNext > 1 ? { undo } : {}),
-    ...(undoNext < undoStack.length ? { redo } : {}),
-  };
-  return <Editor {...props2} />;
+  return (
+    <Editor
+      layout="fullscreen"
+      report={report}
+      setReport={setReport2}
+      sourceData={sampleData}
+      api={{}}
+      navbar={{
+        hasUndoRedo: true,
+        undo: undoNext > 1 ? undo : undefined,
+        redo: undoNext < undoStack.length ? redo : undefined,
+        left: <Brand />,
+      }}
+    />
+  );
+}
+
+function Brand() {
+  return (
+    <Typography sx={{ marginLeft: 1 }} fontWeight="bold">
+      PantherPDF
+    </Typography>
+  );
 }

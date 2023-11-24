@@ -306,6 +306,8 @@ export default function Editor(props: EditorProps) {
     drop,
     transforms,
     widgets,
+
+    navbar: props.navbar || {},
   };
 
   return <Layout {...props2} dragOver={dragOver} />;

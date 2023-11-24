@@ -12,6 +12,7 @@ import Editor from './editor/Editor';
 import type {
   CompileHelper,
   EditorProps,
+  NavbarProps,
   ItemRenderPreviewHelper,
   ItemRenderPreviewProps,
   ItemRenderEditorProps,
@@ -73,6 +74,7 @@ export {
 
 export type {
   EditorProps,
+  NavbarProps,
   GenerateArgs,
   FileOutput,
   SourceData,

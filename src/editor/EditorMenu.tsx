@@ -29,7 +29,6 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
-import Link from '@mui/material/Link';
 
 export default function EditorMenu(props: GeneralProps) {
   const [shownModalPrint, setShownModalPrint] = useState<
@@ -100,39 +99,40 @@ export default function EditorMenu(props: GeneralProps) {
     setIsPrinting(false);
   }
 
+  const navbarProps = props.navbar;
+
   return (
     <>
       <Stack
         direction="row"
-        justifyContent="center"
+        justifyContent="space-between"
         alignItems="center"
-        spacing={3}
         sx={{ height: '100%' }}
       >
-        {props.homeLink && (
-          <Link href={props.homeLink.url} target="_parent">
-            {props.homeLink.text}
-          </Link>
-        )}
-        <Button variant="contained" size="large" onClick={print}>
-          {!isPrinting ? (
-            <FontAwesomeIcon icon={faPrint} fixedWidth />
-          ) : (
-            <FontAwesomeIcon icon={faSpinner} spin fixedWidth />
+        {navbarProps.left || <div />}
+        <Stack direction="row" spacing={3}>
+          <Button variant="contained" size="large" onClick={print}>
+            {!isPrinting ? (
+              <FontAwesomeIcon icon={faPrint} fixedWidth />
+            ) : (
+              <FontAwesomeIcon icon={faSpinner} spin fixedWidth />
+            )}
+          </Button>
+          {navbarProps.hasUndoRedo && (
+            <ButtonGroup variant="contained" size="large">
+              <Button onClick={navbarProps.undo} disabled={!navbarProps.undo}>
+                <FontAwesomeIcon icon={faUndo} fixedWidth />
+              </Button>
+              <Button onClick={navbarProps.redo} disabled={!navbarProps.redo}>
+                <FontAwesomeIcon icon={faRedo} fixedWidth />
+              </Button>
+            </ButtonGroup>
           )}
-        </Button>
-        {props.hasUndoRedo && (
-          <ButtonGroup variant="contained" size="large">
-            <Button onClick={props.undo} disabled={!props.undo}>
-              <FontAwesomeIcon icon={faUndo} fixedWidth />
-            </Button>
-            <Button onClick={props.redo} disabled={!props.redo}>
-              <FontAwesomeIcon icon={faRedo} fixedWidth />
-            </Button>
-          </ButtonGroup>
-        )}
-        {props.isBackendBusy && <FontAwesomeIcon icon={faSpinner} spin />}
-        {/*<Button variant="contained" onClick={print}>Logout</Button>*/}
+          {navbarProps.isBackendBusy && (
+            <FontAwesomeIcon icon={faSpinner} spin />
+          )}
+        </Stack>
+        {navbarProps.right || <div />}
       </Stack>
 
       {/* Preview */}
