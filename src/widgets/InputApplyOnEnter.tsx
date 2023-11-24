@@ -9,8 +9,8 @@ import React, { useState, useEffect } from 'react';
 import Trans from '../translation';
 import InputAdornment from '@mui/material/InputAdornment';
 
-export const WidthRegex = /^(?:|\d+(?:\.\d+)?(?:mm|cm|px|%|rem|em|vw|vh|))$/;
-export const WidthOptions = 'mm|cm|px|%|rem|em|vw|vh';
+export const WidthRegex = /^(?:|\d+(?:\.\d+)?(?:mm|cm|in|px|%|rem|em|vw|vh|))$/;
+export const WidthOptions = 'mm|cm|in|px|%|rem|em|vw|vh';
 
 type TAllowed = string | number;
 type AbstractComponent =
@@ -48,7 +48,9 @@ export default function InputApplyOnEnter<T extends AbstractComponent>(
     let value2: TAllowed;
 
     // number
-    if (typeof props.value === 'number') {
+    if (typeof props.value === 'number' && value.trim().length === 0) {
+      value2 = 0;
+    } else if (typeof props.value === 'number') {
       const num =
         Number.isInteger(props.step) && props.step !== 0
           ? parseInt(value)

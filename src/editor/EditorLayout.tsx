@@ -179,7 +179,7 @@ function RenderContent(props: GeneralProps) {
     if (fontStyle) {
       LoadGoogleFontCss(fontStyle);
     }
-    let width = props.report.properties.paperWidth || 210;
+    let width = props.report.properties.paper?.width || 210;
     style.maxWidth = `${(width * 800) / 210}px`;
     style.margin = `0 auto`;
     return (

@@ -36,6 +36,7 @@ import type {
   TransformItem,
   Item,
   ItemCompiled,
+  Paper,
 } from './types';
 import { setEditorLanguage } from './translation';
 import { SourceData } from './editor/retrieveOriginalSourceData';
@@ -75,6 +76,7 @@ export {
 export type {
   EditorProps,
   NavbarProps,
+  Paper,
   GenerateArgs,
   FileOutput,
   SourceData,

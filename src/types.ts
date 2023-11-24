@@ -59,12 +59,17 @@ export interface TVariable {
   formula: string;
 }
 
+/** Paper properties, units are mm */
+export interface Paper {
+  margin?: [number, number, number, number];
+  width?: number;
+  height?: number;
+}
+
 export interface ReportProperties {
   font?: TFont;
-  margin?: [number, number, number, number];
+  paper?: Paper;
   fileName?: string;
-  paperWidth?: number;
-  paperHeight?: number;
   lang?: string;
 }
 

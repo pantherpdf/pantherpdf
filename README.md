@@ -62,6 +62,7 @@ const editorApi: ApiEndpoints = {};
 
 function App() {
   const [report, setReport] = useState<Report>(emptyReport);
+  // Use language="en-us" for imperial/US units.
   return (
     <Editor
       layout="fullscreen"

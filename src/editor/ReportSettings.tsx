@@ -7,16 +7,14 @@
 
 import React, { CSSProperties, useState } from 'react';
 import { GeneralProps } from './types';
-import type { TargetOption, Report } from '../types';
+import type { TargetOption, Report, Paper } from '../types';
 import { isReport } from '../types';
 import Trans from '../translation';
 import PropertyFont, { TFont } from '../widgets/PropertyFont';
+import PaperEditor from './PaperEditor';
 import InputApplyOnEnter, {
   inputFAdornment,
 } from '../widgets/InputApplyOnEnter';
-import Property4SideInput, {
-  Value as Property4SideInputValue,
-} from '../widgets/Property4SideInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faDownload,
@@ -32,7 +30,6 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
-import InputAdornment from '@mui/material/InputAdornment';
 
 const styleWidget: CSSProperties = {
   padding: '3px 5px',
@@ -50,10 +47,6 @@ const TargetOptionTmpObj: { [key in TargetOption]: number } = {
   'csv-windows-1250': 1,
 };
 const TargetOptionTmpKeys = Object.keys(TargetOptionTmpObj);
-
-const inputAdornmentMm = {
-  endAdornment: <InputAdornment position="end">mm</InputAdornment>,
-};
 
 function fileReportUpload(
   arr: Report[],
@@ -160,30 +153,22 @@ export default function ReportSettings(props: GeneralProps) {
     return props.setReport(obj);
   }
 
-  async function changeMargin(value: Property4SideInputValue) {
-    const obj: Report = {
-      ...props.report,
-      properties: { ...props.report.properties },
-    };
-    obj.properties.margin = value;
-    return props.setReport(obj);
-  }
-
   async function changeProperty(
     key: keyof typeof props.report.properties,
     value: string | number,
   ) {
     const obj: Report = {
       ...props.report,
-      properties: { ...props.report.properties },
+      properties: {
+        ...props.report.properties,
+        paper: props.report.properties.paper
+          ? { ...props.report.properties.paper }
+          : {},
+      },
     };
     if (key === 'fileName' && typeof value === 'string') {
       obj.properties[key] = value;
     } else if (key === 'lang' && typeof value === 'string') {
-      obj.properties[key] = value;
-    } else if (key === 'paperWidth' && typeof value === 'number') {
-      obj.properties[key] = value;
-    } else if (key === 'paperHeight' && typeof value === 'number') {
       obj.properties[key] = value;
     } else {
       throw new Error('bad value');
@@ -200,9 +185,19 @@ export default function ReportSettings(props: GeneralProps) {
     return props.setReport(obj);
   }
 
-  const margin: Property4SideInputValue = props.report.properties.margin
-    ? props.report.properties.margin
-    : [0, 0, 0, 0];
+  async function paperChanged(value: Paper) {
+    const obj: Report = {
+      ...props.report,
+      properties: { ...props.report.properties },
+    };
+    if (Object.keys(value).length > 0) {
+      obj.properties.paper = value;
+    } else {
+      delete obj.properties.paper;
+    }
+    return props.setReport(obj);
+  }
+
   return (
     <>
       <InputApplyOnEnter
@@ -285,49 +280,11 @@ export default function ReportSettings(props: GeneralProps) {
                 googleFontApiKey={props.api.googleFontApiKey}
               />
 
-              <SectionName
-                text={Trans('paper')}
-                secondaryText={Trans('0 means default')}
+              <PaperEditor
+                unit={props.language === 'en-us' ? 'inch' : 'mm'}
+                value={props.report.properties.paper || {}}
+                onChange={paperChanged}
               />
-
-              <InputApplyOnEnter
-                component={TextField}
-                value={
-                  props.report.properties.paperWidth
-                    ? props.report.properties.paperWidth
-                    : 0
-                }
-                onChange={val =>
-                  val
-                    ? changeProperty('paperWidth', val)
-                    : deleteProperty('paperWidth')
-                }
-                type="number"
-                label={Trans('width')}
-                id="paperWidth"
-                InputProps={inputAdornmentMm}
-              />
-
-              <InputApplyOnEnter
-                component={TextField}
-                value={
-                  props.report.properties.paperHeight
-                    ? props.report.properties.paperHeight
-                    : 0
-                }
-                onChange={val =>
-                  val
-                    ? changeProperty('paperHeight', val)
-                    : deleteProperty('paperHeight')
-                }
-                type="number"
-                label={Trans('height')}
-                id="paperHeight"
-                InputProps={inputAdornmentMm}
-              />
-
-              <SectionName text={Trans('margin')} secondaryText="mm" />
-              <Property4SideInput value={margin} onChange={changeMargin} />
             </>
           )}
 

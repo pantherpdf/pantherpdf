@@ -59,6 +59,9 @@ export interface EditorProps {
   /** Editor layout */
   layout: 'fullscreen';
 
+  /** Editors language. Default is "en". Use "en-us" to use imperial/US units. */
+  language?: 'en' | 'en-us';
+
   /** Current value */
   report: Report;
 
