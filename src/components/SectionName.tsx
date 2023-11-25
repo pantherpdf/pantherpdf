@@ -1,3 +1,10 @@
+/**
+ * @file Title for a section in editor's properties
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2023
+ * @license MIT
+ */
+
 import { CSSProperties } from 'react';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';

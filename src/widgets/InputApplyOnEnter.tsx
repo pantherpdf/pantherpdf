@@ -1,7 +1,7 @@
 /**
  * @file Helper form input that calls onChange only when focus is lost or when user presses enter.
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2023
  * @license MIT
  */
 

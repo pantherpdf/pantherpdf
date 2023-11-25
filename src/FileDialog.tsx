@@ -1,7 +1,7 @@
 /**
  * @file Component to enable user to browse, select, upload files.
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2023
  * @license MIT
  */
 

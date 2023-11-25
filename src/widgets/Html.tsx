@@ -1,7 +1,7 @@
 /**
  * @file Render html
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2023
  * @license MIT
  */
 
