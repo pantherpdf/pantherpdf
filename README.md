@@ -74,6 +74,9 @@ function App() {
 }
 ```
 
+PantherPDF editor supports **dark mode**. Note that "virtual paper" will stay white.
+Follow [MUI instructions](https://mui.com/material-ui/customization/dark-mode/).
+
 ### Backend
 ```ts
 import { generate, emptyReport, ApiEndpoints } from 'pantherpdf';

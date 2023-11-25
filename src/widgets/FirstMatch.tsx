@@ -114,7 +114,6 @@ export const FirstMatch: Widget = {
           onChange={val => props.setItem({ ...item, varName: val })}
           label={Trans('varName')}
           id="FirstMatch-varName"
-          InputProps={inputFAdornment}
           helperText={Trans('repeat - current item is this var')}
         />
       </>

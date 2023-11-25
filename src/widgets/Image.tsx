@@ -251,7 +251,6 @@ export const Image: Widget = {
           onChange={val => props.setItem({ ...item, url: val })}
           label={Trans('url')}
           id="img-url"
-          InputProps={inputFAdornment}
           placeholder="https://www.example.com/image.jpg"
         />
         {props.api.files && (
@@ -281,7 +280,6 @@ export const Image: Widget = {
           regex={WidthRegex}
           label={Trans('width')}
           id="img-width"
-          InputProps={inputFAdornment}
           helperText={WidthOptions}
         />
 
@@ -300,7 +298,6 @@ export const Image: Widget = {
           regex={WidthRegex}
           label={Trans('height')}
           id="img-height"
-          InputProps={inputFAdornment}
           helperText={WidthOptions}
         />
 

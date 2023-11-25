@@ -1,11 +1,23 @@
 import { CSSProperties } from 'react';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import { blueGrey } from '@mui/material/colors';
+import { styled } from '@mui/material/styles';
 
 const styleFill: CSSProperties = {
   flex: '1',
 };
+
+const Bg = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.action.selected,
+  display: 'flex',
+  padding: '0.5rem 1rem',
+}));
+
+const Secondary = styled(Typography)(({ theme }) => ({
+  marginLeft: 0.5,
+  color: theme.palette.text.secondary,
+  display: 'inline',
+}));
 
 interface Props {
   text: string;
@@ -15,27 +27,16 @@ interface Props {
 
 export default function SectionName(props: Props) {
   return (
-    <Paper
-      elevation={2}
-      sx={{
-        backgroundColor: blueGrey[50],
-        padding: 1,
-        display: 'flex',
-      }}
-    >
+    <Bg elevation={2}>
       <Typography style={styleFill} fontWeight="bold">
         {props.text}
         {props.secondaryText && (
-          <Typography
-            component="span"
-            color="GrayText"
-            sx={{ marginLeft: 0.5 }}
-          >
+          <Secondary>
             <small>{props.secondaryText}</small>
-          </Typography>
+          </Secondary>
         )}
       </Typography>
       {props.endElement && <div>{props.endElement}</div>}
-    </Paper>
+    </Bg>
   );
 }
