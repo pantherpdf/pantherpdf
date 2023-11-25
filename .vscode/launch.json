@@ -2,17 +2,15 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug CRA Tests",
+      "name": "Debug unit tests",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/jest",
       "args": ["--runInBand", "--no-cache", "--watchAll=false"],
       "cwd": "${workspaceRoot}",
-      "protocol": "inspector",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "env": { "CI": "true" },
-      "disableOptimisticBPs": true
+      "env": { "CI": "true" }
     }
   ]
 }

@@ -1,5 +1,4 @@
 /**
- * @jest-environment jsdom
  * @project PantherPDF Report Editor
  * @copyright Ignac Banic 2021
  * @license MIT
@@ -8,8 +7,9 @@
 import { Frame, FrameData } from './Frame';
 import { sampleReport } from '../editor/sampleReport';
 import type { Report } from '../types';
-import { compileTest, renderToHtmlContentTest } from '../unitTestHelpers';
+import { compileTest, renderWidget } from '../unitTestHelpers';
 import type { ItemNewProps } from '../editor/types';
+import { TextSimple, TextSimpleData } from './TextSimple';
 
 test('Frame should include google font', async () => {
   const helper: ItemNewProps = { report: sampleReport };
@@ -31,23 +31,20 @@ test('Frame should include page break property', async () => {
   const helper: ItemNewProps = { report: sampleReport };
   const el = (await Frame.newItem(helper)) as FrameData;
   el.pageBreakAvoid = true;
-  const report: Report = {
-    ...sampleReport,
-    children: [el],
-  };
-  const compiled = await compileTest(report, {});
-  const html = renderToHtmlContentTest(compiled);
+  const html = await renderWidget(el);
   expect(html.replace(/\s/g, '')).toContain('page-break-inside:avoid');
 });
 
 test('Frame should not add whitespace around outer div', async () => {
   const helper: ItemNewProps = { report: sampleReport };
-  const el = (await Frame.newItem(helper)) as FrameData;
-  const report: Report = {
-    ...sampleReport,
-    children: [el],
-  };
-  const compiled = await compileTest(report, {});
-  const html = renderToHtmlContentTest(compiled);
-  expect(html.trim()).toBe(html);
+  const elOuter = (await Frame.newItem(helper)) as FrameData;
+  const elInner = (await Frame.newItem(helper)) as FrameData;
+  const elTxt = (await TextSimple.newItem(helper)) as TextSimpleData;
+  elTxt.formula = '"abc"';
+  elInner.children.push(elTxt);
+  elOuter.children.push(elInner);
+  const html = await renderWidget(elOuter);
+  expect(html).not.toContain(' <');
+  expect(html).not.toContain('\n<');
+  expect(html).not.toContain('\t<');
 });

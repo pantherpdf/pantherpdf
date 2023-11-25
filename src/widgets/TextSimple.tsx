@@ -56,7 +56,7 @@ export const TextSimple: Widget = {
 
   RenderPreview: function (props) {
     const item = props.item as TextSimpleCompiled;
-    return `<div>${props.escapeHtml(item.data)}</div>\n`;
+    return <div>{item.data}</div>;
   },
 
   RenderProperties: function (props) {

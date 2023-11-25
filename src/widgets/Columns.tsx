@@ -56,7 +56,7 @@ export const ColumnsCt: Widget = {
 
   RenderPreview: function (props) {
     // handled by Columns
-    return '';
+    return null;
   },
 
   RenderProperties: function () {
@@ -157,16 +157,18 @@ export const Columns: Widget = {
 
   RenderPreview: function (props) {
     const item = props.item as ColumnsCompiled;
-    let out = '<div style="display: flex;">\n';
-    for (let idx = 0; idx < item.children.length; ++idx) {
-      const ch = item.children[idx];
-      const style = colStyle(item.widths[idx]);
-      out += `<div style="${props.styleToStringAttribute(style)}">
-				${props.renderChildren(ch.children, { ...props })}
-			</div>\n`;
-    }
-    out += '</div>\n';
-    return out;
+    return (
+      <div style={{ display: 'flex' }}>
+        {item.children.map((ch, idx) => {
+          const style = colStyle(item.widths[idx]);
+          return (
+            <div key={idx} style={style}>
+              {props.renderChildren(ch.children, { ...props })}
+            </div>
+          );
+        })}
+      </div>
+    );
   },
 
   RenderProperties: function (props) {

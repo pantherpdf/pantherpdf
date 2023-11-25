@@ -6,13 +6,7 @@
  */
 
 import { HtmlData, HtmlCompiled } from './Html';
-import {
-  compileComponentTest,
-  compileTest,
-  renderToHtmlContentTest,
-} from '../unitTestHelpers';
-import { sampleReport } from '../editor/sampleReport';
-import { ReportForceChildren } from '../editor/types';
+import { compileComponentTest, renderWidget } from '../unitTestHelpers';
 
 test('Html compile', async () => {
   const dt: HtmlData = { type: 'Html', source: 'data.desc', children: [] };
@@ -26,14 +20,9 @@ test('Html compile', async () => {
 });
 
 test('html render', async () => {
-  const report: ReportForceChildren<HtmlData> = {
-    ...sampleReport,
-    children: [{ type: 'Html', source: 'data.desc', children: [] }],
-  };
-
+  const dt: HtmlData = { type: 'Html', source: 'data.desc', children: [] };
   const data = { desc: '<p>Hello</p>' };
-  const compiled = await compileTest(report, data);
-  const html = renderToHtmlContentTest(compiled);
+  const html = await renderWidget(dt, data);
   expect(html).toMatchSnapshot();
 });
 

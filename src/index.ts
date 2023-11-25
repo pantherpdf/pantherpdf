@@ -4,10 +4,6 @@
  * @license MIT
  */
 
-// Parcel processes each file individually,
-// so we need to explicitly reference .d.ts files
-/// <reference types="./react-style-object-to-css" />
-
 import Editor from './editor/Editor';
 import type {
   CompileHelper,

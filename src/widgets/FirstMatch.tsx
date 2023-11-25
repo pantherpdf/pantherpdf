@@ -82,7 +82,7 @@ export const FirstMatch: Widget = {
 
   RenderPreview: function (props) {
     const item = props.item as FirstMatchCompiled;
-    return props.renderChildren(item.children, props);
+    return <>{props.renderChildren(item.children, props)}</>;
   },
 
   RenderProperties: function (props) {

@@ -1,29 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`complete grid 1`] = `
-<div style="display: flex;  flex-wrap: wrap;">
-  <div style>
-    <div style>
+<div style="display:flex;flex-wrap:wrap">
+  <div>
+    <div>
       1
     </div>
   </div>
-  <div style>
-    <div style>
+  <div>
+    <div>
       2
     </div>
   </div>
-  <div style>
-    <div style>
+  <div>
+    <div>
       3
     </div>
   </div>
-  <div style>
-    <div style>
+  <div>
+    <div>
       4
     </div>
   </div>
-  <div style>
-    <div style>
+  <div>
+    <div>
       5
     </div>
   </div>
@@ -31,70 +31,70 @@ exports[`complete grid 1`] = `
 `;
 
 exports[`complete rows 1`] = `
-<div style>
+<div>
   1
 </div>
-<div style>
+<div>
   2
 </div>
-<div style>
+<div>
   3
 </div>
-<div style>
+<div>
   4
 </div>
-<div style>
+<div>
   5
 </div>
 `;
 
 exports[`grid - products 1`] = `
-<div style="display: block;"
+<div style="display:block"
      class="grid-with-frame"
 >
-  <div style="margin: 0px 0px 0px 0px;  padding: 0px 0px 0px 0px;  box-sizing: border-box;  width: 5cm;  border: 0px solid #000000;  flex: 0 0 5cm;  overflow-x: hidden;  height: 5cm;  overflow-y: hidden;">
+  <div style="margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;box-sizing:border-box;width:5cm;border:0px solid #000000;flex:0 0 5cm;overflow-x:hidden;height:5cm;overflow-y:hidden">
   </div>
-  <div style="margin: 0px 0px 0px 0px;  padding: 0px 0px 0px 0px;  box-sizing: border-box;  width: 5cm;  border: 0px solid #000000;  flex: 0 0 5cm;  overflow-x: hidden;  height: 5cm;  overflow-y: hidden;">
+  <div style="margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;box-sizing:border-box;width:5cm;border:0px solid #000000;flex:0 0 5cm;overflow-x:hidden;height:5cm;overflow-y:hidden">
   </div>
-  <div style="margin: 0px 0px 0px 0px;  padding: 0px 0px 0px 0px;  box-sizing: border-box;  width: 5cm;  border: 0px solid #000000;  flex: 0 0 5cm;  overflow-x: hidden;  height: 5cm;  overflow-y: hidden;">
+  <div style="margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;box-sizing:border-box;width:5cm;border:0px solid #000000;flex:0 0 5cm;overflow-x:hidden;height:5cm;overflow-y:hidden">
   </div>
 </div>
 `;
 
 exports[`repeat columns 1`] = `
-<div style="display: flex;">
-  <div style="flex: 0 0 14.2857%;">
-    <div style>
+<div style="display:flex">
+  <div style="flex:0 0 14.2857%">
+    <div>
       1
     </div>
   </div>
-  <div style="flex: 0 0 14.2857%;">
-    <div style>
+  <div style="flex:0 0 14.2857%">
+    <div>
       2
     </div>
   </div>
-  <div style="flex: 0 0 14.2857%;">
-    <div style>
+  <div style="flex:0 0 14.2857%">
+    <div>
       3
     </div>
   </div>
-  <div style="flex: 0 0 14.2857%;">
-    <div style>
+  <div style="flex:0 0 14.2857%">
+    <div>
       4
     </div>
   </div>
-  <div style="flex: 0 0 14.2857%;">
-    <div style>
+  <div style="flex:0 0 14.2857%">
+    <div>
       5
     </div>
   </div>
-  <div style="flex: 0 0 14.2857%;">
-    <div style>
+  <div style="flex:0 0 14.2857%">
+    <div>
       6
     </div>
   </div>
-  <div style="flex: 0 0 14.2857%;">
-    <div style>
+  <div style="flex:0 0 14.2857%">
+    <div>
       7
     </div>
   </div>

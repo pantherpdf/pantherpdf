@@ -5,10 +5,13 @@
  * @license MIT
  */
 
+import React from 'react';
 import { Item, ItemCompiled, Report, ReportCompiled } from './types';
 import { defaultWidgets } from './widgets/allWidgets';
 import compile from './editor/compile';
-import { renderToHtmlContent } from './editor/renderToHtml';
+import { renderBody } from './editor/renderToHtml';
+import { sampleReport } from './editor/sampleReport';
+import { renderToString } from 'react-dom/server';
 
 export async function compileComponentTest(
   cmpData: object,
@@ -34,6 +37,16 @@ export async function compileTest(
   return compile(report, data, defaultWidgets, {});
 }
 
-export function renderToHtmlContentTest(report: ReportCompiled) {
-  return renderToHtmlContent(report, defaultWidgets);
+export async function renderWidget(
+  item: Item,
+  data: unknown = {},
+): Promise<string> {
+  const report: Report = {
+    ...sampleReport,
+    children: [item],
+  };
+  const compiled = await compileTest(report, data);
+  const html = renderBody(compiled, defaultWidgets);
+  const html2 = React.createElement(React.Fragment, {}, ...html.props.children);
+  return renderToString(html2);
 }

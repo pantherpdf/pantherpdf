@@ -5,28 +5,19 @@
  * @license MIT
  */
 
-import type { CSSProperties } from 'react';
+import React, { CSSProperties } from 'react';
+import { renderToString } from 'react-dom/server';
 import { defaultReportCss, ReportCompiled } from '../types';
 import type { ItemRenderPreviewHelper, Widget } from './types';
 import { getWidget } from '../widgets/allWidgets';
-import styleToCssString from 'react-style-object-to-css';
 import { PropertyFontGenCss } from '../widgets/PropertyFont';
 import { GoogleFontUrlImport } from '../widgets/GoogleFonts';
 
-function escapeHtml(unsafe: string): string {
-  return unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-
-export function renderToHtmlContent(
+export function renderBody(
   report: ReportCompiled,
   widgets: Widget[],
   externalHelpers: { [key: string]: any } = {},
-) {
+): React.ReactElement {
   const helper: ItemRenderPreviewHelper = {
     renderItem: (item, helper) => {
       const w = getWidget(widgets, item.type);
@@ -36,20 +27,26 @@ export function renderToHtmlContent(
       if (!Array.isArray(chs)) {
         throw new Error('Bad childs array');
       }
-      let txt = '';
-      for (const item of chs) {
+      return chs.map((item, idx) => {
         const w = getWidget(widgets, item.type);
-        txt += w.RenderPreview({ ...helper, item });
-      }
-      return txt;
+        return (
+          <React.Fragment key={idx}>
+            {w.RenderPreview({ ...helper, item })}
+          </React.Fragment>
+        );
+      });
     },
-    escapeHtml,
-    styleToStringAttribute: (css: CSSProperties) =>
-      escapeHtml(styleToCssString(css).trim()),
     externalHelpers,
   };
 
-  return helper.renderChildren(report.children, helper);
+  const children = helper.renderChildren(report.children, helper);
+
+  // prepare css
+  const cssObj: CSSProperties = {
+    ...defaultReportCss,
+    ...PropertyFontGenCss(report.properties.font || {}),
+  };
+  return <body style={cssObj}>{children}</body>;
 }
 
 export default function renderToHtml(
@@ -57,15 +54,9 @@ export default function renderToHtml(
   widgets: Widget[],
   externalHelpers: { [key: string]: any } = {},
 ): string {
-  // prepare css
-  const cssObj: CSSProperties = {
-    ...defaultReportCss,
-    ...PropertyFontGenCss(report.properties.font || {}),
-  };
-  const css = styleToCssString(cssObj);
-
   // render content
-  const htmlContent = renderToHtmlContent(report, widgets, externalHelpers);
+  const bodyElement = renderBody(report, widgets, externalHelpers);
+  const bodyTxt = renderToString(bodyElement);
 
   const fontUrl = GoogleFontUrlImport(report.fontsUsed);
   const fontHtml = fontUrl
@@ -158,16 +149,11 @@ sup {
 }
 </style>
 <style>
-body {
-	${css}
-}
 ${report.globalCss}
 </style>
 ${fontHtml}
 </head>
-<body>
-${htmlContent}
-</body>
+${bodyTxt}
 </html>
 `;
   return html;

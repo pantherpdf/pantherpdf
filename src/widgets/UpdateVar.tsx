@@ -140,7 +140,7 @@ export const UpdateVar: Widget = {
   },
 
   RenderPreview: function (props) {
-    return '';
+    return null;
   },
 
   RenderProperties: function (props) {

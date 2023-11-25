@@ -38,8 +38,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
     "file-saver": "^2.0.5",
-    "react-colorful": "^5.5.1",
-    "react-style-object-to-css": "^1.1.2"
+    "react-colorful": "^5.5.1"
   },
   "peerDependencies": {
     "@mui/material": ">= 5 < 6",
@@ -68,11 +67,9 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^29.5.0",
-    "jest-environment-jsdom": "^29.5.0",
     "jest-serializer-html": "^7.1.0",
     "parcel": "latest",
     "prettier": "^2.8.4",
-    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "ts-jest": "^29.0.5",

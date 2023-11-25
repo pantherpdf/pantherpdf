@@ -59,9 +59,7 @@ export const Html: Widget = {
 
   RenderPreview: function (props) {
     const item = props.item as HtmlCompiled;
-    return `<div>
-			${item.data}
-		</div>\n`;
+    return <div dangerouslySetInnerHTML={{ __html: item.data }} />;
   },
 
   RenderProperties: function (props) {

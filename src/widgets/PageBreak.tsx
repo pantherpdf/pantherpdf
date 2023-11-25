@@ -46,7 +46,7 @@ export const PageBreak: Widget = {
   },
 
   RenderPreview: function () {
-    return '<div style="page-break-before: always"></div>\n';
+    return <div style={{ pageBreakBefore: 'always' }} />;
   },
 
   RenderProperties: function () {

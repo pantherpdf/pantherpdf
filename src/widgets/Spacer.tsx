@@ -16,6 +16,7 @@ export const TBorderStyles = tuple('dotted', 'dashed', 'solid');
 export type TBorderStyle = (typeof TBorderStyles)[number];
 
 interface Properties {
+  /** px */
   height: number;
 }
 export type SpacerData = Item & Properties;
@@ -51,7 +52,7 @@ export const Spacer: Widget = {
 
   RenderPreview: function (props) {
     const item = props.item as SpacerCompiled;
-    return `<div style="height: ${item.height}px"></div>\n`;
+    return <div style={{ height: `${item.height}px` }} />;
   },
 
   RenderProperties: function (props) {

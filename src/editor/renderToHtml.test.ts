@@ -5,8 +5,7 @@
  * @license MIT
  */
 
-import { compileTest, renderToHtmlContentTest } from '../unitTestHelpers';
-import type { ReportForceChildren } from './types';
+import { compileTest, renderWidget } from '../unitTestHelpers';
 import type { Report } from '../types';
 import type { TextSimpleData } from '../widgets/TextSimple';
 import { sampleReport } from './sampleReport';
@@ -14,16 +13,13 @@ import renderToHtml from './renderToHtml';
 import { defaultWidgets } from '../widgets/allWidgets';
 
 test('text', async () => {
-  const report: ReportForceChildren<TextSimpleData> = {
-    ...sampleReport,
-    children: [
-      { type: 'TextSimple', formula: '"Hello World: "+data.num', children: [] },
-    ],
+  const el: TextSimpleData = {
+    type: 'TextSimple',
+    formula: '"Hello World: "+data.num',
+    children: [],
   };
-
   const obj = { num: 123 };
-  const compiled = await compileTest(report, obj);
-  const html = renderToHtmlContentTest(compiled);
+  const html = await renderWidget(el, obj);
   expect(html).toMatchSnapshot();
 });
 

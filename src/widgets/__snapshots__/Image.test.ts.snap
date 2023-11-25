@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Image should render svg 1`] = `
+<div>
+  <div style="display:inline-block;max-width:100%">
+    <svg viewbox="0 0 500 500"
+         xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect x="37.03"
+            y="43.969"
+            width="420.811"
+            height="419.344"
+            style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);"
+      >
+      </rect>
+    </svg>
+  </div>
+</div>
+`;

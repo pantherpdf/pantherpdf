@@ -199,13 +199,13 @@ export const Image: Widget = {
 
     let img;
     if (item.data === '') {
-      return '';
+      return null;
     }
     //
     else if (item.data.trimStart().startsWith('<svg')) {
-      img = `<div style="${props.styleToStringAttribute(cssImg)}">${
-        item.data
-      }</div>`;
+      img = (
+        <div style={cssImg} dangerouslySetInnerHTML={{ __html: item.data }} />
+      );
     }
     //
     else if (
@@ -216,9 +216,7 @@ export const Image: Widget = {
       item.data.startsWith('./') ||
       item.data.startsWith('../')
     ) {
-      img = `<img src="${props.escapeHtml(
-        item.data,
-      )}" alt="" style="${props.styleToStringAttribute(cssImg)}" />`;
+      img = <img src={item.data} alt="" style={cssImg} />;
     }
     //
     else {
@@ -226,9 +224,7 @@ export const Image: Widget = {
       throw new Error('Bad image data');
     }
 
-    return `<div style="${props.styleToStringAttribute(cssContainer)}">
-			${img}
-		</div>\n`;
+    return <div style={cssContainer}>{img}</div>;
   },
 
   RenderProperties: function (props) {

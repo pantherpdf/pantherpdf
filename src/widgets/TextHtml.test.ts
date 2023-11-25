@@ -1,5 +1,4 @@
 /**
- * @jest-environment jsdom
  * @project PantherPDF Report Editor
  * @copyright Ignac Banic 2021
  * @license MIT
@@ -14,7 +13,7 @@ import {
 import {
   compileComponentTest,
   compileTest,
-  renderToHtmlContentTest,
+  renderWidget,
 } from '../unitTestHelpers';
 import renderToHtml from '../editor/renderToHtml';
 import { ReportForceChildren } from '../editor/types';
@@ -84,19 +83,13 @@ test('TextHtml Filter', async () => {
 });
 
 test('TextHtml should render html', async () => {
-  const report: ReportForceChildren<TextHtmlData> = {
-    ...sampleReport,
-    children: [
-      {
-        type: 'TextHtml',
-        value: ValueInternalFromEditor('Hello <b>world</b>'),
-        children: [],
-        font: { size: '20px' },
-      },
-    ],
+  const dt: TextHtmlData = {
+    type: 'TextHtml',
+    value: ValueInternalFromEditor('Hello <b>world</b>'),
+    children: [],
+    font: { size: '20px' },
   };
-  const compiled = await compileTest(report, {});
-  const html = renderToHtmlContentTest(compiled);
+  const html = await renderWidget(dt);
   expect(html).toMatchSnapshot();
 });
 

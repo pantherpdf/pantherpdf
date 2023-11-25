@@ -916,9 +916,7 @@ export const TextHtml: Widget = {
   RenderPreview: function (props) {
     const item = props.item as TextHtmlCompiled;
     const css = PropertyFontGenCss(item.font);
-    return `<div style="${props.styleToStringAttribute(css)}">${
-      item.value
-    }</div>\n`;
+    return <div style={css} dangerouslySetInnerHTML={{ __html: item.value }} />;
   },
 
   RenderProperties: function (props) {

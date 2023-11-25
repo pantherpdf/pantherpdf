@@ -6,7 +6,7 @@
  */
 
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import type { FunctionComponent, ReactNode, CSSProperties } from 'react';
+import type { FunctionComponent, ReactNode } from 'react';
 import type { FormulaHelper } from './compile';
 import {
   Report,
@@ -137,14 +137,15 @@ export interface ItemRenderEditorProps extends GeneralProps {
 }
 
 export interface ItemRenderPreviewHelper {
-  renderItem: (item: ItemCompiled, helper: ItemRenderPreviewHelper) => string;
+  renderItem: (
+    item: ItemCompiled,
+    helper: ItemRenderPreviewHelper,
+  ) => React.ReactNode;
   renderChildren: (
     chs: ItemCompiled[],
     helper: ItemRenderPreviewHelper,
-  ) => string;
+  ) => React.ReactNode[];
   externalHelpers: { [key: string]: any };
-  escapeHtml: (txt: string) => string;
-  styleToStringAttribute: (style: CSSProperties) => string;
 }
 
 export interface ItemRenderPreviewProps extends ItemRenderPreviewHelper {
@@ -196,7 +197,7 @@ export interface Widget {
   RenderEditor: FunctionComponent<ItemRenderEditorProps>;
 
   /** Render item for final report */
-  RenderPreview: (props: ItemRenderPreviewProps) => string;
+  RenderPreview: FunctionComponent<ItemRenderPreviewProps>;
 
   /**
    * Can user add this widget to report? Default true.

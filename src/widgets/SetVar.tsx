@@ -67,7 +67,7 @@ export const SetVar: Widget = {
 
   RenderPreview: function (props) {
     const item = props.item as SetVarCompiled;
-    return props.renderChildren(item.children, props);
+    return <>{props.renderChildren(item.children, props)}</>;
   },
 
   RenderProperties: function (props) {

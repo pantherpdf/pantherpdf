@@ -1,5 +1,4 @@
 /**
- * @jest-environment jsdom
  * @project PantherPDF Report Editor
  * @copyright Ignac Banic 2021
  * @license MIT
@@ -10,7 +9,7 @@ import { RepeatData } from './Repeat';
 import {
   compileComponentTest,
   compileTest,
-  renderToHtmlContentTest,
+  renderWidget,
 } from '../unitTestHelpers';
 import { ForceChildren } from '../editor/types';
 import { sampleReport } from '../editor/sampleReport';
@@ -60,7 +59,7 @@ test('complete rows', async () => {
   expect(children[0].children[0][0].type).toBe('TextHtml');
   expect(children[0].children[0][0].value).toBe('1');
 
-  const html = renderToHtmlContentTest(report2);
+  const html = await renderWidget(rpt);
   expect(html).toMatchSnapshot();
 });
 
@@ -78,10 +77,8 @@ test('repeat columns', async () => {
     varName: 'item',
     direction: 'columns',
   };
-  const report: Report = { ...sampleReport, children: [rpt] };
 
-  const report2 = await compileTest(report, {});
-  const html = renderToHtmlContentTest(report2);
+  const html = await renderWidget(rpt);
   expect(html).toMatchSnapshot();
 });
 
@@ -109,7 +106,7 @@ test('complete grid', async () => {
   expect(children[0].children[0][0].type).toBe('TextHtml');
   expect(children[0].children[0][0].value).toBe('1');
 
-  const html = renderToHtmlContentTest(report2);
+  const html = await renderWidget(rpt);
   expect(html).toMatchSnapshot();
 });
 
@@ -135,11 +132,12 @@ test('grid - products', async () => {
     varName: 'item',
     direction: 'grid',
   };
+
+  const html = await renderWidget(rpt);
+  expect(html).toMatchSnapshot();
+
   const report: Report = { ...sampleReport, children: [rpt] };
   const report2 = await compileTest(report, {});
-
-  const html = renderToHtmlContentTest(report2);
-  expect(html).toMatchSnapshot();
   expect(report2.globalCss.replace(/\s/g, '')).toContain(
     '.grid-with-frame>div{display:inline-block;vertical-align:top;}',
   );
