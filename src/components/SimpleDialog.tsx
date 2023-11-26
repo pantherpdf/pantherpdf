@@ -12,6 +12,7 @@ interface ModalProps {
   onHide: () => void;
   children: JSX.Element | JSX.Element[];
   size?: DialogProps['maxWidth'];
+  contentBackgroundColor?: string;
 }
 
 type IconButtonProps = React.ComponentProps<typeof IconButton>;
@@ -39,7 +40,9 @@ export default function SimpleDialog(props: ModalProps) {
         >
           <FontAwesomeIcon icon={faTimes} fixedWidth />
         </IconButton>
-        <DialogContent>{props.children}</DialogContent>
+        <DialogContent sx={{ backgroundColor: props.contentBackgroundColor }}>
+          {props.children}
+        </DialogContent>
       </Dialog>
     </>
   );

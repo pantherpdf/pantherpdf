@@ -172,6 +172,7 @@ export default function EditorMenu(props: GeneralProps) {
                 width: '100%',
                 height: 'calc(100vh - 190px)',
                 border: 'none',
+                backgroundColor: 'white',
               }}
               title={Trans('preview')}
             />
