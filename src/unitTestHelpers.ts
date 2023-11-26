@@ -11,7 +11,7 @@ import { defaultWidgets } from './widgets/allWidgets';
 import compile from './editor/compile';
 import { renderBody } from './editor/renderToHtml';
 import { sampleReport } from './editor/sampleReport';
-import { renderToString } from 'react-dom/server';
+import renderReactNodeToHtmlString from './htmlRenderer/htmlRenderer';
 
 export async function compileComponentTest(
   cmpData: object,
@@ -48,5 +48,5 @@ export async function renderWidget(
   const compiled = await compileTest(report, data);
   const html = renderBody(compiled, defaultWidgets);
   const html2 = React.createElement(React.Fragment, {}, ...html.props.children);
-  return renderToString(html2);
+  return renderReactNodeToHtmlString(html2);
 }

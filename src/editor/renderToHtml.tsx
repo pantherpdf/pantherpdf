@@ -6,12 +6,12 @@
  */
 
 import React, { CSSProperties } from 'react';
-import { renderToString } from 'react-dom/server';
 import { defaultReportCss, ReportCompiled } from '../types';
 import type { ItemRenderPreviewHelper, Widget } from './types';
 import { getWidget } from '../widgets/allWidgets';
 import { PropertyFontGenCss } from '../widgets/PropertyFont';
 import { GoogleFontUrlImport } from '../widgets/GoogleFonts';
+import renderReactNodeToHtmlString from '../htmlRenderer/htmlRenderer';
 
 export function renderBody(
   report: ReportCompiled,
@@ -56,7 +56,7 @@ export default function renderToHtml(
 ): string {
   // render content
   const bodyElement = renderBody(report, widgets, externalHelpers);
-  const bodyTxt = renderToString(bodyElement);
+  const bodyTxt = renderReactNodeToHtmlString(bodyElement);
 
   const fontUrl = GoogleFontUrlImport(report.fontsUsed);
   const fontHtml = fontUrl
