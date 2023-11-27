@@ -294,18 +294,18 @@ export default function Layout(
   }
 
   return (
-    <>
-      <BoxMenu elevation={0}>
+    <div data-testid="pantherpdf">
+      <BoxMenu elevation={0} data-testid="navbar">
         <EditorMenu {...props} />
       </BoxMenu>
-      <Box1>
+      <Box1 data-testid="widgets">
         <Stack spacing={2}>
           <div />
           <EditWidgetNew {...props} />
           <div />
         </Stack>
       </Box1>
-      <Box2 onDragOver={onDragOver} onDrop={onDrop}>
+      <Box2 onDragOver={onDragOver} onDrop={onDrop} data-testid="source-data">
         <Stack spacing={2}>
           <div />
           <DataTransform {...props} />
@@ -320,7 +320,7 @@ export default function Layout(
           <div />
         </Stack>
       </Box2>
-      <Box3>
+      <Box3 data-testid="properties">
         <Stack spacing={2}>
           <div />
           <Properties {...props} />
@@ -333,11 +333,12 @@ export default function Layout(
         onDrop={e => props.drop(e, [props.report.children.length])}
         tabIndex={0}
         onKeyDown={keyDownHandler}
+        data-testid="content"
       >
         <div>
           <RenderContent {...props} />
         </div>
       </BoxMain>
-    </>
+    </div>
   );
 }

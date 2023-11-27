@@ -110,8 +110,13 @@ export default function EditorMenu(props: GeneralProps) {
         sx={{ height: '100%' }}
       >
         {navbarProps.left || <div />}
-        <Stack direction="row" spacing={3}>
-          <Button variant="contained" size="large" onClick={print}>
+        <Stack direction="row" spacing={3} data-testid="center-buttons">
+          <Button
+            variant="contained"
+            size="large"
+            onClick={print}
+            data-testid="print"
+          >
             {!isPrinting ? (
               <FontAwesomeIcon icon={faPrint} fixedWidth />
             ) : (
@@ -120,10 +125,18 @@ export default function EditorMenu(props: GeneralProps) {
           </Button>
           {navbarProps.hasUndoRedo && (
             <ButtonGroup variant="contained" size="large">
-              <Button onClick={navbarProps.undo} disabled={!navbarProps.undo}>
+              <Button
+                onClick={navbarProps.undo}
+                disabled={!navbarProps.undo}
+                data-testid="undo"
+              >
                 <FontAwesomeIcon icon={faUndo} fixedWidth />
               </Button>
-              <Button onClick={navbarProps.redo} disabled={!navbarProps.redo}>
+              <Button
+                onClick={navbarProps.redo}
+                disabled={!navbarProps.redo}
+                data-testid="redo"
+              >
                 <FontAwesomeIcon icon={faRedo} fixedWidth />
               </Button>
             </ButtonGroup>
@@ -140,6 +153,7 @@ export default function EditorMenu(props: GeneralProps) {
         show={!!shownModalPrint}
         onHide={() => setShownModalPrint(undefined)}
         size="md"
+        data-testid="dialog-preview"
         title={
           <>
             {Trans('preview')}
@@ -150,6 +164,7 @@ export default function EditorMenu(props: GeneralProps) {
                 sx={{ marginLeft: 0.5 }}
                 onClick={genPdfWrapper}
                 disabled={isDownloading}
+                data-testid="download-pdf"
                 startIcon={
                   !isDownloading ? (
                     <FontAwesomeIcon icon={faDownload} />

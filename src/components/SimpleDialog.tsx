@@ -13,6 +13,7 @@ interface ModalProps {
   children: JSX.Element | JSX.Element[];
   size?: DialogProps['maxWidth'];
   contentBackgroundColor?: string;
+  'data-testid'?: string;
 }
 
 type IconButtonProps = React.ComponentProps<typeof IconButton>;
@@ -31,12 +32,14 @@ export default function SimpleDialog(props: ModalProps) {
         open={props.show}
         maxWidth={props.size ? props.size : 'lg'}
         fullWidth={!!props.size}
+        data-testid={props['data-testid']}
       >
         <DialogTitle>{props.title}</DialogTitle>
         <IconButton
           aria-label={Trans('close')}
           onClick={props.onHide}
           sx={closeStyle}
+          data-testid="close-dialog"
         >
           <FontAwesomeIcon icon={faTimes} fixedWidth />
         </IconButton>

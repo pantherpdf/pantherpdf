@@ -204,6 +204,7 @@ export default function Editor(props: EditorProps) {
         onDragOver={dragOver}
         onDragEnter={() => setDragHighlight(parents)}
         onDragLeave={dragLeave}
+        data-testid={`spacer-${parents.join(',')}`}
       ></div>
     );
   }
@@ -221,6 +222,7 @@ export default function Editor(props: EditorProps) {
         draggable={typeof obj.canDrag === 'undefined' || obj.canDrag}
         onDragStart={e => dragWidgetStart(e, { type: 'wid', wid })}
         onDragEnd={e => dragWidgetEnd(e)}
+        data-testid={`widget-${wid.join(',')}`}
       >
         <obj.RenderEditor
           {...props2}

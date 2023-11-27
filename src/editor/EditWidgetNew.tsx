@@ -102,6 +102,7 @@ function ShowWidgets(props: GeneralProps) {
                 onDragStart={e => dragStartWidget(e, w)}
                 onDragEnd={e => props.dragWidgetEnd(e)}
                 sx={{ py: 0.2 }}
+                data-testid={w.id}
               >
                 <ListItemIcon>
                   <FontAwesomeIcon icon={w.icon} fixedWidth />
