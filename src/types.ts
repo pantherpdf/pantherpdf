@@ -6,29 +6,14 @@
 
 import type { CSSProperties } from 'react';
 import type { TFont, TFontStyle } from './widgets/PropertyFont';
+import type { Item, ItemCompiled } from './widgets/types';
+import type { TransformItem } from './transforms/types';
 
 // helper for converting tuple into type
 // prettier-ignore
 type Narrowable =
   string | number | boolean | symbol | object | {} | void | null | undefined;
 export const tuple = <T extends Narrowable[]>(...args: T) => args;
-
-export type WithId<T> = T & { _id: string };
-
-/**
- * Instance of a Widget.
- * Reports are made out of multiple items. It contains data like text,
- * font-size, image url, margins etc.
- */
-export interface Item {
-  [key: string]: unknown;
-
-  /** Id of a Widget */
-  type: string;
-
-  /** Subitems */
-  children: Item[];
-}
 
 export const TargetOptions = tuple(
   'pdf',
@@ -46,12 +31,6 @@ export function TargetOptionTypeGuard(r: any): r is TargetOption {
     return false;
   }
   return true;
-}
-
-export interface TransformItem {
-  [key: string]: unknown;
-  type: string;
-  comment: string;
 }
 
 export interface TVariable {
@@ -82,7 +61,6 @@ export interface Report {
   children: Item[];
   transforms: TransformItem[];
   properties: ReportProperties;
-  dataUrl: string;
   variables: TVariable[];
 }
 
@@ -92,11 +70,6 @@ export interface Report {
 export interface ApiReportMetaData {
   id: string;
   name: string;
-}
-
-export interface ItemCompiled {
-  [key: string]: unknown;
-  type: string;
 }
 
 export interface ReportCompiled extends Omit<Report, 'children'> {
@@ -151,9 +124,6 @@ export function isReport(r: any): r is Report {
     return false;
   }
   //
-  if (typeof r.dataUrl !== 'string') {
-    return false;
-  }
   if (!Array.isArray(r.variables)) {
     return false;
   }
@@ -241,3 +211,9 @@ export const defaultReportCss: CSSProperties = {
   fontSize: '12pt',
   color: '#000000',
 };
+
+/**
+ * Name is used for translating strings.
+ * It can be `string` or `object` with 2-letter ISO language keys.
+ */
+export type Name = string | { [key: string]: string };

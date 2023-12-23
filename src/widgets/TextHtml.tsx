@@ -10,8 +10,12 @@
 // - insert tag, delete nbsp space after tag and press enter
 
 import React, { useEffect, useState, CSSProperties } from 'react';
-import { Item, ItemCompiled } from '../types';
-import type { ItemRenderEditorProps, Widget } from '../editor/types';
+import type {
+  Item,
+  ItemCompiled,
+  ItemRenderEditorProps,
+  Widget,
+} from './types';
 import BoxName from './BoxName';
 import PropertyFont, {
   PropertyFontExtractStyle,

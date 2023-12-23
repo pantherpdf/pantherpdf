@@ -5,15 +5,11 @@
  */
 
 import React from 'react';
-import { defaultReportCss, Item } from '../types';
-import { GeneralProps } from './types';
+import type { Item } from '../widgets/types';
+import type { GeneralProps } from './types';
 import Trans, { TransName } from '../translation';
-import {
-  PropertyFontExtractStyle,
-  PropertyFontGenCss,
-} from '../widgets/PropertyFont';
+
 import EditorMenu from './EditorMenu';
-import ObjectExplorer from './ObjectExplorer';
 import DataTransform from './DataTransform';
 import EditWidgetNew from './EditWidgetNew';
 import { getWidget } from '../widgets/allWidgets';
@@ -22,20 +18,16 @@ import ReportSettings from './ReportSettings';
 import { extractFiles } from '../FileSelect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { LoadGoogleFontCss } from '../widgets/GoogleFonts';
 import SectionName from '../components/SectionName';
 import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
+import TransformedDataExplorer from './TransformedDataExplorer';
+import EditorContentJson from './EditorContentJson';
+import EditorContentCsv from './EditorContentCsv';
+import EditorContentHtml from './EditorContentHtml';
 
 const BoxMain = styled('div')(({ theme }) => ({
   position: 'absolute',
@@ -166,74 +158,17 @@ function Properties(props: GeneralProps) {
   );
 }
 
-function RenderContent(props: GeneralProps) {
-  const t = props.report.target;
-  if (t === 'pdf' || t === 'html') {
-    const style = {
-      ...defaultReportCss,
-      ...PropertyFontGenCss(props.report.properties.font || {}),
-    };
-    const fontStyle = props.report.properties.font
-      ? PropertyFontExtractStyle(props.report.properties.font)
-      : undefined;
-    if (fontStyle) {
-      LoadGoogleFontCss(fontStyle);
-    }
-    let width = props.report.properties.paper?.width || 210;
-    style.maxWidth = `${(width * 800) / 210}px`;
-    style.margin = `0 auto`;
-    return (
-      <div style={style}>
-        {props.renderWidgets(props.report.children, [])}
-        {props.report.children.length === 0 && (
-          <Typography color="GrayText" align="center">
-            {Trans('drag drop widgets here')}
-          </Typography>
-        )}
-      </div>
-    );
+function EditorContent(props: GeneralProps) {
+  switch (props.report.target) {
+    case 'html':
+    case 'pdf':
+      return <EditorContentHtml {...props} />;
+    case 'json':
+      return <EditorContentJson {...props} />;
+    case 'csv-utf-8':
+    case 'csv-windows-1250':
+      return <EditorContentCsv {...props} />;
   }
-
-  if (t === 'json') {
-    try {
-      const content = JSON.stringify(props.data.data);
-      return <pre>{content}</pre>;
-    } catch (e) {
-      return (
-        <Alert severity="error">
-          <AlertTitle>{Trans('error')}</AlertTitle>
-          {String(e)}
-        </Alert>
-      );
-    }
-  }
-
-  if (t === 'csv-utf-8' || t === 'csv-windows-1250') {
-    const dt = props.data.data;
-    if (!Array.isArray(dt)) {
-      return (
-        <Alert severity="error">
-          <AlertTitle>{Trans('error')}</AlertTitle>
-          {Trans('data must be 2D array')}
-        </Alert>
-      );
-    }
-    return (
-      <Table>
-        <TableBody>
-          {dt.map((row, idx) => (
-            <TableRow key={idx}>
-              {Array.isArray(row) &&
-                row.map((cell, idx2) => (
-                  <TableCell key={idx2}>{String(cell)}</TableCell>
-                ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    );
-  }
-
   throw new Error('unknown target');
 }
 
@@ -267,9 +202,6 @@ export default function Layout(
   function onDrop(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
     e.stopPropagation();
-    if (!props.setSourceDataOverride) {
-      return;
-    }
     const arr = extractFiles(e.dataTransfer);
     if (arr.length === 0) {
       return;
@@ -281,10 +213,10 @@ export default function Layout(
         if (!e2.target || typeof e2.target.result !== 'string') {
           return;
         }
-        const dt = JSON.parse(e2.target.result);
-        if (props.setSourceDataOverride) {
-          props.setSourceDataOverride(dt);
-        }
+        props.setSourceDataOverride({
+          type: 'javascript',
+          code: e2.target.result,
+        });
       };
       reader.readAsText(f);
     } catch (e) {
@@ -310,13 +242,7 @@ export default function Layout(
           <div />
           <DataTransform {...props} />
           <Divider />
-          {props.data.errorMsg ? (
-            <div>{props.data.errorMsg}</div>
-          ) : (
-            <div>
-              <ObjectExplorer data={props.data.data} />
-            </div>
-          )}
+          <TransformedDataExplorer {...props} />
           <div />
         </Stack>
       </Box2>
@@ -336,7 +262,7 @@ export default function Layout(
         data-testid="content"
       >
         <div>
-          <RenderContent {...props} />
+          <EditorContent {...props} />
         </div>
       </BoxMain>
     </div>

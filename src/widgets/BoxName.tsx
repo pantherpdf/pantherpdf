@@ -7,7 +7,8 @@
 
 import React from 'react';
 import { TransName } from '../translation';
-import { ItemRenderEditorProps, Name } from '../editor/types';
+import type { ItemRenderEditorProps } from './types';
+import type { Name } from '../types';
 import { styled } from '@mui/material/styles';
 
 const BoxParent = styled('div')({

@@ -6,8 +6,7 @@
  */
 
 import React from 'react';
-import { Item, ItemCompiled } from '../types';
-import type { Widget } from '../editor/types';
+import type { Item, ItemCompiled, Widget } from './types';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
 import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';

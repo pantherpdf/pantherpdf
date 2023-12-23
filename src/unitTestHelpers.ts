@@ -6,12 +6,13 @@
  */
 
 import React from 'react';
-import { Item, ItemCompiled, Report, ReportCompiled } from './types';
+import type { Report, ReportCompiled } from './types';
 import { defaultWidgets } from './widgets/allWidgets';
-import compile from './editor/compile';
-import { renderBody } from './editor/renderToHtml';
+import compile from './data/compile';
+import { renderBody } from './data/renderToHtml';
 import { sampleReport } from './editor/sampleReport';
 import { renderToString } from 'react-dom/server';
+import type { Item, ItemCompiled } from './widgets/types';
 
 export async function compileComponentTest(
   cmpData: object,
@@ -23,7 +24,6 @@ export async function compileComponentTest(
     children: [cmpData as Item],
     transforms: [],
     properties: {},
-    dataUrl: '',
     variables: [],
   };
   const reportCompiled = await compile(dt, data, defaultWidgets, {});
@@ -50,3 +50,10 @@ export async function renderWidget(
   const html2 = React.createElement(React.Fragment, {}, ...html.props.children);
   return renderToString(html2);
 }
+
+// to force specific children type
+export type ForceChildren<T> =
+  | T
+  | { [key: string]: unknown; children: ForceChildren<T>[] };
+
+export type ReportForceChildren<T> = Report & { children: ForceChildren<T>[] };

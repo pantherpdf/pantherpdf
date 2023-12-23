@@ -6,7 +6,7 @@
  */
 
 import React, { CSSProperties, useState } from 'react';
-import { GeneralProps } from './types';
+import type { GeneralProps } from './types';
 import type { TargetOption, Report, Paper } from '../types';
 import { isReport } from '../types';
 import Trans from '../translation';

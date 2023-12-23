@@ -4,7 +4,7 @@
  * @license MIT
  */
 
-import { IHelpers } from './types';
+import type { IHelpers } from './types';
 import parse from './parse';
 import toPostFix from './toPostFix';
 import evaluatePostfix from './evaluate';

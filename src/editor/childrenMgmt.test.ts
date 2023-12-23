@@ -16,8 +16,8 @@ import {
   updateItem,
 } from './childrenMgmt';
 import { sampleReport } from './sampleReport';
-import { ReportForceChildren } from './types';
-import { Report } from '../types';
+import { ReportForceChildren } from '../unitTestHelpers';
+import type { Report } from '../types';
 
 test('findInList', () => {
   let r: ReportForceChildren<RepeatData | TextSimpleData>;

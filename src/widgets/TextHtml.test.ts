@@ -11,12 +11,12 @@ import {
   extractTag,
 } from './TextHtml';
 import {
+  ReportForceChildren,
   compileComponentTest,
   compileTest,
   renderWidget,
 } from '../unitTestHelpers';
-import renderToHtml from '../editor/renderToHtml';
-import { ReportForceChildren } from '../editor/types';
+import renderToHtml from '../data/renderToHtml';
 import { sampleReport } from '../editor/sampleReport';
 import { defaultWidgets } from './allWidgets';
 

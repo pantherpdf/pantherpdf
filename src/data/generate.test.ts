@@ -6,8 +6,8 @@
  */
 
 import generate from './generate';
-import { ApiEndpoints, Report, ReportProperties } from '../types';
-import { sampleReport } from './sampleReport';
+import type { ApiEndpoints, Report, ReportProperties } from '../types';
+import { sampleReport } from '../editor/sampleReport';
 import { CSV, CSVData } from '../transforms/CSV';
 
 test('generate CSV CP1250', async () => {

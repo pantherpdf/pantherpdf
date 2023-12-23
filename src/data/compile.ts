@@ -5,11 +5,10 @@
  * @license MIT
  */
 
-import { Report, Item, ApiEndpoints } from '../types';
-import type { ReportCompiled } from '../types';
+import type { Report, ApiEndpoints, ReportCompiled } from '../types';
 import FormulaEvaluate from '../formula/formula';
 import { getWidget } from '../widgets/allWidgets';
-import { CompileHelper, Widget } from './types';
+import type { CompileHelper, Widget, Item } from '../widgets/types';
 import { PropertyFontExtractStyle } from '../widgets/PropertyFont';
 
 type TOvrr = [string, unknown];

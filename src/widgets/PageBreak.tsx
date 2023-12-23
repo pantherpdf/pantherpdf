@@ -5,8 +5,7 @@
  */
 
 import React from 'react';
-import { Item, ItemCompiled } from '../types';
-import type { Widget } from '../editor/types';
+import type { Item, ItemCompiled, Widget } from './types';
 import { faGripLines } from '@fortawesome/free-solid-svg-icons';
 import Divider from '@mui/material/Divider';
 

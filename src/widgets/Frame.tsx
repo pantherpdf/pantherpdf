@@ -5,8 +5,7 @@
  */
 
 import React, { CSSProperties } from 'react';
-import { Item, ItemCompiled } from '../types';
-import type { Widget } from '../editor/types';
+import type { Item, ItemCompiled, Widget } from './types';
 import { faBorderStyle } from '@fortawesome/free-solid-svg-icons';
 import PropertyColor from './PropertyColor';
 import PropertyBorder, { Border, genBorderCss } from './PropertyBorder';

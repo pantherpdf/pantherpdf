@@ -88,6 +88,11 @@ const tr2 = {
   },
 
   'source data': { en: 'Source data', sl: 'Izvorni podatki' },
+  'override source data': {
+    en: 'Override source data',
+    sl: 'Povozi izvorne podatke',
+  },
+  'clear override': { en: 'Clear override', sl: 'Odstrani povožene podatke' },
   transform: { en: 'Transform', sl: 'Transformacija' },
   'insert data transform': {
     en: 'Insert data transform',

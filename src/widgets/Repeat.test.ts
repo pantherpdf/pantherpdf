@@ -7,13 +7,13 @@
 import { TextSimpleData } from './TextSimple';
 import { RepeatData } from './Repeat';
 import {
+  ForceChildren,
   compileComponentTest,
   compileTest,
   renderWidget,
 } from '../unitTestHelpers';
-import { ForceChildren } from '../editor/types';
 import { sampleReport } from '../editor/sampleReport';
-import { Report } from '../types';
+import type { Report } from '../types';
 import { TextHtmlData, ValueInternalFromEditor } from './TextHtml';
 import { FrameData } from './Frame';
 

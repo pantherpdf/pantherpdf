@@ -7,8 +7,9 @@
 
 import React, { useEffect, useState } from 'react';
 import Trans, { TransName } from '../translation';
-import { Report, ApiReportMetaData } from '../types';
-import { Widget, GeneralProps, ItemNewProps } from './types';
+import type { Report, ApiReportMetaData } from '../types';
+import type { GeneralProps } from './types';
+import type { ItemNewProps, Widget } from '../widgets/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import SectionName from '../components/SectionName';

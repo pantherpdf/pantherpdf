@@ -5,8 +5,7 @@
  */
 
 import React, { CSSProperties } from 'react';
-import { Item, ItemCompiled } from '../types';
-import type { Widget } from '../editor/types';
+import type { Widget, Item, ItemCompiled } from './types';
 import { faColumns, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
 import InputApplyOnEnter, {

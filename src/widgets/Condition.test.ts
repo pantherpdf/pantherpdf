@@ -7,8 +7,7 @@
 
 import { TextSimpleData } from './TextSimple';
 import { ConditionCompiled, ConditionData } from '../widgets/Condition';
-import { ForceChildren } from '../editor/types';
-import { compileComponentTest } from '../unitTestHelpers';
+import { ForceChildren, compileComponentTest } from '../unitTestHelpers';
 
 test('Condition should show children when formula is truthy', async () => {
   const dt: ForceChildren<ConditionData | TextSimpleData> = {

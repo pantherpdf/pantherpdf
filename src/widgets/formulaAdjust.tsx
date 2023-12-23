@@ -4,7 +4,7 @@
  * @license MIT
  */
 
-import { Name } from '../editor/types';
+import type { Name } from '../types';
 import { TransName } from '../translation';
 
 interface Adjust {

@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import type { Transform } from '../editor/types';
+import type { Transform } from './types';
 import { Filter } from './Filter';
 import { CSV } from './CSV';
 

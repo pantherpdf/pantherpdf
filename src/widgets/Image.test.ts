@@ -7,7 +7,7 @@
 import { Image, ImageData } from './Image';
 import { renderWidget } from '../unitTestHelpers';
 import { sampleReport } from '../editor/sampleReport';
-import type { ItemNewProps } from '../editor/types';
+import type { ItemNewProps } from './types';
 
 test('Image should render svg', async () => {
   const content = `<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">

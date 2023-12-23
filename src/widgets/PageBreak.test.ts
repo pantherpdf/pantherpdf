@@ -7,7 +7,7 @@
 import { PageBreak, PageBreakData } from './PageBreak';
 import { renderWidget } from '../unitTestHelpers';
 import { sampleReport } from '../editor/sampleReport';
-import type { ItemNewProps } from '../editor/types';
+import type { ItemNewProps } from './types';
 
 test('PageBreak should include css page-break-before', async () => {
   const helper: ItemNewProps = { report: sampleReport };

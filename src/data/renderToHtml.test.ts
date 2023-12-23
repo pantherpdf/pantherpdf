@@ -8,7 +8,7 @@
 import { compileTest, renderWidget } from '../unitTestHelpers';
 import type { Report } from '../types';
 import type { TextSimpleData } from '../widgets/TextSimple';
-import { sampleReport } from './sampleReport';
+import { sampleReport } from '../editor/sampleReport';
 import renderToHtml from './renderToHtml';
 import { defaultWidgets } from '../widgets/allWidgets';
 

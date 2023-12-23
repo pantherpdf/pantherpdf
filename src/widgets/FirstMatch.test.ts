@@ -7,8 +7,7 @@
 
 import { TextSimpleData } from './TextSimple';
 import { FirstMatchCompiled, FirstMatchData } from '../widgets/FirstMatch';
-import { compileComponentTest } from '../unitTestHelpers';
-import { ForceChildren } from '../editor/types';
+import { ForceChildren, compileComponentTest } from '../unitTestHelpers';
 
 test('FirstMatch', async () => {
   const dt: ForceChildren<FirstMatchData | TextSimpleData> = {

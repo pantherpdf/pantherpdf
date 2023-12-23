@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Report, Editor } from '../src/index';
+import { Report, Editor, SourceData } from '../src/index';
 import Typography from '@mui/material/Typography';
 
 const sampleReport: Report = {
@@ -8,7 +8,6 @@ const sampleReport: Report = {
   children: [],
   transforms: [],
   properties: {},
-  dataUrl: '',
   variables: [],
 };
 
@@ -44,6 +43,7 @@ class Employee extends Person {
 }
 
 const sampleData = new Employee('Alice', 30, 'Iceberg mover');
+const sampleDataWrapper: SourceData = { type: 'as-is', value: sampleData };
 
 export default function Container() {
   const [report, setReport] = useState<Report>(sampleReport);
@@ -76,7 +76,7 @@ export default function Container() {
       layout="fullscreen"
       report={report}
       setReport={setReport2}
-      sourceData={sampleData}
+      sourceData={sampleDataWrapper}
       api={{}}
       navbar={{
         hasUndoRedo: true,

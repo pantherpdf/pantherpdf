@@ -8,7 +8,7 @@ import { Frame, FrameData } from './Frame';
 import { sampleReport } from '../editor/sampleReport';
 import type { Report } from '../types';
 import { compileTest, renderWidget } from '../unitTestHelpers';
-import type { ItemNewProps } from '../editor/types';
+import type { ItemNewProps } from './types';
 import { TextSimple, TextSimpleData } from './TextSimple';
 
 test('Frame should include google font', async () => {

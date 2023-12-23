@@ -20,7 +20,7 @@ import parse, {
   parseImpl,
   parseNum,
 } from './parse';
-import { TExpr, TExpr_object } from './types';
+import type { TExpr, TExpr_object } from './types';
 
 function extractTypes2(oprs: string[], expr: TExpr[]) {
   expr.map(x => extractType2(oprs, x));

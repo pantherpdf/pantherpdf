@@ -8,11 +8,14 @@
 import { TextSimpleData } from './TextSimple';
 import { SetVarData } from '../widgets/SetVar';
 import { UpdateVarData } from '../widgets/UpdateVar';
-import { compileComponentTest, compileTest } from '../unitTestHelpers';
-import { ForceChildren } from '../editor/types';
+import {
+  ForceChildren,
+  compileComponentTest,
+  compileTest,
+} from '../unitTestHelpers';
 import { RepeatData } from './Repeat';
 import { sampleReport } from '../editor/sampleReport';
-import { Report } from '../types';
+import type { Report } from '../types';
 
 test('UpdateVar SetVar', async () => {
   const dt: ForceChildren<

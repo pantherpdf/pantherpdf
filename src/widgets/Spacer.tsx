@@ -5,8 +5,8 @@
  */
 
 import React from 'react';
-import { Item, ItemCompiled, tuple } from '../types';
-import type { Widget } from '../editor/types';
+import type { Item, ItemCompiled, Widget } from './types';
+import { tuple } from '../types';
 import { faArrowsAltV } from '@fortawesome/free-solid-svg-icons';
 import PropertySlider from './PropertySlider';
 import Trans from '../translation';

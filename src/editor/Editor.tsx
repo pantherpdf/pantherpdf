@@ -5,22 +5,10 @@
  * @license MIT
  */
 
-import React, {
-  ReactNode,
-  useState,
-  useEffect,
-  useRef,
-  CSSProperties,
-} from 'react';
+import React, { ReactNode, useState, useRef, CSSProperties } from 'react';
 import { defaultWidgets, getWidget } from '../widgets/allWidgets';
-import { Report, Item, ApiUploadMetaData } from '../types';
-import {
-  EditorProps,
-  GeneralProps,
-  ItemNewProps,
-  TDragObj,
-  SourceData,
-} from './types';
+import type { Report, ApiUploadMetaData } from '../types';
+import type { EditorProps, GeneralProps, TDragObj } from './types';
 import Layout from './EditorLayout';
 import {
   findInList,
@@ -32,9 +20,9 @@ import {
 } from './childrenMgmt';
 import { extractFiles } from '../FileSelect';
 import { Image as ImageWidget, ImageData } from '../widgets/Image';
-import { transformData } from './DataTransform';
-import retrieveOriginalSourceData from './retrieveOriginalSourceData';
+import { SourceData } from '../data/fetchSourceData';
 import { defaultTransforms } from '../transforms/allTransforms';
+import type { Item, ItemNewProps } from '../widgets/types';
 
 const styleDragHighlight: CSSProperties = {
   backgroundColor: 'red',
@@ -61,9 +49,8 @@ const styleSelected: CSSProperties = {
  */
 export default function Editor(props: EditorProps) {
   const [selected, setSelected] = useState<number[] | null>(null);
-  const [data, setData] = useState<SourceData>({ data: undefined });
-  const [overrideSourceData, setSourceDataOverride] = useState<
-    string | undefined
+  const [sourceDataOverride, setSourceDataOverride] = useState<
+    SourceData | undefined
   >(undefined);
   const dragObj = useRef<TDragObj | null>(null);
   const [dragHighlight, setDragHighlight] = useState<number[] | null>(null);
@@ -71,37 +58,6 @@ export default function Editor(props: EditorProps) {
     ? props.transforms
     : defaultTransforms;
   const widgets = Array.isArray(props.widgets) ? props.widgets : defaultWidgets;
-
-  // refresh data
-  useEffect(() => {
-    (async function () {
-      try {
-        const dt1 = await getOrigSourceInternal();
-        const dt2 = await transformData(
-          transforms,
-          dt1,
-          props.report.transforms,
-        );
-        setData({ data: dt2 });
-      } catch (e) {
-        setData({ data: undefined, errorMsg: String(e) });
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [overrideSourceData, props.report.dataUrl, props.report.transforms]);
-
-  async function getOrigSourceInternal(): Promise<unknown> {
-    if (typeof props.sourceData !== 'undefined') {
-      return props.sourceData;
-    }
-    if (overrideSourceData !== undefined) {
-      return JSON.parse(overrideSourceData);
-    }
-    return retrieveOriginalSourceData({
-      reportDataUrl: props.report.dataUrl,
-      api: props.api,
-    });
-  }
 
   let props2: GeneralProps;
 
@@ -287,19 +243,8 @@ export default function Editor(props: EditorProps) {
 
     selected,
     setSelected,
-    ...(typeof props.sourceData === 'undefined'
-      ? {
-          setSourceDataOverride: (data: unknown) => {
-            const dt =
-              typeof data !== 'undefined' ? JSON.stringify(data) : undefined;
-            setSourceDataOverride(dt);
-          },
-        }
-      : {}),
-    getSourceData: getOrigSourceInternal,
-    isSourceDataOverriden:
-      !!overrideSourceData || typeof props.sourceData !== 'undefined',
-    data,
+    sourceDataOverride,
+    setSourceDataOverride,
 
     renderWidget,
     renderWidgets,

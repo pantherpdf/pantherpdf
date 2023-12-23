@@ -6,8 +6,8 @@
  */
 
 import React, { useState } from 'react';
-import { Report, TransformItem } from '../types';
-import { GeneralProps, Transform } from './types';
+import type { Report } from '../types';
+import type { GeneralProps } from './types';
 import Trans, { TransName } from '../translation';
 import { getTransform } from '../transforms/allTransforms';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,11 +20,15 @@ import {
   faTimes,
   faTrash,
   faCaretDown,
+  faLink,
 } from '@fortawesome/free-solid-svg-icons';
 import ObjectExplorer from './ObjectExplorer';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
 import SimpleDialog from '../components/SimpleDialog';
 import SectionName from '../components/SectionName';
+import { SourceData } from '../data/fetchSourceData';
+import useTransformedData from './useTransformedData';
+import type { TransformItem } from '../transforms/types';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -48,29 +52,6 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
-
-/**
- * Function for calling all transformations
- * @func
- * @param {inputData} unknown - Input data
- * @param {len} number - Number of transformations to apply
- */
-export async function transformData(
-  allTrans: Transform[],
-  inputData: unknown,
-  transformData: TransformItem[],
-  len?: number,
-) {
-  if (len === undefined) {
-    len = transformData.length;
-  }
-  for (let i = 0; i < len; ++i) {
-    const w = transformData[i];
-    const comp = getTransform(allTrans, w.type);
-    inputData = await comp.transform(inputData, w);
-  }
-  return inputData;
-}
 
 interface TransformItemProps extends GeneralProps {
   item: TransformItem;
@@ -216,30 +197,27 @@ function TransformItemEditor(props: TransformItemProps) {
   );
 }
 
-async function uploadOverrideSourceData(): Promise<unknown> {
-  return new Promise(resolve => {
+async function readJsonFileFromFileSystem(): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
     let el = document.createElement('INPUT') as HTMLInputElement;
     el.type = 'file';
     el.accept = 'application/json';
     el.multiple = false;
     el.addEventListener('change', function (ev2) {
-      const f = el.files && el.files.length > 0 ? el.files[0] : undefined;
-      if (!f) {
-        return resolve(undefined);
+      if (!el.files || el.files.length === 0) {
+        return resolve('');
       }
+      const f = el.files[0];
+      const reader = new FileReader();
+      reader.onload = e2 => {
+        const txt =
+          typeof e2.target?.result === 'string' ? e2.target.result : '';
+        resolve(txt);
+      };
       try {
-        const reader = new FileReader();
-        reader.onload = e2 => {
-          if (!e2.target || typeof e2.target.result !== 'string') {
-            return;
-          }
-          const dt = JSON.parse(e2.target.result);
-          resolve(dt);
-        };
         reader.readAsText(f);
       } catch (e) {
-        alert(`Error: ${String(e)}`);
-        return resolve(undefined);
+        return reject(e);
       }
     });
     el.click();
@@ -251,48 +229,10 @@ interface TEdit {
   data: TransformItem;
 }
 
-interface SourceDataShow {
-  length?: number;
-  data: unknown;
-  errorMsg?: string;
-}
-
 export default function DataTransform(props: GeneralProps) {
   const [shownModalInsert, setShownModalInsert] = useState<boolean>(false);
   const [showEdit, setShowEdit] = useState<TEdit | null>(null);
-  const [showData, setShowData] = useState<SourceDataShow | null>(null);
-
-  async function doShowData(len: number) {
-    let dt;
-    try {
-      dt = await props.getSourceData();
-    } catch (e) {
-      let msg = String(e);
-      if (msg.trim().length === 0) {
-        msg = 'unknown error';
-      }
-      setShowData({ data: null, errorMsg: msg });
-      return;
-    }
-
-    let dt2;
-    try {
-      dt2 = await transformData(
-        props.transforms,
-        dt,
-        props.report.transforms,
-        len,
-      );
-    } catch (e) {
-      let msg = String(e);
-      if (msg.trim().length === 0) {
-        msg = 'unknown error';
-      }
-      setShowData({ data: null, errorMsg: msg });
-      return;
-    }
-    setShowData({ data: dt2, length: len });
-  }
+  const [showData, setShowData] = useState<number | null>(null);
 
   async function itemAdd(key: string) {
     const cmp = getTransform(props.transforms, key);
@@ -372,48 +312,7 @@ export default function DataTransform(props: GeneralProps) {
 
   return (
     <>
-      <SectionName
-        text={Trans('source data')}
-        endElement={
-          !!props.setSourceDataOverride && (
-            <Link
-              component="button"
-              style={{ color: '#666' }}
-              onClick={async () => {
-                if (!props.setSourceDataOverride) {
-                  return;
-                }
-                if (props.isSourceDataOverriden) {
-                  // remove
-                  props.setSourceDataOverride(undefined);
-                } else {
-                  // select file and replace
-                  const dt = await uploadOverrideSourceData();
-                  if (dt) {
-                    props.setSourceDataOverride(dt);
-                  }
-                }
-              }}
-              title={Trans('load local json file')}
-            >
-              <FontAwesomeIcon
-                icon={props.isSourceDataOverriden ? faTimes : faFolderOpen}
-              />
-            </Link>
-          )
-        }
-      />
-      <InputApplyOnEnter
-        component={TextField}
-        value={props.report.dataUrl}
-        onChange={val => {
-          const report2: Report = { ...props.report, dataUrl: String(val) };
-          props.setReport(report2);
-        }}
-        fullWidth
-        id="source-url"
-        placeholder="https://www.example.com/data.js(on)"
-      />
+      <Override {...props} />
 
       <SectionName text={Trans('transform')} />
       {props.report.transforms.length > 0 && (
@@ -424,7 +323,7 @@ export default function DataTransform(props: GeneralProps) {
               item={item}
               index={idx}
               key={idx}
-              showData={doShowData}
+              showData={setShowData}
               up={itemUp}
               down={itemDown}
               itemDelete={itemDelete}
@@ -521,17 +420,133 @@ export default function DataTransform(props: GeneralProps) {
       </Dialog>
 
       {/* DATA */}
-      <SimpleDialog
-        show={!!showData}
-        onHide={() => setShowData(null)}
-        title={Trans('data')}
-        size="md"
-      >
-        <>
-          {showData?.data && <ObjectExplorer data={showData.data} />}
-          {showData?.errorMsg && <div>{showData?.errorMsg}</div>}
-        </>
-      </SimpleDialog>
+      {showData !== null && (
+        <DialogBrowseData
+          {...props}
+          applyNumTransforms={showData}
+          onHide={() => setShowData(null)}
+        />
+      )}
     </>
+  );
+}
+
+type DialogBrowseDataProps = {
+  applyNumTransforms: number;
+  onHide: () => void;
+} & GeneralProps;
+function DialogBrowseData(props: DialogBrowseDataProps) {
+  const data = useTransformedData(props, props.applyNumTransforms);
+  return (
+    <SimpleDialog
+      show={true}
+      onHide={props.onHide}
+      title={Trans('data')}
+      size="md"
+    >
+      <>
+        {data.ok && <ObjectExplorer data={data.value} />}
+        {!data.ok && <div>{data.errorMsg}</div>}
+      </>
+    </SimpleDialog>
+  );
+}
+
+function Override(props: GeneralProps) {
+  const [showUrl, setShowUrl] = useState(false);
+  let dataUrl: string;
+  let dataUrlEnabled: boolean;
+  if (props.sourceDataOverride) {
+    if (props.sourceDataOverride.type === 'url') {
+      dataUrl = props.sourceDataOverride.url;
+      dataUrlEnabled = true;
+    } else {
+      dataUrl = '';
+      dataUrlEnabled = false;
+    }
+  } else {
+    dataUrl = '';
+    dataUrlEnabled = true;
+  }
+  return (
+    <>
+      <SectionName
+        text={Trans('override source data')}
+        endElement={
+          <OverrideLink {...props} showUrl={showUrl} setShowUrl={setShowUrl} />
+        }
+      />
+      {showUrl && (
+        <InputApplyOnEnter
+          component={TextField}
+          value={dataUrl}
+          onChange={val => {
+            const str = String(val);
+            const obj: SourceData | undefined =
+              str.length > 0 ? { type: 'url', url: str } : undefined;
+            props.setSourceDataOverride(obj);
+          }}
+          fullWidth
+          id="source-url"
+          placeholder="https://www.example.com/data.js(on)"
+          disabled={!dataUrlEnabled}
+        />
+      )}
+    </>
+  );
+}
+type OverrideLinkProps = GeneralProps & {
+  showUrl: boolean;
+  setShowUrl: (val: boolean) => void;
+};
+function OverrideLink(props: OverrideLinkProps) {
+  return (
+    <div style={{ color: '#666' }}>
+      <Link
+        component="button"
+        style={{ marginRight: '0.5rem' }}
+        onClick={() => {
+          if (props.sourceDataOverride) {
+            props.setSourceDataOverride(undefined);
+          }
+          props.setShowUrl(!props.showUrl);
+        }}
+      >
+        <FontAwesomeIcon icon={faLink} />
+      </Link>
+      {!props.sourceDataOverride && (
+        <Link
+          component="button"
+          onClick={async () => {
+            // select file and replace
+            let text;
+            try {
+              text = await readJsonFileFromFileSystem();
+            } catch (err) {
+              alert(`Error: ${err}`);
+              return;
+            }
+            // empty when cancelled
+            if (text) {
+              props.setSourceDataOverride({ type: 'javascript', code: text });
+            }
+          }}
+          title={Trans('load local json file')}
+        >
+          <FontAwesomeIcon icon={faFolderOpen} />
+        </Link>
+      )}
+      {!!props.sourceDataOverride && (
+        <Link
+          component="button"
+          onClick={() => props.setSourceDataOverride(undefined)}
+          title={Trans('clear override')}
+        >
+          <FontAwesomeIcon
+            icon={props.sourceDataOverride ? faTimes : faFolderOpen}
+          />
+        </Link>
+      )}
+    </div>
   );
 }

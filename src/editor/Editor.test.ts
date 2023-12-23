@@ -5,12 +5,12 @@
  * @license MIT
  */
 
-import { Report } from '../types';
+import type { Report } from '../types';
 import { RepeatData } from '../widgets/Repeat';
 import { TextSimpleData } from '../widgets/TextSimple';
 import { dropImpl } from './Editor';
 import { sampleReport } from './sampleReport';
-import { TDragObj } from './types';
+import type { TDragObj } from './types';
 
 test('dropImpl copy existing widget to the end of doc', () => {
   const r = JSON.parse(JSON.stringify(sampleReport)) as Report;

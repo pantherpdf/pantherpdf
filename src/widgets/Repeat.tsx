@@ -5,8 +5,8 @@
  */
 
 import React, { CSSProperties } from 'react';
-import { Item, ItemCompiled, tuple } from '../types';
-import type { Widget } from '../editor/types';
+import type { Item, ItemCompiled, Widget } from './types';
+import { tuple } from '../types';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import BoxName from './BoxName';
 import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';

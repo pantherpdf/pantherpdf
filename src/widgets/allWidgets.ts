@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import type { Widget } from '../editor/types';
+import type { Widget } from './types';
 import { TextSimple } from './TextSimple';
 import { Repeat } from './Repeat';
 import { TextHtml } from './TextHtml';

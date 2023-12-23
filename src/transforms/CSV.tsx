@@ -6,9 +6,8 @@
  */
 
 import React from 'react';
-import { TransformItem } from '../types';
-import { Transform } from '../editor/types';
-import { IHelpers } from '../formula/types';
+import type { Transform, TransformItem } from './types';
+import type { IHelpers } from '../formula/types';
 import FormulaEvaluate from '../formula/formula';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
 import Trans from '../translation';

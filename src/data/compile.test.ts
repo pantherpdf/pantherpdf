@@ -5,11 +5,10 @@
  * @license MIT
  */
 
-import { compileTest } from '../unitTestHelpers';
-import type { ReportForceChildren } from './types';
+import { ReportForceChildren, compileTest } from '../unitTestHelpers';
 import type { Report } from '../types';
 import type { TextSimpleData, TextSimpleCompiled } from '../widgets/TextSimple';
-import { sampleReport } from './sampleReport';
+import { sampleReport } from '../editor/sampleReport';
 
 test('text data', async () => {
   const report: ReportForceChildren<TextSimpleData> = {

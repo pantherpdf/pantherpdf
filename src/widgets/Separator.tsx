@@ -5,8 +5,8 @@
  */
 
 import React, { CSSProperties } from 'react';
-import { Item, ItemCompiled, tuple } from '../types';
-import type { Widget } from '../editor/types';
+import type { Item, ItemCompiled, Widget } from './types';
+import { tuple } from '../types';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import PropertyBorder, { Border, genBorderCss } from './PropertyBorder';
 import Trans from '../translation';

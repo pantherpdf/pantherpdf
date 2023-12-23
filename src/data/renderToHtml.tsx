@@ -7,8 +7,9 @@
 
 import React, { CSSProperties } from 'react';
 import { renderToString } from 'react-dom/server';
-import { defaultReportCss, ReportCompiled } from '../types';
-import type { ItemRenderPreviewHelper, Widget } from './types';
+import { defaultReportCss } from '../types';
+import type { ReportCompiled } from '../types';
+import type { ItemRenderPreviewHelper, Widget } from '../widgets/types';
 import { getWidget } from '../widgets/allWidgets';
 import { PropertyFontGenCss } from '../widgets/PropertyFont';
 import { GoogleFontUrlImport } from '../widgets/GoogleFonts';

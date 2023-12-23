@@ -6,7 +6,7 @@
  */
 
 import FormulaEvaluate from './formula';
-import { IHelpers } from './types';
+import type { IHelpers } from './types';
 
 test('whitespace', async () => {
   await expect(FormulaEvaluate(' ')).resolves.toBe(undefined);

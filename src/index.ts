@@ -5,21 +5,24 @@
  */
 
 import Editor from './editor/Editor';
+import type { EditorProps, NavbarProps } from './editor/types';
 import type {
   CompileHelper,
-  EditorProps,
-  NavbarProps,
   ItemRenderPreviewHelper,
   ItemRenderPreviewProps,
   ItemRenderEditorProps,
   ItemNewProps,
-  Name,
+  Widget,
+  Item,
+  ItemCompiled,
+} from './widgets/types';
+import type {
   TransformRenderProps,
   Transform,
-  Widget,
-} from './editor/types';
-import generate from './editor/generate';
-import type { GenerateArgs, FileOutput } from './editor/generate';
+  TransformItem,
+} from './transforms/types';
+import generate from './data/generate';
+import type { GenerateArgs, FileOutput } from './data/generate';
 import { isReport } from './types';
 import type {
   Report,
@@ -29,13 +32,11 @@ import type {
   ReportProperties,
   ApiUploadMetaData,
   TargetOption,
-  TransformItem,
-  Item,
-  ItemCompiled,
   Paper,
+  Name,
 } from './types';
 import { setEditorLanguage } from './translation';
-import { SourceData } from './editor/retrieveOriginalSourceData';
+import { SourceData } from './data/fetchSourceData';
 import { defaultTransforms } from './transforms/allTransforms';
 import BoxName, { BoxNameProps } from './widgets/BoxName';
 import { defaultWidgets } from './widgets/allWidgets';
@@ -47,7 +48,6 @@ const emptyReport: Report = {
   children: [],
   transforms: [],
   properties: {},
-  dataUrl: '',
   variables: [],
 };
 

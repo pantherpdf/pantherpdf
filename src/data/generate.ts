@@ -4,15 +4,14 @@
  * @license MIT
  */
 
-import { ApiEndpoints, TargetOption, Report } from '../types';
+import type { ApiEndpoints, TargetOption, Report } from '../types';
 import compile from './compile';
-import retrieveOriginalSourceData, {
-  SourceData,
-} from './retrieveOriginalSourceData';
-import { transformData } from './DataTransform';
+import fetchSourceData, { SourceData } from './fetchSourceData';
+import { transformData } from '../transforms/transformData';
 import renderToHtml from './renderToHtml';
+import type { Transform } from '../transforms/types';
+import type { Widget } from '../widgets/types';
 import { encode } from './encoding';
-import { Transform, Widget } from './types';
 import { defaultTransforms } from '../transforms/allTransforms';
 import { defaultWidgets } from '../widgets/allWidgets';
 
@@ -162,11 +161,7 @@ export default async function generate(
   const { report, api, data, logPerformance = false } = props;
 
   const tDataBefore = logPerformance ? performance.now() : 0;
-  const source = await retrieveOriginalSourceData({
-    reportDataUrl: report.dataUrl,
-    api,
-    data,
-  });
+  const source = data ? await fetchSourceData(api, data) : undefined;
   const useTransforms = Array.isArray(props.transforms)
     ? props.transforms
     : defaultTransforms;
@@ -181,7 +176,7 @@ export default async function generate(
   const tDataAfter = logPerformance ? performance.now() : 0;
   if (logPerformance) {
     console.log(
-      `retrieveOriginalSourceData() + transformData() took ${(
+      `fetchSourceData() + transformData() took ${(
         tDataAfter - tDataBefore
       ).toFixed(0)}ms`,
     );

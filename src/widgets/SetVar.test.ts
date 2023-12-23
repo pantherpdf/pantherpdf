@@ -7,8 +7,7 @@
 
 import { TextSimpleData } from './TextSimple';
 import { SetVarData } from '../widgets/SetVar';
-import { compileComponentTest } from '../unitTestHelpers';
-import { ForceChildren } from '../editor/types';
+import { ForceChildren, compileComponentTest } from '../unitTestHelpers';
 
 test('SetVar', async () => {
   const dt: ForceChildren<SetVarData | TextSimpleData> = {

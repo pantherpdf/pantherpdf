@@ -1,18 +1,14 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2023
  * @license MIT
  */
 
-import { ApiEndpoints } from '../types';
-import retrieveOriginalSourceData, {
-  SourceData,
-} from './retrieveOriginalSourceData';
-import { sampleReport } from './sampleReport';
+import type { ApiEndpoints } from '../types';
+import fetchSourceData, { SourceData } from './fetchSourceData';
 
-test('retrieveOriginalSourceData javascript', async () => {
-  const report = JSON.parse(JSON.stringify(sampleReport));
+test('fetchSourceData javascript', async () => {
   const api: ApiEndpoints = {
     evaluateJavaScript: async (code: string) => {
       // eslint-disable-next-line no-new-func
@@ -29,10 +25,6 @@ test('retrieveOriginalSourceData javascript', async () => {
 			return abc(5, 4)
 		`,
   };
-  const data = await retrieveOriginalSourceData({
-    reportDataUrl: report.dataUrl,
-    api,
-    data: input,
-  });
+  const data = await fetchSourceData(api, input);
   expect(data).toBe(9);
 });

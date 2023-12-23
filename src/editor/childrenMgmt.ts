@@ -5,7 +5,8 @@
  * @license MIT
  */
 
-import { Report, Item } from '../types';
+import type { Report } from '../types';
+import type { Item } from '../widgets/types';
 
 export function findArrayInList(report: Report, wid: number[]): Item[] {
   let arr: Item[] = report.children;
