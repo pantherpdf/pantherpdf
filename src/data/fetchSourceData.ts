@@ -16,7 +16,8 @@ export default async function fetchSourceData(
   api: ApiEndpoints,
   obj: SourceData,
 ): Promise<unknown> {
-  switch (obj.type) {
+  const type = obj.type;
+  switch (type) {
     case 'as-is':
       return obj.value;
     case 'javascript':
@@ -26,8 +27,10 @@ export default async function fetchSourceData(
       return await api.evaluateJavaScript(obj.code);
     case 'url':
       return getDataFromUrl(obj.url, api);
+    default:
+      const exhaustiveCheck: never = type;
+      throw new Error(`Unknown data type: ${exhaustiveCheck}`);
   }
-  throw new Error('Unknown data type');
 }
 
 async function getDataFromUrl(

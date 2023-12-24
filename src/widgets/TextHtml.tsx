@@ -702,7 +702,8 @@ export function assertUnreachable(_x: never): never {
 function ValueInternalToEditor(value: TextHtmlDataValue[]): string {
   let html = '';
   for (const part of value) {
-    switch (part.type) {
+    const type = part.type;
+    switch (type) {
       case 'html': {
         html += part.value;
         break;
@@ -715,9 +716,9 @@ function ValueInternalToEditor(value: TextHtmlDataValue[]): string {
         html += `>${escapeHtml(part.value)}</${tagType}>`;
         break;
       }
-      default: {
-        assertUnreachable(part);
-      }
+      default:
+        const exhaustiveCheck: never = type;
+        throw new Error(`Unknown data type: ${exhaustiveCheck}`);
     }
   }
   return html;
@@ -849,7 +850,8 @@ export const TextHtml: Widget = {
     // combine parts
     let html = '';
     for (const part of dt.value) {
-      switch (part.type) {
+      const type = part.type;
+      switch (type) {
         case 'html': {
           html += part.value;
           break;
@@ -866,9 +868,9 @@ export const TextHtml: Widget = {
           html += String(value);
           break;
         }
-        default: {
-          assertUnreachable(part);
-        }
+        default:
+          const exhaustiveCheck: never = type;
+          throw new Error(`Unknown data type: ${exhaustiveCheck}`);
       }
     }
     return {

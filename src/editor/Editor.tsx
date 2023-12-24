@@ -272,39 +272,41 @@ export function dropImpl(
 
   let toInsert: Item | Item[];
   let report2: Report = report;
-  if (current.type === 'wid') {
-    const dragObj3 = current.wid;
-    if (copy) {
-      toInsert = findInList(report2, dragObj3);
-      toInsert = JSON.parse(JSON.stringify(toInsert));
-    }
-    // calc destination id
-    else {
-      // detect if dragging item to one of its childs
-      let dest2;
-      try {
-        dest2 = updateDestAfterRemove(dest, dragObj3);
-      } catch (e) {
-        return null;
+  const type = current.type;
+  switch (type) {
+    case 'wid':
+      {
+        const dragObj3 = current.wid;
+        if (copy) {
+          toInsert = findInList(report2, dragObj3);
+          toInsert = JSON.parse(JSON.stringify(toInsert));
+        }
+        // calc destination id
+        else {
+          // detect if dragging item to one of its childs
+          let dest2;
+          try {
+            dest2 = updateDestAfterRemove(dest, dragObj3);
+          } catch (e) {
+            return null;
+          }
+          toInsert = findInList(report2, dragObj3);
+          // remove from list
+          report2 = removeFromList(report2, dragObj3);
+          // update destination id
+          dest = dest2;
+        }
       }
-      toInsert = findInList(report2, dragObj3);
-      // remove from list
-      report2 = removeFromList(report2, dragObj3);
-      // update destination id
-      dest = dest2;
-    }
-  }
-  //
-  else if (current.type === 'widget') {
-    toInsert = current.widget;
-  }
-  //
-  else if (current.type === 'widgets') {
-    toInsert = current.widgets;
-  }
-  //
-  else {
-    throw new Error('unknown dragObj2 type');
+      break;
+    case 'widget':
+      toInsert = current.widget;
+      break;
+    case 'widgets':
+      toInsert = current.widgets;
+      break;
+    default:
+      const exhaustiveCheck: never = type;
+      throw new Error(`Unknown data type: ${exhaustiveCheck}`);
   }
 
   // insert
