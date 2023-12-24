@@ -19,7 +19,7 @@ import {
   updateItem,
 } from './childrenMgmt';
 import { extractFiles } from '../FileSelect';
-import { Image as ImageWidget, ImageData } from '../widgets/Image';
+import { Image as ImageWidget, ImageData, apiPrefix } from '../widgets/Image';
 import { SourceData } from '../data/fetchSourceData';
 import { defaultTransforms } from '../transforms/allTransforms';
 import type { Item, ItemNewProps } from '../widgets/types';
@@ -103,7 +103,7 @@ export default function Editor(props: EditorProps) {
       }
       const newItemProps: ItemNewProps = { report: props.report };
       const img = (await ImageWidget.newItem(newItemProps)) as ImageData;
-      img.url = `local/${f.name}`;
+      img.url = `${apiPrefix}${f.name}`;
       const report2 = dropImpl(
         props.report,
         { type: 'widget', widget: img },

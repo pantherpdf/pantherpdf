@@ -48,6 +48,8 @@ export interface ImageCompiled extends ItemCompiled {
 // this will append &state=<number> to url to force reload
 let imgState = 0;
 
+export const apiPrefix = 'api://';
+
 export const Image: Widget = {
   id: 'Image',
   name: { en: 'Image', sl: 'Slika' },
@@ -67,11 +69,13 @@ export const Image: Widget = {
     let data;
     if (dt.url.length > 0) {
       data = dt.url;
-      if (data.startsWith('local/')) {
+      if (data.startsWith(apiPrefix)) {
         if (!helpers.api.filesDownload) {
           throw new Error('Missing api.filesDownload');
         }
-        const obj = await helpers.api.filesDownload(data.substring(6));
+        const obj = await helpers.api.filesDownload(
+          data.substring(apiPrefix.length),
+        );
         if (obj.mimeType.indexOf(';') !== -1) {
           throw new Error('Bad mime type');
         }
@@ -124,9 +128,9 @@ export const Image: Widget = {
     let img;
     if (item.url.length > 0) {
       let url = item.url;
-      if (url.startsWith('local/')) {
+      if (url.startsWith(apiPrefix)) {
         url = props.api.filesDownloadUrl
-          ? props.api.filesDownloadUrl(url.substring(6))
+          ? props.api.filesDownloadUrl(url.substring(apiPrefix.length))
           : '';
         // force refresh
         const hasQuestion = url.indexOf('?') !== -1;
@@ -333,15 +337,15 @@ export const Image: Widget = {
           <FileDialog
             mode="value"
             value={
-              item.url && item.url.startsWith('local/')
-                ? item.url.substring(6)
+              item.url && item.url.startsWith(apiPrefix)
+                ? item.url.substring(apiPrefix.length)
                 : ''
             }
             onChange={val => {
               setShowModal(false);
               props.setItem({
                 ...item,
-                url: val && val.length > 0 ? `local/${val}` : '',
+                url: val && val.length > 0 ? `${apiPrefix}${val}` : '',
               });
             }}
             api={props.api}
