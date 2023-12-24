@@ -22,7 +22,7 @@ import type {
   TransformItem,
 } from './transforms/types';
 import generate from './data/generate';
-import type { GenerateArgs, FileOutput } from './data/generate';
+import type { GenerateArgs } from './data/generate';
 import { isReport } from './types';
 import type {
   Report,
@@ -31,9 +31,10 @@ import type {
   ApiFileMetaData,
   ReportProperties,
   ApiUploadMetaData,
-  TargetOption,
   Paper,
   Name,
+  OutputProperties,
+  Output,
 } from './types';
 import { setEditorLanguage } from './translation';
 import { SourceData } from './data/fetchSourceData';
@@ -44,7 +45,6 @@ import SectionName from './components/SectionName';
 
 const emptyReport: Report = {
   name: 'My report',
-  target: 'pdf',
   children: [],
   transforms: [],
   properties: {},
@@ -74,7 +74,8 @@ export type {
   NavbarProps,
   Paper,
   GenerateArgs,
-  FileOutput,
+  Output,
+  OutputProperties,
   SourceData,
   //
   Report,
@@ -84,7 +85,6 @@ export type {
   ApiReportMetaData,
   ApiFileMetaData,
   ApiUploadMetaData,
-  TargetOption,
   //
   Transform,
   TransformItem,

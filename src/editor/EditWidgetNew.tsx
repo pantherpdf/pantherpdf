@@ -119,17 +119,6 @@ function ShowWidgets(props: GeneralProps) {
 }
 
 export default function EditWidgetNew(props: GeneralProps) {
-  if (props.report.target !== 'pdf' && props.report.target !== 'html') {
-    return (
-      <Typography color="GrayText">
-        <small>
-          {Trans('no widgets available for target -name-', [
-            props.report.target,
-          ])}
-        </small>
-      </Typography>
-    );
-  }
   return (
     <>
       <SectionName text={Trans('widgets')} />

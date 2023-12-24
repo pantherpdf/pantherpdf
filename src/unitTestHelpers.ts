@@ -19,7 +19,6 @@ export async function compileComponentTest(
   data: unknown,
 ): Promise<ItemCompiled> {
   const dt: Report = {
-    target: 'pdf',
     name: 'John Johnny',
     children: [cmpData as Item],
     transforms: [],

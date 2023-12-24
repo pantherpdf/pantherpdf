@@ -14,7 +14,7 @@ import {
 import type { GeneralProps } from './types';
 import Trans from '../translation';
 
-export default function RenderContentHtml(props: GeneralProps) {
+export default function EditorContent(props: GeneralProps) {
   const style = {
     ...defaultReportCss,
     ...PropertyFontGenCss(props.report.properties.font || {}),

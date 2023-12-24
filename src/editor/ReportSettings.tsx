@@ -7,7 +7,7 @@
 
 import React, { CSSProperties, useState } from 'react';
 import type { GeneralProps } from './types';
-import type { TargetOption, Report, Paper } from '../types';
+import type { Report, Paper } from '../types';
 import { isReport } from '../types';
 import Trans from '../translation';
 import PropertyFont, { TFont } from '../widgets/PropertyFont';
@@ -28,7 +28,6 @@ import SectionName from '../components/SectionName';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 
 const styleWidget: CSSProperties = {
@@ -36,17 +35,6 @@ const styleWidget: CSSProperties = {
   margin: '2px 0',
   cursor: 'grab',
 };
-
-// hack to get array of possible values
-// because I can only import types from shared
-const TargetOptionTmpObj: { [key in TargetOption]: number } = {
-  pdf: 1,
-  html: 1,
-  json: 1,
-  'csv-utf-8': 1,
-  'csv-windows-1250': 1,
-};
-const TargetOptionTmpKeys = Object.keys(TargetOptionTmpObj);
 
 function fileReportUpload(
   arr: Report[],
@@ -134,12 +122,6 @@ function ShowUpload(props: GeneralProps) {
 export default function ReportSettings(props: GeneralProps) {
   const [showMore, setShowMore] = useState<boolean>(false);
 
-  async function changeTarget(e: React.ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value;
-    const obj: Report = { ...props.report, target: value as TargetOption };
-    return props.setReport(obj);
-  }
-
   async function changeFont(value: TFont) {
     const obj: Report = {
       ...props.report,
@@ -212,21 +194,6 @@ export default function ReportSettings(props: GeneralProps) {
         fullWidth
       />
 
-      <TextField
-        id="target"
-        select
-        label={Trans('target')}
-        value={props.report.target}
-        onChange={changeTarget}
-        fullWidth
-      >
-        {TargetOptionTmpKeys.map(tp => (
-          <MenuItem key={tp} value={tp}>
-            {tp}
-          </MenuItem>
-        ))}
-      </TextField>
-
       <Button
         size="small"
         color="secondary"
@@ -268,25 +235,19 @@ export default function ReportSettings(props: GeneralProps) {
             helperText={Trans('lang 2 letter iso code')}
           />
 
-          {props.report.target === 'pdf' && (
-            <>
-              <PropertyFont
-                value={
-                  props.report.properties.font
-                    ? props.report.properties.font
-                    : {}
-                }
-                onChange={changeFont}
-                googleFontApiKey={props.api.googleFontApiKey}
-              />
+          <PropertyFont
+            value={
+              props.report.properties.font ? props.report.properties.font : {}
+            }
+            onChange={changeFont}
+            googleFontApiKey={props.api.googleFontApiKey}
+          />
 
-              <PaperEditor
-                unit={props.language === 'en-us' ? 'inch' : 'mm'}
-                value={props.report.properties.paper || {}}
-                onChange={paperChanged}
-              />
-            </>
-          )}
+          <PaperEditor
+            unit={props.language === 'en-us' ? 'inch' : 'mm'}
+            value={props.report.properties.paper || {}}
+            onChange={paperChanged}
+          />
 
           <VarEditor {...props} />
 

@@ -15,24 +15,6 @@ type Narrowable =
   string | number | boolean | symbol | object | {} | void | null | undefined;
 export const tuple = <T extends Narrowable[]>(...args: T) => args;
 
-export const TargetOptions = tuple(
-  'pdf',
-  'html',
-  'json',
-  'csv-utf-8',
-  'csv-windows-1250',
-);
-export type TargetOption = (typeof TargetOptions)[number];
-export function TargetOptionTypeGuard(r: any): r is TargetOption {
-  if (typeof r !== 'string') {
-    return false;
-  }
-  if ((TargetOptions as string[]).indexOf(r) === -1) {
-    return false;
-  }
-  return true;
-}
-
 export interface TVariable {
   name: string;
   formula: string;
@@ -45,11 +27,19 @@ export interface Paper {
   height?: number;
 }
 
-export interface ReportProperties {
-  font?: TFont;
+export interface OutputProperties {
   paper?: Paper;
   fileName?: string;
+}
+
+export interface ReportProperties extends OutputProperties {
+  font?: TFont;
   lang?: string;
+}
+
+export interface Output {
+  html: string;
+  properties: OutputProperties;
 }
 
 /**
@@ -57,7 +47,6 @@ export interface ReportProperties {
  */
 export interface Report {
   name: string;
-  target: TargetOption;
   children: Item[];
   transforms: TransformItem[];
   properties: ReportProperties;
@@ -101,15 +90,6 @@ export function isReport(r: any): r is Report {
     return false;
   }
   if (typeof r.name !== 'string') {
-    return false;
-  }
-  if (
-    r.target !== 'pdf' &&
-    r.target !== 'html' &&
-    r.target !== 'json' &&
-    r.target !== 'csv-utf-8' &&
-    r.target !== 'csv-windows-1250'
-  ) {
     return false;
   }
   if (!Array.isArray(r.children)) {
@@ -199,11 +179,8 @@ export interface ApiEndpoints {
    */
   evaluateJavaScript?: (code: string) => Promise<unknown>;
 
-  /** Used to generate PDF by generate() and by print preview */
-  generatePdf?: (
-    html: string,
-    properties: ReportProperties,
-  ) => Promise<Uint8Array>;
+  /** Used by print preview to generate PDF */
+  generatePdf?: (report: Output) => Promise<Uint8Array>;
 }
 
 export const defaultReportCss: CSSProperties = {

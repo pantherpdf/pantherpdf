@@ -81,11 +81,7 @@ Follow [MUI instructions](https://mui.com/material-ui/customization/dark-mode/).
 ```ts
 import { generate, emptyReport, ApiEndpoints } from 'pantherpdf';
 
-const api: ApiEndpoints = {
-  generatePdf: (html, properties) => {
-    throw new Error('Implement PDF generator');
-  },
-};
+const api: ApiEndpoints = {};
 
 async function main()
 {

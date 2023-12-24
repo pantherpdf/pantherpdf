@@ -93,6 +93,9 @@ function DownloadButton(props: GeneralProps) {
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
   async function genPdfWrapper() {
+    if (!props.api.generatePdf) {
+      throw new Error('Missing api.generatePdf');
+    }
     setIsDownloading(true);
     const src = props.sourceDataOverride ||
       props.sourceData || { type: 'as-is', value: undefined };
@@ -102,8 +105,10 @@ function DownloadButton(props: GeneralProps) {
         api: props.api,
         data: src,
       });
-      const blob = new Blob([res.body], { type: res.contentType });
-      saveAs(blob, res.fileName);
+      const pdf = await props.api.generatePdf(res);
+      const blob = new Blob([pdf], { type: 'application/pdf' });
+      const fileName = res.properties.fileName || 'report.pdf';
+      saveAs(blob, fileName);
     } catch (e) {
       alert(`Error: ${String(e)}`);
     }

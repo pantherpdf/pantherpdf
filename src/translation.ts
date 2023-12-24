@@ -63,7 +63,6 @@ const tr2 = {
   name: { en: 'Name', sl: 'Ime' },
   'show more': { en: 'Show more', sl: 'Pokaži več' },
   'show less': { en: 'Show less', sl: 'Pokaži manj' },
-  target: { en: 'Target', sl: 'Cilj' },
   fileName: { en: 'File Name', sl: 'Ime datoteke' },
   paperWidth: { en: 'Paper Width', sl: 'Papir širina' },
   paperHeight: { en: 'Paper Height', sl: 'Papir višina' },
@@ -81,10 +80,6 @@ const tr2 = {
   'delete report question': {
     en: 'Are you sure to delete this report?',
     sl: 'Ali si prepričan da želiš izbrisati to poročilo?',
-  },
-  'no widgets available for target -name-': {
-    en: 'No widgets available for target {0}.',
-    sl: 'Gradniki niso na voljo za cilj {0}',
   },
 
   'source data': { en: 'Source data', sl: 'Izvorni podatki' },

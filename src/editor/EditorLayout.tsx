@@ -25,9 +25,7 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Paper';
 import TransformedDataExplorer from './TransformedDataExplorer';
-import EditorContentJson from './EditorContentJson';
-import EditorContentCsv from './EditorContentCsv';
-import EditorContentHtml from './EditorContentHtml';
+import EditorContent from './EditorContent';
 
 const BoxMain = styled('div')(({ theme }) => ({
   position: 'absolute',
@@ -156,20 +154,6 @@ function Properties(props: GeneralProps) {
       />
     </>
   );
-}
-
-function EditorContent(props: GeneralProps) {
-  switch (props.report.target) {
-    case 'html':
-    case 'pdf':
-      return <EditorContentHtml {...props} />;
-    case 'json':
-      return <EditorContentJson {...props} />;
-    case 'csv-utf-8':
-    case 'csv-windows-1250':
-      return <EditorContentCsv {...props} />;
-  }
-  throw new Error('unknown target');
 }
 
 export default function Layout(

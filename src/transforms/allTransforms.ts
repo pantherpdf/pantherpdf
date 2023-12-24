@@ -7,9 +7,8 @@
 
 import type { Transform } from './types';
 import { Filter } from './Filter';
-import { CSV } from './CSV';
 
-export const defaultTransforms: Transform[] = [Filter, CSV];
+export const defaultTransforms: Transform[] = [Filter];
 
 export function getTransform(arr: Transform[], id: string): Transform {
   const obj = arr.find(x => x.id === id);
