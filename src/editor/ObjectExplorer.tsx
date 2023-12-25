@@ -6,7 +6,7 @@
  */
 
 import React, { Component } from 'react';
-import Trans from '../translation';
+import trans from '../translation';
 import { getAllPublicObjectKeys } from '../formula/isPropertyAllowed';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -215,7 +215,7 @@ export default class ObjectExplorer extends Component<Props, State> {
         <div>
           <div>{'['}</div>
           <Typography color="GrayText">
-            <small>{Trans('empty')}</small>
+            <small>{trans('empty')}</small>
           </Typography>
           <div>{']'}</div>
         </div>
@@ -233,7 +233,7 @@ export default class ObjectExplorer extends Component<Props, State> {
         <div>
           <div>{'{'}</div>
           <Typography color="GrayText">
-            <small>{Trans('empty')}</small>
+            <small>{trans('empty')}</small>
           </Typography>
           <div>{'}'}</div>
         </div>

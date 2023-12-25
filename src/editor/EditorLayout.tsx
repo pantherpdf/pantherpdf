@@ -5,9 +5,9 @@
  */
 
 import React from 'react';
-import type { Item } from '../widgets/types';
+import type { WidgetItem } from '../widgets/types';
 import type { GeneralProps } from './types';
-import Trans, { TransName } from '../translation';
+import trans, { transName } from '../translation';
 
 import EditorMenu from './EditorMenu';
 import DataTransform from './DataTransform';
@@ -103,7 +103,7 @@ interface PropertiesHeaderProps extends GeneralProps {
 function PropertiesHeader(props: PropertiesHeaderProps) {
   return (
     <SectionName
-      text={TransName(props.name)}
+      text={transName(props.name)}
       endElement={
         !!props.onDelete && (
           <IconButton size="small" color="error" onClick={props.onDelete}>
@@ -119,7 +119,7 @@ function Properties(props: GeneralProps) {
   if (!props.selected) {
     return (
       <>
-        <PropertiesHeader {...props} name={Trans('report')} />
+        <PropertiesHeader {...props} name={trans('report')} />
         <ReportSettings {...props} />
       </>
     );
@@ -137,16 +137,16 @@ function Properties(props: GeneralProps) {
   const wid = props.selected;
   const selected = findInList(props.report, wid);
   const comp = getWidget(props.widgets, selected.type);
-  if (!comp.RenderProperties) {
+  if (!comp.Properties) {
     return <PropertiesHeader {...props} name={comp.name} onDelete={remove} />;
   }
   return (
     <>
       <PropertiesHeader {...props} name={comp.name} onDelete={remove} />
-      <comp.RenderProperties
+      <comp.Properties
         {...props}
         item={selected}
-        setItem={(itm: Item) => {
+        setItem={(itm: WidgetItem) => {
           const r2 = updateItem(props.report, wid, itm);
           return props.setReport(r2);
         }}
@@ -240,7 +240,7 @@ export default function Layout(
       <BoxMain
         onClick={resetSelection}
         onDragOver={props.dragOver}
-        onDrop={e => props.drop(e, [props.report.children.length])}
+        onDrop={e => props.drop(e, [props.report.widgets.length])}
         tabIndex={0}
         onKeyDown={keyDownHandler}
         data-testid="content"

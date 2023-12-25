@@ -1,4 +1,4 @@
-import Trans from '../translation';
+import trans from '../translation';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
@@ -36,7 +36,7 @@ export default function SimpleDialog(props: ModalProps) {
       >
         <DialogTitle>{props.title}</DialogTitle>
         <IconButton
-          aria-label={Trans('close')}
+          aria-label={trans('close')}
           onClick={props.onHide}
           sx={closeStyle}
           data-testid="close-dialog"

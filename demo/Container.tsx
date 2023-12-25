@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 
 const sampleReport: Report = {
   name: 'Report 1',
-  children: [],
+  widgets: [],
   transforms: [],
   properties: {},
   variables: [],

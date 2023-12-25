@@ -50,7 +50,7 @@ test('UpdateVar SetVar', async () => {
 
 test('UpdateVar reportVar', async () => {
   const report = JSON.parse(JSON.stringify(sampleReport)) as Report;
-  report.children = [
+  report.widgets = [
     { type: 'TextSimple', formula: 'ccc', children: [] },
     {
       type: 'Repeat',

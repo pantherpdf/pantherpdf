@@ -12,15 +12,15 @@ import compile from './data/compile';
 import { renderBody } from './data/renderToHtml';
 import { sampleReport } from './editor/sampleReport';
 import { renderToString } from 'react-dom/server';
-import type { Item, ItemCompiled } from './widgets/types';
+import type { WidgetItem, WidgetCompiled } from './widgets/types';
 
 export async function compileComponentTest(
   cmpData: object,
   data: unknown,
-): Promise<ItemCompiled> {
+): Promise<WidgetCompiled> {
   const dt: Report = {
     name: 'John Johnny',
-    children: [cmpData as Item],
+    widgets: [cmpData as WidgetItem],
     transforms: [],
     properties: {},
     variables: [],
@@ -37,12 +37,12 @@ export async function compileTest(
 }
 
 export async function renderWidget(
-  item: Item,
+  item: WidgetItem,
   data: unknown = {},
 ): Promise<string> {
   const report: Report = {
     ...sampleReport,
-    children: [item],
+    widgets: [item],
   };
   const compiled = await compileTest(report, data);
   const html = renderBody(compiled, defaultWidgets);
@@ -55,4 +55,4 @@ export type ForceChildren<T> =
   | T
   | { [key: string]: unknown; children: ForceChildren<T>[] };
 
-export type ReportForceChildren<T> = Report & { children: ForceChildren<T>[] };
+export type ReportForceWidgets<T> = Report & { widgets: ForceChildren<T>[] };

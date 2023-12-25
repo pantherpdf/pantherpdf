@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import Trans from '../translation';
+import trans from '../translation';
 import InputAdornment from '@mui/material/InputAdornment';
 
 export const WidthRegex = /^(?:|\d+(?:\.\d+)?(?:mm|cm|in|px|%|rem|em|vw|vh|))$/;
@@ -95,7 +95,7 @@ export default function InputApplyOnEnter<T extends AbstractComponent>(
           e.preventDefault();
           e.stopPropagation();
           if (!applyValue()) {
-            alert(Trans('invalid value'));
+            alert(trans('invalid value'));
           }
         }
         if (e.key === 'Escape') {
@@ -113,7 +113,7 @@ export default function InputApplyOnEnter<T extends AbstractComponent>(
         // useEffect() will not be called because props.value didnt change
         setValue(String(origValue));
         if (!result) {
-          alert(Trans('invalid value'));
+          alert(trans('invalid value'));
         }
       }}
     />

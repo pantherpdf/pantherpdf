@@ -6,9 +6,10 @@
 
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import type { FunctionComponent } from 'react';
-import type { ApiEndpoints, Name, ReportCompiled, Report } from '../types';
+import type { ApiEndpoints, ReportCompiled, Report } from '../types';
 import type { FormulaHelper } from '../data/compile';
 import type { GeneralProps } from '../editor/types';
+import type { TransName } from '../translation';
 
 /** Building blocks for editor */
 export interface Widget {
@@ -16,24 +17,24 @@ export interface Widget {
   id: string;
 
   /** Human friendly name */
-  name: Name;
+  name: TransName;
 
   icon: IconDefinition;
 
   /** Create new instance of this widget */
-  newItem: (props: ItemNewProps) => Promise<Item>;
+  newItem: (props: WidgetNewProps) => Promise<WidgetItem>;
 
   /** Compile item */
-  compile: (item: any, helper: CompileHelper) => Promise<ItemCompiled>;
+  compile: (item: any, helper: CompileHelper) => Promise<WidgetCompiled>;
 
   /** Render properties editor */
-  RenderProperties?: FunctionComponent<ItemRenderEditorProps>;
+  Properties?: FunctionComponent<WidgetEditorProps>;
 
   /** Render item inside editor */
-  RenderEditor: FunctionComponent<ItemRenderEditorProps>;
+  Editor: FunctionComponent<WidgetEditorProps>;
 
   /** Render item for final report */
-  RenderPreview: FunctionComponent<ItemRenderPreviewProps>;
+  Preview: FunctionComponent<WidgetPreviewProps>;
 
   /**
    * Can user add this widget to report? Default true.
@@ -53,22 +54,22 @@ export interface Widget {
  * Reports are made out of multiple items. It contains data like text,
  * font-size, image url, margins etc.
  */
-export interface Item {
+export interface WidgetItem {
   [key: string]: unknown;
 
   /** Id of a Widget */
   type: string;
 
   /** Subitems */
-  children: Item[];
+  children: WidgetItem[];
 }
 
-export interface ItemCompiled {
+export interface WidgetCompiled {
   [key: string]: unknown;
   type: string;
 }
 
-export interface ItemNewProps {
+export interface WidgetNewProps {
   report: Report;
 }
 
@@ -76,9 +77,9 @@ export interface CompileHelper {
   formulaHelper: FormulaHelper;
   evalFormula: (txt: string) => Promise<unknown>;
   compileChildren: (
-    children: Item[],
+    children: WidgetItem[],
     helper: CompileHelper,
-  ) => Promise<ItemCompiled[]>;
+  ) => Promise<WidgetCompiled[]>;
 
   /** Hierarchical index for current item */
   wid: number[];
@@ -90,24 +91,23 @@ export interface CompileHelper {
   variables: { [key: string]: unknown };
 }
 
-export interface ItemRenderEditorProps extends GeneralProps {
-  item: Item;
-  setItem: (itm: Item) => void;
+export interface WidgetEditorProps extends GeneralProps {
+  item: WidgetItem;
+  setItem: (itm: WidgetItem) => void;
   wid: number[];
 }
 
-export interface ItemRenderPreviewHelper {
+export interface WidgetPreviewProps {
   renderItem: (
-    item: ItemCompiled,
-    helper: ItemRenderPreviewHelper,
+    item: WidgetCompiled,
+    props: WidgetPreviewPropsBase,
   ) => React.ReactNode;
   renderChildren: (
-    chs: ItemCompiled[],
-    helper: ItemRenderPreviewHelper,
+    chs: WidgetCompiled[],
+    props: WidgetPreviewPropsBase,
   ) => React.ReactNode[];
   externalHelpers: { [key: string]: any };
+  item: WidgetCompiled;
 }
 
-export interface ItemRenderPreviewProps extends ItemRenderPreviewHelper {
-  item: ItemCompiled;
-}
+export type WidgetPreviewPropsBase = Omit<WidgetPreviewProps, 'item'>;

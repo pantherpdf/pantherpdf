@@ -11,12 +11,12 @@
 
 import React, { useEffect, useState, CSSProperties } from 'react';
 import type {
-  Item,
-  ItemCompiled,
-  ItemRenderEditorProps,
+  WidgetItem,
+  WidgetCompiled,
+  WidgetEditorProps,
   Widget,
 } from './types';
-import BoxName from './BoxName';
+import WidgetEditorName from './WidgetEditorName';
 import PropertyFont, {
   PropertyFontExtractStyle,
   PropertyFontGenCss,
@@ -36,7 +36,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { listOfAdjusts } from './formulaAdjust';
-import Trans, { TransName, trKeys } from '../translation';
+import trans, { transName, trKeys } from '../translation';
 import { idCmp } from '../editor/childrenMgmt';
 import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
 import { LoadGoogleFontCss } from './GoogleFonts';
@@ -223,7 +223,7 @@ function getSelectedTagPid(wid: number[]): number[] | null {
   return getPidFromNode(btn, x.elementRef);
 }
 
-function TagEditor(props: ItemRenderEditorProps) {
+function TagEditor(props: WidgetEditorProps) {
   const [btnId, setBtnId] = useState<number[] | null>(null);
 
   // subscribe to selection change
@@ -267,7 +267,7 @@ function TagEditor(props: ItemRenderEditorProps) {
           btn.innerText = String(val);
           editor.sendChanges(true);
         }}
-        label={Trans('source data')}
+        label={trans('source data')}
         InputProps={inputFAdornment}
       />
 
@@ -280,7 +280,7 @@ function TagEditor(props: ItemRenderEditorProps) {
           editor.sendChanges(true);
         }}
         id="tag-adjust"
-        label={Trans('adjust')}
+        label={trans('adjust')}
       >
         <MenuItem value=""></MenuItem>
         {arrAdjusts.map((flt, idx) => (
@@ -289,7 +289,7 @@ function TagEditor(props: ItemRenderEditorProps) {
               <MenuItem disabled>──────────</MenuItem>
             )}
             <MenuItem value={flt.id}>
-              {flt.name ? TransName(flt.name) : flt.id}
+              {flt.name ? transName(flt.name) : flt.id}
             </MenuItem>
           </React.Fragment>
         ))}
@@ -298,14 +298,14 @@ function TagEditor(props: ItemRenderEditorProps) {
   );
 }
 
-function TagEditorContainer(props: ItemRenderEditorProps) {
+function TagEditorContainer(props: WidgetEditorProps) {
   return (
     <>
-      <SectionName text={Trans('tag')} />
+      <SectionName text={trans('tag')} />
       <Button
         color="secondary"
         variant="outlined"
-        title={Trans('insert tag')}
+        title={trans('insert tag')}
         draggable="true"
         onDragStart={e => {
           e.dataTransfer.setData('text/plain', 'insert-tag');
@@ -313,7 +313,7 @@ function TagEditorContainer(props: ItemRenderEditorProps) {
         onClick={() => insertTag(props.wid)}
         startIcon={<FontAwesomeIcon icon={faTag} />}
       >
-        {Trans('insert tag')}
+        {trans('insert tag')}
       </Button>
       <TagEditor {...props} />
     </>
@@ -674,13 +674,13 @@ class Editor extends React.Component<EditorProps, EditorState> {
 type TextHtmlDataValue =
   | { type: 'html'; value: string }
   | { type: 'formula'; value: string; adjust?: string };
-export interface TextHtmlData extends Item {
+export interface TextHtmlData extends WidgetItem {
   type: 'TextHtml';
   value: TextHtmlDataValue[];
   font: TFont;
 }
 
-export interface TextHtmlCompiled extends ItemCompiled {
+export interface TextHtmlCompiled extends WidgetCompiled {
   type: 'TextHtml';
   value: string;
   font: TFont;
@@ -828,10 +828,10 @@ export const TextHtml: Widget = {
 
   newItem: async (props): Promise<TextHtmlData> => {
     const valueTxt = `<div>${escapeHtml(
-      Trans('TextHtml initial value'),
+      trans('TextHtml initial value'),
     )}</div>`;
     const value: TextHtmlDataValue[] =
-      props.report.children.length > 0
+      props.report.widgets.length > 0
         ? [{ type: 'html', value: valueTxt }]
         : [];
     return {
@@ -880,7 +880,7 @@ export const TextHtml: Widget = {
     };
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as TextHtmlData;
     const css = PropertyFontGenCss(item.font);
     css.minHeight = '20px';
@@ -890,7 +890,7 @@ export const TextHtml: Widget = {
     }
 
     return (
-      <BoxName
+      <WidgetEditorName
         {...props}
         name={TextHtml.name}
         visible={!props.selected || !idCmp(props.selected, props.wid)}
@@ -915,21 +915,21 @@ export const TextHtml: Widget = {
             active={!!props.selected && idCmp(props.wid, props.selected)}
           />
         </div>
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     const item = props.item as TextHtmlCompiled;
     const css = PropertyFontGenCss(item.font);
     return <div style={css} dangerouslySetInnerHTML={{ __html: item.value }} />;
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const item = props.item as TextHtmlData;
     return (
       <>
-        <InputLabel>{Trans('font')}</InputLabel>
+        <InputLabel>{trans('font')}</InputLabel>
         <PropertyFont
           value={item.font}
           onChange={val => props.setItem({ ...props.item, font: val })}
@@ -946,7 +946,7 @@ export const TextHtml: Widget = {
             <ToggleButton
               key={x.command}
               value={x.command}
-              aria-label={Trans(x.transKey)}
+              aria-label={trans(x.transKey)}
             >
               <FontAwesomeIcon icon={x.icon} fixedWidth />
             </ToggleButton>
@@ -962,7 +962,7 @@ export const TextHtml: Widget = {
             <ToggleButton
               key={x.command}
               value={x.command}
-              aria-label={Trans(x.transKey)}
+              aria-label={trans(x.transKey)}
             >
               <FontAwesomeIcon icon={x.icon} fixedWidth />
             </ToggleButton>
@@ -971,7 +971,7 @@ export const TextHtml: Widget = {
 
         <TextField
           select
-          label={Trans('font-size')}
+          label={trans('font-size')}
           value=""
           onChange={e => {
             const val = `${e.target.value}pt`;
@@ -994,7 +994,7 @@ export const TextHtml: Widget = {
           }}
           id="TextHtml-fontSize"
           sx={{ maxWidth: '5rem' }}
-          title={Trans('font-size')}
+          title={trans('font-size')}
         >
           <MenuItem value=""></MenuItem>
           {['8', '10', '12', '14', '16', '18', '24', '36'].map(x => (

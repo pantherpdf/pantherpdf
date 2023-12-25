@@ -8,22 +8,21 @@ import Editor from './editor/Editor';
 import type { EditorProps, NavbarProps } from './editor/types';
 import type {
   CompileHelper,
-  ItemRenderPreviewHelper,
-  ItemRenderPreviewProps,
-  ItemRenderEditorProps,
-  ItemNewProps,
+  WidgetPreviewProps,
+  WidgetEditorProps,
+  WidgetNewProps,
   Widget,
-  Item,
-  ItemCompiled,
+  WidgetItem,
+  WidgetCompiled,
 } from './widgets/types';
 import type {
-  TransformRenderProps,
+  TransformEditorProps,
   Transform,
   TransformItem,
 } from './transforms/types';
-import generate from './data/generate';
+import generate, { generateData } from './data/generate';
 import type { GenerateArgs } from './data/generate';
-import { isReport } from './types';
+import isReport from './data/isReport';
 import type {
   Report,
   ApiReportMetaData,
@@ -32,20 +31,24 @@ import type {
   ReportProperties,
   ApiUploadMetaData,
   Paper,
-  Name,
-  OutputProperties,
-  Output,
+  GenerateResultProperties,
+  GenerateResult,
 } from './types';
-import { setEditorLanguage } from './translation';
+import {
+  setEditorLanguage,
+  getEditorLanguage,
+  transName,
+  TransName,
+} from './translation';
 import { SourceData } from './data/fetchSourceData';
 import { defaultTransforms } from './transforms/allTransforms';
-import BoxName, { BoxNameProps } from './widgets/BoxName';
+import WidgetEditorName from './widgets/WidgetEditorName';
 import { defaultWidgets } from './widgets/allWidgets';
 import SectionName from './components/SectionName';
 
 const emptyReport: Report = {
   name: 'My report',
-  children: [],
+  widgets: [],
   transforms: [],
   properties: {},
   variables: [],
@@ -56,13 +59,16 @@ export {
   Editor,
   // Backend
   generate,
+  generateData,
   // Other
   isReport,
   setEditorLanguage,
+  getEditorLanguage,
+  transName,
   //
   defaultTransforms,
   defaultWidgets,
-  BoxName,
+  WidgetEditorName,
   //
   emptyReport,
   //
@@ -74,8 +80,8 @@ export type {
   NavbarProps,
   Paper,
   GenerateArgs,
-  Output,
-  OutputProperties,
+  GenerateResult,
+  GenerateResultProperties,
   SourceData,
   //
   Report,
@@ -88,17 +94,15 @@ export type {
   //
   Transform,
   TransformItem,
-  TransformRenderProps,
+  TransformEditorProps,
   //
   Widget,
-  Item,
-  ItemCompiled,
+  WidgetItem,
+  WidgetCompiled,
   CompileHelper,
-  ItemNewProps,
-  ItemRenderEditorProps,
-  ItemRenderPreviewProps,
-  ItemRenderPreviewHelper,
-  BoxNameProps,
+  WidgetNewProps,
+  WidgetEditorProps,
+  WidgetPreviewProps,
   //
-  Name,
+  TransName,
 };

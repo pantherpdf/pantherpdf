@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import Trans, { trKeys } from '../translation';
+import trans, { trKeys } from '../translation';
 import { tuple } from '../types';
 import InputApplyOnEnter from './InputApplyOnEnter';
 import PropertyColor from './PropertyColor';
@@ -49,7 +49,7 @@ export default function BorderEditor(props: BorderEditorProps) {
             width: typeof val === 'number' ? val : 0,
           })
         }
-        label={Trans('border-width')}
+        label={trans('border-width')}
         id={props.id ? `${props.id}-width` : undefined}
       />
 
@@ -57,7 +57,7 @@ export default function BorderEditor(props: BorderEditorProps) {
         <>
           <TextField
             select
-            label={Trans('border-style')}
+            label={trans('border-style')}
             id={props.id ? `${props.id}-style` : undefined}
             value={props.value.style}
             onChange={e =>
@@ -69,7 +69,7 @@ export default function BorderEditor(props: BorderEditorProps) {
           >
             {borderData.map(s => (
               <MenuItem value={s.type} key={s.type}>
-                {Trans(s.transKey)}
+                {trans(s.transKey)}
               </MenuItem>
             ))}
           </TextField>

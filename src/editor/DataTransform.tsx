@@ -8,7 +8,7 @@
 import React, { useState } from 'react';
 import type { Report } from '../types';
 import type { GeneralProps } from './types';
-import Trans, { TransName } from '../translation';
+import trans, { transName } from '../translation';
 import { getTransform } from '../transforms/allTransforms';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -97,7 +97,7 @@ function TransformItemEditor(props: TransformItemProps) {
               icon={comp.icon}
               style={{ marginRight: '0.25rem' }}
             />
-            {TransName(comp.name)}
+            {transName(comp.name)}
           </Typography>
           {props.item.comment && (
             <Typography align="left" color="GrayText" noWrap>
@@ -147,7 +147,7 @@ function TransformItemEditor(props: TransformItemProps) {
                     <ListItemIcon>
                       <FontAwesomeIcon icon={faEdit} fixedWidth />
                     </ListItemIcon>
-                    <ListItemText>{Trans('edit')}</ListItemText>
+                    <ListItemText>{trans('edit')}</ListItemText>
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
@@ -159,7 +159,7 @@ function TransformItemEditor(props: TransformItemProps) {
                     <ListItemIcon>
                       <FontAwesomeIcon icon={faArrowUp} fixedWidth />
                     </ListItemIcon>
-                    <ListItemText>{Trans('up')}</ListItemText>
+                    <ListItemText>{trans('up')}</ListItemText>
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
@@ -173,7 +173,7 @@ function TransformItemEditor(props: TransformItemProps) {
                     <ListItemIcon>
                       <FontAwesomeIcon icon={faArrowDown} fixedWidth />
                     </ListItemIcon>
-                    <ListItemText>{Trans('down')}</ListItemText>
+                    <ListItemText>{trans('down')}</ListItemText>
                   </MenuItem>
                   <Divider />
                   <MenuItem
@@ -185,7 +185,7 @@ function TransformItemEditor(props: TransformItemProps) {
                     <ListItemIcon>
                       <FontAwesomeIcon icon={faTrash} fixedWidth />
                     </ListItemIcon>
-                    <ListItemText>{Trans('delete')}</ListItemText>
+                    <ListItemText>{trans('delete')}</ListItemText>
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>
@@ -314,7 +314,7 @@ export default function DataTransform(props: GeneralProps) {
     <>
       <Override {...props} />
 
-      <SectionName text={Trans('transform')} />
+      <SectionName text={trans('transform')} />
       {props.report.transforms.length > 0 && (
         <div>
           {props.report.transforms.map((item, idx) => (
@@ -338,14 +338,14 @@ export default function DataTransform(props: GeneralProps) {
         onClick={() => setShownModalInsert(true)}
         startIcon={<FontAwesomeIcon icon={faPlus} />}
       >
-        {Trans('transform')}
+        {trans('transform')}
       </Button>
 
       {/* ADD NEW */}
       <SimpleDialog
         show={shownModalInsert}
         onHide={() => setShownModalInsert(false)}
-        title={Trans('insert data transform')}
+        title={trans('insert data transform')}
       >
         <List sx={{ pt: 0, minWidth: '20rem' }}>
           {props.transforms.map(w => {
@@ -360,7 +360,7 @@ export default function DataTransform(props: GeneralProps) {
                     <FontAwesomeIcon icon={w.icon} />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={TransName(w.name)} />
+                <ListItemText primary={transName(w.name)} />
               </ListItemButton>
             );
           })}
@@ -372,10 +372,10 @@ export default function DataTransform(props: GeneralProps) {
         {editCmp && showEdit && (
           <>
             <DialogTitle>
-              {Trans('edit')} {TransName(editCmp.name)}
+              {trans('edit')} {transName(editCmp.name)}
             </DialogTitle>
             <IconButton
-              aria-label={Trans('close')}
+              aria-label={trans('close')}
               sx={{
                 position: 'absolute',
                 right: 13,
@@ -386,7 +386,7 @@ export default function DataTransform(props: GeneralProps) {
               <FontAwesomeIcon icon={faTimes} fixedWidth />
             </IconButton>
             <DialogContent dividers>
-              <editCmp.RenderEditor
+              <editCmp.Editor
                 {...props}
                 index={showEdit.index}
                 item={showEdit.data}
@@ -398,7 +398,7 @@ export default function DataTransform(props: GeneralProps) {
                 id="trans-edit-comment"
                 size="small"
                 fullWidth
-                label={Trans('comment')}
+                label={trans('comment')}
                 variant="outlined"
                 value={showEdit.data.comment}
                 onChange={e =>
@@ -409,10 +409,10 @@ export default function DataTransform(props: GeneralProps) {
                 }
               />
               <Button variant="outlined" onClick={() => setShowEdit(null)}>
-                {Trans('cancel')}
+                {trans('cancel')}
               </Button>
               <Button variant="contained" onClick={editSave}>
-                {Trans('save')}
+                {trans('save')}
               </Button>
             </DialogActions>
           </>
@@ -441,7 +441,7 @@ function DialogBrowseData(props: DialogBrowseDataProps) {
     <SimpleDialog
       show={true}
       onHide={props.onHide}
-      title={Trans('data')}
+      title={trans('data')}
       size="md"
     >
       <>
@@ -471,7 +471,7 @@ function Override(props: GeneralProps) {
   return (
     <>
       <SectionName
-        text={Trans('override source data')}
+        text={trans('override source data')}
         endElement={
           <OverrideLink {...props} showUrl={showUrl} setShowUrl={setShowUrl} />
         }
@@ -531,7 +531,7 @@ function OverrideLink(props: OverrideLinkProps) {
               props.setSourceDataOverride({ type: 'json', value: text });
             }
           }}
-          title={Trans('load local json file')}
+          title={trans('load local json file')}
         >
           <FontAwesomeIcon icon={faFolderOpen} />
         </Link>
@@ -540,7 +540,7 @@ function OverrideLink(props: OverrideLinkProps) {
         <Link
           component="button"
           onClick={() => props.setSourceDataOverride(undefined)}
-          title={Trans('clear override')}
+          title={trans('clear override')}
         >
           <FontAwesomeIcon
             icon={props.sourceDataOverride ? faTimes : faFolderOpen}

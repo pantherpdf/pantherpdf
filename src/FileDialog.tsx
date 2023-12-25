@@ -11,7 +11,7 @@ import { faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
 import type { ApiFileMetaData, ApiUploadMetaData } from './types';
 import type { ApiEndpoints } from './types';
 import FileSelect from './FileSelect';
-import Trans from './translation';
+import trans from './translation';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
@@ -85,7 +85,7 @@ export default function FileDialog(props: Props) {
     // remove big files
     fileUpload = fileUpload.filter((f, idx) => {
       if (f.size > 15_000_000) {
-        alert(Trans('file -name- too big', [f.name]));
+        alert(trans('file -name- too big', [f.name]));
         return false;
       }
       return true;
@@ -227,7 +227,7 @@ export default function FileDialog(props: Props) {
       if (!props.api.filesDelete) {
         return;
       }
-      if (!window.confirm(Trans('delete confirm', [name]))) {
+      if (!window.confirm(trans('delete confirm', [name]))) {
         return;
       }
       await props.api.filesDelete(name);
@@ -245,14 +245,14 @@ export default function FileDialog(props: Props) {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>{Trans('name')}</TableCell>
+            <TableCell>{trans('name')}</TableCell>
             <TableCell style={{ width: '220px' }}>
-              {Trans('uploaded')}
+              {trans('uploaded')}
             </TableCell>
             <TableCell style={{ width: '220px' }}>
-              {Trans('modified')}
+              {trans('modified')}
             </TableCell>
-            <TableCell style={{ width: '100px' }}>{Trans('size')}</TableCell>
+            <TableCell style={{ width: '100px' }}>{trans('size')}</TableCell>
             <TableCell style={{ width: '100px' }}></TableCell>
           </TableRow>
         </TableHead>
@@ -290,7 +290,7 @@ export default function FileDialog(props: Props) {
                 {f.upload && (
                   <>
                     {f.upload.status === 'waiting' && (
-                      <div>{Trans('waiting')}</div>
+                      <div>{trans('waiting')}</div>
                     )}
                     {f.upload.status === 'complete' && (
                       <>
@@ -298,7 +298,7 @@ export default function FileDialog(props: Props) {
                           <Alert severity="error">{f.upload.errorMsg}</Alert>
                         ) : (
                           <Alert severity="success">
-                            {Trans('upload complete')}
+                            {trans('upload complete')}
                           </Alert>
                         )}
                       </>
@@ -306,7 +306,7 @@ export default function FileDialog(props: Props) {
                     {f.upload.status === 'uploading' && (
                       <>
                         <div>
-                          {Trans('uploading...')}
+                          {trans('uploading...')}
                           <FontAwesomeIcon
                             icon={faSpinner}
                             spin
@@ -338,7 +338,7 @@ export default function FileDialog(props: Props) {
                   variant="outlined"
                   startIcon={<FontAwesomeIcon icon={faTrash} fixedWidth />}
                 >
-                  {Trans('delete')}
+                  {trans('delete')}
                 </Button>
               </TableCell>
             </TableRow>
@@ -347,7 +347,7 @@ export default function FileDialog(props: Props) {
             <TableRow>
               <TableCell colSpan={5}>
                 <Typography align="center" color="GrayText" fontStyle="italic">
-                  <small>{Trans('empty')}</small>
+                  <small>{trans('empty')}</small>
                 </Typography>
               </TableCell>
             </TableRow>

@@ -49,7 +49,7 @@ test('complete rows', async () => {
     varName: 'item',
     direction: 'rows',
   };
-  const report: Report = { ...sampleReport, children: [rpt] };
+  const report: Report = { ...sampleReport, widgets: [rpt] };
   const report2 = await compileTest(report, {});
 
   const children = report2.children as any;
@@ -96,7 +96,7 @@ test('complete grid', async () => {
     varName: 'item',
     direction: 'grid',
   };
-  const report: Report = { ...sampleReport, children: [rpt] };
+  const report: Report = { ...sampleReport, widgets: [rpt] };
   const report2 = await compileTest(report, {});
 
   const children = report2.children as any;
@@ -136,7 +136,7 @@ test('grid - products', async () => {
   const html = await renderWidget(rpt);
   expect(html).toMatchSnapshot();
 
-  const report: Report = { ...sampleReport, children: [rpt] };
+  const report: Report = { ...sampleReport, widgets: [rpt] };
   const report2 = await compileTest(report, {});
   expect(report2.globalCss.replace(/\s/g, '')).toContain(
     '.grid-with-frame>div{display:inline-block;vertical-align:top;}',

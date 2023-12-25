@@ -6,7 +6,7 @@
 
 import type { CSSProperties } from 'react';
 import type { TFont, TFontStyle } from './widgets/PropertyFont';
-import type { Item, ItemCompiled } from './widgets/types';
+import type { WidgetItem, WidgetCompiled } from './widgets/types';
 import type { TransformItem } from './transforms/types';
 
 // helper for converting tuple into type
@@ -15,7 +15,7 @@ type Narrowable =
   string | number | boolean | symbol | object | {} | void | null | undefined;
 export const tuple = <T extends Narrowable[]>(...args: T) => args;
 
-export interface TVariable {
+export interface Variable {
   name: string;
   formula: string;
 }
@@ -27,19 +27,19 @@ export interface Paper {
   height?: number;
 }
 
-export interface OutputProperties {
+export interface GenerateResultProperties {
   paper?: Paper;
   fileName?: string;
 }
 
-export interface ReportProperties extends OutputProperties {
+export interface ReportProperties extends GenerateResultProperties {
   font?: TFont;
   lang?: string;
 }
 
-export interface Output {
+export interface GenerateResult {
   html: string;
-  properties: OutputProperties;
+  properties: GenerateResultProperties;
 }
 
 /**
@@ -47,10 +47,10 @@ export interface Output {
  */
 export interface Report {
   name: string;
-  children: Item[];
+  widgets: WidgetItem[];
   transforms: TransformItem[];
   properties: ReportProperties;
-  variables: TVariable[];
+  variables: Variable[];
 }
 
 /**
@@ -62,55 +62,9 @@ export interface ApiReportMetaData {
 }
 
 export interface ReportCompiled extends Omit<Report, 'children'> {
-  children: ItemCompiled[];
+  children: WidgetCompiled[];
   fontsUsed: TFontStyle[];
   globalCss: string;
-}
-
-export function ItemTypeGuard(r: any): r is Item {
-  if (typeof r.type !== 'string' || r.type.length === 0) {
-    return false;
-  }
-  if (!Array.isArray(r.children)) {
-    return false;
-  }
-  for (const ch of r.children) {
-    if (!ItemTypeGuard(ch)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-/**
- * Type guard for Report interface
- */
-export function isReport(r: any): r is Report {
-  if (typeof r != 'object' || !r) {
-    return false;
-  }
-  if (typeof r.name !== 'string') {
-    return false;
-  }
-  if (!Array.isArray(r.children)) {
-    return false;
-  }
-  for (const ch of r.children) {
-    if (!ItemTypeGuard(ch)) {
-      return false;
-    }
-  }
-  if (typeof r.properties !== 'object' || !r.properties) {
-    return false;
-  }
-  //
-  if (!Array.isArray(r.variables)) {
-    return false;
-  }
-  if (!Array.isArray(r.transforms)) {
-    return false;
-  }
-  return true;
 }
 
 /** Meta data when uploading a file */
@@ -180,7 +134,7 @@ export interface ApiEndpoints {
   evaluateJavaScript?: (code: string) => Promise<unknown>;
 
   /** Used by print preview to generate PDF */
-  generatePdf?: (report: Output) => Promise<Uint8Array>;
+  generatePdf?: (report: GenerateResult) => Promise<Uint8Array>;
 }
 
 export const defaultReportCss: CSSProperties = {
@@ -188,9 +142,3 @@ export const defaultReportCss: CSSProperties = {
   fontSize: '12pt',
   color: '#000000',
 };
-
-/**
- * Name is used for translating strings.
- * It can be `string` or `object` with 2-letter ISO language keys.
- */
-export type Name = string | { [key: string]: string };

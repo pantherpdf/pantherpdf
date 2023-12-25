@@ -5,9 +5,9 @@
  */
 
 import React, { useState, CSSProperties } from 'react';
-import type { Item, ItemCompiled, Widget } from './types';
+import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { faEllipsisH, faImage } from '@fortawesome/free-solid-svg-icons';
-import BoxName from './BoxName';
+import WidgetEditorName from './WidgetEditorName';
 import InputApplyOnEnter, {
   WidthOptions,
   WidthRegex,
@@ -16,7 +16,7 @@ import InputApplyOnEnter, {
 import PropertyAlign, { TAlign } from './PropertyAlign';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FileDialog from '../FileDialog';
-import Trans from '../translation';
+import trans from '../translation';
 import base64ArrayBuffer from './base64ArrayBuffer';
 import SimpleDialog from '../components/SimpleDialog';
 import SectionName from '../components/SectionName';
@@ -25,7 +25,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 
-export interface ImageData extends Item {
+export interface ImageData extends WidgetItem {
   type: 'Image';
   url: string;
   formula: string;
@@ -35,7 +35,7 @@ export interface ImageData extends Item {
   fit?: 'fill' | 'contain' | 'cover';
 }
 
-export interface ImageCompiled extends ItemCompiled {
+export interface ImageCompiled extends WidgetCompiled {
   type: 'Image';
   data: string;
   align?: TAlign;
@@ -106,7 +106,7 @@ export const Image: Widget = {
     };
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as ImageData;
 
     const cssImg: CSSProperties = {
@@ -162,7 +162,7 @@ export const Image: Widget = {
     else {
       img = (
         <Typography color="GrayText">
-          <small>{Trans('no image selected')}</small>
+          <small>{trans('no image selected')}</small>
         </Typography>
       );
     }
@@ -173,13 +173,13 @@ export const Image: Widget = {
     }
 
     return (
-      <BoxName {...props} name={Image.name}>
+      <WidgetEditorName {...props} name={Image.name}>
         <div style={cssContainer}>{img}</div>
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     const item = props.item as ImageCompiled;
     const cssImg: CSSProperties = {
       display: 'inline-block',
@@ -230,7 +230,7 @@ export const Image: Widget = {
     return <div style={cssContainer}>{img}</div>;
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const item = props.item as ImageData;
     const [showModal, setShowModal] = useState<boolean>(false);
     return (
@@ -239,7 +239,7 @@ export const Image: Widget = {
           component={TextField}
           value={item.formula}
           onChange={val => props.setItem({ ...item, formula: val })}
-          label={Trans('formula')}
+          label={trans('formula')}
           id="img-formula"
           InputProps={inputFAdornment}
         />
@@ -248,7 +248,7 @@ export const Image: Widget = {
           component={TextField}
           value={item.url}
           onChange={val => props.setItem({ ...item, url: val })}
-          label={Trans('url')}
+          label={trans('url')}
           id="img-url"
           placeholder="https://www.example.com/image.jpg"
         />
@@ -262,7 +262,7 @@ export const Image: Widget = {
           </Button>
         )}
 
-        <SectionName text={Trans('size')} />
+        <SectionName text={trans('size')} />
 
         <InputApplyOnEnter
           component={TextField}
@@ -277,7 +277,7 @@ export const Image: Widget = {
             return props.setItem(val2);
           }}
           regex={WidthRegex}
-          label={Trans('width')}
+          label={trans('width')}
           id="img-width"
           helperText={WidthOptions}
         />
@@ -295,14 +295,14 @@ export const Image: Widget = {
             return props.setItem(val2);
           }}
           regex={WidthRegex}
-          label={Trans('height')}
+          label={trans('height')}
           id="img-height"
           helperText={WidthOptions}
         />
 
         <TextField
           select
-          label={Trans('img-fit')}
+          label={trans('img-fit')}
           value={
             !!item.fit && !!item.width && !!item.height ? item.fit : 'fill'
           }
@@ -318,12 +318,12 @@ export const Image: Widget = {
           id="Image-fit"
           disabled={!item.width || !item.height}
         >
-          <MenuItem value="fill">{Trans('img-fit-fill')}</MenuItem>
-          <MenuItem value="contain">{Trans('img-fit-contain')}</MenuItem>
-          <MenuItem value="cover">{Trans('img-fit-cover')}</MenuItem>
+          <MenuItem value="fill">{trans('img-fit-fill')}</MenuItem>
+          <MenuItem value="contain">{trans('img-fit-contain')}</MenuItem>
+          <MenuItem value="cover">{trans('img-fit-cover')}</MenuItem>
         </TextField>
 
-        <SectionName text={Trans('align')} />
+        <SectionName text={trans('align')} />
         <PropertyAlign
           value={item.align}
           onChange={val => props.setItem({ ...item, align: val })}
@@ -332,7 +332,7 @@ export const Image: Widget = {
           show={showModal}
           onHide={() => setShowModal(false)}
           size="lg"
-          title={Trans('select image')}
+          title={trans('select image')}
         >
           <FileDialog
             mode="value"

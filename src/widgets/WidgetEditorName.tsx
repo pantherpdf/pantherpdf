@@ -6,9 +6,8 @@
  */
 
 import React from 'react';
-import { TransName } from '../translation';
-import type { ItemRenderEditorProps } from './types';
-import type { Name } from '../types';
+import { transName, TransName } from '../translation';
+import type { WidgetEditorProps } from './types';
 import { styled } from '@mui/material/styles';
 
 const BoxParent = styled('div')({
@@ -17,7 +16,7 @@ const BoxParent = styled('div')({
   padding: '0.1rem 0.2rem',
   border: '1px solid #ddd',
 
-  '&:hover > .PantherPdfBoxName': {
+  '&:hover > .PantherPdfWidgetEditorName': {
     opacity: '1',
   },
 });
@@ -40,18 +39,18 @@ const NameDiv = styled('div')({
   overflow: 'hidden',
 });
 
-export interface BoxNameProps extends ItemRenderEditorProps {
-  name: Name;
+export interface WidgetEditorNameProps extends WidgetEditorProps {
+  name: TransName;
   children: React.ReactNode;
   style?: React.CSSProperties;
   visible?: boolean;
 }
 
-export default function BoxName(props: BoxNameProps) {
+export default function WidgetEditorName(props: WidgetEditorNameProps) {
   return (
     <BoxParent style={props.style}>
       <NameDiv
-        className="PantherPdfBoxName"
+        className="PantherPdfWidgetEditorName"
         style={{
           display:
             typeof props.visible === 'boolean' && !props.visible
@@ -64,7 +63,7 @@ export default function BoxName(props: BoxNameProps) {
         }
         onDragEnd={e => props.dragWidgetEnd(e)}
       >
-        {TransName(props.name)}
+        {transName(props.name)}
       </NameDiv>
       {props.children}
     </BoxParent>

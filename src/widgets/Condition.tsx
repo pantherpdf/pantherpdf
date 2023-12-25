@@ -5,21 +5,21 @@
  */
 
 import React from 'react';
-import type { Item, ItemCompiled, Widget } from './types';
+import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
-import BoxName from './BoxName';
+import WidgetEditorName from './WidgetEditorName';
 import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
-import Trans, { TransName } from '../translation';
+import trans, { transName } from '../translation';
 import TextField from '@mui/material/TextField';
 
-export interface ConditionData extends Item {
+export interface ConditionData extends WidgetItem {
   type: 'Condition';
   formula: string;
 }
 
-export interface ConditionCompiled extends ItemCompiled {
+export interface ConditionCompiled extends WidgetCompiled {
   type: 'Condition';
-  children: ItemCompiled[];
+  children: WidgetCompiled[];
 }
 
 export const Condition: Widget = {
@@ -43,24 +43,24 @@ export const Condition: Widget = {
     };
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as ConditionData;
     return (
-      <BoxName
+      <WidgetEditorName
         {...props}
-        name={TransName(Condition.name) + ': ' + item.formula}
+        name={transName(Condition.name) + ': ' + item.formula}
       >
         {props.renderWidgets(item.children, props.wid)}
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     const item = props.item as ConditionCompiled;
     return <>{props.renderChildren(item.children, props)}</>;
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const item = props.item as ConditionData;
     return (
       <>
@@ -68,7 +68,7 @@ export const Condition: Widget = {
           component={TextField}
           value={item.formula}
           onChange={val => props.setItem({ ...item, formula: val })}
-          label={Trans('formula')}
+          label={trans('formula')}
           id="Condition-formula"
           InputProps={inputFAdornment}
         />

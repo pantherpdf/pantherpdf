@@ -22,7 +22,7 @@ import { extractFiles } from '../FileSelect';
 import { Image as ImageWidget, ImageData, apiPrefix } from '../widgets/Image';
 import { SourceData } from '../data/fetchSourceData';
 import { defaultTransforms } from '../transforms/allTransforms';
-import type { Item, ItemNewProps } from '../widgets/types';
+import type { WidgetItem, WidgetNewProps } from '../widgets/types';
 
 const styleDragHighlight: CSSProperties = {
   backgroundColor: 'red',
@@ -101,7 +101,7 @@ export default function Editor(props: EditorProps) {
       } catch (e) {
         alert(`Error while uploading: ${String(e)}`);
       }
-      const newItemProps: ItemNewProps = { report: props.report };
+      const newItemProps: WidgetNewProps = { report: props.report };
       const img = (await ImageWidget.newItem(newItemProps)) as ImageData;
       img.url = `${apiPrefix}${f.name}`;
       const report2 = dropImpl(
@@ -165,7 +165,7 @@ export default function Editor(props: EditorProps) {
     );
   }
 
-  function renderWidget(child: Item, wid: number[]): ReactNode {
+  function renderWidget(child: WidgetItem, wid: number[]): ReactNode {
     const obj = getWidget(widgets, child.type);
 
     return (
@@ -180,10 +180,10 @@ export default function Editor(props: EditorProps) {
         onDragEnd={e => dragWidgetEnd(e)}
         data-testid={`widget-${wid.join(',')}`}
       >
-        <obj.RenderEditor
+        <obj.Editor
           {...props2}
           item={child}
-          setItem={(itm: Item) => {
+          setItem={(itm: WidgetItem) => {
             const r2 = updateItem(props2.report, wid, itm);
             return props2.setReport(r2);
           }}
@@ -193,7 +193,7 @@ export default function Editor(props: EditorProps) {
     );
   }
 
-  function renderWidgets(children: Item[], parents: number[]): ReactNode {
+  function renderWidgets(children: WidgetItem[], parents: number[]): ReactNode {
     return (
       <>
         {renderSpacer([...parents, 0])}
@@ -270,7 +270,7 @@ export function dropImpl(
     throw new Error('dest does not exist');
   }
 
-  let toInsert: Item | Item[];
+  let toInsert: WidgetItem | WidgetItem[];
   let report2: Report = report;
   const type = current.type;
   switch (type) {

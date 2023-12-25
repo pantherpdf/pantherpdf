@@ -5,7 +5,7 @@
  */
 
 import React, { CSSProperties, useRef } from 'react';
-import Trans from './translation';
+import trans from './translation';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -83,9 +83,9 @@ export default function FileSelect(props: Props) {
         onDragOver={onDragOver}
         onDrop={onDrop}
       >
-        <Typography align="center">{Trans('drop-files here')}</Typography>
+        <Typography align="center">{trans('drop-files here')}</Typography>
         <Typography color="GrayText" align="center">
-          {Trans('drop-or')}
+          {trans('drop-or')}
         </Typography>
         <Typography align="center">
           <Button
@@ -94,7 +94,7 @@ export default function FileSelect(props: Props) {
             color="secondary"
             onClick={selectFileClick}
           >
-            {Trans('drop-select files')}
+            {trans('drop-select files')}
           </Button>
         </Typography>
       </Stack>

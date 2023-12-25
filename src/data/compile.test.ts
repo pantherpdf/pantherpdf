@@ -5,15 +5,15 @@
  * @license MIT
  */
 
-import { ReportForceChildren, compileTest } from '../unitTestHelpers';
+import { ReportForceWidgets, compileTest } from '../unitTestHelpers';
 import type { Report } from '../types';
 import type { TextSimpleData, TextSimpleCompiled } from '../widgets/TextSimple';
 import { sampleReport } from '../editor/sampleReport';
 
 test('text data', async () => {
-  const report: ReportForceChildren<TextSimpleData> = {
+  const report: ReportForceWidgets<TextSimpleData> = {
     ...sampleReport,
-    children: [
+    widgets: [
       { type: 'TextSimple', formula: '"Hello World: "+data.num', children: [] },
     ],
   };
@@ -28,12 +28,12 @@ test('text data', async () => {
 });
 
 test('text report', async () => {
-  const report: ReportForceChildren<TextSimpleData> = {
+  const report: ReportForceWidgets<TextSimpleData> = {
     ...sampleReport,
-    children: [
+    widgets: [
       {
         type: 'TextSimple',
-        formula: '"Hello World: "+report.children[0].type',
+        formula: '"Hello World: "+report.widgets[0].type',
         children: [],
       },
     ],
@@ -49,9 +49,9 @@ test('text report', async () => {
 });
 
 test('text', async () => {
-  const report: ReportForceChildren<TextSimpleData> = {
+  const report: ReportForceWidgets<TextSimpleData> = {
     ...sampleReport,
-    children: [{ type: 'TextSimple', formula: 'non_EXIStent', children: [] }],
+    widgets: [{ type: 'TextSimple', formula: 'non_EXIStent', children: [] }],
   };
 
   const obj = { num: 123 };
@@ -61,7 +61,7 @@ test('text', async () => {
 test('fonts used', async () => {
   const report: Report = {
     ...sampleReport,
-    children: [],
+    widgets: [],
   };
   report.properties.font = {
     family: 'Arial',

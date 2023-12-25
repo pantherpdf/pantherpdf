@@ -8,7 +8,7 @@
 import type { ReactNode } from 'react';
 import type { Report, ApiEndpoints } from '../types';
 import { SourceData } from '../data/fetchSourceData';
-import type { Item, Widget } from '../widgets/types';
+import type { WidgetItem, Widget } from '../widgets/types';
 import type { Transform } from '../transforms/types';
 
 /** Navbar properties */
@@ -74,8 +74,8 @@ export interface EditorProps {
 
 export type TDragObj =
   | { type: 'wid'; wid: number[] }
-  | { type: 'widget'; widget: Item }
-  | { type: 'widgets'; widgets: Item[] };
+  | { type: 'widget'; widget: WidgetItem }
+  | { type: 'widgets'; widgets: WidgetItem[] };
 
 export interface GeneralProps extends EditorProps {
   selected: number[] | null;
@@ -85,8 +85,8 @@ export interface GeneralProps extends EditorProps {
   sourceDataOverride?: SourceData;
   setSourceDataOverride: (dt: SourceData | undefined) => void;
 
-  renderWidget: (child: Item, parents: number[]) => ReactNode;
-  renderWidgets: (children: Item[], parents: number[]) => ReactNode;
+  renderWidget: (child: WidgetItem, parents: number[]) => ReactNode;
+  renderWidgets: (children: WidgetItem[], parents: number[]) => ReactNode;
   dragWidgetStart: (e: React.DragEvent<HTMLElement>, dragObj: TDragObj) => void;
   dragWidgetEnd: (e: React.DragEvent<HTMLElement>) => void;
   drop: (e: React.DragEvent<HTMLElement>, dest: number[]) => void;

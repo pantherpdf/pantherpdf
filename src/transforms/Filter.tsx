@@ -12,7 +12,7 @@ import FormulaEvaluate from '../formula/formula';
 import InputApplyOnEnter, {
   inputFAdornment,
 } from '../widgets/InputApplyOnEnter';
-import Trans from '../translation';
+import trans from '../translation';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import TextField from '@mui/material/TextField';
 
@@ -65,7 +65,7 @@ const Filter: Transform = {
     return dt;
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as FilterData;
     return (
       <>
@@ -73,7 +73,7 @@ const Filter: Transform = {
           component={TextField}
           value={item.field}
           onChange={val => props.setItem({ ...item, field: val })}
-          label={Trans('field')}
+          label={trans('field')}
           id="trans-edit-field"
           InputProps={inputFAdornment}
         />
@@ -82,10 +82,10 @@ const Filter: Transform = {
           component={TextField}
           value={item.condition}
           onChange={val => props.setItem({ ...item, condition: val })}
-          label={Trans('condition')}
+          label={trans('condition')}
           id="trans-edit-condition"
           InputProps={inputFAdornment}
-          helperText={Trans('current item is in var -name-', ['item'])}
+          helperText={trans('current item is in var -name-', ['item'])}
         />
       </>
     );

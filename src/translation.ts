@@ -233,10 +233,17 @@ export function setEditorLanguage(lang: string): void {
   currentLang = lang;
 }
 
-export function TransName(
-  name: string | { [key: string]: string },
-  lang?: string,
-): string {
+export function getEditorLanguage(): string {
+  return currentLang;
+}
+
+/**
+ * Name is used for translating strings.
+ * It can be `string` or `object` with 2-letter lower case ISO language keys.
+ */
+export type TransName = string | { [lang: string]: string };
+
+export function transName(name: TransName, lang?: string): string {
   if (typeof name == 'string') {
     return name;
   }
@@ -253,8 +260,8 @@ export function TransName(
   return '';
 }
 
-export default function Trans(key: trKeys, params?: unknown[]): string {
-  let n = TransName(tr2[key]);
+export default function trans(key: trKeys, params?: unknown[]): string {
+  let n = transName(tr2[key]);
   const regex = /{(\d+)}/gm;
   const pl = params ? params.length : 0;
   n = n.replace(regex, (match, p0, p1) => {

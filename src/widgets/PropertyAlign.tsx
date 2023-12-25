@@ -13,7 +13,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { tuple } from '../types';
-import Trans, { trKeys } from '../translation';
+import trans, { trKeys } from '../translation';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 
@@ -46,7 +46,7 @@ export default function PropertyAlign(props: AlignProps) {
           <ToggleButton
             key={x.value}
             value={x.value}
-            aria-label={Trans(x.transKey)}
+            aria-label={trans(x.transKey)}
           >
             <FontAwesomeIcon icon={x.icon} fixedWidth />
           </ToggleButton>

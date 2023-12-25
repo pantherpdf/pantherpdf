@@ -6,7 +6,7 @@
 
 import React, { useState } from 'react';
 import type { GeneralProps } from './types';
-import Trans from '../translation';
+import trans from '../translation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPrint,
@@ -78,7 +78,7 @@ export default function EditorMenu(props: GeneralProps) {
         data-testid="dialog-preview"
         title={
           <>
-            {Trans('preview')}
+            {trans('preview')}
             {!!props.api.generatePdf && <DownloadButton {...props} />}
           </>
         }
@@ -131,7 +131,7 @@ function DownloadButton(props: GeneralProps) {
         )
       }
     >
-      {Trans('download')}
+      {trans('download')}
     </Button>
   );
 }

@@ -12,7 +12,7 @@ import {
   PropertyFontGenCss,
 } from '../widgets/PropertyFont';
 import type { GeneralProps } from './types';
-import Trans from '../translation';
+import trans from '../translation';
 
 export default function EditorContent(props: GeneralProps) {
   const style = {
@@ -30,10 +30,10 @@ export default function EditorContent(props: GeneralProps) {
   style.margin = `0 auto`;
   return (
     <div style={style}>
-      {props.renderWidgets(props.report.children, [])}
-      {props.report.children.length === 0 && (
+      {props.renderWidgets(props.report.widgets, [])}
+      {props.report.widgets.length === 0 && (
         <Typography color="GrayText" align="center">
-          {Trans('drag drop widgets here')}
+          {trans('drag drop widgets here')}
         </Typography>
       )}
     </div>

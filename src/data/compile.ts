@@ -8,7 +8,7 @@
 import type { Report, ApiEndpoints, ReportCompiled } from '../types';
 import FormulaEvaluate from '../formula/formula';
 import { getWidget } from '../widgets/allWidgets';
-import type { CompileHelper, Widget, Item } from '../widgets/types';
+import type { CompileHelper, Widget, WidgetItem } from '../widgets/types';
 import { PropertyFontExtractStyle } from '../widgets/PropertyFont';
 
 type TOvrr = [string, unknown];
@@ -104,7 +104,7 @@ export default async function compile(
       return FormulaEvaluate(txt, { getVar });
     },
 
-    compileChildren: async (children: Item[], helper: CompileHelper) => {
+    compileChildren: async (children: WidgetItem[], helper: CompileHelper) => {
       // dont use promise.all() because order of execution matters and some async operation could change it
       const arr2 = [];
       for (let i = 0; i < children.length; ++i) {
@@ -117,7 +117,7 @@ export default async function compile(
     },
   };
 
-  dt2.children = await helper.compileChildren(report.children, helper);
+  dt2.children = await helper.compileChildren(report.widgets, helper);
 
   formulaHelper.pop();
   formulaHelper.pop();

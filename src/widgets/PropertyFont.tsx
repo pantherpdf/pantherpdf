@@ -5,7 +5,7 @@
  */
 
 import React, { useState, CSSProperties } from 'react';
-import Trans from '../translation';
+import trans from '../translation';
 import PropertyColor from './PropertyColor';
 import InputApplyOnEnter, {
   WidthRegex,
@@ -53,8 +53,8 @@ export interface TFontStyle {
 }
 
 const weightName: { [key in TWeightOption]: string } = {
-  normal: Trans('font-weight-normal'),
-  bold: Trans('font-weight-bold'),
+  normal: trans('font-weight-normal'),
+  bold: trans('font-weight-bold'),
   '100': '100',
   '200': '200',
   '300': '300',
@@ -81,8 +81,8 @@ const WeightOptionToNumeric: { [key in TWeightOption]: number } = {
 };
 
 const styleName: { [key in TStyleOption]: string } = {
-  normal: Trans('font-style-normal'),
-  italic: Trans('font-style-italic'),
+  normal: trans('font-style-normal'),
+  italic: trans('font-style-italic'),
 };
 
 const lineHeightOptions: { txt: string; value: number }[] = [
@@ -191,14 +191,14 @@ export default function PropertyFont(props: Props) {
     if (props.textButton) {
       return (
         <Button variant="text" onClick={handleClick}>
-          {Trans('font')}
+          {trans('font')}
         </Button>
       );
     }
 
     if (props.iconButton) {
       return (
-        <Button variant="text" onClick={handleClick} title={Trans('font')}>
+        <Button variant="text" onClick={handleClick} title={trans('font')}>
           <FontAwesomeIcon icon={faFont} fixedWidth />
         </Button>
       );
@@ -211,7 +211,7 @@ export default function PropertyFont(props: Props) {
         onClick={handleClick}
         startIcon={<FontAwesomeIcon icon={faFont} />}
       >
-        {Trans('font')}
+        {trans('font')}
       </Button>
     );
   }
@@ -255,7 +255,7 @@ export default function PropertyFont(props: Props) {
                 }
               }}
               id="family"
-              label={Trans('font-family')}
+              label={trans('font-family')}
               fullWidth
             />
             {props.googleFontApiKey && (
@@ -272,7 +272,7 @@ export default function PropertyFont(props: Props) {
             }
             id="size"
             regex={WidthRegex}
-            label={Trans('font-size')}
+            label={trans('font-size')}
             helperText={WidthOptions}
           />
           {size.length > 0 && (
@@ -290,7 +290,7 @@ export default function PropertyFont(props: Props) {
                 }
                 props.onChange(obj);
               }}
-              label={Trans('font-line-height')}
+              label={trans('font-line-height')}
             >
               <MenuItem value=""></MenuItem>
               {lineHeightOptions.map(w => (
@@ -305,7 +305,7 @@ export default function PropertyFont(props: Props) {
             id="weight"
             value={weight}
             onChange={handleInputChange}
-            label={Trans('font-weight')}
+            label={trans('font-weight')}
           >
             <MenuItem value=""></MenuItem>
             {WeightOptions.map(w => (
@@ -319,7 +319,7 @@ export default function PropertyFont(props: Props) {
             id="style"
             value={style}
             onChange={handleInputChange}
-            label={Trans('font-style')}
+            label={trans('font-style')}
           >
             <MenuItem value=""></MenuItem>
             {StyleOptions.map(w => (
@@ -343,7 +343,7 @@ export default function PropertyFont(props: Props) {
                 }}
               />
             }
-            label={Trans('color')}
+            label={trans('color')}
           />
           {color.length > 0 && (
             <PropertyColor
@@ -357,7 +357,7 @@ export default function PropertyFont(props: Props) {
       <SimpleDialog
         show={showModal}
         onHide={() => setShowModal(false)}
-        title={Trans('font-select-family')}
+        title={trans('font-select-family')}
       >
         <>
           {showModal && props.googleFontApiKey && (

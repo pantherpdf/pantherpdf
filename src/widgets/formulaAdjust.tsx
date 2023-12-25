@@ -4,13 +4,12 @@
  * @license MIT
  */
 
-import type { Name } from '../types';
-import { TransName } from '../translation';
+import { transName, TransName } from '../translation';
 
 interface Adjust {
   id: string;
   category: string;
-  name?: Name;
+  name?: TransName;
   func: (data: unknown, args: unknown[]) => string;
 }
 
@@ -172,7 +171,7 @@ const n13: Adjust = {
     } else {
       throw new Error('transName expects string or object of strings');
     }
-    return TransName(val as string | { [key: string]: string }, lang);
+    return transName(val as string | { [key: string]: string }, lang);
   },
 };
 const n14: Adjust = {

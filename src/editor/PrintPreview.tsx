@@ -10,7 +10,7 @@ import type { GeneralProps } from './types';
 import useTransformedData, { DataOrError } from './useTransformedData';
 import compile from '../data/compile';
 import renderToHtml from '../data/renderToHtml';
-import Trans from '../translation';
+import trans from '../translation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
@@ -55,7 +55,7 @@ export default function PrintPreview(props: GeneralProps) {
         border: 'none',
         backgroundColor: 'white',
       }}
-      title={Trans('preview')}
+      title={trans('preview')}
     />
   );
 }

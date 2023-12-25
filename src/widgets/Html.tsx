@@ -6,20 +6,20 @@
  */
 
 import React from 'react';
-import type { Item, ItemCompiled, Widget } from './types';
+import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
-import BoxName from './BoxName';
+import WidgetEditorName from './WidgetEditorName';
 import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
-import Trans from '../translation';
+import trans from '../translation';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-export interface HtmlData extends Item {
+export interface HtmlData extends WidgetItem {
   type: 'Html';
   source: string;
 }
 
-export interface HtmlCompiled extends ItemCompiled {
+export interface HtmlCompiled extends WidgetCompiled {
   type: 'Html';
   data: string;
 }
@@ -47,21 +47,21 @@ export const Html: Widget = {
     };
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as HtmlData;
     return (
-      <BoxName {...props} name={Html.name}>
+      <WidgetEditorName {...props} name={Html.name}>
         <Typography fontFamily="monospace">{item.source}</Typography>
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     const item = props.item as HtmlCompiled;
     return <div dangerouslySetInnerHTML={{ __html: item.data }} />;
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const item = props.item as HtmlData;
     return (
       <>
@@ -69,7 +69,7 @@ export const Html: Widget = {
           component={TextField}
           value={item.source}
           onChange={val => props.setItem({ ...item, source: val })}
-          label={Trans('source data')}
+          label={trans('source data')}
           id="Html-source"
           InputProps={inputFAdornment}
         />

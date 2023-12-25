@@ -7,7 +7,7 @@
 import React from 'react';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Trans from '../translation';
+import trans from '../translation';
 import type { Report } from '../types';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
 import type { GeneralProps } from './types';
@@ -40,7 +40,7 @@ export default function VarEditor(props: GeneralProps) {
       if (name || formula) {
         name = name || report.variables[idx].name;
         if (reservedVars.indexOf(name) !== -1) {
-          alert(Trans('var is reserved'));
+          alert(trans('var is reserved'));
           name += '_';
         }
         report.variables[idx] = { ...report.variables[idx] };
@@ -55,7 +55,7 @@ export default function VarEditor(props: GeneralProps) {
         throw new Error('missing name and/or value');
       }
       if (reservedVars.indexOf(name) !== -1) {
-        alert(Trans('var is reserved'));
+        alert(trans('var is reserved'));
         name += '_';
       }
       report.variables.push({ name, formula });
@@ -65,13 +65,13 @@ export default function VarEditor(props: GeneralProps) {
 
   return (
     <>
-      <SectionName text={Trans('variables')} />
+      <SectionName text={trans('variables')} />
       <Table size="small">
         <TableHead>
           <TableRow>
-            <StyledTableCell>{Trans('name')}</StyledTableCell>
+            <StyledTableCell>{trans('name')}</StyledTableCell>
             <StyledTableCell sx={{ width: '50%' }}>
-              {Trans('var value')} <i>ƒ</i>
+              {trans('var value')} <i>ƒ</i>
             </StyledTableCell>
             <StyledTableCell sx={{ width: '1.5rem' }}>
               {/* Delete */}
@@ -129,7 +129,7 @@ export default function VarEditor(props: GeneralProps) {
         onClick={() => changeVar(undefined, 'var', '0')}
         startIcon={<FontAwesomeIcon icon={faPlus} />}
       >
-        {Trans('add var')}
+        {trans('add var')}
       </Button>
     </>
   );

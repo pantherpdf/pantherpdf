@@ -6,10 +6,10 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import Trans, { TransName } from '../translation';
+import trans, { transName } from '../translation';
 import type { Report, ApiReportMetaData } from '../types';
 import type { GeneralProps } from './types';
-import type { ItemNewProps, Widget } from '../widgets/types';
+import type { WidgetNewProps, Widget } from '../widgets/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import SectionName from '../components/SectionName';
@@ -43,13 +43,13 @@ function ShowReports(props: GeneralProps) {
       alert(String(e));
       return;
     }
-    return props.dragWidgetStart(e, { type: 'widgets', widgets: js.children });
+    return props.dragWidgetStart(e, { type: 'widgets', widgets: js.widgets });
   }
 
   if (allReports.length === 0) {
     return (
       <>
-        <Typography color="GrayText">{Trans('empty')}</Typography>
+        <Typography color="GrayText">{trans('empty')}</Typography>
       </>
     );
   }
@@ -67,7 +67,7 @@ function ShowReports(props: GeneralProps) {
             <ListItemIcon>
               <FontAwesomeIcon icon={faFileAlt} fixedWidth />
             </ListItemIcon>
-            <ListItemText primary={TransName(r.name)} />
+            <ListItemText primary={transName(r.name)} />
           </ListItemButton>
         </ListItem>
       ))}
@@ -77,7 +77,7 @@ function ShowReports(props: GeneralProps) {
 
 function ShowWidgets(props: GeneralProps) {
   async function dragStartWidget(e: React.DragEvent<HTMLElement>, w: Widget) {
-    const propsNewItem: ItemNewProps = {
+    const propsNewItem: WidgetNewProps = {
       report: props.report,
     };
     const obj = await w.newItem(propsNewItem);
@@ -93,7 +93,7 @@ function ShowWidgets(props: GeneralProps) {
         return (
           <Tooltip
             key={w.id}
-            title={Trans('drag drop widgets')}
+            title={trans('drag drop widgets')}
             placement="left-start"
           >
             <ListItem disablePadding>
@@ -108,7 +108,7 @@ function ShowWidgets(props: GeneralProps) {
                 <ListItemIcon>
                   <FontAwesomeIcon icon={w.icon} fixedWidth />
                 </ListItemIcon>
-                <ListItemText primary={TransName(w.name)} />
+                <ListItemText primary={transName(w.name)} />
               </ListItemButton>
             </ListItem>
           </Tooltip>
@@ -121,12 +121,12 @@ function ShowWidgets(props: GeneralProps) {
 export default function EditWidgetNew(props: GeneralProps) {
   return (
     <>
-      <SectionName text={Trans('widgets')} />
+      <SectionName text={trans('widgets')} />
       <ShowWidgets {...props} />
 
       {!!props.api.allReports && (
         <>
-          <SectionName text={Trans('reports')} />
+          <SectionName text={trans('reports')} />
           <ShowReports {...props} />
         </>
       )}

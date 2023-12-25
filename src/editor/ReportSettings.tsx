@@ -8,8 +8,8 @@
 import React, { CSSProperties, useState } from 'react';
 import type { GeneralProps } from './types';
 import type { Report, Paper } from '../types';
-import { isReport } from '../types';
-import Trans from '../translation';
+import isReport from '../data/isReport';
+import trans from '../translation';
 import PropertyFont, { TFont } from '../widgets/PropertyFont';
 import PaperEditor from './PaperEditor';
 import InputApplyOnEnter, {
@@ -57,7 +57,7 @@ function fileReportUpload(
       try {
         dt = JSON.parse(e3.target.result);
       } catch (e) {
-        alert(Trans('upload bad file') + ' ' + String(e));
+        alert(trans('upload bad file') + ' ' + String(e));
         return;
       }
       if (!isReport(dt)) {
@@ -66,7 +66,7 @@ function fileReportUpload(
       }
       let n = arr.length;
       setArr([...arr, dt]);
-      alert(Trans('upload finished', [(n + 1).toString()]));
+      alert(trans('upload finished', [(n + 1).toString()]));
     });
     fr.readAsText(fl);
   });
@@ -84,7 +84,7 @@ function ShowUpload(props: GeneralProps) {
   }
 
   function dragStartFile(e: React.DragEvent<HTMLDivElement>, dt: Report) {
-    return props.dragWidgetStart(e, { type: 'widgets', widgets: dt.children });
+    return props.dragWidgetStart(e, { type: 'widgets', widgets: dt.widgets });
   }
 
   return (
@@ -94,13 +94,13 @@ function ShowUpload(props: GeneralProps) {
           onClick={fileDownload}
           startIcon={<FontAwesomeIcon icon={faDownload} fixedWidth />}
         >
-          {Trans('export')}
+          {trans('export')}
         </Button>
         <Button
           onClick={() => fileReportUpload(arr, setArr)}
           startIcon={<FontAwesomeIcon icon={faUpload} fixedWidth />}
         >
-          {Trans('import')}
+          {trans('import')}
         </Button>
       </ButtonGroup>
       {arr.length > 0 && <Divider />}
@@ -190,7 +190,7 @@ export default function ReportSettings(props: GeneralProps) {
           return props.setReport(obj);
         }}
         id="report-name"
-        label={Trans('name')}
+        label={trans('name')}
         fullWidth
       />
 
@@ -203,7 +203,7 @@ export default function ReportSettings(props: GeneralProps) {
           <FontAwesomeIcon icon={showMore ? faCaretUp : faCaretDown} />
         }
       >
-        {Trans(showMore ? 'show less' : 'show more')}
+        {trans(showMore ? 'show less' : 'show more')}
       </Button>
 
       {showMore && (
@@ -216,7 +216,7 @@ export default function ReportSettings(props: GeneralProps) {
                 ? changeProperty('fileName', val)
                 : deleteProperty('fileName')
             }
-            label={Trans('fileName')}
+            label={trans('fileName')}
             id="fileName"
             InputProps={inputFAdornment}
             fullWidth
@@ -230,9 +230,9 @@ export default function ReportSettings(props: GeneralProps) {
                 ? changeProperty('lang', val)
                 : deleteProperty('lang')
             }
-            label={Trans('lang')}
+            label={trans('lang')}
             id="lang"
-            helperText={Trans('lang 2 letter iso code')}
+            helperText={trans('lang 2 letter iso code')}
           />
 
           <PropertyFont
@@ -251,7 +251,7 @@ export default function ReportSettings(props: GeneralProps) {
 
           <VarEditor {...props} />
 
-          <SectionName text={Trans('import export')} />
+          <SectionName text={trans('import export')} />
           <ShowUpload {...props} />
         </>
       )}

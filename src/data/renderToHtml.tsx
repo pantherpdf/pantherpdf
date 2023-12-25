@@ -9,7 +9,7 @@ import React, { CSSProperties } from 'react';
 import { renderToString } from 'react-dom/server';
 import { defaultReportCss } from '../types';
 import type { ReportCompiled } from '../types';
-import type { ItemRenderPreviewHelper, Widget } from '../widgets/types';
+import type { WidgetPreviewPropsBase, Widget } from '../widgets/types';
 import { getWidget } from '../widgets/allWidgets';
 import { PropertyFontGenCss } from '../widgets/PropertyFont';
 import { GoogleFontUrlImport } from '../widgets/GoogleFonts';
@@ -19,10 +19,10 @@ export function renderBody(
   widgets: Widget[],
   externalHelpers: { [key: string]: any } = {},
 ): React.ReactElement {
-  const helper: ItemRenderPreviewHelper = {
+  const helper: WidgetPreviewPropsBase = {
     renderItem: (item, helper) => {
       const w = getWidget(widgets, item.type);
-      return w.RenderPreview({ ...helper, item });
+      return w.Preview({ ...helper, item });
     },
     renderChildren: (chs, helper) => {
       if (!Array.isArray(chs)) {
@@ -32,7 +32,7 @@ export function renderBody(
         const w = getWidget(widgets, item.type);
         return (
           <React.Fragment key={idx}>
-            {w.RenderPreview({ ...helper, item })}
+            {w.Preview({ ...helper, item })}
           </React.Fragment>
         );
       });

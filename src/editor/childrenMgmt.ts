@@ -6,10 +6,10 @@
  */
 
 import type { Report } from '../types';
-import type { Item } from '../widgets/types';
+import type { WidgetItem } from '../widgets/types';
 
-export function findArrayInList(report: Report, wid: number[]): Item[] {
-  let arr: Item[] = report.children;
+export function findArrayInList(report: Report, wid: number[]): WidgetItem[] {
+  let arr: WidgetItem[] = report.widgets;
   for (const id of wid) {
     if (id >= arr.length) {
       throw new Error('bad id');
@@ -19,7 +19,7 @@ export function findArrayInList(report: Report, wid: number[]): Item[] {
   return arr;
 }
 
-export function findInList(report: Report, wid: number[]): Item {
+export function findInList(report: Report, wid: number[]): WidgetItem {
   if (wid.length === 0) {
     throw new Error('empty wid');
   }
@@ -37,8 +37,8 @@ export function removeFromList(report: Report, wid: number[]): Report {
     throw new Error('bad wid');
   }
 
-  const r: Report = { ...report, children: [...report.children] };
-  let lst: Item[] = r.children;
+  const r: Report = { ...report, widgets: [...report.widgets] };
+  let lst: WidgetItem[] = r.widgets;
 
   for (let i = 0; i < wid.length; ++i) {
     const id = wid[i];
@@ -66,14 +66,14 @@ export function removeFromList(report: Report, wid: number[]): Report {
 export function insertIntoList(
   report: Report,
   wid: number[],
-  obj: Item,
+  obj: WidgetItem,
 ): Report {
   if (wid.length === 0) {
     throw new Error('bad wid');
   }
 
-  const r: Report = { ...report, children: [...report.children] };
-  let lst: Item[] = r.children;
+  const r: Report = { ...report, widgets: [...report.widgets] };
+  let lst: WidgetItem[] = r.widgets;
 
   for (let i = 0; i < wid.length; ++i) {
     const id = wid[i];
@@ -143,10 +143,14 @@ export function idCmp(id1: number[], id2: number[]): boolean {
   return true;
 }
 
-export function updateItem(report: Report, wid: number[], obj: Item): Report {
+export function updateItem(
+  report: Report,
+  wid: number[],
+  obj: WidgetItem,
+): Report {
   const r = { ...report };
-  r.children = [...r.children];
-  let chs = r.children;
+  r.widgets = [...r.widgets];
+  let chs = r.widgets;
   for (let i = 0; i < wid.length; ++i) {
     const id = wid[i];
     if (id >= chs.length) {

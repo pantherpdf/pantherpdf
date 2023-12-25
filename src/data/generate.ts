@@ -1,10 +1,10 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2023
  * @license MIT
  */
 
-import type { ApiEndpoints, Output, Report } from '../types';
+import type { ApiEndpoints, GenerateResult, Report } from '../types';
 import compile from './compile';
 import fetchSourceData, { SourceData } from './fetchSourceData';
 import { transformData } from '../transforms/transformData';
@@ -44,27 +44,40 @@ export interface GenerateArgs {
  * Output: html with meta data
  * Note that PDF output is not directly supported by this library.
  */
-export default async function generate(props: GenerateArgs): Promise<Output> {
+export default async function generate(
+  props: GenerateArgs,
+): Promise<GenerateResult> {
+  const useWidgets = Array.isArray(props.widgets)
+    ? props.widgets
+    : defaultWidgets;
+  const inputData = await generateData(props);
+  const reportCompiled = await compile(
+    props.report,
+    inputData,
+    useWidgets,
+    props.api,
+  );
+  const html = renderToHtml(reportCompiled, useWidgets);
+  return {
+    html,
+    properties: reportCompiled.properties,
+  };
+}
+
+/**
+ * Generate target
+ *
+ * Input: report, source data
+ * Output: html with meta data
+ * Note that PDF output is not directly supported by this library.
+ */
+export async function generateData(props: GenerateArgs): Promise<unknown> {
   const { report, api, data } = props;
 
   const source = data ? await fetchSourceData(api, data) : undefined;
   const useTransforms = Array.isArray(props.transforms)
     ? props.transforms
     : defaultTransforms;
-  const useWidgets = Array.isArray(props.widgets)
-    ? props.widgets
-    : defaultWidgets;
-  const inputData = await transformData(
-    useTransforms,
-    source,
-    report.transforms,
-  );
 
-  const reportCompiled = await compile(report, inputData, useWidgets, api);
-
-  const html = renderToHtml(reportCompiled, useWidgets);
-  return {
-    html,
-    properties: reportCompiled.properties,
-  };
+  return await transformData(useTransforms, source, report.transforms);
 }

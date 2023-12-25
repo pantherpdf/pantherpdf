@@ -5,23 +5,23 @@
  */
 
 import React from 'react';
-import type { Item, ItemCompiled, Widget } from './types';
+import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { faHammer } from '@fortawesome/free-solid-svg-icons';
-import BoxName from './BoxName';
+import WidgetEditorName from './WidgetEditorName';
 import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
-import Trans, { TransName } from '../translation';
+import trans, { transName } from '../translation';
 import TextField from '@mui/material/TextField';
 
-export interface SetVarData extends Item {
+export interface SetVarData extends WidgetItem {
   type: 'SetVar';
   source: string;
   varName: string;
   varValue: unknown;
 }
 
-export interface SetVarCompiled extends ItemCompiled {
+export interface SetVarCompiled extends WidgetCompiled {
   type: 'SetVar';
-  children: ItemCompiled[];
+  children: WidgetCompiled[];
 }
 
 export const SetVar: Widget = {
@@ -55,21 +55,24 @@ export const SetVar: Widget = {
     };
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as SetVarData;
     return (
-      <BoxName {...props} name={`${TransName(SetVar.name)} - ${item.varName}`}>
+      <WidgetEditorName
+        {...props}
+        name={`${transName(SetVar.name)} - ${item.varName}`}
+      >
         {props.renderWidgets(props.item.children, props.wid)}
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     const item = props.item as SetVarCompiled;
     return <>{props.renderChildren(item.children, props)}</>;
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const item = props.item as SetVarData;
     return (
       <>
@@ -77,7 +80,7 @@ export const SetVar: Widget = {
           component={TextField}
           value={item.source}
           onChange={val => props.setItem({ ...item, source: val })}
-          label={Trans('source data')}
+          label={trans('source data')}
           id="SetVar-source"
           InputProps={inputFAdornment}
         />
@@ -86,9 +89,9 @@ export const SetVar: Widget = {
           component={TextField}
           value={item.varName}
           onChange={val => props.setItem({ ...item, varName: val })}
-          label={Trans('varName')}
+          label={trans('varName')}
           id="SetVar-varName"
-          helperText={Trans('repeat - current item is this var')}
+          helperText={trans('repeat - current item is this var')}
         />
       </>
     );

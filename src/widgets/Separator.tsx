@@ -5,12 +5,12 @@
  */
 
 import React, { CSSProperties } from 'react';
-import type { Item, ItemCompiled, Widget } from './types';
+import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { tuple } from '../types';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import PropertyBorder, { Border, genBorderCss } from './PropertyBorder';
-import Trans from '../translation';
-import BoxName from './BoxName';
+import trans from '../translation';
+import WidgetEditorName from './WidgetEditorName';
 import PropertySlider from './PropertySlider';
 import SectionName from '../components/SectionName';
 
@@ -22,8 +22,8 @@ interface Properties {
   marginBottom: number;
   border: Border;
 }
-export type SeparatorData = Item & Properties;
-export type SeparatorCompiled = ItemCompiled & Properties;
+export type SeparatorData = WidgetItem & Properties;
+export type SeparatorCompiled = WidgetCompiled & Properties;
 
 function GenStyle(item: SeparatorData | SeparatorCompiled): CSSProperties {
   return {
@@ -63,22 +63,22 @@ export const Separator: Widget = {
     };
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as SeparatorData;
     return (
-      <BoxName {...props} name={Separator.name}>
+      <WidgetEditorName {...props} name={Separator.name}>
         <hr style={GenStyle(item)} />
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     const item = props.item as SeparatorCompiled;
     const style = GenStyle(item);
     return <hr style={style} />;
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const item = props.item as SeparatorData;
     return (
       <>
@@ -88,7 +88,7 @@ export const Separator: Widget = {
           onChange={val => props.setItem({ ...props.item, border: val })}
         />
 
-        <SectionName text={Trans('margin top')} />
+        <SectionName text={trans('margin top')} />
         <PropertySlider
           id="sep-marginTop"
           min={0}
@@ -97,7 +97,7 @@ export const Separator: Widget = {
           onChange={val => props.setItem({ ...props.item, marginTop: val })}
         />
 
-        <SectionName text={Trans('margin bottom')} />
+        <SectionName text={trans('margin bottom')} />
         <PropertySlider
           id="sep-marginBottom"
           min={0}

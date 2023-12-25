@@ -6,12 +6,12 @@
 
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import Trans from '../translation';
+import trans from '../translation';
 
 export default function ErrorAlert({ msg }: { msg: string }) {
   return (
     <Alert severity="error">
-      <AlertTitle>{Trans('error')}</AlertTitle>
+      <AlertTitle>{trans('error')}</AlertTitle>
       {msg}
     </Alert>
   );

@@ -3,7 +3,7 @@ import Property4SideInput, {
   Value as Property4SideInputValue,
 } from '../widgets/Property4SideInput';
 import SectionName from '../components/SectionName';
-import Trans from '../translation';
+import trans from '../translation';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
@@ -71,8 +71,8 @@ export default function PaperEditor(props: PaperEditorProps) {
   return (
     <>
       <SectionName
-        text={Trans('paper')}
-        secondaryText={Trans('0 means default')}
+        text={trans('paper')}
+        secondaryText={trans('0 means default')}
       />
 
       <InputApplyOnEnter
@@ -80,7 +80,7 @@ export default function PaperEditor(props: PaperEditorProps) {
         value={width}
         onChange={val => changeProperty('width', val as number)}
         type="number"
-        label={Trans('width')}
+        label={trans('width')}
         id="paperWidth"
         InputProps={props.unit === 'mm' ? inputAdornmentMm : inputAdornmentInch}
       />
@@ -90,12 +90,12 @@ export default function PaperEditor(props: PaperEditorProps) {
         value={height}
         onChange={val => changeProperty('height', val as number)}
         type="number"
-        label={Trans('height')}
+        label={trans('height')}
         id="paperHeight"
         InputProps={props.unit === 'mm' ? inputAdornmentMm : inputAdornmentInch}
       />
 
-      <SectionName text={Trans('margin')} secondaryText={props.unit} />
+      <SectionName text={trans('margin')} secondaryText={props.unit} />
       <Property4SideInput value={margin} onChange={changeMargin} />
     </>
   );

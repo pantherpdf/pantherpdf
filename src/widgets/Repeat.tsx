@@ -5,12 +5,12 @@
  */
 
 import React, { CSSProperties } from 'react';
-import type { Item, ItemCompiled, Widget } from './types';
+import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { tuple } from '../types';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import BoxName from './BoxName';
+import WidgetEditorName from './WidgetEditorName';
 import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
-import Trans, { TransName, trKeys } from '../translation';
+import trans, { transName, trKeys } from '../translation';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
@@ -23,16 +23,16 @@ const RepeatDirectionTrans: { [key in RepeatDirection]: trKeys } = {
   grid: 'repeat - direction grid',
 };
 
-export interface RepeatData extends Item {
+export interface RepeatData extends WidgetItem {
   type: 'Repeat';
   source: string;
   varName: string;
   direction: RepeatDirection;
 }
 
-export interface RepeatCompiled extends ItemCompiled {
+export interface RepeatCompiled extends WidgetCompiled {
   type: 'Repeat';
-  children: ItemCompiled[][];
+  children: WidgetCompiled[][];
   direction: RepeatDirection;
   addChildElement: boolean;
 }
@@ -59,7 +59,7 @@ export const Repeat: Widget = {
         `Repeat: expected source to be array but got ${typeof value}`,
       );
     }
-    const children: ItemCompiled[][] = [];
+    const children: WidgetCompiled[][] = [];
     for (let i = 0; i < value.length; ++i) {
       helper.formulaHelper.push(dt.varName, value[i]);
       helper.formulaHelper.push(dt.varName + '_i', i);
@@ -98,17 +98,20 @@ export const Repeat: Widget = {
     };
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as RepeatData;
     return (
-      <BoxName {...props} name={`${TransName(Repeat.name)} - ${item.varName}`}>
+      <WidgetEditorName
+        {...props}
+        name={`${transName(Repeat.name)} - ${item.varName}`}
+      >
         {props.item.children &&
           props.renderWidgets(props.item.children, props.wid)}
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     const item = props.item as RepeatCompiled;
     if (item.direction === 'rows') {
       // maybe add to cssItem:
@@ -168,7 +171,7 @@ export const Repeat: Widget = {
     }
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const item = props.item as RepeatData;
     return (
       <>
@@ -176,7 +179,7 @@ export const Repeat: Widget = {
           component={TextField}
           value={item.source}
           onChange={val => props.setItem({ ...item, source: val })}
-          label={Trans('source data')}
+          label={trans('source data')}
           id="Repeat-source"
           InputProps={inputFAdornment}
         />
@@ -185,27 +188,27 @@ export const Repeat: Widget = {
           component={TextField}
           value={item.varName}
           onChange={val => props.setItem({ ...item, varName: val })}
-          label={Trans('varName')}
+          label={trans('varName')}
           id="Repeat-varName"
         />
 
         <Typography color="GrayText">
-          <small>{Trans('repeat - current item is this var')}</small>
+          <small>{trans('repeat - current item is this var')}</small>
         </Typography>
         <Typography color="GrayText">
-          <small>{Trans('repeat - index name', [`${item.varName}_i`])}</small>
+          <small>{trans('repeat - index name', [`${item.varName}_i`])}</small>
         </Typography>
 
         <TextField
           select
-          label={Trans('repeat - direction')}
+          label={trans('repeat - direction')}
           value={item.direction}
           onChange={e => props.setItem({ ...item, direction: e.target.value })}
           id="Repeat-direction"
         >
           {RepeatDirections.map(m => (
             <MenuItem key={m} value={m}>
-              {Trans(RepeatDirectionTrans[m])}
+              {trans(RepeatDirectionTrans[m])}
             </MenuItem>
           ))}
         </TextField>

@@ -5,28 +5,28 @@
  */
 
 import React, { CSSProperties } from 'react';
-import type { Widget, Item, ItemCompiled } from './types';
+import type { Widget, WidgetItem, WidgetCompiled } from './types';
 import { faColumns, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
-import BoxName from './BoxName';
+import WidgetEditorName from './WidgetEditorName';
 import InputApplyOnEnter, {
   WidthRegex,
   WidthOptions,
 } from './InputApplyOnEnter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Trans from '../translation';
+import trans from '../translation';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
-export interface ColumnsCtData extends Item {
+export interface ColumnsCtData extends WidgetItem {
   type: 'ColumnsCt';
 }
 
-export interface ColumnsCtCompiled extends ItemCompiled {
+export interface ColumnsCtCompiled extends WidgetCompiled {
   type: 'ColumnsCt';
-  children: ItemCompiled[];
+  children: WidgetCompiled[];
 }
 
 export const ColumnsCt: Widget = {
@@ -48,17 +48,17 @@ export const ColumnsCt: Widget = {
     };
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     // handled by Columns
     return null;
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     // handled by Columns
     return null;
   },
 
-  RenderProperties: function () {
+  Properties: function () {
     return null;
   },
 
@@ -67,12 +67,12 @@ export const ColumnsCt: Widget = {
   canDrag: false,
 };
 
-export interface ColumnsData extends Item {
+export interface ColumnsData extends WidgetItem {
   type: 'Columns';
   widths: string[];
 }
 
-export interface ColumnsCompiled extends ItemCompiled {
+export interface ColumnsCompiled extends WidgetCompiled {
   type: 'Columns';
   widths: string[];
   children: ColumnsCtCompiled[];
@@ -125,13 +125,13 @@ export const Columns: Widget = {
     };
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as ColumnsData;
     const baseStyle: CSSProperties = {
       border: '1px solid #ccc',
     };
     return (
-      <BoxName {...props} name={Columns.name}>
+      <WidgetEditorName {...props} name={Columns.name}>
         <div
           style={{
             display: 'flex',
@@ -150,11 +150,11 @@ export const Columns: Widget = {
             </div>
           ))}
         </div>
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     const item = props.item as ColumnsCompiled;
     return (
       <div style={{ display: 'flex' }}>
@@ -170,7 +170,7 @@ export const Columns: Widget = {
     );
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const item = props.item as ColumnsData;
     if (item.children.length !== item.widths.length) {
       throw new Error(
@@ -180,13 +180,13 @@ export const Columns: Widget = {
     return (
       <>
         <div>
-          {Trans('width')}
+          {trans('width')}
           <br />
           <Typography color="GrayText">
             <small>
               {WidthOptions}
               <br />
-              {Trans('columns - empty = auto')}
+              {trans('columns - empty = auto')}
             </small>
           </Typography>
         </div>
@@ -212,7 +212,7 @@ export const Columns: Widget = {
                 chs.splice(idx, 1);
                 props.setItem({ ...item, widths: ws, children: chs });
               }}
-              title={Trans('remove')}
+              title={trans('remove')}
             >
               <FontAwesomeIcon icon={faTimes} />
             </IconButton>
@@ -232,7 +232,7 @@ export const Columns: Widget = {
             }}
             startIcon={<FontAwesomeIcon icon={faPlus} />}
           >
-            {Trans('columns add')}
+            {trans('columns add')}
           </Button>
         </div>
       </>

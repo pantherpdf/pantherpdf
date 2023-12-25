@@ -16,24 +16,24 @@ import {
   updateItem,
 } from './childrenMgmt';
 import { sampleReport } from './sampleReport';
-import { ReportForceChildren } from '../unitTestHelpers';
+import { ReportForceWidgets } from '../unitTestHelpers';
 import type { Report } from '../types';
 
 test('findInList', () => {
-  let r: ReportForceChildren<RepeatData | TextSimpleData>;
+  let r: ReportForceWidgets<RepeatData | TextSimpleData>;
   r = { ...sampleReport };
 
   expect(() => findInList(r, [])).toThrow();
   expect(() => findInList(r, [0])).toThrow();
   expect(() => findInList(r, [200, 1])).toThrow();
 
-  r.children = [
+  r.widgets = [
     { type: 'TextSimple', formula: '"Hello World: "+data.num', children: [] },
   ];
   expect(() => findInList(r, [1])).toThrow();
-  expect(findInList(r, [0])).toBe(r.children[0]);
+  expect(findInList(r, [0])).toBe(r.widgets[0]);
 
-  r.children = [
+  r.widgets = [
     {
       type: 'Repeat',
       varName: 'rp',
@@ -57,23 +57,23 @@ test('findInList', () => {
       ],
     },
   ];
-  expect(findInList(r, [1, 2])).toBe(r.children[1].children?.[2]);
+  expect(findInList(r, [1, 2])).toBe(r.widgets[1].children?.[2]);
 });
 
 test('removeFromList simple', () => {
-  let r: ReportForceChildren<RepeatData | TextSimpleData>;
+  let r: ReportForceWidgets<RepeatData | TextSimpleData>;
   r = { ...sampleReport };
 
   expect(() => removeFromList(r, [])).toThrow();
   expect(() => removeFromList(r, [0])).toThrow();
   expect(() => removeFromList(r, [200, 0])).toThrow();
 
-  r.children = [
+  r.widgets = [
     { type: 'TextSimple', formula: '"Hello World: "+data.num', children: [] },
   ];
   expect(() => removeFromList(r, [1])).toThrow();
   r = removeFromList(r, [0]);
-  expect(r.children.length).toBe(0);
+  expect(r.widgets.length).toBe(0);
 });
 
 test('removeFromList', () => {
@@ -95,20 +95,20 @@ test('removeFromList', () => {
   const c0: RepeatData = { type:'Repeat', varName:'rp', source:'data.arr + ["a","b"]', children:[t0,t1,t2], direction:'rows' }
   // prettier-ignore
   const c1: RepeatData = { type:'Repeat', varName:'rp', source:'data.arr + ["a","b"]', children:[t3,t4,t5], direction:'rows' }
-  r.children = [c0, c1];
+  r.widgets = [c0, c1];
   r = removeFromList(r, [1, 0]);
-  expect(r.children.length).toBe(2);
-  expect(r.children[0]).toBe(c0);
-  expect(r.children[1]).not.toBe(c1); // should make a copy
-  expect(r.children[1].children?.length).toBe(2);
-  expect(r.children[1].children?.[0]).toBe(t4);
-  expect(r.children[1].children?.[1]).toBe(t5);
+  expect(r.widgets.length).toBe(2);
+  expect(r.widgets[0]).toBe(c0);
+  expect(r.widgets[1]).not.toBe(c1); // should make a copy
+  expect(r.widgets[1].children?.length).toBe(2);
+  expect(r.widgets[1].children?.[0]).toBe(t4);
+  expect(r.widgets[1].children?.[1]).toBe(t5);
   r = removeFromList(r, [1]);
-  expect(r.children.length).toBe(1);
-  expect(r.children[0]).toBe(c0);
-  expect(r.children[0].children?.length).toBe(3);
+  expect(r.widgets.length).toBe(1);
+  expect(r.widgets[0]).toBe(c0);
+  expect(r.widgets[0].children?.length).toBe(3);
   r = removeFromList(r, [0]);
-  expect(r.children.length).toBe(0);
+  expect(r.widgets.length).toBe(0);
 });
 
 test('insertIntoList', () => {
@@ -138,43 +138,43 @@ test('insertIntoList', () => {
   r_old = r;
   r = insertIntoList(r, [0], c0);
   expect(r).not.toBe(r_old);
-  expect(r.children[0]).toBe(c0);
+  expect(r.widgets[0]).toBe(c0);
   r_old = r;
-  let children_old = r.children;
+  let children_old = r.widgets;
   r = insertIntoList(r, [0], c1);
-  expect(r.children[0]).toBe(c1);
-  expect(r.children[1]).toBe(c0);
-  expect(r.children).not.toBe(children_old);
+  expect(r.widgets[0]).toBe(c1);
+  expect(r.widgets[1]).toBe(c0);
+  expect(r.widgets).not.toBe(children_old);
 
   expect(() => insertIntoList(r, [0, 200], t3)).toThrow();
   expect(() => insertIntoList(r, [2, 0], t3)).toThrow();
 
-  children_old = r.children[0].children || [];
-  expect(r.children[0].children).toBe(children_old);
+  children_old = r.widgets[0].children || [];
+  expect(r.widgets[0].children).toBe(children_old);
   expect(() => insertIntoList(r, [0, 1], t3)).toThrow();
 
   r = insertIntoList(r, [0, 0], t3);
-  expect(r.children[0].children).not.toBe(children_old);
-  expect(r.children[0].children?.length).toBe(1);
-  expect(r.children[0].children?.[0]).toBe(t3);
+  expect(r.widgets[0].children).not.toBe(children_old);
+  expect(r.widgets[0].children?.length).toBe(1);
+  expect(r.widgets[0].children?.[0]).toBe(t3);
 
   r = insertIntoList(r, [0, 0], t4);
-  expect(r.children[0].children?.length).toBe(2);
-  expect(r.children[0].children?.[0]).toBe(t4);
-  expect(r.children[0].children?.[1]).toBe(t3);
+  expect(r.widgets[0].children?.length).toBe(2);
+  expect(r.widgets[0].children?.[0]).toBe(t4);
+  expect(r.widgets[0].children?.[1]).toBe(t3);
 
   r = insertIntoList(r, [0, 2], t5);
-  expect(r.children[0].children?.length).toBe(3);
-  expect(r.children[0].children?.[0]).toBe(t4);
-  expect(r.children[0].children?.[1]).toBe(t3);
-  expect(r.children[0].children?.[2]).toBe(t5);
+  expect(r.widgets[0].children?.length).toBe(3);
+  expect(r.widgets[0].children?.[0]).toBe(t4);
+  expect(r.widgets[0].children?.[1]).toBe(t3);
+  expect(r.widgets[0].children?.[2]).toBe(t5);
 
   r = insertIntoList(r, [0, 2], t6);
-  expect(r.children[0].children?.length).toBe(4);
-  expect(r.children[0].children?.[0]).toBe(t4);
-  expect(r.children[0].children?.[1]).toBe(t3);
-  expect(r.children[0].children?.[2]).toBe(t6);
-  expect(r.children[0].children?.[3]).toBe(t5);
+  expect(r.widgets[0].children?.length).toBe(4);
+  expect(r.widgets[0].children?.[0]).toBe(t4);
+  expect(r.widgets[0].children?.[1]).toBe(t3);
+  expect(r.widgets[0].children?.[2]).toBe(t6);
+  expect(r.widgets[0].children?.[3]).toBe(t5);
 });
 
 test('updateDestAfterRemove', () => {
@@ -252,7 +252,7 @@ test('updateItem', () => {
   const c0: RepeatData = { type: 'Repeat', varName: 'rp', source: 'data.arr + ["a","b"]', children: [t0,t1,t2], direction: 'rows' };
   // prettier-ignore
   const c1: RepeatData = { type: 'Repeat', varName: 'rp', source: 'data.arr + ["a","b"]', children: [t3,t4,t5], direction: 'rows' };
-  r.children = [c0, c1];
+  r.widgets = [c0, c1];
 
   expect(findInList(r, [1, 1])).toBe(t4);
   const t4_2 = { ...t4 };

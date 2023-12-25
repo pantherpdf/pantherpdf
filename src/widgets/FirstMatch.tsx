@@ -5,23 +5,23 @@
  */
 
 import React from 'react';
-import type { Item, ItemCompiled, Widget } from './types';
+import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { faHandRock } from '@fortawesome/free-solid-svg-icons';
-import BoxName from './BoxName';
+import WidgetEditorName from './WidgetEditorName';
 import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
-import Trans, { TransName } from '../translation';
+import trans, { transName } from '../translation';
 import TextField from '@mui/material/TextField';
 
-export interface FirstMatchData extends Item {
+export interface FirstMatchData extends WidgetItem {
   type: 'FirstMatch';
   source: string;
   condition: string;
   varName: string;
 }
 
-export interface FirstMatchCompiled extends ItemCompiled {
+export interface FirstMatchCompiled extends WidgetCompiled {
   type: 'FirstMatch';
-  children: ItemCompiled[];
+  children: WidgetCompiled[];
 }
 
 export const FirstMatch: Widget = {
@@ -67,24 +67,24 @@ export const FirstMatch: Widget = {
     return result;
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as FirstMatchData;
     return (
-      <BoxName
+      <WidgetEditorName
         {...props}
-        name={`${TransName(FirstMatch.name)}: ${item.varName}`}
+        name={`${transName(FirstMatch.name)}: ${item.varName}`}
       >
         {props.renderWidgets(item.children, props.wid)}
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     const item = props.item as FirstMatchCompiled;
     return <>{props.renderChildren(item.children, props)}</>;
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const item = props.item as FirstMatchData;
     return (
       <>
@@ -92,7 +92,7 @@ export const FirstMatch: Widget = {
           component={TextField}
           value={item.source}
           onChange={val => props.setItem({ ...item, source: val })}
-          label={Trans('source data')}
+          label={trans('source data')}
           id="FirstMatch-source"
           InputProps={inputFAdornment}
         />
@@ -101,19 +101,19 @@ export const FirstMatch: Widget = {
           component={TextField}
           value={item.condition}
           onChange={val => props.setItem({ ...item, condition: val })}
-          label={Trans('condition')}
+          label={trans('condition')}
           id="FirstMatch-condition"
           InputProps={inputFAdornment}
-          helperText={Trans('current item is in var -name-', [item.varName])}
+          helperText={trans('current item is in var -name-', [item.varName])}
         />
 
         <InputApplyOnEnter
           component={TextField}
           value={item.varName}
           onChange={val => props.setItem({ ...item, varName: val })}
-          label={Trans('varName')}
+          label={trans('varName')}
           id="FirstMatch-varName"
-          helperText={Trans('repeat - current item is this var')}
+          helperText={trans('repeat - current item is this var')}
         />
       </>
     );

@@ -5,12 +5,12 @@
  */
 
 import React, { CSSProperties } from 'react';
-import type { Item, ItemCompiled, Widget } from './types';
+import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { faBorderStyle } from '@fortawesome/free-solid-svg-icons';
 import PropertyColor from './PropertyColor';
 import PropertyBorder, { Border, genBorderCss } from './PropertyBorder';
-import BoxName from './BoxName';
-import Trans from '../translation';
+import WidgetEditorName from './WidgetEditorName';
+import trans from '../translation';
 import InputApplyOnEnter, {
   WidthOptions,
   WidthRegex,
@@ -42,9 +42,9 @@ interface Properties {
   pageBreakAvoid?: boolean;
   font: TFont;
 }
-export type FrameData = Item & Properties;
-export type FrameCompiled = ItemCompiled &
-  Properties & { children: ItemCompiled[] };
+export type FrameData = WidgetItem & Properties;
+export type FrameCompiled = WidgetCompiled &
+  Properties & { children: WidgetCompiled[] };
 
 function genStyle(
   item: FrameData | FrameCompiled,
@@ -191,20 +191,24 @@ export const Frame: Widget = {
     return dt2;
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as FrameData;
     const fontStyle = PropertyFontExtractStyle(item.font);
     if (fontStyle) {
       LoadGoogleFontCss(fontStyle);
     }
     return (
-      <BoxName {...props} style={genStyle(item, false)} name={Frame.name}>
+      <WidgetEditorName
+        {...props}
+        style={genStyle(item, false)}
+        name={Frame.name}
+      >
         {props.renderWidgets(item.children, props.wid)}
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     const item = props.item as FrameCompiled;
     const style = genStyle(item, true);
     return (
@@ -212,7 +216,7 @@ export const Frame: Widget = {
     );
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const item = props.item as FrameData;
     return (
       <>
@@ -242,7 +246,7 @@ export const Frame: Widget = {
               }}
             />
           }
-          label={Trans('background')}
+          label={trans('background')}
         />
         {!!item.backgroundColor && (
           <PropertyColor
@@ -253,7 +257,7 @@ export const Frame: Widget = {
 
         <Property4SideRange
           id="Frame-margin"
-          label={Trans('margin')}
+          label={trans('margin')}
           min={0}
           max={80}
           value={item.margin}
@@ -262,14 +266,14 @@ export const Frame: Widget = {
 
         <Property4SideRange
           id="Frame-padding"
-          label={Trans('padding')}
+          label={trans('padding')}
           min={0}
           max={80}
           value={item.padding}
           onChange={val => props.setItem({ ...props.item, padding: val })}
         />
 
-        <SectionName text={Trans('border')} />
+        <SectionName text={trans('border')} />
 
         <FormControlLabel
           control={
@@ -289,7 +293,7 @@ export const Frame: Widget = {
               }}
             />
           }
-          label={Trans('border different sides')}
+          label={trans('border different sides')}
         />
 
         {Array.isArray(item.border) &&
@@ -300,7 +304,7 @@ export const Frame: Widget = {
               : [item.border, item.border, item.border, item.border];
             return (
               <React.Fragment key={side}>
-                <SectionName text={Trans(`border-${side}`)} />
+                <SectionName text={trans(`border-${side}`)} />
                 <PropertyBorder
                   id={`Frame-border-${side}`}
                   value={val2[idx]}
@@ -321,7 +325,7 @@ export const Frame: Widget = {
           />
         )}
 
-        <SectionName text={Trans('other')} />
+        <SectionName text={trans('other')} />
         <PropertyFont
           value={item.font}
           onChange={val => props.setItem({ ...props.item, font: val })}
@@ -338,7 +342,7 @@ export const Frame: Widget = {
               }}
             />
           }
-          label={Trans('page-break-avoid')}
+          label={trans('page-break-avoid')}
         />
       </>
     );
@@ -356,7 +360,7 @@ function SizeInput(props: SizeInputProps) {
   return (
     <FormControl fullWidth>
       <InputLabel htmlFor={id}>
-        {Trans(props.type)}
+        {trans(props.type)}
         <Typography component="span" sx={{ marginLeft: 0.25 }}>
           <small>[{WidthOptions}]</small>
         </Typography>

@@ -26,7 +26,7 @@ test('text', async () => {
 test('should include google font', async () => {
   const report: Report = {
     ...sampleReport,
-    children: [],
+    widgets: [],
   };
   report.properties = {
     ...report.properties,

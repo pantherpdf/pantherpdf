@@ -5,18 +5,18 @@
  */
 
 import React from 'react';
-import type { Item, ItemCompiled, Widget } from './types';
+import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
-import BoxName from './BoxName';
+import WidgetEditorName from './WidgetEditorName';
 import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
 import TextField from '@mui/material/TextField';
 
-export interface TextSimpleData extends Item {
+export interface TextSimpleData extends WidgetItem {
   type: 'TextSimple';
   formula: string;
 }
 
-export interface TextSimpleCompiled extends ItemCompiled {
+export interface TextSimpleCompiled extends WidgetCompiled {
   type: 'TextSimple';
   data: string;
 }
@@ -44,21 +44,21 @@ export const TextSimple: Widget = {
     };
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as TextSimpleData;
     return (
-      <BoxName {...props} name={TextSimple.name}>
+      <WidgetEditorName {...props} name={TextSimple.name}>
         <div>{item.formula}</div>
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     const item = props.item as TextSimpleCompiled;
     return <div>{item.data}</div>;
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const item = props.item as TextSimpleData;
     return (
       <>

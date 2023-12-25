@@ -5,12 +5,12 @@
  */
 
 import React from 'react';
-import type { Item, ItemCompiled, Widget } from './types';
+import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { faGripLines } from '@fortawesome/free-solid-svg-icons';
 import Divider from '@mui/material/Divider';
 
-export type PageBreakData = Item & { type: 'PageBreak' };
-export type PageBreakCompiled = ItemCompiled & { type: 'PageBreak' };
+export type PageBreakData = WidgetItem & { type: 'PageBreak' };
+export type PageBreakCompiled = WidgetCompiled & { type: 'PageBreak' };
 
 export const PageBreak: Widget = {
   id: 'PageBreak',
@@ -30,7 +30,7 @@ export const PageBreak: Widget = {
     };
   },
 
-  RenderEditor: function () {
+  Editor: function () {
     return (
       <Divider
         style={{
@@ -44,11 +44,11 @@ export const PageBreak: Widget = {
     );
   },
 
-  RenderPreview: function () {
+  Preview: function () {
     return <div style={{ pageBreakBefore: 'always' }} />;
   },
 
-  RenderProperties: function () {
+  Properties: function () {
     return null;
   },
 };

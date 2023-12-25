@@ -11,7 +11,7 @@ import {
   extractTag,
 } from './TextHtml';
 import {
-  ReportForceChildren,
+  ReportForceWidgets,
   compileComponentTest,
   compileTest,
   renderWidget,
@@ -94,9 +94,9 @@ test('TextHtml should render html', async () => {
 });
 
 test('TextHtml should include google font', async () => {
-  const report: ReportForceChildren<TextHtmlData> = {
+  const report: ReportForceWidgets<TextHtmlData> = {
     ...sampleReport,
-    children: [
+    widgets: [
       {
         type: 'TextHtml',
         value: ValueInternalFromEditor('text'),

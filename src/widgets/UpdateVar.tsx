@@ -6,12 +6,12 @@
 
 import React from 'react';
 import type { Report } from '../types';
-import type { Widget, Item, ItemCompiled } from './types';
+import type { Widget, WidgetItem, WidgetCompiled } from './types';
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import BoxName from './BoxName';
+import WidgetEditorName from './WidgetEditorName';
 import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
 import { findInList } from '../editor/childrenMgmt';
-import Trans from '../translation';
+import trans from '../translation';
 import { SetVarData } from './SetVar';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -49,13 +49,13 @@ function getAllVars(report: Report, wid: number[]): GetAllVars[] {
   return arr;
 }
 
-export interface UpdateVarData extends Item {
+export interface UpdateVarData extends WidgetItem {
   type: 'UpdateVar';
   varName: string;
   formula: string;
 }
 
-export interface UpdateVarCompiled extends ItemCompiled {
+export interface UpdateVarCompiled extends WidgetCompiled {
   type: 'UpdateVar';
 }
 
@@ -94,14 +94,14 @@ export const UpdateVar: Widget = {
     };
   },
 
-  RenderEditor: function (props) {
+  Editor: function (props) {
     const item = props.item as UpdateVarData;
     function Impl() {
       const vars = getAllVars(props.report, props.wid);
       if (item.varName.length === 0) {
         return (
           <Alert severity="error">
-            {Trans('UpdateVar error variable not selected')}
+            {trans('UpdateVar error variable not selected')}
           </Alert>
         );
       }
@@ -109,14 +109,14 @@ export const UpdateVar: Widget = {
       if (!varExists) {
         return (
           <Alert severity="error">
-            {Trans('UpdateVar error variable doesnt exist')}
+            {trans('UpdateVar error variable doesnt exist')}
           </Alert>
         );
       }
       if (item.formula.trim().length === 0) {
         return (
           <Alert severity="error">
-            {Trans('UpdateVar error formula empty')}
+            {trans('UpdateVar error formula empty')}
           </Alert>
         );
       }
@@ -133,17 +133,17 @@ export const UpdateVar: Widget = {
       );
     }
     return (
-      <BoxName {...props} name={UpdateVar.name}>
+      <WidgetEditorName {...props} name={UpdateVar.name}>
         <Impl />
-      </BoxName>
+      </WidgetEditorName>
     );
   },
 
-  RenderPreview: function (props) {
+  Preview: function (props) {
     return null;
   },
 
-  RenderProperties: function (props) {
+  Properties: function (props) {
     const vars = getAllVars(props.report, props.wid);
     const item = props.item as UpdateVarData;
     const varData = vars.find(v => v.name === 'data' && v.owner === undefined);
@@ -154,7 +154,7 @@ export const UpdateVar: Widget = {
       <>
         <TextField
           select
-          label={Trans('varName')}
+          label={trans('varName')}
           value={item.varName}
           onChange={e => props.setItem({ ...item, varName: e.target.value })}
           id="UpdateVar-varName"
@@ -183,7 +183,7 @@ export const UpdateVar: Widget = {
           component={TextField}
           value={item.formula}
           onChange={val => props.setItem({ ...item, formula: val })}
-          label={Trans('formula')}
+          label={trans('formula')}
           id="UpdateVar-Formula"
           InputProps={inputFAdornment}
         />
