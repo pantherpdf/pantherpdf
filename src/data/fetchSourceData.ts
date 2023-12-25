@@ -9,7 +9,9 @@ import type { ApiEndpoints } from '../types';
 export type SourceData =
   | { type: 'as-is'; value: unknown }
   | { type: 'javascript'; code: string }
-  | { type: 'url'; url: string };
+  | { type: 'url'; url: string }
+  | { type: 'json'; value: string }
+  | { type: 'callback'; callback: () => unknown };
 
 /** Load unmodified source data from specified source */
 export default async function fetchSourceData(
@@ -27,6 +29,10 @@ export default async function fetchSourceData(
       return await api.evaluateJavaScript(obj.code);
     case 'url':
       return getDataFromUrl(obj.url, api);
+    case 'json':
+      return JSON.parse(obj.value);
+    case 'callback':
+      return await obj.callback();
     default:
       const exhaustiveCheck: never = type;
       throw new Error(`Unknown data type: ${exhaustiveCheck}`);

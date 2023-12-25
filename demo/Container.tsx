@@ -41,8 +41,10 @@ class Employee extends Person {
   }
 }
 
-const sampleData = new Employee('Alice', 30, 'Iceberg mover');
-const sampleDataWrapper: SourceData = { type: 'as-is', value: sampleData };
+const sampleDataWrapper: SourceData = {
+  type: 'callback',
+  callback: () => new Employee('Alice', 30, 'Iceberg mover'),
+};
 
 export default function Container() {
   const [report, setReport] = useState<Report>(sampleReport);

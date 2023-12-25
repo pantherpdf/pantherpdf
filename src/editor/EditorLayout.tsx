@@ -198,8 +198,8 @@ export default function Layout(
           return;
         }
         props.setSourceDataOverride({
-          type: 'javascript',
-          code: e2.target.result,
+          type: 'json',
+          value: e2.target.result,
         });
       };
       reader.readAsText(f);

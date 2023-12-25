@@ -528,7 +528,7 @@ function OverrideLink(props: OverrideLinkProps) {
             }
             // empty when cancelled
             if (text) {
-              props.setSourceDataOverride({ type: 'javascript', code: text });
+              props.setSourceDataOverride({ type: 'json', value: text });
             }
           }}
           title={Trans('load local json file')}
