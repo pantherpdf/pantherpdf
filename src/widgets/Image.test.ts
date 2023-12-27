@@ -1,4 +1,5 @@
 /**
+ * @jest-environment node
  * @project PantherPDF Report Editor
  * @copyright Ignac Banic 2023
  * @license MIT

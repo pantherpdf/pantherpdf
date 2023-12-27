@@ -14,18 +14,28 @@ import trans from '../translation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
+const loadingMagicKey = 'loading';
+
 function useCompiledHtml(props: GeneralProps): DataOrError {
   const data = useTransformedData(props);
-  const [html, setHtml] = useState<DataOrError>({ ok: true, value: 'loading' });
+  const [html, setHtml] = useState<DataOrError>({
+    ok: true,
+    value: loadingMagicKey,
+  });
   useEffect(() => {
     const impl = async () => {
       if (!data.ok) {
         setHtml(data);
         return;
       }
-      setHtml({ ok: true, value: 'loading' });
+      setHtml({ ok: true, value: loadingMagicKey });
       try {
-        const c = await compile(props.report, data, props.widgets, props.api);
+        const c = await compile(
+          props.report,
+          data.value,
+          props.widgets,
+          props.api,
+        );
         const result = renderToHtml(c, props.widgets);
         setHtml({ ok: true, value: result });
       } catch (err) {
@@ -43,7 +53,7 @@ export default function PrintPreview(props: GeneralProps) {
     return <ErrorAlert msg={data.errorMsg} />;
   }
   const html = data.value as string;
-  if (html === 'loading') {
+  if (html === loadingMagicKey) {
     return <FontAwesomeIcon icon={faSpinner} spin />;
   }
   return (

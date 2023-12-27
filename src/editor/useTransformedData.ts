@@ -44,7 +44,10 @@ export default function useTransformedData(
   props: GeneralProps,
   numTransToApply?: number,
 ) {
-  const [data, setData] = useState<DataOrError>({ ok: true, value: undefined });
+  const [data, setData] = useState<DataOrError>({
+    ok: false,
+    errorMsg: 'loading data ...',
+  });
   useEffect(() => {
     const src = props.sourceDataOverride ||
       props.sourceData || { type: 'as-is', value: undefined };
