@@ -9,13 +9,7 @@ import type { ApiEndpoints } from '../types';
 import fetchSourceData, { SourceData } from './fetchSourceData';
 
 test('fetchSourceData javascript', async () => {
-  const api: ApiEndpoints = {
-    evaluateJavaScript: async (code: string) => {
-      // eslint-disable-next-line no-new-func
-      const func = new Function(code);
-      return await func();
-    },
-  };
+  const api: ApiEndpoints = {};
   const input: SourceData = {
     type: 'javascript',
     code: `

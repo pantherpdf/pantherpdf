@@ -23,11 +23,11 @@ export default async function fetchSourceData(
   switch (type) {
     case 'as-is':
       return obj.value;
-    case 'javascript':
-      if (!api.evaluateJavaScript) {
-        throw new Error('Evaluating JS is disabled');
-      }
-      return await api.evaluateJavaScript(obj.code);
+    case 'javascript': {
+      // eslint-disable-next-line no-new-func
+      const func = new Function(obj.code);
+      return await func();
+    }
     case 'url':
       return getDataFromUrl(obj, api);
     case 'json':

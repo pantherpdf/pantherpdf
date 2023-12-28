@@ -85,7 +85,10 @@ export interface ApiFileMetaData extends ApiUploadMetaData {
   size: number;
 }
 
-/** Access to optional external services */
+/**
+ * Access to optional external services.
+ * Experimental. Subject to change without a notice.
+ */
 export interface ApiEndpoints {
   /**
    * Get a list of all reports.
@@ -124,14 +127,6 @@ export interface ApiEndpoints {
 
   /** To access metadata for all families served by Google Fonts */
   googleFontApiKey?: string;
-
-  /**
-   * Evaluate custom JavaScript code
-   *
-   * Code must include a return statement.
-   * e.g. `function makeIt() { return { hello: 'world' }; } return makeIt();`
-   */
-  evaluateJavaScript?: (code: string) => Promise<unknown>;
 
   /** Used by print preview to generate PDF */
   generatePdf?: (report: GenerateResult) => Promise<Uint8Array>;
