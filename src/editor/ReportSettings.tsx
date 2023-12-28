@@ -14,7 +14,7 @@ import PropertyFont, { TFont } from '../widgets/PropertyFont';
 import PaperEditor from './PaperEditor';
 import InputApplyOnEnter, {
   inputFAdornment,
-} from '../widgets/InputApplyOnEnter';
+} from '../components/InputApplyOnEnter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faDownload,

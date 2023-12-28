@@ -23,7 +23,6 @@ import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
-import Divider from '@mui/material/Paper';
 import TransformedDataExplorer from './TransformedDataExplorer';
 import EditorContent from './EditorContent';
 

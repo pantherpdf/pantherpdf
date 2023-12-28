@@ -24,6 +24,7 @@ type Props<T extends AbstractComponent> = Omit<
   value: TAllowed;
   onChange: (val: TAllowed) => void;
   regex?: RegExp;
+  disableCommitOnEnter?: boolean; // for multi line text field
 };
 
 export default function InputApplyOnEnter<T extends AbstractComponent>(
@@ -91,7 +92,7 @@ export default function InputApplyOnEnter<T extends AbstractComponent>(
       value={value}
       onChange={(e: any) => setValue(e.target.value)}
       onKeyDown={(e: any) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !props.disableCommitOnEnter) {
           e.preventDefault();
           e.stopPropagation();
           if (!applyValue()) {

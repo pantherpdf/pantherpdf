@@ -9,7 +9,7 @@ import React from 'react';
 import type { TransformItem, Transform } from './types';
 import InputApplyOnEnter, {
   inputFAdornment,
-} from '../widgets/InputApplyOnEnter';
+} from '../components/InputApplyOnEnter';
 import trans from '../translation';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import TextField from '@mui/material/TextField';

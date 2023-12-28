@@ -9,7 +9,9 @@ import type { Report } from '../types';
 import type { Widget, WidgetItem, WidgetCompiled } from './types';
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import WidgetEditorName from './WidgetEditorName';
-import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
+import InputApplyOnEnter, {
+  inputFAdornment,
+} from '../components/InputApplyOnEnter';
 import { findInList } from '../editor/childrenMgmt';
 import trans from '../translation';
 import { SetVarData } from './SetVar';

@@ -11,7 +11,7 @@ import WidgetEditorName from './WidgetEditorName';
 import InputApplyOnEnter, {
   WidthRegex,
   WidthOptions,
-} from './InputApplyOnEnter';
+} from '../components/InputApplyOnEnter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import trans from '../translation';
 import Button from '@mui/material/Button';

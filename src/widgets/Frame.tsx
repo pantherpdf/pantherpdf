@@ -14,7 +14,7 @@ import trans from '../translation';
 import InputApplyOnEnter, {
   WidthOptions,
   WidthRegex,
-} from './InputApplyOnEnter';
+} from '../components/InputApplyOnEnter';
 import PropertyFont, {
   PropertyFontExtractStyle,
   PropertyFontGenCss,

@@ -38,7 +38,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { listOfAdjusts } from './formulaAdjust';
 import trans, { transName, trKeys } from '../translation';
 import { idCmp } from '../editor/childrenMgmt';
-import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
+import InputApplyOnEnter, {
+  inputFAdornment,
+} from '../components/InputApplyOnEnter';
 import { LoadGoogleFontCss } from './GoogleFonts';
 import { Element_, parse, extractText } from './HtmlParser';
 import SectionName from '../components/SectionName';

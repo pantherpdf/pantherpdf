@@ -12,7 +12,7 @@ import InputApplyOnEnter, {
   WidthOptions,
   WidthRegex,
   inputFAdornment,
-} from './InputApplyOnEnter';
+} from '../components/InputApplyOnEnter';
 import PropertyAlign, { TAlign } from './PropertyAlign';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FileDialog from '../FileDialog';

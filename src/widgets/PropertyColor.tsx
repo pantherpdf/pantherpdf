@@ -8,7 +8,7 @@ import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { CSSProperties, useEffect, useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
-import InputApplyOnEnter from './InputApplyOnEnter';
+import InputApplyOnEnter from '../components/InputApplyOnEnter';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';

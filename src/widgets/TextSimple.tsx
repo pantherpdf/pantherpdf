@@ -8,7 +8,9 @@ import React from 'react';
 import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import WidgetEditorName from './WidgetEditorName';
-import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
+import InputApplyOnEnter, {
+  inputFAdornment,
+} from '../components/InputApplyOnEnter';
 import TextField from '@mui/material/TextField';
 
 export interface TextSimpleData extends WidgetItem {

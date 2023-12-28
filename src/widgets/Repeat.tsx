@@ -9,7 +9,9 @@ import type { WidgetItem, WidgetCompiled, Widget } from './types';
 import { tuple } from '../types';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import WidgetEditorName from './WidgetEditorName';
-import InputApplyOnEnter, { inputFAdornment } from './InputApplyOnEnter';
+import InputApplyOnEnter, {
+  inputFAdornment,
+} from '../components/InputApplyOnEnter';
 import trans, { transName, trKeys } from '../translation';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';

@@ -21,7 +21,7 @@ import {
   faCaretDown,
 } from '@fortawesome/free-solid-svg-icons';
 import ObjectExplorer from './ObjectExplorer';
-import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
+import InputApplyOnEnter from '../components/InputApplyOnEnter';
 import SimpleDialog from '../components/SimpleDialog';
 import SectionName from '../components/SectionName';
 import { SourceData } from '../data/fetchSourceData';

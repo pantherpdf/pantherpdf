@@ -9,7 +9,7 @@ import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import trans from '../translation';
 import type { Report } from '../types';
-import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
+import InputApplyOnEnter from '../components/InputApplyOnEnter';
 import type { GeneralProps } from './types';
 import SectionName from '../components/SectionName';
 import Table from '@mui/material/Table';

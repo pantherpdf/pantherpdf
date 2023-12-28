@@ -10,7 +10,7 @@ import PropertyColor from './PropertyColor';
 import InputApplyOnEnter, {
   WidthRegex,
   WidthOptions,
-} from './InputApplyOnEnter';
+} from '../components/InputApplyOnEnter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faFont } from '@fortawesome/free-solid-svg-icons';
 import { GoogleFontSelector } from './GoogleFonts';

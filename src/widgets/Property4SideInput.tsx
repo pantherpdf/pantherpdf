@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import InputApplyOnEnter from './InputApplyOnEnter';
+import InputApplyOnEnter from '../components/InputApplyOnEnter';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 

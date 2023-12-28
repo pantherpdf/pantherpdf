@@ -46,7 +46,7 @@ import { defaultTransforms } from './transforms/allTransforms';
 import WidgetEditorName from './widgets/WidgetEditorName';
 import { defaultWidgets } from './widgets/allWidgets';
 import SectionName from './components/SectionName';
-import InputApplyOnEnter from './widgets/InputApplyOnEnter';
+import InputApplyOnEnter from './components/InputApplyOnEnter';
 
 const emptyReport: Report = {
   name: 'My report',

@@ -4,7 +4,7 @@ import Property4SideInput, {
 } from '../widgets/Property4SideInput';
 import SectionName from '../components/SectionName';
 import trans from '../translation';
-import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
+import InputApplyOnEnter from '../components/InputApplyOnEnter';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 

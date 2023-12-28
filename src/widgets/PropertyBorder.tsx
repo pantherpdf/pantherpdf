@@ -7,7 +7,7 @@
 import React from 'react';
 import trans, { trKeys } from '../translation';
 import { tuple } from '../types';
-import InputApplyOnEnter from './InputApplyOnEnter';
+import InputApplyOnEnter from '../components/InputApplyOnEnter';
 import PropertyColor from './PropertyColor';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
