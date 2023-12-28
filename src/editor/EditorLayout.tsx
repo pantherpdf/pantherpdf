@@ -59,7 +59,7 @@ const Box1 = styled('div')(({ theme }) => ({
   overflowY: 'auto',
   left: '0',
   top: '4rem',
-  bottom: 'calc(50% + 10px)',
+  bottom: 'calc(60% + 10px)',
   width: '20%',
   padding: '0 0.5rem 10px 0.5rem',
   display: 'none',
@@ -72,7 +72,7 @@ const Box2 = styled('div')(({ theme }) => ({
   position: 'fixed',
   overflowY: 'auto',
   left: '0',
-  top: '50%',
+  top: '40%',
   bottom: '0',
   width: '20%',
   padding: '0 0.5rem',
@@ -200,6 +200,7 @@ export default function Layout(
         props.setSourceDataOverride({
           type: 'json',
           value: e2.target.result,
+          description: trans('local json file'),
         });
       };
       reader.readAsText(f);
@@ -225,7 +226,7 @@ export default function Layout(
         <Stack spacing={2}>
           <div />
           <DataTransform {...props} />
-          <Divider />
+          <SectionName text={trans('data')} />
           <TransformedDataExplorer {...props} />
           <div />
         </Stack>

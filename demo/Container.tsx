@@ -44,6 +44,7 @@ class Employee extends Person {
 const sampleDataWrapper: SourceData = {
   type: 'callback',
   callback: () => new Employee('Alice', 30, 'Iceberg mover'),
+  description: 'Employee Alice',
 };
 
 export default function Container() {

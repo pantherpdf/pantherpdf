@@ -200,10 +200,12 @@ const tr2 = {
   'repeat - direction grid': { en: 'Grid', sl: 'Mreža' },
 
   'no image selected': { en: 'No image selected', sl: 'Slika ni izbrana' },
-  'load local json file': {
-    en: 'Load local .json file',
-    sl: 'Naloži lokalno .json datoteko',
+  'load json file': {
+    en: 'Load json file',
+    sl: 'Naloži json datoteko',
   },
+  'load url': { en: 'Load URL', sl: 'Naloži URL' },
+  'local json file': { en: 'Local json file', sl: 'Lokalna json datoteka' },
   'TextHtml initial value': {
     en: 'This is sample text',
     sl: 'To je vzorčni tekst',

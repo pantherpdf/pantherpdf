@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import type { Report } from '../types';
 import type { GeneralProps } from './types';
 import trans, { transName } from '../translation';
@@ -15,12 +15,10 @@ import {
   faArrowDown,
   faArrowUp,
   faEdit,
-  faFolderOpen,
   faPlus,
   faTimes,
   faTrash,
   faCaretDown,
-  faLink,
 } from '@fortawesome/free-solid-svg-icons';
 import ObjectExplorer from './ObjectExplorer';
 import InputApplyOnEnter from '../widgets/InputApplyOnEnter';
@@ -312,7 +310,7 @@ export default function DataTransform(props: GeneralProps) {
 
   return (
     <>
-      <Override {...props} />
+      <Override {...props} showBrowseSourceData={() => setShowData(0)} />
 
       <SectionName text={trans('transform')} />
       {props.report.transforms.length > 0 && (
@@ -452,7 +450,7 @@ function DialogBrowseData(props: DialogBrowseDataProps) {
   );
 }
 
-function Override(props: GeneralProps) {
+function Override(props: GeneralProps & { showBrowseSourceData: () => void }) {
   const [showUrl, setShowUrl] = useState(false);
   let dataUrl: string;
   let dataUrlEnabled: boolean;
@@ -468,14 +466,82 @@ function Override(props: GeneralProps) {
     dataUrl = '';
     dataUrlEnabled = true;
   }
+  const styleIrrelevant: CSSProperties = {
+    color: '#999999',
+    fontWeight: 'bold',
+    textDecoration: 'line-through',
+  };
+  const styleSelected: CSSProperties = {
+    fontWeight: 'bold',
+    textDecoration: 'none',
+  };
   return (
     <>
-      <SectionName
-        text={trans('override source data')}
-        endElement={
-          <OverrideLink {...props} showUrl={showUrl} setShowUrl={setShowUrl} />
-        }
-      />
+      <SectionName text={trans('source data')} />
+      <p>
+        {trans('source data')}
+        :&nbsp;
+        <strong
+          style={props.sourceDataOverride ? styleIrrelevant : styleSelected}
+        >
+          {getSourceDescription(props.sourceData)}
+        </strong>
+        <br />
+        {trans('override source data')}:&nbsp;
+        <strong
+          style={!props.sourceDataOverride ? styleIrrelevant : styleSelected}
+        >
+          {getSourceDescription(props.sourceDataOverride)}
+        </strong>
+        <br />
+        <Link component="button" onClick={props.showBrowseSourceData}>
+          {trans('preview')}
+        </Link>
+        {!props.sourceDataOverride && (
+          <>
+            <Link
+              component="button"
+              onClick={async () => {
+                // select file and replace
+                let text;
+                try {
+                  text = await readJsonFileFromFileSystem();
+                } catch (err) {
+                  alert(`Error: ${err}`);
+                  return;
+                }
+                // empty when cancelled
+                if (text) {
+                  props.setSourceDataOverride({
+                    type: 'json',
+                    value: text,
+                    description: trans('local json file'),
+                  });
+                }
+              }}
+              style={{ marginLeft: '1rem' }}
+            >
+              {trans('load json file')}
+            </Link>
+            <Link
+              component="button"
+              onClick={() => setShowUrl(!showUrl)}
+              style={{ marginLeft: '1rem' }}
+            >
+              {trans('load url')}
+            </Link>
+          </>
+        )}
+        {!!props.sourceDataOverride && (
+          <Link
+            component="button"
+            onClick={() => props.setSourceDataOverride(undefined)}
+            style={{ marginLeft: '1rem' }}
+          >
+            {trans('clear override')}
+          </Link>
+        )}
+      </p>
       {showUrl && (
         <InputApplyOnEnter
           component={TextField}
@@ -483,7 +549,9 @@ function Override(props: GeneralProps) {
           onChange={val => {
             const str = String(val);
             const obj: SourceData | undefined =
-              str.length > 0 ? { type: 'url', url: str } : undefined;
+              str.length > 0
+                ? { type: 'url', url: str, description: '' }
+                : undefined;
             props.setSourceDataOverride(obj);
           }}
           fullWidth
@@ -495,58 +563,16 @@ function Override(props: GeneralProps) {
     </>
   );
 }
-type OverrideLinkProps = GeneralProps & {
-  showUrl: boolean;
-  setShowUrl: (val: boolean) => void;
-};
-function OverrideLink(props: OverrideLinkProps) {
-  return (
-    <div style={{ color: '#666' }}>
-      <Link
-        component="button"
-        style={{ marginRight: '0.5rem' }}
-        onClick={() => {
-          if (props.sourceDataOverride) {
-            props.setSourceDataOverride(undefined);
-          }
-          props.setShowUrl(!props.showUrl);
-        }}
-      >
-        <FontAwesomeIcon icon={faLink} />
-      </Link>
-      {!props.sourceDataOverride && (
-        <Link
-          component="button"
-          onClick={async () => {
-            // select file and replace
-            let text;
-            try {
-              text = await readJsonFileFromFileSystem();
-            } catch (err) {
-              alert(`Error: ${err}`);
-              return;
-            }
-            // empty when cancelled
-            if (text) {
-              props.setSourceDataOverride({ type: 'json', value: text });
-            }
-          }}
-          title={trans('load local json file')}
-        >
-          <FontAwesomeIcon icon={faFolderOpen} />
-        </Link>
-      )}
-      {!!props.sourceDataOverride && (
-        <Link
-          component="button"
-          onClick={() => props.setSourceDataOverride(undefined)}
-          title={trans('clear override')}
-        >
-          <FontAwesomeIcon
-            icon={props.sourceDataOverride ? faTimes : faFolderOpen}
-          />
-        </Link>
-      )}
-    </div>
-  );
+
+function getSourceDescription(data: SourceData | undefined): string {
+  if (!data) {
+    return trans('empty');
+  }
+  if (data.description && data.description.length > 0) {
+    return data.description;
+  }
+  if (data.type === 'url') {
+    return data.url;
+  }
+  return data.type;
 }

@@ -6,12 +6,13 @@
 
 import type { ApiEndpoints } from '../types';
 
+type SourceDataUrl = { type: 'url'; url: string; description?: string };
 export type SourceData =
-  | { type: 'as-is'; value: unknown }
-  | { type: 'javascript'; code: string }
-  | { type: 'url'; url: string }
-  | { type: 'json'; value: string }
-  | { type: 'callback'; callback: () => unknown };
+  | { type: 'as-is'; value: unknown; description?: string }
+  | { type: 'javascript'; code: string; description?: string }
+  | SourceDataUrl
+  | { type: 'json'; value: string; description?: string }
+  | { type: 'callback'; callback: () => unknown; description?: string };
 
 /** Load unmodified source data from specified source */
 export default async function fetchSourceData(
@@ -28,7 +29,7 @@ export default async function fetchSourceData(
       }
       return await api.evaluateJavaScript(obj.code);
     case 'url':
-      return getDataFromUrl(obj.url, api);
+      return getDataFromUrl(obj, api);
     case 'json':
       return JSON.parse(obj.value);
     case 'callback':
@@ -40,9 +41,10 @@ export default async function fetchSourceData(
 }
 
 async function getDataFromUrl(
-  url: string,
+  value: SourceDataUrl,
   api: ApiEndpoints,
 ): Promise<unknown> {
+  const { url } = value;
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
     throw new Error('Only absolute url is allowed');
   }
@@ -64,11 +66,19 @@ async function getDataFromUrl(
   const ct = (r.headers.get('Content-Type') || '').split(';')[0].trim();
   if (ct === 'text/javascript' || ct === 'application/javascript') {
     const code = await r.text();
-    return fetchSourceData(api, { type: 'javascript', code });
+    return fetchSourceData(api, {
+      description: value.description,
+      type: 'javascript',
+      code,
+    });
   }
   if (ct === 'application/json') {
     const data = await r.json();
-    return fetchSourceData(api, { type: 'as-is', value: data });
+    return fetchSourceData(api, {
+      description: value.description,
+      type: 'as-is',
+      value: data,
+    });
   }
   throw new Error('unsupported content-type');
 }
