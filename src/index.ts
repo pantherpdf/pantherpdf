@@ -19,6 +19,7 @@ import type {
   TransformEditorProps,
   Transform,
   TransformItem,
+  TransformHelper,
 } from './transforms/types';
 import generate, { generateData } from './data/generate';
 import type { GenerateArgs } from './data/generate';
@@ -45,6 +46,7 @@ import { defaultTransforms } from './transforms/allTransforms';
 import WidgetEditorName from './widgets/WidgetEditorName';
 import { defaultWidgets } from './widgets/allWidgets';
 import SectionName from './components/SectionName';
+import InputApplyOnEnter from './widgets/InputApplyOnEnter';
 
 const emptyReport: Report = {
   name: 'My report',
@@ -73,6 +75,7 @@ export {
   emptyReport,
   //
   SectionName,
+  InputApplyOnEnter,
 };
 
 export type {
@@ -95,6 +98,7 @@ export type {
   Transform,
   TransformItem,
   TransformEditorProps,
+  TransformHelper,
   //
   Widget,
   WidgetItem,

@@ -79,5 +79,5 @@ export async function generateData(props: GenerateArgs): Promise<unknown> {
     ? props.transforms
     : defaultTransforms;
 
-  return await transformData(useTransforms, source, report.transforms);
+  return await transformData(useTransforms, source, report.transforms, api);
 }

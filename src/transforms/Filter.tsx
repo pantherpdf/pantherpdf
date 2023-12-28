@@ -7,8 +7,6 @@
 
 import React from 'react';
 import type { TransformItem, Transform } from './types';
-import type { IHelpers } from '../formula/types';
-import FormulaEvaluate from '../formula/formula';
 import InputApplyOnEnter, {
   inputFAdornment,
 } from '../widgets/InputApplyOnEnter';
@@ -37,23 +35,20 @@ const Filter: Transform = {
     return obj;
   },
 
-  transform: async (dt, item2: TransformItem) => {
+  transform: async (dt, item2, helper) => {
     const item = item2 as FilterData;
     if (item.field.length === 0 || item.condition.length === 0) {
       return dt;
     }
-    const helper: IHelpers & { vars: {} } = {
-      vars: {
-        data: dt,
-      },
-    };
-    const result = await FormulaEvaluate(item.field, helper);
+    helper.formulaHelper.push('data', dt);
+    const result = await helper.evalFormula(item.field);
     if (!Array.isArray(result)) {
-      throw new Error('');
+      throw new Error(`Expected field to be array but got ${result}`);
     }
     for (let i = 0; i < result.length; ) {
-      helper.vars['item'] = result[i];
-      const result2 = await FormulaEvaluate(item.condition, helper);
+      helper.formulaHelper.push('item', result[i]);
+      const result2 = await helper.evalFormula(item.field);
+      helper.formulaHelper.pop();
       if (result2) {
         // keep
         i += 1;

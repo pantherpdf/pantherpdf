@@ -28,6 +28,7 @@ async function refreshData(
       transforms,
       dt1,
       transformItems,
+      api,
       numTransToApply,
     );
     return { ok: true, value: dt2 };
