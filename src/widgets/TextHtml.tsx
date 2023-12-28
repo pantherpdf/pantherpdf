@@ -254,10 +254,6 @@ function TagEditor(props: WidgetEditorProps) {
   }
   const btn = btnTmp as HTMLElement;
 
-  const arrAdjusts = [...listOfAdjusts].sort((a, b) =>
-    a.category <= b.category ? -1 : 1,
-  );
-
   return (
     <>
       {/* FORMULA */}
@@ -278,26 +274,50 @@ function TagEditor(props: WidgetEditorProps) {
         select
         value={btn.getAttribute('data-adjust') || ''}
         onChange={e => {
-          btn.setAttribute('data-adjust', e.currentTarget.value);
+          btn.setAttribute('data-adjust', e.target.value);
           editor.sendChanges(true);
         }}
         id="tag-adjust"
         label={trans('adjust')}
       >
         <MenuItem value=""></MenuItem>
-        {arrAdjusts.map((flt, idx) => (
-          <React.Fragment key={flt.id}>
-            {idx !== 0 && flt.category !== arrAdjusts[idx - 1].category && (
-              <MenuItem disabled>──────────</MenuItem>
-            )}
-            <MenuItem value={flt.id}>
-              {flt.name ? transName(flt.name) : flt.id}
+        {adjustOptionsWithSeparatos().map((flt, idx) =>
+          flt.key.startsWith('separator-') ? (
+            <MenuItem disabled key={flt.key}>
+              ──────────
             </MenuItem>
-          </React.Fragment>
-        ))}
+          ) : (
+            <MenuItem value={flt.key} key={flt.key}>
+              {flt.value}
+            </MenuItem>
+          ),
+        )}
       </TextField>
     </>
   );
+}
+
+function adjustOptionsWithSeparatos() {
+  const arrAdjusts = [...listOfAdjusts].sort((a, b) =>
+    a.category <= b.category ? -1 : 1,
+  );
+  // MUI TextField component does not accept React.Fragment so we need to prepare mixed array of items and separators
+  const arrAdjusts2: { key: string; value: string }[] = [];
+  let lastCat = '';
+  for (const obj of arrAdjusts) {
+    if (obj.category !== lastCat && arrAdjusts2.length > 0) {
+      arrAdjusts2.push({
+        key: `separator-${obj.category}`,
+        value: '',
+      });
+      lastCat = obj.category;
+    }
+    arrAdjusts2.push({
+      key: obj.id,
+      value: obj.name ? transName(obj.name) : obj.id,
+    });
+  }
+  return arrAdjusts2;
 }
 
 function TagEditorContainer(props: WidgetEditorProps) {
