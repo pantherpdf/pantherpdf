@@ -104,6 +104,8 @@ function DownloadButton(props: GeneralProps) {
         report: props.report,
         api: props.api,
         data: src,
+        transforms: props.transforms,
+        widgets: props.widgets,
       });
       const pdf = await props.api.generatePdf(res);
       const blob = new Blob([pdf], { type: 'application/pdf' });
