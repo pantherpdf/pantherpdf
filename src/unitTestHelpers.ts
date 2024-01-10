@@ -19,7 +19,6 @@ export async function compileComponentTest(
   data: unknown,
 ): Promise<WidgetCompiled> {
   const dt: Report = {
-    name: 'John Johnny',
     widgets: [cmpData as WidgetItem],
     transforms: [],
     properties: {},

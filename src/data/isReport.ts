@@ -30,9 +30,6 @@ export default function isReport(r: any): r is Report {
   if (typeof r != 'object' || !r) {
     return false;
   }
-  if (typeof r.name !== 'string') {
-    return false;
-  }
   if (!Array.isArray(r.widgets)) {
     return false;
   }

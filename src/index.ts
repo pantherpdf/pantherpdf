@@ -49,7 +49,6 @@ import SectionName from './components/SectionName';
 import InputApplyOnEnter from './components/InputApplyOnEnter';
 
 const emptyReport: Report = {
-  name: 'My report',
   widgets: [],
   transforms: [],
   properties: {},

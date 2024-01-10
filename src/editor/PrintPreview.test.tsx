@@ -25,7 +25,6 @@ test('RenderPreview should prepare a document', async () => {
   ];
 
   const report: Report = {
-    name: 'test report',
     widgets,
     transforms: [],
     properties: {},

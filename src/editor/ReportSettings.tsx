@@ -112,7 +112,7 @@ function ShowUpload(props: GeneralProps) {
           onDragEnd={props.dragWidgetEnd}
           style={styleWidget}
         >
-          {r.name}&nbsp;
+          {trans('uploaded report')}
         </div>
       ))}
     </>
@@ -182,18 +182,6 @@ export default function ReportSettings(props: GeneralProps) {
 
   return (
     <>
-      <InputApplyOnEnter
-        component={TextField}
-        value={props.report.name}
-        onChange={val => {
-          const obj = { ...props.report, name: String(val) };
-          return props.setReport(obj);
-        }}
-        id="report-name"
-        label={trans('name')}
-        fullWidth
-      />
-
       <Button
         size="small"
         color="secondary"

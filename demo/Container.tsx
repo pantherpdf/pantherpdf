@@ -3,7 +3,6 @@ import { Report, Editor, SourceData } from '../src/index';
 import Typography from '@mui/material/Typography';
 
 const sampleReport: Report = {
-  name: 'Report 1',
   widgets: [],
   transforms: [],
   properties: {},

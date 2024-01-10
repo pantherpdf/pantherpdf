@@ -225,6 +225,7 @@ const tr2 = {
   'select image': { en: 'Select image', sl: 'Izberi sliko' },
   close: { en: 'Close', sl: 'Zapri' },
   error: { en: 'Error', sl: 'Napaka' },
+  'uploaded report': { en: 'Uploaded report', sl: 'Naložen report' },
 };
 
 export type trKeys = keyof typeof tr2;

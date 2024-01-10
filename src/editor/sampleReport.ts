@@ -7,7 +7,6 @@
 import type { Report } from '../types';
 
 export const sampleReport: Report = {
-  name: 'Report 1',
   widgets: [],
   transforms: [],
   properties: {},

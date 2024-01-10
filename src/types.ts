@@ -46,7 +46,6 @@ export interface GenerateResult {
  * Report type
  */
 export interface Report {
-  name: string;
   widgets: WidgetItem[];
   transforms: TransformItem[];
   properties: ReportProperties;
