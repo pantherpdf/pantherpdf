@@ -62,7 +62,7 @@ export interface TExpr_variable {
 }
 
 // prettier-ignore
-type Narrowable = string | number | boolean | symbol | object | {} | void | null | undefined;
+type Narrowable = string | number | boolean | symbol | object | NonNullable<unknown> | void | null | undefined;
 const tuple = <T extends Narrowable[]>(...args: T) => args;
 // prettier-ignore
 export const Operators = tuple( '^', '*', '/', '+', '-', '==', '!=', '<', '>', '>=', '<=', '||', '&&' );

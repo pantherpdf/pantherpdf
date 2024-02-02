@@ -129,7 +129,7 @@ export default class ObjectExplorer extends Component<Props, State> {
                 onClick={e => {
                   e.preventDefault();
                   if (this.isExpanded(key)) {
-                    this.collapse(key, dt);
+                    this.collapse(key);
                   } else {
                     this.expand(key, dt);
                   }
@@ -151,7 +151,7 @@ export default class ObjectExplorer extends Component<Props, State> {
             onClick={e => {
               e.preventDefault();
               if (this.state.expanded[key]) {
-                this.collapse(key, dt);
+                this.collapse(key);
               } else {
                 this.expand(key, dt);
               }
@@ -204,7 +204,7 @@ export default class ObjectExplorer extends Component<Props, State> {
     this.change_expanded(key, true);
   }
 
-  collapse(key: string, dt: unknown) {
+  collapse(key: string) {
     this.change_expanded(key, false);
   }
 

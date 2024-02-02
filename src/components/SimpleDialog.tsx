@@ -1,3 +1,10 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2023-2024
+ * @license MIT
+ */
+
+import React from 'react';
 import trans from '../translation';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

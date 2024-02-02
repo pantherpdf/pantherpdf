@@ -12,7 +12,7 @@ import type { TransformItem } from './transforms/types';
 // helper for converting tuple into type
 // prettier-ignore
 type Narrowable =
-  string | number | boolean | symbol | object | {} | void | null | undefined;
+  string | number | boolean | symbol | object | NonNullable<unknown> | void | null | undefined;
 export const tuple = <T extends Narrowable[]>(...args: T) => args;
 
 export interface Variable {

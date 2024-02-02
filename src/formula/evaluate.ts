@@ -46,7 +46,7 @@ async function getVariable(name: string, helpers?: IHelpers): Promise<unknown> {
 }
 
 // https://stackoverflow.com/a/16788517
-function objectEquals(x: any, y: any): boolean {
+function objectEquals(x: unknown, y: unknown): boolean {
   if (x === null || x === undefined || y === null || y === undefined) {
     return x === y;
   }
@@ -65,7 +65,7 @@ function objectEquals(x: any, y: any): boolean {
   if (x === y || x.valueOf() === y.valueOf()) {
     return true;
   }
-  if (Array.isArray(x) && x.length !== y.length) {
+  if (Array.isArray(x) && (!Array.isArray(y) || x.length !== y.length)) {
     return false;
   }
 
@@ -83,20 +83,24 @@ function objectEquals(x: any, y: any): boolean {
   }
 
   // recursive object equality check
-  var p = Object.keys(x);
+  const p = Object.keys(x);
   return (
     Object.keys(y).every(function (i) {
       return p.indexOf(i) !== -1;
     }) &&
     p.every(function (i) {
-      return objectEquals(x[i], y[i]);
+      const xSub = x[i as keyof typeof x];
+      const ySub = y[i as keyof typeof y];
+      return objectEquals(xSub, ySub);
     })
   );
 }
 
 export function evaluateOperator(
   op: TOperators,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   a: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   b: any,
   pos: number,
 ): unknown {
@@ -192,7 +196,7 @@ export default async function evaluatePostfix(
     }
 
     // extract value
-    let value: any;
+    let value;
     if (part.type === 'number') {
       value = part.number;
     }
@@ -219,12 +223,13 @@ export default async function evaluatePostfix(
     }
     //
     else if (part.type === 'object') {
-      value = {};
+      const newValue: { [k: string]: unknown } = {};
       await Promise.all(
         Object.keys(part.object).map(async (k: string) => {
-          value[k] = await evaluatePostfix(part.object[k], helpers);
+          newValue[k] = await evaluatePostfix(part.object[k], helpers);
         }),
       );
+      value = newValue;
     }
     //
     else {
@@ -255,8 +260,8 @@ export default async function evaluatePostfix(
             e instanceof Error
               ? e.message
               : typeof e === 'string'
-              ? e
-              : 'unknown error while calling a function';
+                ? e
+                : 'unknown error while calling a function';
           throw new EvaluateError(msg, sub.position);
         }
       }
@@ -275,12 +280,12 @@ export default async function evaluatePostfix(
           // prevent __proto__ and other built-in
           const key2 = String(key);
           if (Object.keys(value).indexOf(key2) !== -1) {
-            value = await value[key2];
+            value = (await value[key2]) as unknown;
           }
           //
           else if (isPropertyAllowed(value, key2)) {
-            const prevVal = value;
-            value = value[key2];
+            const prevVal: unknown = value;
+            value = value[key2] as unknown;
             if (typeof value === 'function') {
               value = value.bind(prevVal);
             }

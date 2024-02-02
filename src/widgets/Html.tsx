@@ -39,7 +39,8 @@ export const Html: Widget = {
     };
   },
 
-  compile: async (dt: HtmlData, helpers): Promise<HtmlCompiled> => {
+  compile: async (item, helpers): Promise<HtmlCompiled> => {
+    const dt = item as HtmlData;
     const str2 = await helpers.evalFormula(dt.source);
     const str =
       str2 !== undefined && str2 !== null && str2 !== false ? String(str2) : '';

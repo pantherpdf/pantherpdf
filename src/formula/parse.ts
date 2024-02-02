@@ -4,6 +4,8 @@
  * @license MIT
  */
 
+/* eslint-disable no-constant-condition */
+
 import {
   TExpr,
   ParseError,
@@ -66,7 +68,7 @@ export function validVarChar(ch: string): boolean {
   return isAl(ch) || isNum(ch) || ch === '_';
 }
 
-export function isOperatorTypeGuard(r: any): r is TOperators {
+export function isOperatorTypeGuard(r: unknown): r is TOperators {
   if (typeof r !== 'string') {
     return false;
   }

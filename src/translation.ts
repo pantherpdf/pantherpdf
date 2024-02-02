@@ -267,7 +267,7 @@ export default function trans(key: trKeys, params?: unknown[]): string {
   let n = transName(tr2[key]);
   const regex = /{(\d+)}/gm;
   const pl = params ? params.length : 0;
-  n = n.replace(regex, (match, p0, p1) => {
+  n = n.replace(regex, (match, p0) => {
     const idx = parseInt(p0);
     if (idx >= 0 && idx < pl) {
       return String(params?.[idx]);

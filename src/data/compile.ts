@@ -47,7 +47,7 @@ export default async function compile(
   data: unknown,
   widgets: Widget[],
   api: ApiEndpoints,
-  externalHelpers: { [key: string]: any } = {},
+  externalHelpers: { [key: string]: unknown } = {},
 ): Promise<ReportCompiled> {
   // make a copy, to support changing
   report = JSON.parse(JSON.stringify(report));

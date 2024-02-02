@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -25,7 +25,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Stack from '@mui/material/Stack';
 
 // prettier-ignore
-type Narrowable = string | number | boolean | symbol | object | {} | void | null | undefined;
+type Narrowable = string | number | boolean | symbol | object | NonNullable<unknown> | void | null | undefined;
 const tuple = <T extends Narrowable[]>(...args: T) => args;
 
 // could use csstype, but FontWeight has includes [number] instead of hard coded string numbers
@@ -110,10 +110,11 @@ export function PropertyFontGenCss(obj: TFont): CSSProperties {
     }
   }
   if (obj.weight && obj.weight.length > 0) {
-    if ((obj.weight as any) >= 100 && (obj.weight as any) <= 900) {
-      css.fontWeight = parseInt(obj.weight);
+    const weightNum = parseInt(obj.weight);
+    if (isFinite(weightNum)) {
+      css.fontWeight = weightNum;
     } else {
-      css.fontWeight = obj.weight as any;
+      css.fontWeight = obj.weight;
     }
   }
   if (obj.style && obj.style.length > 0) {
@@ -152,31 +153,25 @@ export default function PropertyFont(props: Props) {
   function handleInputChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
-    const target = event.target as any;
-    let value1: string | boolean =
-      target.type === 'checkbox' ? target.checked : target.value;
-    let value: string | boolean | number = value1;
-    const name: string = target.name;
-    if (typeof value1 === 'string' && target.type === 'number') {
-      if (target.step === 1) {
-        value = parseInt(value1);
-      } else {
-        value = parseFloat(value1);
-      }
+    const target = event.target;
+    let value: string | number = target.value;
+    const name = target.name as keyof TFont;
+    if (typeof value === 'string' && target.type === 'number') {
+      value = parseFloat(value);
       if (!Number.isFinite(value)) {
         value = '';
       }
     }
 
-    const obj: any = { ...props.value };
-
+    let obj: TFont;
     if (typeof value === 'string' && value === '') {
+      obj = { ...props.value };
       delete obj[name];
     } else {
-      obj[name] = value;
+      obj = { ...props.value, [name]: value };
     }
 
-    props.onChange(obj as TFont);
+    props.onChange(obj);
   }
 
   function handleClick(e: React.MouseEvent<HTMLElement>) {

@@ -375,7 +375,7 @@ function extractTextInternal(el: Element_): string {
       lines.push('');
       continue;
     }
-    let txt2 = extractTextInternal(el2);
+    const txt2 = extractTextInternal(el2);
     // inline
     if (el2.name.startsWith('#') || inlineElements.indexOf(el2.name) !== -1) {
       lines[lines.length - 1] += txt2;

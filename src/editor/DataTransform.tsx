@@ -197,11 +197,11 @@ function TransformItemEditor(props: TransformItemProps) {
 
 async function readJsonFileFromFileSystem(): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    let el = document.createElement('INPUT') as HTMLInputElement;
+    const el = document.createElement('INPUT') as HTMLInputElement;
     el.type = 'file';
     el.accept = 'application/json';
     el.multiple = false;
-    el.addEventListener('change', function (ev2) {
+    el.addEventListener('change', function () {
       if (!el.files || el.files.length === 0) {
         return resolve('');
       }

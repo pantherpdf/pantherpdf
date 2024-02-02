@@ -16,7 +16,7 @@ const privateKeys = [
 
 const privatePrefixes = ['$$', '__'];
 
-export function getAllPublicObjectKeys(data: any): string[] {
+export function getAllPublicObjectKeys(data: object): string[] {
   const arr = new Set<string>();
   while (data) {
     for (const key of Object.keys(data)) {
@@ -25,7 +25,7 @@ export function getAllPublicObjectKeys(data: any): string[] {
     for (const key of Object.getOwnPropertyNames(data)) {
       arr.add(key);
     }
-    data = data.__proto__;
+    data = Object.getPrototypeOf(data);
   }
   return Array.from(arr).filter(key => {
     if (privateKeys.includes(key)) {
@@ -38,7 +38,7 @@ export function getAllPublicObjectKeys(data: any): string[] {
   });
 }
 
-export function isPropertyAllowed(value: any, key: string): boolean {
+export function isPropertyAllowed(value: unknown, key: string): boolean {
   let allowed: string[];
   // array
   if (Array.isArray(value)) {

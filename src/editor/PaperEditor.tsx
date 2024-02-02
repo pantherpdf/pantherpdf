@@ -1,3 +1,10 @@
+/**
+ * @project PantherPDF Report Editor
+ * @copyright Ignac Banic 2021-2024
+ * @license MIT
+ */
+
+import React from 'react';
 import type { Paper } from '../types';
 import Property4SideInput, {
   Value as Property4SideInputValue,

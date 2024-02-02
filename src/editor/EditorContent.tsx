@@ -4,6 +4,7 @@
  * @license MIT
  */
 
+import React from 'react';
 import Typography from '@mui/material/Typography';
 import { defaultReportCss } from '../types';
 import { LoadGoogleFontCss } from '../widgets/GoogleFonts';
@@ -25,7 +26,7 @@ export default function EditorContent(props: GeneralProps) {
   if (fontStyle) {
     LoadGoogleFontCss(fontStyle);
   }
-  let width = props.report.properties.paper?.width || 210;
+  const width = props.report.properties.paper?.width || 210;
   style.maxWidth = `${(width * 800) / 210}px`;
   style.margin = `0 auto`;
   return (

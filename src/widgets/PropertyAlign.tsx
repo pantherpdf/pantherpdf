@@ -4,6 +4,7 @@
  * @license MIT
  */
 
+import React from 'react';
 import {
   faAlignCenter,
   faAlignJustify,

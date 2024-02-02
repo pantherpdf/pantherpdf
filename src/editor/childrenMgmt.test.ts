@@ -20,8 +20,9 @@ import { ReportForceWidgets } from '../unitTestHelpers';
 import type { Report } from '../types';
 
 test('findInList', () => {
-  let r: ReportForceWidgets<RepeatData | TextSimpleData>;
-  r = { ...sampleReport };
+  const r: ReportForceWidgets<RepeatData | TextSimpleData> = {
+    ...sampleReport,
+  };
 
   expect(() => findInList(r, [])).toThrow();
   expect(() => findInList(r, [0])).toThrow();
@@ -234,8 +235,7 @@ test('idCmp', () => {
 });
 
 test('updateItem', () => {
-  let r: Report;
-  r = { ...sampleReport };
+  const r: Report = { ...sampleReport };
   // prettier-ignore
   const t0: TextSimpleData = { type: 'TextSimple', formula: 'rp0', children: [] };
   // prettier-ignore

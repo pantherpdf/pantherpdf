@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import trans from '../translation';
 import InputAdornment from '@mui/material/InputAdornment';
 
@@ -15,6 +15,7 @@ export const WidthOptions = 'mm|cm|in|px|%|rem|em|vw|vh';
 type TAllowed = string | number;
 type AbstractComponent =
   | keyof JSX.IntrinsicElements
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   | React.JSXElementConstructor<any>;
 type Props<T extends AbstractComponent> = Omit<
   React.ComponentProps<T>,
@@ -31,6 +32,7 @@ export default function InputApplyOnEnter<T extends AbstractComponent>(
   props: Props<T>,
 ) {
   const Cmp = props.component;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const props2: any = { ...props };
   delete props2.component;
   delete props2.value;
@@ -90,8 +92,8 @@ export default function InputApplyOnEnter<T extends AbstractComponent>(
     <Cmp
       {...props2}
       value={value}
-      onChange={(e: any) => setValue(e.target.value)}
-      onKeyDown={(e: any) => {
+      onChange={(e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
+      onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && !props.disableCommitOnEnter) {
           e.preventDefault();
           e.stopPropagation();

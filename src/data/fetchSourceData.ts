@@ -34,9 +34,10 @@ export default async function fetchSourceData(
       return JSON.parse(obj.value);
     case 'callback':
       return await obj.callback();
-    default:
+    default: {
       const exhaustiveCheck: never = type;
       throw new Error(`Unknown data type: ${exhaustiveCheck}`);
+    }
   }
 }
 

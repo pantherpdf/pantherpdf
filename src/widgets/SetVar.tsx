@@ -41,7 +41,8 @@ export const SetVar: Widget = {
     };
   },
 
-  compile: async (dt: SetVarData, helper): Promise<SetVarCompiled> => {
+  compile: async (item, helper): Promise<SetVarCompiled> => {
+    const dt = item as SetVarData;
     dt.varValue = await helper.evalFormula(dt.source);
     if (dt.varValue === undefined) {
       // undefined in evaluateFormula means variable doesnt exist

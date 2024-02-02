@@ -59,8 +59,6 @@ export default function Editor(props: EditorProps) {
     : defaultTransforms;
   const widgets = Array.isArray(props.widgets) ? props.widgets : defaultWidgets;
 
-  let props2: GeneralProps;
-
   async function drop(
     e: React.DragEvent<HTMLElement>,
     dest: number[],
@@ -238,7 +236,7 @@ export default function Editor(props: EditorProps) {
     }
   }
 
-  props2 = {
+  const props2: GeneralProps = {
     ...props,
 
     selected,
@@ -304,9 +302,10 @@ export function dropImpl(
     case 'widgets':
       toInsert = current.widgets;
       break;
-    default:
+    default: {
       const exhaustiveCheck: never = type;
       throw new Error(`Unknown data type: ${exhaustiveCheck}`);
+    }
   }
 
   // insert

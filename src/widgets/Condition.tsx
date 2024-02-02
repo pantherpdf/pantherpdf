@@ -37,7 +37,8 @@ export const Condition: Widget = {
     };
   },
 
-  compile: async (dt: ConditionData, helper): Promise<ConditionCompiled> => {
+  compile: async (item, helper): Promise<ConditionCompiled> => {
+    const dt = item as ConditionData;
     const ok = await helper.evalFormula(dt.formula);
     return {
       type: dt.type,

@@ -65,7 +65,8 @@ export const Image: Widget = {
     };
   },
 
-  compile: async (dt: ImageData, helpers): Promise<ImageCompiled> => {
+  compile: async (item, helpers): Promise<ImageCompiled> => {
+    const dt = item as ImageData;
     let data;
     if (dt.url.length > 0) {
       data = dt.url;
@@ -309,7 +310,7 @@ export const Image: Widget = {
           onChange={val => {
             const val2: ImageData = { ...item };
             if (val) {
-              val2.fit = val.target.value as any;
+              val2.fit = val.target.value as ImageData['fit'];
             } else {
               delete val2.fit;
             }

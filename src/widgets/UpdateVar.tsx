@@ -75,7 +75,8 @@ export const UpdateVar: Widget = {
     };
   },
 
-  compile: async (dt: UpdateVarData, helper): Promise<UpdateVarCompiled> => {
+  compile: async (item, helper): Promise<UpdateVarCompiled> => {
+    const dt = item as UpdateVarData;
     const value = await helper.evalFormula(dt.formula);
     if (value === undefined) {
       // undefined in evaluateFormula means variable doesnt exist
@@ -141,9 +142,7 @@ export const UpdateVar: Widget = {
     );
   },
 
-  Preview: function (props) {
-    return null;
-  },
+  Preview: () => null,
 
   Properties: function (props) {
     const vars = getAllVars(props.report, props.wid);

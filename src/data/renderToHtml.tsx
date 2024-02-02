@@ -17,7 +17,7 @@ import { GoogleFontUrlImport } from '../widgets/GoogleFonts';
 export function renderBody(
   report: ReportCompiled,
   widgets: Widget[],
-  externalHelpers: { [key: string]: any } = {},
+  externalHelpers: { [key: string]: unknown } = {},
 ): React.ReactElement {
   const helper: WidgetPreviewPropsBase = {
     renderItem: (item, helper) => {
@@ -53,7 +53,7 @@ export function renderBody(
 export default function renderToHtml(
   report: ReportCompiled,
   widgets: Widget[],
-  externalHelpers: { [key: string]: any } = {},
+  externalHelpers: { [key: string]: unknown } = {},
 ): string {
   // render content
   const bodyElement = renderBody(report, widgets, externalHelpers);

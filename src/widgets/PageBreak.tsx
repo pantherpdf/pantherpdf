@@ -24,7 +24,8 @@ export const PageBreak: Widget = {
     };
   },
 
-  compile: async (dt: PageBreakData, helpers): Promise<PageBreakCompiled> => {
+  compile: async (item): Promise<PageBreakCompiled> => {
+    const dt = item as PageBreakData;
     return {
       ...dt,
     };

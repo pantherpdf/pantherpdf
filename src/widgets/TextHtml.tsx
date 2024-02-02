@@ -161,10 +161,7 @@ function getTagFromSelection(
 // make number path from editor to child node
 function getPidFromNode(node: Node, editor: HTMLElement): number[] {
   const arr: number[] = [];
-  while (true) {
-    if (node === editor) {
-      break;
-    }
+  while (node !== editor) {
     const parent = node.parentNode;
     if (!parent) {
       throw new Error('Cant find pid 1');
@@ -281,7 +278,7 @@ function TagEditor(props: WidgetEditorProps) {
         label={trans('adjust')}
       >
         <MenuItem value=""></MenuItem>
-        {adjustOptionsWithSeparatos().map((flt, idx) =>
+        {adjustOptionsWithSeparatos().map(flt =>
           flt.key.startsWith('separator-') ? (
             <MenuItem disabled key={flt.key}>
               ──────────
@@ -530,7 +527,7 @@ class Editor extends React.Component<EditorProps, EditorState> {
       return;
     }
     // change
-    let val = this.elementRef.innerHTML;
+    const val = this.elementRef.innerHTML;
     if (val === this.currentValueFromProps) {
       return;
     }
@@ -610,8 +607,10 @@ class Editor extends React.Component<EditorProps, EditorState> {
     // https://developer.mozilla.org/en-US/docs/Web/API/Document/caretRangeFromPoint
     // https://jsfiddle.net/fpkjbech/
     e.preventDefault();
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const document_ = document as any;
     const e_ = e as any;
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     let node: Node;
     let offset: number;
     e.currentTarget.focus();
@@ -717,10 +716,6 @@ function escapeHtml(unsafe: string): string {
     .replace(/'/g, '&#039;');
 }
 
-export function assertUnreachable(_x: never): never {
-  throw new Error("Didn't expect to get here");
-}
-
 function ValueInternalToEditor(value: TextHtmlDataValue[]): string {
   let html = '';
   for (const part of value) {
@@ -738,9 +733,10 @@ function ValueInternalToEditor(value: TextHtmlDataValue[]): string {
         html += `>${escapeHtml(part.value)}</${tagType}>`;
         break;
       }
-      default:
+      default: {
         const exhaustiveCheck: never = type;
         throw new Error(`Unknown data type: ${exhaustiveCheck}`);
+      }
     }
   }
   return html;
@@ -864,7 +860,8 @@ export const TextHtml: Widget = {
     };
   },
 
-  compile: async (dt: TextHtmlData, helper): Promise<TextHtmlCompiled> => {
+  compile: async (item, helper): Promise<TextHtmlCompiled> => {
+    const dt = item as TextHtmlData;
     const style = PropertyFontExtractStyle(dt.font);
     if (style) {
       helper.reportCompiled.fontsUsed.push(style);
@@ -890,9 +887,10 @@ export const TextHtml: Widget = {
           html += String(value);
           break;
         }
-        default:
+        default: {
           const exhaustiveCheck: never = type;
           throw new Error(`Unknown data type: ${exhaustiveCheck}`);
+        }
       }
     }
     return {
@@ -1002,9 +1000,9 @@ export const TextHtml: Widget = {
               return;
             }
             document.execCommand('fontSize', false, '7');
-            var fontElements = document.getElementsByTagName('font');
+            const fontElements = document.getElementsByTagName('font');
             for (let i = 0, len = fontElements.length; i < len; ++i) {
-              const el: any = fontElements[i]; // using deprecated api
+              const el = fontElements[i];
               if (!isNodeInside(el, editor.elementRef)) {
                 continue;
               }

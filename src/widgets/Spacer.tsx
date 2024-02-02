@@ -35,7 +35,8 @@ export const Spacer: Widget = {
     };
   },
 
-  compile: async (dt: SpacerData, helpers): Promise<SpacerCompiled> => {
+  compile: async (item): Promise<SpacerCompiled> => {
+    const dt = item as SpacerData;
     return {
       ...dt,
     };

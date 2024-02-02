@@ -57,7 +57,8 @@ export const Separator: Widget = {
     };
   },
 
-  compile: async (dt: SeparatorData, helpers): Promise<SeparatorCompiled> => {
+  compile: async (item): Promise<SeparatorCompiled> => {
+    const dt = item as SeparatorData;
     return {
       ...dt,
     };

@@ -8,7 +8,11 @@
 import type { WidgetItem } from '../widgets/types';
 import type { Report } from '../types';
 
-function isWidgetItem(r: any): r is WidgetItem {
+function isWidgetItem(r2: unknown): r2 is WidgetItem {
+  if (typeof r2 != 'object' || !r2) {
+    return false;
+  }
+  const r = r2 as { [k: string]: unknown };
   if (typeof r.type !== 'string' || r.type.length === 0) {
     return false;
   }
@@ -26,10 +30,11 @@ function isWidgetItem(r: any): r is WidgetItem {
 /**
  * Type guard for Report interface
  */
-export default function isReport(r: any): r is Report {
-  if (typeof r != 'object' || !r) {
+export default function isReport(r2: unknown): r2 is Report {
+  if (typeof r2 != 'object' || !r2) {
     return false;
   }
+  const r = r2 as { [k: string]: unknown };
   if (!Array.isArray(r.widgets)) {
     return false;
   }

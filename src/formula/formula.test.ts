@@ -5,6 +5,8 @@
  * @license MIT
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import FormulaEvaluate from './formula';
 import type { IHelpers } from './types';
 
@@ -242,7 +244,7 @@ test('custom functions', async () => {
     },
   };
   await expect(FormulaEvaluate('data.func(10)', helper)).resolves.toBe(20);
-  await expect(FormulaEvaluate('data.funcErr()', helper)).rejects.toThrowError(
+  await expect(FormulaEvaluate('data.funcErr()', helper)).rejects.toThrow(
     'my custom error',
   );
 });
@@ -266,9 +268,7 @@ test('buildin properties', async () => {
   ).resolves.toStrictEqual(
     'The quick brown fox jumps over the lazy monkey. If the monkey reacted, was it really lazy?',
   );
-  await expect(
-    FormulaEvaluate('"abc aa".replace("a", "x")'),
-  ).rejects.toThrowError();
+  await expect(FormulaEvaluate('"abc aa".replace("a", "x")')).rejects.toThrow();
 });
 
 test('class member function', async () => {

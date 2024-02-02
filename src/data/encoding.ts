@@ -4,10 +4,6 @@
  * @license MIT
  */
 
-function assertUnreachableTarget(_x: never): never {
-  throw new Error('Unsupported target');
-}
-
 const cp1250 = [
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
   22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
@@ -28,20 +24,25 @@ const cp1250 = [
 ];
 
 export function encode(txt: string, encoding: 'utf-8' | 'cp1250'): Uint8Array {
-  if (encoding === 'utf-8') {
-    const encoder = new TextEncoder();
-    return encoder.encode(txt);
-  }
-
-  if (encoding === 'cp1250') {
-    const out = new Uint8Array(txt.length);
-    for (let i = 0; i < txt.length; ++i) {
-      const codePoint = txt.codePointAt(i) || 0;
-      const nth = cp1250.indexOf(codePoint);
-      out[i] = nth !== -1 ? nth : 0;
+  switch (encoding) {
+    case 'utf-8': {
+      const encoder = new TextEncoder();
+      return encoder.encode(txt);
     }
-    return out;
-  }
 
-  assertUnreachableTarget(encoding);
+    case 'cp1250': {
+      const out = new Uint8Array(txt.length);
+      for (let i = 0; i < txt.length; ++i) {
+        const codePoint = txt.codePointAt(i) || 0;
+        const nth = cp1250.indexOf(codePoint);
+        out[i] = nth !== -1 ? nth : 0;
+      }
+      return out;
+    }
+
+    default: {
+      const exhaustiveCheck: never = encoding;
+      throw new Error(`Unknown encoding: ${exhaustiveCheck}`);
+    }
+  }
 }

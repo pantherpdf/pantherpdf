@@ -64,7 +64,7 @@ function fileReportUpload(
         alert('Bad data');
         return;
       }
-      let n = arr.length;
+      const n = arr.length;
       setArr([...arr, dt]);
       alert(trans('upload finished', [(n + 1).toString()]));
     });
@@ -77,7 +77,7 @@ function ShowUpload(props: GeneralProps) {
   const [arr, setArr] = useState<Report[]>([]);
 
   function fileDownload() {
-    let blob = new Blob([JSON.stringify(props.report, null, 4)], {
+    const blob = new Blob([JSON.stringify(props.report, null, 4)], {
       type: 'application/json',
     });
     saveAs(blob, 'report.json');

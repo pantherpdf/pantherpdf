@@ -25,9 +25,9 @@ import Typography from '@mui/material/Typography';
 
 // check browser support for fetch stream upload (upload progress bar)
 // Chrome 92 requires experimental flag #enable-experimental-web-platform-features
-interface RequestInit2 extends RequestInit {
+interface RequestInit2 extends Omit<RequestInit, 'duplex'> {
   // https://fetch.spec.whatwg.org/#dom-requestinit-duplex
-  duplex: any;
+  readonly duplex: 'half';
 }
 const supportsRequestStreams = (() => {
   // https://developer.chrome.com/articles/fetch-streaming-requests/#feature-detection
@@ -43,7 +43,7 @@ const supportsRequestStreams = (() => {
   const init: RequestInit2 = {
     body: new window.ReadableStream(),
     method: 'POST',
-    get duplex() {
+    get duplex(): 'half' {
       duplexAccessed = true;
       return 'half';
     },
@@ -83,7 +83,7 @@ export default function FileDialog(props: Props) {
   // shared upload code
   function prepareUpload(fileUpload: File[]) {
     // remove big files
-    fileUpload = fileUpload.filter((f, idx) => {
+    fileUpload = fileUpload.filter(f => {
       if (f.size > 15_000_000) {
         alert(trans('file -name- too big', [f.name]));
         return false;

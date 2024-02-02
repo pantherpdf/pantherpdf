@@ -179,7 +179,8 @@ export const Frame: Widget = {
     };
   },
 
-  compile: async (dt: FrameData, helpers): Promise<FrameCompiled> => {
+  compile: async (item, helpers): Promise<FrameCompiled> => {
+    const dt = item as FrameData;
     const dt2: FrameCompiled = JSON.parse(
       JSON.stringify({ ...dt, children: [] }),
     );

@@ -4,6 +4,7 @@
  * @license MIT
  */
 
+import React from 'react';
 import type { GeneralProps } from './types';
 import ObjectExplorer from './ObjectExplorer';
 import useTransformedData from './useTransformedData';

@@ -41,7 +41,8 @@ export const FirstMatch: Widget = {
     };
   },
 
-  compile: async (dt: FirstMatchData, helper): Promise<FirstMatchCompiled> => {
+  compile: async (item, helper): Promise<FirstMatchCompiled> => {
+    const dt = item as FirstMatchData;
     const arr = await helper.evalFormula(dt.source);
     if (!Array.isArray(arr)) {
       throw new Error(

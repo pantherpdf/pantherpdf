@@ -25,7 +25,7 @@ export interface Widget {
   newItem: (props: WidgetNewProps) => Promise<WidgetItem>;
 
   /** Compile item */
-  compile: (item: any, helper: CompileHelper) => Promise<WidgetCompiled>;
+  compile: (item: WidgetItem, helper: CompileHelper) => Promise<WidgetCompiled>;
 
   /** Render properties editor */
   Properties?: FunctionComponent<WidgetEditorProps>;
@@ -87,7 +87,7 @@ export interface CompileHelper {
   report: Report;
   reportCompiled: ReportCompiled;
   api: ApiEndpoints;
-  externalHelpers: { [key: string]: any };
+  externalHelpers: { [key: string]: unknown };
   variables: { [key: string]: unknown };
 }
 
@@ -106,7 +106,7 @@ export interface WidgetPreviewProps {
     chs: WidgetCompiled[],
     props: WidgetPreviewPropsBase,
   ) => React.ReactNode[];
-  externalHelpers: { [key: string]: any };
+  externalHelpers: { [key: string]: unknown };
   item: WidgetCompiled;
 }
 

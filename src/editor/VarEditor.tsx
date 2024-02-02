@@ -23,7 +23,7 @@ import { styled } from '@mui/material/styles';
 
 const reservedVars = ['data', 'report'];
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
   paddingLeft: '0.1rem',
   paddingRight: '0.1rem',
 }));

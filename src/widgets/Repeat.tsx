@@ -54,7 +54,8 @@ export const Repeat: Widget = {
     };
   },
 
-  compile: async (dt: RepeatData, helper): Promise<RepeatCompiled> => {
+  compile: async (item, helper): Promise<RepeatCompiled> => {
+    const dt = item as RepeatData;
     const value = await helper.evalFormula(dt.source);
     if (!Array.isArray(value)) {
       throw new Error(

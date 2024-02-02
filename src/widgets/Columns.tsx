@@ -41,22 +41,17 @@ export const ColumnsCt: Widget = {
     };
   },
 
-  compile: async (dt: ColumnsCtData, helper): Promise<ColumnsCtCompiled> => {
+  compile: async (item, helper): Promise<ColumnsCtCompiled> => {
+    const dt = item as ColumnsCtData;
     return {
       type: dt.type,
       children: await helper.compileChildren(dt.children, helper),
     };
   },
 
-  Editor: function (props) {
-    // handled by Columns
-    return null;
-  },
+  Editor: () => null, // handled by Columns
 
-  Preview: function (props) {
-    // handled by Columns
-    return null;
-  },
+  Preview: () => null, // handled by Columns
 
   Properties: function () {
     return null;
@@ -114,7 +109,8 @@ export const Columns: Widget = {
     };
   },
 
-  compile: async (dt: ColumnsData, helper): Promise<ColumnsCompiled> => {
+  compile: async (item, helper): Promise<ColumnsCompiled> => {
+    const dt = item as ColumnsData;
     return {
       type: dt.type,
       children: (await helper.compileChildren(

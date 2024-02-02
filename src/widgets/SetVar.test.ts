@@ -5,6 +5,8 @@
  * @license MIT
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { TextSimpleData } from './TextSimple';
 import { SetVarData } from '../widgets/SetVar';
 import { ForceChildren, compileComponentTest } from '../unitTestHelpers';

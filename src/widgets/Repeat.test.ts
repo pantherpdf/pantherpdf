@@ -5,6 +5,8 @@
  * @license MIT
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { TextSimpleData } from './TextSimple';
 import { RepeatData } from './Repeat';
 import {

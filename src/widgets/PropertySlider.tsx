@@ -4,6 +4,7 @@
  * @license MIT
  */
 
+import React from 'react';
 import useStateDelayed from '../useStateDelayed';
 import Slider from '@mui/material/Slider';
 import InputLabel from '@mui/material/InputLabel';

@@ -36,7 +36,8 @@ export const TextSimple: Widget = {
     };
   },
 
-  compile: async (dt: TextSimpleData, helpers): Promise<TextSimpleCompiled> => {
+  compile: async (item, helpers): Promise<TextSimpleCompiled> => {
+    const dt = item as TextSimpleData;
     const str2 = await helpers.evalFormula(dt.formula);
     const str =
       str2 !== undefined && str2 !== null && str2 !== false ? String(str2) : '';

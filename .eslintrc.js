@@ -21,6 +21,7 @@ module.exports = {
     curly: ['error', 'all'],
     // disable false positives:
     'testing-library/render-result-naming-convention': 'off',
+    'react/prop-types': 'off',
   },
   overrides: [
     {

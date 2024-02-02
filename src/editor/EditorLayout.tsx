@@ -43,7 +43,7 @@ const BoxMain = styled('div')(({ theme }) => ({
   },
 }));
 
-const BoxMenu = styled(Paper)(({ theme }) => ({
+const BoxMenu = styled(Paper)(() => ({
   position: 'fixed',
   left: '0',
   right: '0',

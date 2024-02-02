@@ -46,7 +46,7 @@ function extractType2(oprs: string[], expr: TExpr) {
   }
 }
 function extractTypes(expr: TExpr[]): string[] {
-  let arr: string[] = [];
+  const arr: string[] = [];
   extractTypes2(arr, expr);
   return arr;
 }

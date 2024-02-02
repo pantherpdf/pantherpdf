@@ -5,6 +5,8 @@
  * @license MIT
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {
   TextHtmlData,
   TextHtmlCompiled,

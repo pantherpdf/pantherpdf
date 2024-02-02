@@ -4,7 +4,7 @@
  * @license MIT
  */
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ErrorAlert from './ErrorAlert';
 import type { GeneralProps } from './types';
 import useTransformedData, { DataOrError } from './useTransformedData';
