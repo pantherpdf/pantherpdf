@@ -1010,6 +1010,8 @@ export const TextHtml: Widget = {
                 el.style.fontSize = val;
               }
             }
+            // Immediately apply due to manual changes
+            editor.sendChanges(true);
           }}
           id="TextHtml-fontSize"
           sx={{ maxWidth: '5rem' }}
