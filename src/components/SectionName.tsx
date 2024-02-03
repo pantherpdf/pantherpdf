@@ -39,7 +39,7 @@ export default function SectionName(props: Props) {
       <Typography style={styleFill} fontWeight="bold">
         {props.text}
         {props.secondaryText && (
-          <Secondary>
+          <Secondary style={{ marginLeft: '0.5rem' }}>
             <small>{props.secondaryText}</small>
           </Secondary>
         )}
