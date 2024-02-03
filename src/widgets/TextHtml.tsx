@@ -46,12 +46,12 @@ import { Element_, parse, extractText } from './HtmlParser';
 import SectionName from '../components/SectionName';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Divider from '@mui/material/Divider';
+import Secondary from '../components/Secondary';
 
 const listOfEditors: Editor[] = [];
 const listOfSelectionCallbacks: (() => void)[] = [];
@@ -949,7 +949,6 @@ export const TextHtml: Widget = {
     const item = props.item as TextHtmlData;
     return (
       <>
-        <InputLabel>{trans('font')}</InputLabel>
         <PropertyFont
           value={item.font}
           onChange={val => props.setItem({ ...props.item, font: val })}
@@ -1016,7 +1015,9 @@ export const TextHtml: Widget = {
           sx={{ maxWidth: '5rem' }}
           title={trans('font-size')}
         >
-          <MenuItem value=""></MenuItem>
+          <MenuItem value="">
+            <Secondary>{trans('inherit')}</Secondary>
+          </MenuItem>
           {['8', '10', '12', '14', '16', '18', '24', '36'].map(x => (
             <MenuItem key={x} value={x}>
               {x}

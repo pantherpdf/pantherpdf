@@ -23,6 +23,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Stack from '@mui/material/Stack';
+import Secondary from '../components/Secondary';
 
 // prettier-ignore
 type Narrowable = string | number | boolean | symbol | object | NonNullable<unknown> | void | null | undefined;
@@ -150,27 +151,14 @@ export default function PropertyFont(props: Props) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
-  function handleInputChange(
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    const target = event.target;
-    let value: string | number = target.value;
-    const name = target.name as keyof TFont;
-    if (typeof value === 'string' && target.type === 'number') {
-      value = parseFloat(value);
-      if (!Number.isFinite(value)) {
-        value = '';
-      }
-    }
-
+  function handleInputChange(name: keyof TFont, value: string) {
     let obj: TFont;
-    if (typeof value === 'string' && value === '') {
+    if (value === '') {
       obj = { ...props.value };
       delete obj[name];
     } else {
       obj = { ...props.value, [name]: value };
     }
-
     props.onChange(obj);
   }
 
@@ -237,18 +225,7 @@ export default function PropertyFont(props: Props) {
             <InputApplyOnEnter
               component={TextField}
               value={family}
-              onChange={val => {
-                if (val && val.length > 0) {
-                  return props.onChange({
-                    ...props.value,
-                    family: val,
-                  });
-                } else {
-                  const val3: TFont = { ...props.value };
-                  delete val3.family;
-                  return props.onChange(val3);
-                }
-              }}
+              onChange={val => handleInputChange('family', val)}
               id="family"
               label={trans('font-family')}
               fullWidth
@@ -262,7 +239,7 @@ export default function PropertyFont(props: Props) {
           <InputApplyOnEnter
             component={TextField}
             value={size}
-            onChange={val => props.onChange({ ...props.value, size: val })}
+            onChange={val => handleInputChange('size', val)}
             id="size"
             regex={WidthRegex}
             label={trans('font-size')}
@@ -275,17 +252,20 @@ export default function PropertyFont(props: Props) {
               value={lineHeight}
               onChange={e => {
                 const val = e.target.value;
-                const obj: TFont = { ...props.value };
-                if (val) {
-                  obj.lineHeight = parseFloat(val);
-                } else {
+                let obj: TFont;
+                if (val === '') {
+                  obj = { ...props.value };
                   delete obj.lineHeight;
+                } else {
+                  obj = { ...props.value, lineHeight: parseFloat(val) };
                 }
                 props.onChange(obj);
               }}
               label={trans('font-line-height')}
             >
-              <MenuItem value=""></MenuItem>
+              <MenuItem value="">
+                <Secondary>{trans('inherit')}</Secondary>
+              </MenuItem>
               {lineHeightOptions.map(w => (
                 <MenuItem value={w.value} key={w.value}>
                   {w.txt}
@@ -297,10 +277,12 @@ export default function PropertyFont(props: Props) {
             select
             id="weight"
             value={weight}
-            onChange={handleInputChange}
+            onChange={e => handleInputChange('weight', e.target.value)}
             label={trans('font-weight')}
           >
-            <MenuItem value=""></MenuItem>
+            <MenuItem value="">
+              <Secondary>{trans('inherit')}</Secondary>
+            </MenuItem>
             {WeightOptions.map(w => (
               <MenuItem value={w} key={w}>
                 {weightName[w]}
@@ -311,10 +293,12 @@ export default function PropertyFont(props: Props) {
             select
             id="style"
             value={style}
-            onChange={handleInputChange}
+            onChange={e => handleInputChange('style', e.target.value)}
             label={trans('font-style')}
           >
-            <MenuItem value=""></MenuItem>
+            <MenuItem value="">
+              <Secondary>{trans('inherit')}</Secondary>
+            </MenuItem>
             {StyleOptions.map(w => (
               <MenuItem value={w} key={w}>
                 {styleName[w]}
@@ -325,15 +309,9 @@ export default function PropertyFont(props: Props) {
             control={
               <Checkbox
                 checked={color.length > 0}
-                onChange={e => {
-                  if (e.target.checked) {
-                    props.onChange({ ...props.value, color: '#000000' });
-                  } else {
-                    const obj = { ...props.value };
-                    delete obj.color;
-                    props.onChange(obj);
-                  }
-                }}
+                onChange={e =>
+                  handleInputChange('color', e.target.checked ? '#000000' : '')
+                }
               />
             }
             label={trans('color')}

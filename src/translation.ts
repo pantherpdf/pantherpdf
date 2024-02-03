@@ -226,6 +226,8 @@ const tr2 = {
   close: { en: 'Close', sl: 'Zapri' },
   error: { en: 'Error', sl: 'Napaka' },
   'uploaded report': { en: 'Uploaded report', sl: 'Naložen report' },
+
+  inherit: { en: 'Inherit', sl: 'Podeduj' },
 };
 
 export type trKeys = keyof typeof tr2;
