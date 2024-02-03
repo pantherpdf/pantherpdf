@@ -21,6 +21,7 @@ import {
   faUpload,
   faCaretDown,
   faCaretUp,
+  faFile,
 } from '@fortawesome/free-solid-svg-icons';
 import VarEditor from './VarEditor';
 import { saveAs } from 'file-saver';
@@ -66,7 +67,7 @@ function fileReportUpload(
       }
       const n = arr.length;
       setArr([...arr, dt]);
-      alert(trans('upload finished', [(n + 1).toString()]));
+      alert(trans('report upload finished', [(n + 1).toString()]));
     });
     fr.readAsText(fl);
   });
@@ -112,6 +113,7 @@ function ShowUpload(props: GeneralProps) {
           onDragEnd={props.dragWidgetEnd}
           style={styleWidget}
         >
+          <FontAwesomeIcon icon={faFile} style={{ marginRight: '0.5rem' }} />
           {trans('uploaded report')}
         </div>
       ))}

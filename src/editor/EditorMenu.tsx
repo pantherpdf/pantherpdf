@@ -112,7 +112,7 @@ function DownloadButton(props: GeneralProps) {
       const fileName = res.properties.fileName || 'report.pdf';
       saveAs(blob, fileName);
     } catch (e) {
-      alert(`Error: ${String(e)}`);
+      alert(String(e));
     }
     setIsDownloading(false);
   }

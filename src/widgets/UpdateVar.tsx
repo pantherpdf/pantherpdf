@@ -14,16 +14,22 @@ import InputApplyOnEnter, {
 } from '../components/InputApplyOnEnter';
 import { findInList } from '../editor/childrenMgmt';
 import trans from '../translation';
-import { SetVarData } from './SetVar';
+import { SetVar, SetVarData } from './SetVar';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
+import Secondary from '../components/Secondary';
 
 interface GetAllVars {
   name: string;
   owner: SetVarData | undefined;
 }
+
+/**
+ * Find all available variables
+ * It expects `SetVar` to be a parent of current widget item.
+ */
 function getAllVars(report: Report, wid: number[]): GetAllVars[] {
   wid = [...wid];
   // return array to keep correct order
@@ -32,7 +38,7 @@ function getAllVars(report: Report, wid: number[]): GetAllVars[] {
   // SetVar
   while (wid.length > 0) {
     const w = findInList(report, wid);
-    if (w.type === 'SetVar') {
+    if (w.type === SetVar.id) {
       const item = w as SetVarData;
       if (!(item.varName in tmpVarNames)) {
         tmpVarNames[item.varName] = true;
@@ -161,7 +167,9 @@ export const UpdateVar: Widget = {
           id="UpdateVar-varName"
         >
           {!vars.find(v => v.name === item.varName) && (
-            <MenuItem value={item.varName}></MenuItem>
+            <MenuItem value={item.varName}>
+              <Secondary>{trans('empty')}</Secondary>
+            </MenuItem>
           )}
           {vars.map(v => (
             <MenuItem value={v.name} key={v.name}>

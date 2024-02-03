@@ -48,7 +48,10 @@ const tr2 = {
     en: 'Uploaded bad file',
     sl: 'Naložena datoteka ni primerna',
   },
-  'upload finished': { en: 'Upload finished', sl: 'Nalaganje končano' },
+  'report upload finished': {
+    en: 'Report upload finished. Manually drag and drop it to the document. It is available under "import" button.',
+    sl: 'Nalaganje končano. Ročno primi in vstavi v dokument. Naložen dokument se nahaja pod gumbom "Uvozi".',
+  },
   download: { en: 'Download', sl: 'Prenesi' },
   upload: { en: 'Upload', sl: 'Naloži' },
   widgets: { en: 'Widgets', sl: 'Gradniki' },

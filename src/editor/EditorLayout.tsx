@@ -204,7 +204,7 @@ export default function Layout(
       };
       reader.readAsText(f);
     } catch (e) {
-      alert(`Error: ${String(e)}`);
+      alert(String(e));
       return;
     }
   }

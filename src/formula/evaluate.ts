@@ -10,16 +10,16 @@ import { isPropertyAllowed } from './isPropertyAllowed';
 
 let cacheFunctions: string[] | undefined;
 let cacheConstants: string[] | undefined;
-async function getVariable(name: string, helpers?: IHelpers): Promise<unknown> {
+async function getVariable(name: string, helpers: IHelpers): Promise<unknown> {
   // user defined
-  if (helpers && helpers.vars) {
+  if (helpers.vars) {
     if (Object.keys(helpers.vars).indexOf(name) !== -1) {
       return helpers.vars[name];
     }
   }
 
   // user defined
-  if (helpers && helpers.getVar) {
+  if (helpers.getVar) {
     const val = await helpers.getVar(name);
     if (val !== undefined) {
       return val;
@@ -170,7 +170,7 @@ export function evaluateOperator(
 
 export default async function evaluatePostfix(
   expr: TExpr[],
-  helpers?: IHelpers,
+  helpers: IHelpers,
 ): Promise<unknown> {
   if (expr.length === 0) {
     return undefined;

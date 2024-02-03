@@ -13,7 +13,9 @@ export default function ErrorAlert({ msg }: { msg: string }) {
   return (
     <Alert severity="error">
       <AlertTitle>{trans('error')}</AlertTitle>
-      {msg}
+      {msg.split('\n').map((msgPart, partIdx) => (
+        <div key={partIdx}>{msgPart}</div>
+      ))}
     </Alert>
   );
 }

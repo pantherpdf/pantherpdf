@@ -33,7 +33,7 @@ async function refreshData(
     );
     return { ok: true, value: dt2 };
   } catch (e) {
-    let errorMsg = String(e);
+    let errorMsg = e instanceof Error ? e.message : String(e);
     if (errorMsg.trim().length === 0) {
       errorMsg = 'unknown error';
     }

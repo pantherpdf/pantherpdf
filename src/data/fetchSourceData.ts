@@ -58,7 +58,7 @@ async function getDataFromUrl(
     });
   } catch (err) {
     throw new Error(
-      `Error while requesting data from url "${url}". Error: ${String(err)}`,
+      `Error while requesting data from url "${url}": ${String(err)}`,
     );
   }
   if (r.status !== 200) {
