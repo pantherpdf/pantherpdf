@@ -7,7 +7,7 @@
 import React from 'react';
 import trans, { trKeys } from '../translation';
 import { tuple } from '../types';
-import InputApplyOnEnter from '../components/InputApplyOnEnter';
+import { InputApplyOnEnterNumber } from '../components/InputApplyOnEnter';
 import PropertyColor from './PropertyColor';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -39,14 +39,14 @@ interface BorderEditorProps {
 export default function BorderEditor(props: BorderEditorProps) {
   return (
     <>
-      <InputApplyOnEnter
+      <InputApplyOnEnterNumber
         component={TextField}
         value={props.value.width}
         type="number"
         onChange={val =>
           props.onChange({
             ...props.value,
-            width: typeof val === 'number' ? val : 0,
+            width: val,
           })
         }
         label={trans('border-width')}

@@ -85,7 +85,7 @@ export default function VarEditor(props: GeneralProps) {
                 <InputApplyOnEnter
                   component={TextField}
                   value={v.name}
-                  onChange={val => changeVar(idx, String(val), undefined)}
+                  onChange={val => changeVar(idx, val, undefined)}
                   size="small"
                   hiddenLabel
                   fullWidth
@@ -96,7 +96,7 @@ export default function VarEditor(props: GeneralProps) {
                 <InputApplyOnEnter
                   component={TextField}
                   value={v.formula}
-                  onChange={val => changeVar(idx, undefined, String(val))}
+                  onChange={val => changeVar(idx, undefined, val)}
                   size="small"
                   hiddenLabel
                   fullWidth

@@ -194,7 +194,7 @@ export const Columns: Widget = {
               value={w}
               onChange={val => {
                 const arr = [...item.widths];
-                arr[idx] = String(val);
+                arr[idx] = val;
                 props.setItem({ ...item, widths: arr });
               }}
               regex={WidthRegex}

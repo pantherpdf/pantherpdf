@@ -11,7 +11,7 @@ import Property4SideInput, {
 } from '../widgets/Property4SideInput';
 import SectionName from '../components/SectionName';
 import trans from '../translation';
-import InputApplyOnEnter from '../components/InputApplyOnEnter';
+import { InputApplyOnEnterNumber } from '../components/InputApplyOnEnter';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 
@@ -82,20 +82,20 @@ export default function PaperEditor(props: PaperEditorProps) {
         secondaryText={trans('0 means default')}
       />
 
-      <InputApplyOnEnter
+      <InputApplyOnEnterNumber
         component={TextField}
         value={width}
-        onChange={val => changeProperty('width', val as number)}
+        onChange={val => changeProperty('width', val)}
         type="number"
         label={trans('width')}
         id="paperWidth"
         InputProps={props.unit === 'mm' ? inputAdornmentMm : inputAdornmentInch}
       />
 
-      <InputApplyOnEnter
+      <InputApplyOnEnterNumber
         component={TextField}
         value={height}
-        onChange={val => changeProperty('height', val as number)}
+        onChange={val => changeProperty('height', val)}
         type="number"
         label={trans('height')}
         id="paperHeight"

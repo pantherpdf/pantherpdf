@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import InputApplyOnEnter from '../components/InputApplyOnEnter';
+import { InputApplyOnEnterNumber } from '../components/InputApplyOnEnter';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 
@@ -16,7 +16,6 @@ interface Props {
   onChange: (val: Value) => void;
 
   id?: string;
-  regex?: RegExp;
   style?: React.CSSProperties;
 }
 
@@ -27,7 +26,7 @@ export default function Property4SideInput(props: Props) {
       display: 'inline',
     };
     return (
-      <InputApplyOnEnter
+      <InputApplyOnEnterNumber
         component={TextField}
         value={props.value[idx]}
         onChange={val => {
@@ -40,7 +39,6 @@ export default function Property4SideInput(props: Props) {
         }}
         id={props.id ? `${props.id}-${idx}` : undefined}
         style={st}
-        regex={props.regex}
         size="small"
       />
     );

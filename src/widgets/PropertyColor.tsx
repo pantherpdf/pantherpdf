@@ -76,7 +76,7 @@ export default function PropertyColor(props: Props) {
           component={InputBase}
           value={props.value}
           onChange={val2 => {
-            const val = String(val2).toUpperCase();
+            const val = val2.toUpperCase();
             setValue(val);
             props.onChange(val);
           }}

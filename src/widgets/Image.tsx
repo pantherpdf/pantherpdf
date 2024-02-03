@@ -271,7 +271,7 @@ export const Image: Widget = {
           onChange={val => {
             const val2: ImageData = { ...item };
             if (val) {
-              val2.width = String(val);
+              val2.width = val;
             } else {
               delete val2.width;
             }
@@ -289,7 +289,7 @@ export const Image: Widget = {
           onChange={val => {
             const val2: ImageData = { ...item };
             if (val) {
-              val2.height = String(val);
+              val2.height = val;
             } else {
               delete val2.height;
             }

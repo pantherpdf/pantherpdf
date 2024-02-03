@@ -547,10 +547,9 @@ function Override(props: GeneralProps & { showBrowseSourceData: () => void }) {
           component={TextField}
           value={dataUrl}
           onChange={val => {
-            const str = String(val);
             const obj: SourceData | undefined =
-              str.length > 0
-                ? { type: 'url', url: str, description: '' }
+              val.length > 0
+                ? { type: 'url', url: val, description: '' }
                 : undefined;
             props.setSourceDataOverride(obj);
           }}

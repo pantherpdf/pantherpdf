@@ -238,10 +238,10 @@ export default function PropertyFont(props: Props) {
               component={TextField}
               value={family}
               onChange={val => {
-                if (val && String(val).length > 0) {
+                if (val && val.length > 0) {
                   return props.onChange({
                     ...props.value,
-                    family: String(val),
+                    family: val,
                   });
                 } else {
                   const val3: TFont = { ...props.value };
@@ -262,9 +262,7 @@ export default function PropertyFont(props: Props) {
           <InputApplyOnEnter
             component={TextField}
             value={size}
-            onChange={val =>
-              props.onChange({ ...props.value, size: String(val) })
-            }
+            onChange={val => props.onChange({ ...props.value, size: val })}
             id="size"
             regex={WidthRegex}
             label={trans('font-size')}

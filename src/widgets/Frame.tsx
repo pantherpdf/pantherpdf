@@ -223,13 +223,13 @@ export const Frame: Widget = {
       <>
         <SizeInput
           type="width"
-          value={item.width || ''}
-          onChange={val => props.setItem({ ...item, width: String(val) })}
+          value={item.width}
+          onChange={val => props.setItem({ ...item, width: val })}
         />
         <SizeInput
           type="height"
-          value={item.height || ''}
-          onChange={val => props.setItem({ ...item, height: String(val) })}
+          value={item.height}
+          onChange={val => props.setItem({ ...item, height: val })}
         />
 
         <FormControlLabel
@@ -351,8 +351,8 @@ export const Frame: Widget = {
 };
 
 interface SizeInputProps {
-  value: string | number;
-  onChange: (val: string | number) => void;
+  value: string;
+  onChange: (val: string) => void;
   type: 'width' | 'height';
 }
 

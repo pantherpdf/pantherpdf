@@ -259,7 +259,7 @@ function TagEditor(props: WidgetEditorProps) {
         id="tag-value"
         value={btn.innerText}
         onChange={val => {
-          btn.innerText = String(val);
+          btn.innerText = val;
           editor.sendChanges(true);
         }}
         label={trans('source data')}
