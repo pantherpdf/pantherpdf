@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -14,9 +14,9 @@ import { ForceChildren, compileComponentTest } from '../unitTestHelpers';
 test('SetVar', async () => {
   const dt: ForceChildren<SetVarData | TextSimpleData> = {
     type: 'SetVar',
-    source: 'data.abc.def',
+    source: { formula: 'data.abc.def' },
     varName: 'ccc',
-    children: [{ type: 'TextSimple', formula: 'ccc', children: [] }],
+    children: [{ type: 'TextSimple', value: { formula: 'ccc' }, children: [] }],
   };
   const data = { abc: { def: '123' } };
   const p = await compileComponentTest(dt, data);
@@ -28,9 +28,9 @@ test('SetVar', async () => {
 test('SetVar check that childs of data are not accessible', async () => {
   const dt: ForceChildren<SetVarData | TextSimpleData> = {
     type: 'SetVar',
-    source: 'abc.def',
+    source: { formula: 'abc.def' },
     varName: 'ccc',
-    children: [{ type: 'TextSimple', formula: 'abc', children: [] }],
+    children: [{ type: 'TextSimple', value: { formula: 'abc' }, children: [] }],
   };
   const data = { abc: { def: '123' } };
 

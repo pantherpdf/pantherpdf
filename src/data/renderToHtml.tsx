@@ -1,7 +1,7 @@
 /**
  * @file Compiled report -> html
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -40,7 +40,7 @@ export function renderBody(
     externalHelpers,
   };
 
-  const children = helper.renderChildren(report.children, helper);
+  const children = helper.renderChildren(report.widgets, helper);
 
   // prepare css
   const cssObj: CSSProperties = {
@@ -59,7 +59,7 @@ export default function renderToHtml(
   const bodyElement = renderBody(report, widgets, externalHelpers);
   const bodyTxt = renderToString(bodyElement);
 
-  const fontUrl = GoogleFontUrlImport(report.fontsUsed);
+  const fontUrl = GoogleFontUrlImport(report.properties.fontsUsed);
   const fontHtml = fontUrl
     ? `<link rel="stylesheet" href="${fontUrl}"></link>`
     : '';
@@ -150,7 +150,7 @@ sup {
 }
 </style>
 <style>
-${report.globalCss}
+${report.properties.globalCss}
 </style>
 ${fontHtml}
 </head>

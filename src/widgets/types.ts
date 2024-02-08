@@ -1,12 +1,17 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import type { FunctionComponent } from 'react';
-import type { ApiEndpoints, ReportCompiled, Report } from '../types';
+import type {
+  ApiEndpoints,
+  FormulaObject,
+  Report,
+  ReportPropertiesCompiled,
+} from '../types';
 import type { FormulaHelper } from '../data/compile';
 import type { GeneralProps } from '../editor/types';
 import type { TransName } from '../translation';
@@ -75,7 +80,7 @@ export interface WidgetNewProps {
 
 export interface CompileHelper {
   formulaHelper: FormulaHelper;
-  evalFormula: (txt: string) => Promise<unknown>;
+  evalFormula: (val: FormulaObject) => Promise<unknown>;
   compileChildren: (
     children: WidgetItem[],
     helper: CompileHelper,
@@ -85,7 +90,7 @@ export interface CompileHelper {
   wid: number[];
 
   report: Report;
-  reportCompiled: ReportCompiled;
+  propertiesCompiled: ReportPropertiesCompiled;
   api: ApiEndpoints;
   externalHelpers: { [key: string]: unknown };
   variables: { [key: string]: unknown };

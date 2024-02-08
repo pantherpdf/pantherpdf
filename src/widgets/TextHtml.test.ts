@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -31,12 +31,12 @@ d<b id="&quot;">ef</b> <data data-adjust="123&gt;4"><i></i><b>d</b>ata.def</data
 <p></p>`;
 
   const arr = ValueInternalFromEditor(html);
-  expect(arr[0].value).toBe(`aaa
+  expect((arr[0] as any).value).toBe(`aaa
 <div>a<b style="color:white">b</b>c</div>
 d<b id="&quot;">ef</b> <b>`);
-  expect(arr[1].value).toBe('data.def');
+  expect((arr[1] as any).formula).toBe('data.def');
   expect((arr[1] as any).adjust).toBe('123>4');
-  expect(arr[2].value).toBe(`</b><br/>
+  expect((arr[2] as any).value).toBe(`</b><br/>
 <div>ghi</div>
 <p></p>`);
 });

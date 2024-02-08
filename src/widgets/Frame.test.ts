@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -23,7 +23,7 @@ test('Frame should include google font', async () => {
     widgets: [el],
   };
   const compiled = await compileTest(report, {});
-  expect(compiled.fontsUsed).toStrictEqual([
+  expect(compiled.properties.fontsUsed).toStrictEqual([
     { name: 'Lato', weight: 700, italic: true },
   ]);
 });

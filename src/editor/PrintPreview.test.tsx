@@ -1,7 +1,7 @@
 /**
  * @jest-environment ./src/JSDOMExtEnvironment.ts
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2023
+ * @copyright Ignac Banic 2023-2024
  * @license MIT
  */
 
@@ -19,7 +19,7 @@ test('RenderPreview should prepare a document', async () => {
   const widgets: WidgetItem[] = [
     {
       type: 'TextSimple',
-      formula: '"Hello " + data.hello',
+      value: { formula: '"Hello " + data.hello' },
       children: [],
     },
   ];

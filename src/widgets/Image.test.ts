@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2023
+ * @copyright Ignac Banic 2023-2024
  * @license MIT
  */
 
@@ -16,7 +16,7 @@ test('Image should render svg', async () => {
 </svg>`;
   const helper: WidgetNewProps = { report: sampleReport };
   const el = (await Image.newItem(helper)) as ImageData;
-  el.formula = `data.generateImg()`;
+  el.url = { formula: `data.generateImg()` };
   const data = {
     generateImg: () => {
       return content;

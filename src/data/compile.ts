@@ -1,12 +1,19 @@
 /**
  * @file Compile sourceData and report - evaluate all formulas
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
-import type { Report, ApiEndpoints, ReportCompiled } from '../types';
-import FormulaEvaluate from '../formula/formula';
+import type {
+  Report,
+  ApiEndpoints,
+  ReportCompiled,
+  ReportProperties,
+  ReportPropertiesCompiled,
+  FormulaObject,
+} from '../types';
+import formulaEvaluate from '../formula/formula';
 import { getWidget } from '../widgets/allWidgets';
 import type { CompileHelper, Widget, WidgetItem } from '../widgets/types';
 import { PropertyFontExtractStyle } from '../widgets/PropertyFont';
@@ -53,9 +60,11 @@ export default async function compile(
   report = JSON.parse(JSON.stringify(report));
 
   const formulaHelper = new FormulaHelper();
-  const getVar = formulaHelper.getVar.bind(formulaHelper);
   formulaHelper.push('data', data);
   formulaHelper.push('report', report);
+  const evalFormulaWrapper = async (val: FormulaObject): Promise<unknown> => {
+    return formulaEvaluate(val.formula, formulaHelper);
+  };
 
   // custom variables
   const vars: { [key: string]: unknown } = {};
@@ -63,46 +72,25 @@ export default async function compile(
     return vars[varName];
   }
   for (const v of report.variables) {
-    vars[v.name] = await FormulaEvaluate(v.formula, { getVar });
+    vars[v.name] = evalFormulaWrapper(v.value);
     formulaHelper.push(v.name, getVarValue);
   }
 
-  let dt2: ReportCompiled = {
-    ...report,
-    children: [],
-    fontsUsed: [],
-    globalCss: '',
-  };
-  dt2 = JSON.parse(JSON.stringify(dt2));
-  if (dt2.properties.font) {
-    const style = PropertyFontExtractStyle(dt2.properties.font);
-    if (style) {
-      dt2.fontsUsed.push(style);
-    }
-  }
-
-  if (dt2.properties.fileName) {
-    const res = await FormulaEvaluate(dt2.properties.fileName, { getVar });
-    if (typeof res !== 'string') {
-      throw new Error(
-        `Filename should be a string, but received ${typeof res}`,
-      );
-    }
-    dt2.properties.fileName = res;
-  }
+  const propsCompiled = await compilePrprt(
+    report.properties,
+    evalFormulaWrapper,
+  );
 
   const helper: CompileHelper = {
     wid: [],
     report: report,
-    reportCompiled: dt2,
+    propertiesCompiled: propsCompiled,
     formulaHelper,
     api,
     variables: vars,
     externalHelpers,
 
-    evalFormula: async (txt: string) => {
-      return FormulaEvaluate(txt, { getVar });
-    },
+    evalFormula: evalFormulaWrapper,
 
     compileChildren: async (children: WidgetItem[], helper: CompileHelper) => {
       // dont use promise.all() because order of execution matters and some async operation could change it
@@ -117,7 +105,7 @@ export default async function compile(
     },
   };
 
-  dt2.children = await helper.compileChildren(report.widgets, helper);
+  const widgetsCompiled = await helper.compileChildren(report.widgets, helper);
 
   formulaHelper.pop();
   formulaHelper.pop();
@@ -125,5 +113,38 @@ export default async function compile(
   if (formulaHelper.overrides.length !== 0) {
     throw new Error('helper has overrides still left inside');
   }
-  return dt2;
+
+  return {
+    widgets: widgetsCompiled,
+    properties: propsCompiled,
+  };
+}
+
+async function compilePrprt(
+  prprt: ReportProperties,
+  evalFormulaWrapper: (formula: FormulaObject) => Promise<unknown>,
+): Promise<ReportPropertiesCompiled> {
+  const obj: ReportPropertiesCompiled = {
+    // make deep copy because widgets can change properties
+    ...JSON.parse(JSON.stringify(prprt)),
+    fileName: undefined,
+    fontsUsed: [],
+    globalCss: '',
+  };
+  if (prprt.fileName !== undefined) {
+    const res = await evalFormulaWrapper(prprt.fileName);
+    if (typeof res !== 'string') {
+      throw new Error(
+        `Filename should be a string, but received ${typeof res}`,
+      );
+    }
+    obj.fileName = res;
+  }
+  if (prprt.font) {
+    const style = PropertyFontExtractStyle(prprt.font);
+    if (style) {
+      obj.fontsUsed.push(style);
+    }
+  }
+  return obj;
 }

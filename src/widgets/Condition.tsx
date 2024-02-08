@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -13,10 +13,11 @@ import InputApplyOnEnter, {
 } from '../components/InputApplyOnEnter';
 import trans, { transName } from '../translation';
 import TextField from '@mui/material/TextField';
+import { FormulaObject } from '../types';
 
 export interface ConditionData extends WidgetItem {
   type: 'Condition';
-  formula: string;
+  condition: FormulaObject;
 }
 
 export interface ConditionCompiled extends WidgetCompiled {
@@ -33,13 +34,13 @@ export const Condition: Widget = {
     return {
       type: 'Condition',
       children: [],
-      formula: 'true',
+      condition: { formula: 'true' },
     };
   },
 
   compile: async (item, helper): Promise<ConditionCompiled> => {
     const dt = item as ConditionData;
-    const ok = await helper.evalFormula(dt.formula);
+    const ok = await helper.evalFormula(dt.condition);
     return {
       type: dt.type,
       children: ok ? await helper.compileChildren(dt.children, helper) : [],
@@ -69,8 +70,10 @@ export const Condition: Widget = {
       <>
         <InputApplyOnEnter
           component={TextField}
-          value={item.formula}
-          onChange={val => props.setItem({ ...item, formula: val })}
+          value={item.condition.formula}
+          onChange={val =>
+            props.setItem({ ...item, condition: { formula: val } })
+          }
           label={trans('formula')}
           id="Condition-formula"
           InputProps={inputFAdornment}

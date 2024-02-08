@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -24,11 +24,11 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import { FormulaObject } from '../types';
 
 export interface ImageData extends WidgetItem {
   type: 'Image';
-  url: string;
-  formula: string;
+  url: string | FormulaObject;
   align?: TAlign;
   width?: string;
   height?: string;
@@ -68,7 +68,7 @@ export const Image: Widget = {
   compile: async (item, helpers): Promise<ImageCompiled> => {
     const dt = item as ImageData;
     let data;
-    if (dt.url.length > 0) {
+    if (typeof dt.url === 'string' && dt.url.length > 0) {
       data = dt.url;
       if (data.startsWith(apiPrefix)) {
         if (!helpers.api.filesDownload) {
@@ -84,8 +84,8 @@ export const Image: Widget = {
       }
     }
     //
-    else if (dt.formula.length > 0) {
-      const data2 = await helpers.evalFormula(dt.formula);
+    else if (typeof dt.url === 'object' && dt.url.formula.length > 0) {
+      const data2 = await helpers.evalFormula(dt.url);
       if (typeof data2 !== 'string') {
         throw new Error(
           `Image from formula expected string but got ${typeof data2}`,
@@ -127,7 +127,7 @@ export const Image: Widget = {
     }
 
     let img;
-    if (item.url.length > 0) {
+    if (typeof item.url === 'string' && item.url.length > 0) {
       let url = item.url;
       if (url.startsWith(apiPrefix)) {
         url = props.api.filesDownloadUrl
@@ -140,7 +140,7 @@ export const Image: Widget = {
       img = <img src={url} alt="" style={cssImg} />;
     }
     //
-    else if (item.formula.length > 0) {
+    else if (typeof item.url === 'object' && item.url.formula.length > 0) {
       cssImg.backgroundColor = '#ddd';
       cssImg.textAlign = 'center';
       cssImg.minWidth = '100px';
@@ -154,7 +154,7 @@ export const Image: Widget = {
             noWrap
             style={{ fontSize: '70%', opacity: '0.3' }}
           >
-            {item.formula}
+            {item.url.formula}
           </Typography>
         </div>
       );
@@ -238,8 +238,8 @@ export const Image: Widget = {
       <>
         <InputApplyOnEnter
           component={TextField}
-          value={item.formula}
-          onChange={val => props.setItem({ ...item, formula: val })}
+          value={typeof item.url === 'object' ? item.url.formula : ''}
+          onChange={val => props.setItem({ ...item, url: { formula: val } })}
           label={trans('formula')}
           id="img-formula"
           InputProps={inputFAdornment}
@@ -247,7 +247,7 @@ export const Image: Widget = {
 
         <InputApplyOnEnter
           component={TextField}
-          value={item.url}
+          value={typeof item.url === 'string' ? item.url : ''}
           onChange={val => props.setItem({ ...item, url: val })}
           label={trans('url')}
           id="img-url"
@@ -338,7 +338,7 @@ export const Image: Widget = {
           <FileDialog
             mode="value"
             value={
-              item.url && item.url.startsWith(apiPrefix)
+              typeof item.url === 'string' && item.url.startsWith(apiPrefix)
                 ? item.url.substring(apiPrefix.length)
                 : ''
             }

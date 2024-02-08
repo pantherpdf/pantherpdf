@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -22,7 +22,6 @@ import PropertyFont, {
   PropertyFontGenCss,
   TFont,
 } from './PropertyFont';
-import FormulaEvaluate from '../formula/formula';
 import {
   faAlignCenter,
   faAlignJustify,
@@ -52,6 +51,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Divider from '@mui/material/Divider';
 import Secondary from '../components/Secondary';
+import { FormulaObject } from '../types';
 
 const listOfEditors: Editor[] = [];
 const listOfSelectionCallbacks: (() => void)[] = [];
@@ -692,9 +692,9 @@ class Editor extends React.Component<EditorProps, EditorState> {
   }
 }
 
-type TextHtmlDataValue =
-  | { type: 'html'; value: string }
-  | { type: 'formula'; value: string; adjust?: string };
+type ValueHtml = { type: 'html'; value: string };
+type ValueFormula = FormulaObject & { type: 'formula'; adjust?: string };
+type TextHtmlDataValue = ValueHtml | ValueFormula;
 export interface TextHtmlData extends WidgetItem {
   type: 'TextHtml';
   value: TextHtmlDataValue[];
@@ -730,7 +730,7 @@ function ValueInternalToEditor(value: TextHtmlDataValue[]): string {
         if (part.adjust) {
           html += ` data-adjust="${escapeHtml(part.adjust)}"`;
         }
-        html += `>${escapeHtml(part.value)}</${tagType}>`;
+        html += `>${escapeHtml(part.formula)}</${tagType}>`;
         break;
       }
       default: {
@@ -794,10 +794,8 @@ export function ValueInternalFromEditor(html: string): TextHtmlDataValue[] {
     }
     const html2 = html.substring(i, i2);
     if (html2.length > 0) {
-      if (arr.length === 0 || arr[arr.length - 1].type !== 'html') {
-        arr.push({ type: 'html', value: '' });
-      }
-      arr[arr.length - 1].value += html2;
+      const lastVal = getOrAddHtmlValue(arr);
+      lastVal.value += html2;
     }
     const { formula, adjust, tags } = extractTag(
       html.substring(i2, i3 + tagEnd.length),
@@ -808,18 +806,19 @@ export function ValueInternalFromEditor(html: string): TextHtmlDataValue[] {
     ) {
       arr.push({ type: 'html', value: '' });
     }
+    const lastVal = getOrAddHtmlValue(arr);
     for (const tag of tags) {
-      arr[arr.length - 1].value += `<${tag.name}`;
+      lastVal.value += `<${tag.name}`;
       for (const [key, value] of Object.entries(tag.attributes)) {
-        arr[arr.length - 1].value += ` ${key}`;
+        lastVal.value += ` ${key}`;
         if (value !== undefined) {
-          arr[arr.length - 1].value += `="${escapeHtml(value)}"`;
+          lastVal.value += `="${escapeHtml(value)}"`;
         }
       }
-      arr[arr.length - 1].value += `>`;
+      lastVal.value += `>`;
     }
     if (formula.length > 0) {
-      arr.push({ type: 'formula', value: formula, adjust });
+      arr.push({ type: 'formula', formula, adjust });
     }
     if (tags.length > 0) {
       const val: TextHtmlDataValue = { type: 'html', value: '' };
@@ -831,12 +830,19 @@ export function ValueInternalFromEditor(html: string): TextHtmlDataValue[] {
     i = i3 + tagEnd.length;
   }
   if (i < html.length) {
-    if (arr.length === 0 || arr[arr.length - 1].type !== 'html') {
-      arr.push({ type: 'html', value: '' });
-    }
-    arr[arr.length - 1].value += html.substring(i);
+    const lastVal = getOrAddHtmlValue(arr);
+    lastVal.value += html.substring(i);
   }
   return arr;
+}
+
+function getOrAddHtmlValue(arr: TextHtmlDataValue[]): ValueHtml {
+  if (arr.length > 0 && arr[arr.length - 1].type === 'html') {
+    return arr[arr.length - 1] as ValueHtml;
+  }
+  const lastVal: ValueHtml = { type: 'html', value: '' };
+  arr.push(lastVal);
+  return lastVal;
 }
 
 export const TextHtml: Widget = {
@@ -864,7 +870,7 @@ export const TextHtml: Widget = {
     const dt = item as TextHtmlData;
     const style = PropertyFontExtractStyle(dt.font);
     if (style) {
-      helper.reportCompiled.fontsUsed.push(style);
+      helper.propertiesCompiled.fontsUsed.push(style);
     }
     // combine parts
     let html = '';
@@ -876,7 +882,7 @@ export const TextHtml: Widget = {
           break;
         }
         case 'formula': {
-          let value = await FormulaEvaluate(part.value, helper.formulaHelper);
+          let value = await helper.evalFormula(part);
           if (part.adjust && part.adjust.length > 0) {
             const adjustObj = listOfAdjusts.find(x => x.id === part.adjust);
             if (!adjustObj) {

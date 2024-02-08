@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -14,11 +14,15 @@ import type { TDragObj } from './types';
 
 test('dropImpl copy existing widget to the end of doc', () => {
   const r = JSON.parse(JSON.stringify(sampleReport)) as Report;
-  const c2: TextSimpleData = { type: 'TextSimple', children: [], formula: '' };
+  const c2: TextSimpleData = {
+    type: 'TextSimple',
+    children: [],
+    value: { formula: '' },
+  };
   const c1: RepeatData = {
     type: 'Repeat',
     children: [c2],
-    source: '',
+    source: { formula: '' },
     varName: '',
     direction: 'rows',
   };
@@ -34,11 +38,15 @@ test('dropImpl copy existing widget to the end of doc', () => {
 
 test('dropImpl move existing widget to the end of doc', () => {
   const r = JSON.parse(JSON.stringify(sampleReport)) as Report;
-  const c2: TextSimpleData = { type: 'TextSimple', children: [], formula: '' };
+  const c2: TextSimpleData = {
+    type: 'TextSimple',
+    children: [],
+    value: { formula: '' },
+  };
   const c1: RepeatData = {
     type: 'Repeat',
     children: [c2],
-    source: '',
+    source: { formula: '' },
     varName: '',
     direction: 'rows',
   };

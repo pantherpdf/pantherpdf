@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -24,9 +24,9 @@ test('text', async () => {
   const dt: ForceChildren<RepeatData | TextSimpleData> = {
     type: 'Repeat',
     varName: 'rp',
-    source: 'data.arr + ["a","b"]',
+    source: { formula: 'data.arr + ["a","b"]' },
     direction: 'rows',
-    children: [{ type: 'TextSimple', formula: 'rp', children: [] }],
+    children: [{ type: 'TextSimple', value: { formula: 'rp' }, children: [] }],
   };
   const data = { arr: ['1', '2'] };
   const p = (await compileComponentTest(dt, data)) as any;
@@ -48,14 +48,14 @@ test('complete rows', async () => {
   const rpt: RepeatData = {
     type: 'Repeat',
     children: [txt],
-    source: '[1,2,3,4,5]',
+    source: { formula: '[1,2,3,4,5]' },
     varName: 'item',
     direction: 'rows',
   };
   const report: Report = { ...sampleReport, widgets: [rpt] };
   const report2 = await compileTest(report, {});
 
-  const children = report2.children as any;
+  const children = report2.widgets as any;
   expect(children[0].type).toBe('Repeat');
   expect(children[0].children.length).toBe(5);
   expect(Array.isArray(children[0].children[0])).toBeTruthy();
@@ -76,7 +76,7 @@ test('repeat columns', async () => {
   const rpt: RepeatData = {
     type: 'Repeat',
     children: [txt],
-    source: '[1,2,3,4,5,6,7]',
+    source: { formula: '[1,2,3,4,5,6,7]' },
     varName: 'item',
     direction: 'columns',
   };
@@ -95,14 +95,14 @@ test('complete grid', async () => {
   const rpt: RepeatData = {
     type: 'Repeat',
     children: [txt],
-    source: '[1,2,3,4,5]',
+    source: { formula: '[1,2,3,4,5]' },
     varName: 'item',
     direction: 'grid',
   };
   const report: Report = { ...sampleReport, widgets: [rpt] };
   const report2 = await compileTest(report, {});
 
-  const children = report2.children as any;
+  const children = report2.widgets as any;
   expect(children[0].type).toBe('Repeat');
   expect(children[0].children.length).toBe(5);
   expect(Array.isArray(children[0].children[0])).toBeTruthy();
@@ -131,7 +131,7 @@ test('grid - products', async () => {
   const rpt: RepeatData = {
     type: 'Repeat',
     children: [frame],
-    source: '[1,2,3]',
+    source: { formula: '[1,2,3]' },
     varName: 'item',
     direction: 'grid',
   };
@@ -141,7 +141,7 @@ test('grid - products', async () => {
 
   const report: Report = { ...sampleReport, widgets: [rpt] };
   const report2 = await compileTest(report, {});
-  expect(report2.globalCss.replace(/\s/g, '')).toContain(
+  expect(report2.properties.globalCss.replace(/\s/g, '')).toContain(
     '.grid-with-frame>div{display:inline-block;vertical-align:top;}',
   );
 });

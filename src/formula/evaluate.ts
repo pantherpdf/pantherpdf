@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -12,18 +12,9 @@ let cacheFunctions: string[] | undefined;
 let cacheConstants: string[] | undefined;
 async function getVariable(name: string, helpers: IHelpers): Promise<unknown> {
   // user defined
-  if (helpers.vars) {
-    if (Object.keys(helpers.vars).indexOf(name) !== -1) {
-      return helpers.vars[name];
-    }
-  }
-
-  // user defined
-  if (helpers.getVar) {
-    const val = await helpers.getVar(name);
-    if (val !== undefined) {
-      return val;
-    }
+  const val = await helpers.getVar(name);
+  if (val !== undefined) {
+    return val;
   }
 
   // functions

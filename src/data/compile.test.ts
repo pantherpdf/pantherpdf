@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -14,16 +14,20 @@ test('text data', async () => {
   const report: ReportForceWidgets<TextSimpleData> = {
     ...sampleReport,
     widgets: [
-      { type: 'TextSimple', formula: '"Hello World: "+data.num', children: [] },
+      {
+        type: 'TextSimple',
+        value: { formula: '"Hello World: "+data.num' },
+        children: [],
+      },
     ],
   };
 
   const obj = { num: 123 };
   const compiled = await compileTest(report, obj);
 
-  expect(compiled.children.length).toBe(1);
-  expect(compiled.children[0].type).toBe('TextSimple');
-  const c = compiled.children[0] as TextSimpleCompiled;
+  expect(compiled.widgets.length).toBe(1);
+  expect(compiled.widgets[0].type).toBe('TextSimple');
+  const c = compiled.widgets[0] as TextSimpleCompiled;
   expect(c.data).toBe('Hello World: 123');
 });
 
@@ -33,7 +37,7 @@ test('text report', async () => {
     widgets: [
       {
         type: 'TextSimple',
-        formula: '"Hello World: "+report.widgets[0].type',
+        value: { formula: '"Hello World: "+report.widgets[0].type' },
         children: [],
       },
     ],
@@ -42,16 +46,18 @@ test('text report', async () => {
   const obj = { num: 123 };
   const compiled = await compileTest(report, obj);
 
-  expect(compiled.children.length).toBe(1);
-  expect(compiled.children[0].type).toBe('TextSimple');
-  const c = compiled.children[0] as TextSimpleCompiled;
+  expect(compiled.widgets.length).toBe(1);
+  expect(compiled.widgets[0].type).toBe('TextSimple');
+  const c = compiled.widgets[0] as TextSimpleCompiled;
   expect(c.data).toBe('Hello World: TextSimple');
 });
 
 test('text', async () => {
   const report: ReportForceWidgets<TextSimpleData> = {
     ...sampleReport,
-    widgets: [{ type: 'TextSimple', formula: 'non_EXIStent', children: [] }],
+    widgets: [
+      { type: 'TextSimple', value: { formula: 'non_EXIStent' }, children: [] },
+    ],
   };
 
   const obj = { num: 123 };
@@ -68,7 +74,7 @@ test('fonts used', async () => {
   };
   const obj = {};
   const compiled = await compileTest(report, obj);
-  expect(compiled.fontsUsed).toStrictEqual([
+  expect(compiled.properties.fontsUsed).toStrictEqual([
     { name: 'Arial', weight: 400, italic: false },
   ]);
 });

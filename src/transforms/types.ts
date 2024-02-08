@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -8,7 +8,7 @@ import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import type { FunctionComponent } from 'react';
 import type { GeneralProps } from '../editor/types';
 import type { TransName } from '../translation';
-import type { ApiEndpoints } from '../types';
+import type { ApiEndpoints, FormulaObject } from '../types';
 import type { FormulaHelper } from '../data/compile';
 
 /** Instance of a Transform */
@@ -58,7 +58,7 @@ export interface TransformHelper {
   transformIndex: number;
 
   /** Evaluate formula */
-  evalFormula: (txt: string) => Promise<unknown>;
+  evalFormula: (txt: FormulaObject) => Promise<unknown>;
   formulaHelper: FormulaHelper;
 
   api: ApiEndpoints;

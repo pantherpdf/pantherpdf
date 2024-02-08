@@ -1,7 +1,7 @@
 /**
  * @file General settings/properties of a report
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -151,7 +151,7 @@ export default function ReportSettings(props: GeneralProps) {
       },
     };
     if (key === 'fileName' && typeof value === 'string') {
-      obj.properties[key] = value;
+      obj.properties[key] = { formula: value };
     } else if (key === 'lang' && typeof value === 'string') {
       obj.properties[key] = value;
     } else {
@@ -200,7 +200,7 @@ export default function ReportSettings(props: GeneralProps) {
         <>
           <InputApplyOnEnter
             component={TextField}
-            value={props.report.properties.fileName || ''}
+            value={props.report.properties.fileName?.formula || ''}
             onChange={val =>
               typeof val === 'string' && val.length > 0
                 ? changeProperty('fileName', val)

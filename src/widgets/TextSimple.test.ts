@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -11,7 +11,7 @@ import { compileComponentTest } from '../unitTestHelpers';
 test('text', async () => {
   const dt: TextSimpleData = {
     type: 'TextSimple',
-    formula: '"Hello World: " + data.txt',
+    value: { formula: '"Hello World: " + data.txt' },
     children: [],
   };
   const data = { txt: '123' };
@@ -25,7 +25,7 @@ test('text', async () => {
 test('text formula==null should be empty string', async () => {
   const dt: TextSimpleData = {
     type: 'TextSimple',
-    formula: 'data.dt',
+    value: { formula: 'data.dt' },
     children: [],
   };
   const p2 = await compileComponentTest(dt, { dt: null });
@@ -35,7 +35,7 @@ test('text formula==null should be empty string', async () => {
 test('text formula==false should be empty string', async () => {
   const dt: TextSimpleData = {
     type: 'TextSimple',
-    formula: 'data.dt',
+    value: { formula: 'data.dt' },
     children: [],
   };
   const p2 = await compileComponentTest(dt, { dt: false });
@@ -45,7 +45,7 @@ test('text formula==false should be empty string', async () => {
 test('text formula==false should be empty string 2', async () => {
   const dt: TextSimpleData = {
     type: 'TextSimple',
-    formula: 'data.dt',
+    value: { formula: 'data.dt' },
     children: [],
   };
   const p2 = await compileComponentTest(dt, { dt: undefined });
@@ -55,7 +55,7 @@ test('text formula==false should be empty string 2', async () => {
 test('text formula==0 should be "0"', async () => {
   const dt: TextSimpleData = {
     type: 'TextSimple',
-    formula: 'data.dt',
+    value: { formula: 'data.dt' },
     children: [],
   };
   const p2 = await compileComponentTest(dt, { dt: 0 });

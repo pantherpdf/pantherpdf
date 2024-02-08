@@ -1,7 +1,7 @@
 /**
  * @file Filter array's items based on a condition
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -13,11 +13,12 @@ import InputApplyOnEnter, {
 import trans from '../translation';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import TextField from '@mui/material/TextField';
+import { FormulaObject } from '../types';
 
 export interface FilterData extends TransformItem {
   type: 'Filter';
-  field: string;
-  condition: string;
+  field: FormulaObject;
+  condition: FormulaObject;
 }
 
 const Filter: Transform = {
@@ -29,15 +30,18 @@ const Filter: Transform = {
     const obj: FilterData = {
       type: 'Filter',
       comment: '',
-      field: '',
-      condition: '',
+      field: { formula: '' },
+      condition: { formula: '' },
     };
     return obj;
   },
 
   transform: async (dt, item2, helper) => {
     const item = item2 as FilterData;
-    if (item.field.length === 0 || item.condition.length === 0) {
+    if (
+      item.field.formula.length === 0 ||
+      item.condition.formula.length === 0
+    ) {
       return dt;
     }
     helper.formulaHelper.push('data', dt);
@@ -47,7 +51,7 @@ const Filter: Transform = {
     }
     for (let i = 0; i < result.length; ) {
       helper.formulaHelper.push('item', result[i]);
-      const result2 = await helper.evalFormula(item.field);
+      const result2 = await helper.evalFormula(item.condition);
       helper.formulaHelper.pop();
       if (result2) {
         // keep
@@ -57,6 +61,7 @@ const Filter: Transform = {
         result.splice(i, 1);
       }
     }
+    helper.formulaHelper.pop();
     return dt;
   },
 
@@ -66,8 +71,8 @@ const Filter: Transform = {
       <>
         <InputApplyOnEnter
           component={TextField}
-          value={item.field}
-          onChange={val => props.setItem({ ...item, field: val })}
+          value={item.field.formula}
+          onChange={val => props.setItem({ ...item, field: { formula: val } })}
           label={trans('field')}
           id="trans-edit-field"
           InputProps={inputFAdornment}
@@ -75,8 +80,10 @@ const Filter: Transform = {
 
         <InputApplyOnEnter
           component={TextField}
-          value={item.condition}
-          onChange={val => props.setItem({ ...item, condition: val })}
+          value={item.condition.formula}
+          onChange={val =>
+            props.setItem({ ...item, condition: { formula: val } })
+          }
           label={trans('condition')}
           id="trans-edit-condition"
           InputProps={inputFAdornment}

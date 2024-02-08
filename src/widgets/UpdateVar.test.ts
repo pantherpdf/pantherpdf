@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -24,24 +24,25 @@ test('UpdateVar SetVar', async () => {
     SetVarData | TextSimpleData | RepeatData | UpdateVarData
   > = {
     type: 'SetVar',
-    source: '1',
+    source: { formula: '1' },
     varName: 'ccc',
     children: [
-      { type: 'TextSimple', formula: 'ccc', children: [] },
+      { type: 'TextSimple', value: { formula: 'ccc' }, children: [] },
       {
         type: 'Repeat',
-        source: '[1,2,3,4,5]',
+        source: { formula: '[1,2,3,4,5]' },
         varName: 'item',
+        direction: 'rows',
         children: [
           {
             type: 'UpdateVar',
             varName: 'ccc',
-            formula: 'ccc + 1',
+            value: { formula: 'ccc + 1' },
             children: [],
           },
         ],
       },
-      { type: 'TextSimple', formula: 'ccc', children: [] },
+      { type: 'TextSimple', value: { formula: 'ccc' }, children: [] },
     ],
   };
   const p = await compileComponentTest(dt, {});
@@ -53,19 +54,24 @@ test('UpdateVar SetVar', async () => {
 test('UpdateVar reportVar', async () => {
   const report = JSON.parse(JSON.stringify(sampleReport)) as Report;
   report.widgets = [
-    { type: 'TextSimple', formula: 'ccc', children: [] },
+    { type: 'TextSimple', value: { formula: 'ccc' }, children: [] },
     {
       type: 'Repeat',
-      source: '[1,2,3,4,5]',
+      source: { formula: '[1,2,3,4,5]' },
       varName: 'item',
       children: [
-        { type: 'UpdateVar', varName: 'ccc', formula: 'ccc * 3', children: [] },
+        {
+          type: 'UpdateVar',
+          varName: 'ccc',
+          value: { formula: 'ccc * 3' },
+          children: [],
+        },
       ],
     },
-    { type: 'TextSimple', formula: 'ccc', children: [] },
+    { type: 'TextSimple', value: { formula: 'ccc' }, children: [] },
   ];
-  report.variables.push({ name: 'ccc', formula: '5' });
+  report.variables.push({ name: 'ccc', value: { formula: '5' } });
   const p = await compileTest(report, {});
-  expect(p.children[0].data).toBe('5');
-  expect(p.children[2].data).toBe('1215');
+  expect(p.widgets[0].data).toBe('5');
+  expect(p.widgets[2].data).toBe('1215');
 });

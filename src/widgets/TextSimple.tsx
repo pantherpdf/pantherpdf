@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -12,10 +12,11 @@ import InputApplyOnEnter, {
   inputFAdornment,
 } from '../components/InputApplyOnEnter';
 import TextField from '@mui/material/TextField';
+import { FormulaObject } from '../types';
 
 export interface TextSimpleData extends WidgetItem {
   type: 'TextSimple';
-  formula: string;
+  value: FormulaObject;
 }
 
 export interface TextSimpleCompiled extends WidgetCompiled {
@@ -32,13 +33,13 @@ export const TextSimple: Widget = {
     return {
       type: 'TextSimple',
       children: [],
-      formula: '',
+      value: { formula: '' },
     };
   },
 
   compile: async (item, helpers): Promise<TextSimpleCompiled> => {
     const dt = item as TextSimpleData;
-    const str2 = await helpers.evalFormula(dt.formula);
+    const str2 = await helpers.evalFormula(dt.value);
     const str =
       str2 !== undefined && str2 !== null && str2 !== false ? String(str2) : '';
     return {
@@ -51,7 +52,7 @@ export const TextSimple: Widget = {
     const item = props.item as TextSimpleData;
     return (
       <WidgetEditorName {...props} name={TextSimple.name}>
-        <div>{item.formula}</div>
+        <div>{item.value.formula}</div>
       </WidgetEditorName>
     );
   },
@@ -68,8 +69,8 @@ export const TextSimple: Widget = {
         <InputApplyOnEnter
           component={TextField}
           id="TextSimple-formula"
-          value={item.formula}
-          onChange={val => props.setItem({ ...item, formula: val })}
+          value={item.value.formula}
+          onChange={val => props.setItem({ ...item, value: { formula: val } })}
           InputProps={inputFAdornment}
         />
       </>

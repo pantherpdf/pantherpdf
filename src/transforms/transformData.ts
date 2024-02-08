@@ -1,19 +1,19 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
 import type { Transform, TransformHelper, TransformItem } from './types';
-import type { ApiEndpoints } from '../types';
+import type { ApiEndpoints, FormulaObject } from '../types';
 import { getTransform } from './allTransforms';
 import { FormulaHelper } from '../data/compile';
-import FormulaEvaluate from '../formula/formula';
+import formulaEvaluate from '../formula/formula';
 
 /**
  * Function for calling all transformations
- * @param {unknown} inputData - Input data
- * @param {number} len - Number of transformations to apply
+ * @param inputData - Input data
+ * @param len - Number of transformations to apply
  */
 export async function transformData(
   allTrans: Transform[],
@@ -27,12 +27,10 @@ export async function transformData(
   }
   for (let i = 0; i < len; ++i) {
     const formulaHelper = new FormulaHelper();
-    const getVar = formulaHelper.getVar.bind(formulaHelper);
     const helper: TransformHelper = {
       transformIndex: i,
-      evalFormula: async (txt: string) => {
-        return FormulaEvaluate(txt, { getVar });
-      },
+      evalFormula: async (val: FormulaObject) =>
+        formulaEvaluate(val.formula, formulaHelper),
       formulaHelper,
       api,
     };

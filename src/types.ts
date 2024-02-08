@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -17,7 +17,7 @@ export const tuple = <T extends Narrowable[]>(...args: T) => args;
 
 export interface Variable {
   name: string;
-  formula: string;
+  value: FormulaObject;
 }
 
 /** Paper properties, units are mm */
@@ -32,9 +32,18 @@ export interface GenerateResultProperties {
   fileName?: string;
 }
 
-export interface ReportProperties extends GenerateResultProperties {
+export interface ReportProperties
+  extends Omit<GenerateResultProperties, 'fileName'> {
   font?: TFont;
   lang?: string;
+  fileName?: FormulaObject;
+}
+
+export interface ReportPropertiesCompiled
+  extends Omit<ReportProperties, 'fileName'> {
+  fileName?: string;
+  fontsUsed: TFontStyle[];
+  globalCss: string;
 }
 
 export interface GenerateResult {
@@ -60,10 +69,9 @@ export interface ApiReportMetaData {
   name: string;
 }
 
-export interface ReportCompiled extends Omit<Report, 'children'> {
-  children: WidgetCompiled[];
-  fontsUsed: TFontStyle[];
-  globalCss: string;
+export interface ReportCompiled {
+  widgets: WidgetCompiled[];
+  properties: ReportPropertiesCompiled;
 }
 
 /** Meta data when uploading a file */
@@ -136,3 +144,9 @@ export const defaultReportCss: CSSProperties = {
   fontSize: '12pt',
   color: '#000000',
 };
+
+/**
+ * Object representing a formula.
+ * Used to distinguish between literal strings and formulas.
+ */
+export type FormulaObject = { formula: string };

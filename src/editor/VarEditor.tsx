@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -45,8 +45,10 @@ export default function VarEditor(props: GeneralProps) {
         }
         report.variables[idx] = { ...report.variables[idx] };
         report.variables[idx].name = name;
-        report.variables[idx].formula =
-          formula || report.variables[idx].formula;
+        report.variables[idx].value =
+          typeof formula === 'string'
+            ? { formula }
+            : report.variables[idx].value;
       } else {
         report.variables.splice(idx, 1);
       }
@@ -58,7 +60,7 @@ export default function VarEditor(props: GeneralProps) {
         alert(trans('var is reserved'));
         name += '_';
       }
-      report.variables.push({ name, formula });
+      report.variables.push({ name, value: { formula } });
     }
     return props.setReport(report);
   }
@@ -95,7 +97,7 @@ export default function VarEditor(props: GeneralProps) {
               <StyledTableCell>
                 <InputApplyOnEnter
                   component={TextField}
-                  value={v.formula}
+                  value={v.value.formula}
                   onChange={val => changeVar(idx, undefined, val)}
                   size="small"
                   hiddenLabel

@@ -1,7 +1,7 @@
 /**
  * @file Helper functions used in unit tests
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2023
+ * @copyright Ignac Banic 2023-2024
  * @license MIT
  */
 
@@ -25,7 +25,7 @@ export async function compileComponentTest(
     variables: [],
   };
   const reportCompiled = await compile(dt, data, defaultWidgets, {});
-  return reportCompiled.children[0];
+  return reportCompiled.widgets[0];
 }
 
 export async function compileTest(
@@ -50,8 +50,6 @@ export async function renderWidget(
 }
 
 // to force specific children type
-export type ForceChildren<T> =
-  | T
-  | { [key: string]: unknown; children: ForceChildren<T>[] };
+export type ForceChildren<T> = T & { children: ForceChildren<T>[] };
 
 export type ReportForceWidgets<T> = Report & { widgets: ForceChildren<T>[] };

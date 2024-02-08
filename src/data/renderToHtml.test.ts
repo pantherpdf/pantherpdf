@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -15,7 +15,7 @@ import { defaultWidgets } from '../widgets/allWidgets';
 test('text', async () => {
   const el: TextSimpleData = {
     type: 'TextSimple',
-    formula: '"Hello World: "+data.num',
+    value: { formula: '"Hello World: "+data.num' },
     children: [],
   };
   const obj = { num: 123 };
@@ -47,7 +47,7 @@ test('should include google font', async () => {
 
 test('should include globalCss', async () => {
   const compiled = await compileTest(sampleReport, {});
-  compiled.globalCss = '.abc-def-123-456 { font-weight: bold }';
+  compiled.properties.globalCss = '.abc-def-123-456 { font-weight: bold }';
   const html = renderToHtml(compiled, defaultWidgets);
   expect(html.indexOf('.abc-def-123-456 { font-weight: bold }')).not.toBe(-1);
 });

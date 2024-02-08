@@ -1,12 +1,11 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
 export interface IHelpers {
-  getVar?: (name: string) => Promise<unknown>;
-  vars?: { [key: string]: unknown };
+  getVar: (name: string) => unknown;
 }
 
 export interface TSubExpr_function {

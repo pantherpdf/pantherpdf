@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -13,11 +13,12 @@ import InputApplyOnEnter, {
 } from '../components/InputApplyOnEnter';
 import trans, { transName } from '../translation';
 import TextField from '@mui/material/TextField';
+import { FormulaObject } from '../types';
 
 export interface FirstMatchData extends WidgetItem {
   type: 'FirstMatch';
-  source: string;
-  condition: string;
+  source: FormulaObject;
+  condition: FormulaObject;
   varName: string;
 }
 
@@ -35,8 +36,8 @@ export const FirstMatch: Widget = {
     return {
       type: 'FirstMatch',
       children: [],
-      source: '[]',
-      condition: 'true',
+      source: { formula: '[]' },
+      condition: { formula: 'true' },
       varName: 'match1',
     };
   },
@@ -93,8 +94,8 @@ export const FirstMatch: Widget = {
       <>
         <InputApplyOnEnter
           component={TextField}
-          value={item.source}
-          onChange={val => props.setItem({ ...item, source: val })}
+          value={item.source.formula}
+          onChange={val => props.setItem({ ...item, source: { formula: val } })}
           label={trans('source data')}
           id="FirstMatch-source"
           InputProps={inputFAdornment}
@@ -102,8 +103,10 @@ export const FirstMatch: Widget = {
 
         <InputApplyOnEnter
           component={TextField}
-          value={item.condition}
-          onChange={val => props.setItem({ ...item, condition: val })}
+          value={item.condition.formula}
+          onChange={val =>
+            props.setItem({ ...item, condition: { formula: val } })
+          }
           label={trans('condition')}
           id="FirstMatch-condition"
           InputProps={inputFAdornment}

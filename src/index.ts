@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2023
+ * @copyright Ignac Banic 2023-2024
  * @license MIT
  */
 
@@ -34,6 +34,8 @@ import type {
   Paper,
   GenerateResultProperties,
   GenerateResult,
+  FormulaObject,
+  ReportPropertiesCompiled,
 } from './types';
 import {
   setEditorLanguage,
@@ -85,6 +87,7 @@ export type {
   GenerateResult,
   GenerateResultProperties,
   SourceData,
+  FormulaObject,
   //
   Report,
   ReportProperties,
@@ -106,6 +109,7 @@ export type {
   WidgetNewProps,
   WidgetEditorProps,
   WidgetPreviewProps,
+  ReportPropertiesCompiled,
   //
   TransName,
 };

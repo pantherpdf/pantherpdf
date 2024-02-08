@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -186,7 +186,7 @@ export const Frame: Widget = {
     );
     const style = PropertyFontExtractStyle(dt.font);
     if (style) {
-      helpers.reportCompiled.fontsUsed.push(style);
+      helpers.propertiesCompiled.fontsUsed.push(style);
     }
     dt2.children = await helpers.compileChildren(dt.children, helpers);
     return dt2;

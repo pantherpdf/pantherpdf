@@ -1,7 +1,7 @@
 /**
  * @file Render html
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -15,10 +15,11 @@ import InputApplyOnEnter, {
 import trans from '../translation';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { FormulaObject } from '../types';
 
 export interface HtmlData extends WidgetItem {
   type: 'Html';
-  source: string;
+  source: FormulaObject;
 }
 
 export interface HtmlCompiled extends WidgetCompiled {
@@ -35,7 +36,7 @@ export const Html: Widget = {
     return {
       type: 'Html',
       children: [],
-      source: '',
+      source: { formula: '' },
     };
   },
 
@@ -54,7 +55,7 @@ export const Html: Widget = {
     const item = props.item as HtmlData;
     return (
       <WidgetEditorName {...props} name={Html.name}>
-        <Typography fontFamily="monospace">{item.source}</Typography>
+        <Typography fontFamily="monospace">{item.source.formula}</Typography>
       </WidgetEditorName>
     );
   },
@@ -70,8 +71,8 @@ export const Html: Widget = {
       <>
         <InputApplyOnEnter
           component={TextField}
-          value={item.source}
-          onChange={val => props.setItem({ ...item, source: val })}
+          value={item.source.formula}
+          onChange={val => props.setItem({ ...item, source: { formula: val } })}
           label={trans('source data')}
           id="Html-source"
           InputProps={inputFAdornment}

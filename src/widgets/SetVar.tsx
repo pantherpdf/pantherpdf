@@ -1,6 +1,6 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -13,12 +13,13 @@ import InputApplyOnEnter, {
 } from '../components/InputApplyOnEnter';
 import trans, { transName } from '../translation';
 import TextField from '@mui/material/TextField';
+import { FormulaObject } from '../types';
 
 export interface SetVarData extends WidgetItem {
   type: 'SetVar';
-  source: string;
+  source: FormulaObject;
   varName: string;
-  varValue: unknown;
+  varValue?: unknown;
 }
 
 export interface SetVarCompiled extends WidgetCompiled {
@@ -35,9 +36,8 @@ export const SetVar: Widget = {
     return {
       type: 'SetVar',
       children: [],
-      source: '0',
+      source: { formula: '0' },
       varName: 'var',
-      varValue: undefined,
     };
   },
 
@@ -51,7 +51,7 @@ export const SetVar: Widget = {
     helper.formulaHelper.push(dt.varName, () => dt.varValue);
     const children = await helper.compileChildren(dt.children, helper);
     helper.formulaHelper.pop();
-    dt.varValue = undefined;
+    delete dt.varValue;
     return {
       type: dt.type,
       children,
@@ -81,8 +81,8 @@ export const SetVar: Widget = {
       <>
         <InputApplyOnEnter
           component={TextField}
-          value={item.source}
-          onChange={val => props.setItem({ ...item, source: val })}
+          value={item.source.formula}
+          onChange={val => props.setItem({ ...item, source: { formula: val } })}
           label={trans('source data')}
           id="SetVar-source"
           InputProps={inputFAdornment}

@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2023
+ * @copyright Ignac Banic 2023-2024
  * @license MIT
  */
 
@@ -11,7 +11,7 @@ import { sampleReport } from '../editor/sampleReport';
 
 test('generate pdf', async () => {
   const report: Report = JSON.parse(JSON.stringify(sampleReport));
-  report.properties.fileName = 'data[1].abc + ".pdf"';
+  report.properties.fileName = { formula: 'data[1].abc + ".pdf"' };
 
   const data = [
     { abc: 'a', def: 'b' },

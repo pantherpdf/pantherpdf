@@ -1,12 +1,12 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
 import React, { CSSProperties } from 'react';
 import type { WidgetItem, WidgetCompiled, Widget } from './types';
-import { tuple } from '../types';
+import { FormulaObject, tuple } from '../types';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import WidgetEditorName from './WidgetEditorName';
 import InputApplyOnEnter, {
@@ -27,7 +27,7 @@ const RepeatDirectionTrans: { [key in RepeatDirection]: trKeys } = {
 
 export interface RepeatData extends WidgetItem {
   type: 'Repeat';
-  source: string;
+  source: FormulaObject;
   varName: string;
   direction: RepeatDirection;
 }
@@ -48,7 +48,7 @@ export const Repeat: Widget = {
     return {
       type: 'Repeat',
       children: [],
-      source: '',
+      source: { formula: '' },
       varName: 'item',
       direction: 'rows',
     };
@@ -82,9 +82,9 @@ export const Repeat: Widget = {
         // vertical-align: top, to prevent vertical space between frames
         addChildElement = false;
         if (
-          helper.reportCompiled.globalCss.indexOf('.grid-with-frame') === -1
+          helper.propertiesCompiled.globalCss.indexOf('.grid-with-frame') === -1
         ) {
-          helper.reportCompiled.globalCss += `
+          helper.propertiesCompiled.globalCss += `
 						.grid-with-frame > div {
 							display: inline-block;
 							vertical-align: top;
@@ -180,8 +180,8 @@ export const Repeat: Widget = {
       <>
         <InputApplyOnEnter
           component={TextField}
-          value={item.source}
-          onChange={val => props.setItem({ ...item, source: val })}
+          value={item.source.formula}
+          onChange={val => props.setItem({ ...item, source: { formula: val } })}
           label={trans('source data')}
           id="Repeat-source"
           InputProps={inputFAdornment}

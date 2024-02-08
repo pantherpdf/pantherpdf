@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
@@ -20,16 +20,20 @@ import { ReportForceWidgets } from '../unitTestHelpers';
 import type { Report } from '../types';
 
 test('findInList', () => {
-  const r: ReportForceWidgets<RepeatData | TextSimpleData> = {
+  const r = {
     ...sampleReport,
-  };
+  } as ReportForceWidgets<RepeatData | TextSimpleData>;
 
   expect(() => findInList(r, [])).toThrow();
   expect(() => findInList(r, [0])).toThrow();
   expect(() => findInList(r, [200, 1])).toThrow();
 
   r.widgets = [
-    { type: 'TextSimple', formula: '"Hello World: "+data.num', children: [] },
+    {
+      type: 'TextSimple',
+      value: { formula: '"Hello World: "+data.num' },
+      children: [],
+    },
   ];
   expect(() => findInList(r, [1])).toThrow();
   expect(findInList(r, [0])).toBe(r.widgets[0]);
@@ -38,23 +42,23 @@ test('findInList', () => {
     {
       type: 'Repeat',
       varName: 'rp',
-      source: 'data.arr + ["a","b"]',
+      source: { formula: 'data.arr + ["a","b"]' },
       direction: 'rows',
       children: [
-        { type: 'TextSimple', formula: 'rp', children: [] },
-        { type: 'TextSimple', formula: 'rp', children: [] },
-        { type: 'TextSimple', formula: 'rp', children: [] },
+        { type: 'TextSimple', value: { formula: 'rp' }, children: [] },
+        { type: 'TextSimple', value: { formula: 'rp' }, children: [] },
+        { type: 'TextSimple', value: { formula: 'rp' }, children: [] },
       ],
     },
     {
       type: 'Repeat',
       varName: 'rp',
-      source: 'data.arr + ["a","b"]',
+      source: { formula: 'data.arr + ["a","b"]' },
       direction: 'rows',
       children: [
-        { type: 'TextSimple', formula: 'rp', children: [] },
-        { type: 'TextSimple', formula: 'rp', children: [] },
-        { type: 'TextSimple', formula: 'rp', children: [] },
+        { type: 'TextSimple', value: { formula: 'rp' }, children: [] },
+        { type: 'TextSimple', value: { formula: 'rp' }, children: [] },
+        { type: 'TextSimple', value: { formula: 'rp' }, children: [] },
       ],
     },
   ];
@@ -63,17 +67,21 @@ test('findInList', () => {
 
 test('removeFromList simple', () => {
   let r: ReportForceWidgets<RepeatData | TextSimpleData>;
-  r = { ...sampleReport };
+  r = { ...sampleReport } as typeof r;
 
   expect(() => removeFromList(r, [])).toThrow();
   expect(() => removeFromList(r, [0])).toThrow();
   expect(() => removeFromList(r, [200, 0])).toThrow();
 
   r.widgets = [
-    { type: 'TextSimple', formula: '"Hello World: "+data.num', children: [] },
+    {
+      type: 'TextSimple',
+      value: { formula: '"Hello World: "+data.num' },
+      children: [],
+    },
   ];
   expect(() => removeFromList(r, [1])).toThrow();
-  r = removeFromList(r, [0]);
+  r = removeFromList(r, [0]) as typeof r;
   expect(r.widgets.length).toBe(0);
 });
 
@@ -81,21 +89,21 @@ test('removeFromList', () => {
   let r: Report;
   r = { ...sampleReport };
   // prettier-ignore
-  const t0: TextSimpleData = { type:'TextSimple', formula:'rp0', children:[] };
+  const t0: TextSimpleData = { type:'TextSimple', value: { formula:'rp0' }, children:[] };
   // prettier-ignore
-  const t1: TextSimpleData = { type:'TextSimple', formula:'rp1', children:[] };
+  const t1: TextSimpleData = { type:'TextSimple', value: { formula:'rp1' }, children:[] };
   // prettier-ignore
-  const t2: TextSimpleData = { type:'TextSimple', formula:'rp2', children:[] };
+  const t2: TextSimpleData = { type:'TextSimple', value: { formula:'rp2' }, children:[] };
   // prettier-ignore
-  const t3: TextSimpleData = { type:'TextSimple', formula:'rp3', children:[] };
+  const t3: TextSimpleData = { type:'TextSimple', value: { formula:'rp3' }, children:[] };
   // prettier-ignore
-  const t4: TextSimpleData = { type:'TextSimple', formula:'rp4', children:[] };
+  const t4: TextSimpleData = { type:'TextSimple', value: { formula:'rp4' }, children:[] };
   // prettier-ignore
-  const t5: TextSimpleData = { type:'TextSimple', formula:'rp5', children:[] };
+  const t5: TextSimpleData = { type:'TextSimple', value: { formula:'rp5' }, children:[] };
   // prettier-ignore
-  const c0: RepeatData = { type:'Repeat', varName:'rp', source:'data.arr + ["a","b"]', children:[t0,t1,t2], direction:'rows' }
+  const c0: RepeatData = { type:'Repeat', varName:'rp', source: { formula: 'data.arr + ["a","b"]' }, children:[t0,t1,t2], direction:'rows' }
   // prettier-ignore
-  const c1: RepeatData = { type:'Repeat', varName:'rp', source:'data.arr + ["a","b"]', children:[t3,t4,t5], direction:'rows' }
+  const c1: RepeatData = { type:'Repeat', varName:'rp', source: { formula: 'data.arr + ["a","b"]' }, children:[t3,t4,t5], direction:'rows' }
   r.widgets = [c0, c1];
   r = removeFromList(r, [1, 0]);
   expect(r.widgets.length).toBe(2);
@@ -117,23 +125,23 @@ test('insertIntoList', () => {
   let r_old: Report;
   r = { ...sampleReport };
   // prettier-ignore
-  const t0: TextSimpleData = { type:'TextSimple', formula:'rp0', children:[] };
+  const t0: TextSimpleData = { type:'TextSimple', value: { formula: 'rp0' }, children:[] };
   // prettier-ignore
-  const t1: TextSimpleData = { type:'TextSimple', formula:'rp1', children:[] };
+  const t1: TextSimpleData = { type:'TextSimple', value: { formula: 'rp1' }, children:[] };
   // prettier-ignore
-  const t2: TextSimpleData = { type:'TextSimple', formula:'rp2', children:[] };
+  const t2: TextSimpleData = { type:'TextSimple', value: { formula: 'rp2' }, children:[] };
   // prettier-ignore
-  const t3: TextSimpleData = { type:'TextSimple', formula:'rp3', children:[] };
+  const t3: TextSimpleData = { type:'TextSimple', value: { formula: 'rp3' }, children:[] };
   // prettier-ignore
-  const t4: TextSimpleData = { type:'TextSimple', formula:'rp4', children:[] };
+  const t4: TextSimpleData = { type:'TextSimple', value: { formula: 'rp4' }, children:[] };
   // prettier-ignore
-  const t5: TextSimpleData = { type:'TextSimple', formula:'rp5', children:[] };
+  const t5: TextSimpleData = { type:'TextSimple', value: { formula: 'rp5' }, children:[] };
   // prettier-ignore
-  const t6: TextSimpleData = { type:'TextSimple', formula:'rp6', children:[] };
+  const t6: TextSimpleData = { type:'TextSimple', value: { formula: 'rp6' }, children:[] };
   // prettier-ignore
-  const c0: RepeatData = { type:'Repeat', varName:'rp', source:'data.arr + ["a","b"]', children:[t0,t1,t2], direction:'rows' };
+  const c0: RepeatData = { type:'Repeat', varName:'rp', source: { formula: 'data.arr + ["a","b"]' }, children:[t0,t1,t2], direction:'rows' };
   // prettier-ignore
-  const c1: RepeatData = { type:'Repeat', varName:'rp', source:'data.arr + ["a","b"]', children:[], direction:'rows' };
+  const c1: RepeatData = { type:'Repeat', varName:'rp', source: { formula: 'data.arr + ["a","b"]' }, children:[], direction:'rows' };
 
   expect(() => insertIntoList(r, [], t3)).toThrow();
   r_old = r;
@@ -237,21 +245,21 @@ test('idCmp', () => {
 test('updateItem', () => {
   const r: Report = { ...sampleReport };
   // prettier-ignore
-  const t0: TextSimpleData = { type: 'TextSimple', formula: 'rp0', children: [] };
+  const t0: TextSimpleData = { type: 'TextSimple', value: { formula: 'rp0' }, children: [] };
   // prettier-ignore
-  const t1: TextSimpleData = { type: 'TextSimple', formula: 'rp1', children: [] };
+  const t1: TextSimpleData = { type: 'TextSimple', value: { formula: 'rp1' }, children: [] };
   // prettier-ignore
-  const t2: TextSimpleData = { type: 'TextSimple', formula: 'rp2', children: [] };
+  const t2: TextSimpleData = { type: 'TextSimple', value: { formula: 'rp2' }, children: [] };
   // prettier-ignore
-  const t3: TextSimpleData = { type: 'TextSimple', formula: 'rp3', children: [] };
+  const t3: TextSimpleData = { type: 'TextSimple', value: { formula: 'rp3' }, children: [] };
   // prettier-ignore
-  const t4: TextSimpleData = { type: 'TextSimple', formula: 'rp4', children: [] };
+  const t4: TextSimpleData = { type: 'TextSimple', value: { formula: 'rp4' }, children: [] };
   // prettier-ignore
-  const t5: TextSimpleData = { type: 'TextSimple', formula: 'rp5', children: [] };
+  const t5: TextSimpleData = { type: 'TextSimple', value: { formula: 'rp5' }, children: [] };
   // prettier-ignore
-  const c0: RepeatData = { type: 'Repeat', varName: 'rp', source: 'data.arr + ["a","b"]', children: [t0,t1,t2], direction: 'rows' };
+  const c0: RepeatData = { type: 'Repeat', varName: 'rp', source: { formula: 'data.arr + ["a","b"]' }, children: [t0,t1,t2], direction: 'rows' };
   // prettier-ignore
-  const c1: RepeatData = { type: 'Repeat', varName: 'rp', source: 'data.arr + ["a","b"]', children: [t3,t4,t5], direction: 'rows' };
+  const c1: RepeatData = { type: 'Repeat', varName: 'rp', source: { formula: 'data.arr + ["a","b"]' }, children: [t3,t4,t5], direction: 'rows' };
   r.widgets = [c0, c1];
 
   expect(findInList(r, [1, 1])).toBe(t4);

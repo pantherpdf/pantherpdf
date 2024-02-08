@@ -1,11 +1,11 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
 import React from 'react';
-import type { Report } from '../types';
+import type { FormulaObject, Report } from '../types';
 import type { Widget, WidgetItem, WidgetCompiled } from './types';
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import WidgetEditorName from './WidgetEditorName';
@@ -60,7 +60,7 @@ function getAllVars(report: Report, wid: number[]): GetAllVars[] {
 export interface UpdateVarData extends WidgetItem {
   type: 'UpdateVar';
   varName: string;
-  formula: string;
+  value: FormulaObject;
 }
 
 export interface UpdateVarCompiled extends WidgetCompiled {
@@ -77,13 +77,13 @@ export const UpdateVar: Widget = {
       type: 'UpdateVar',
       children: [],
       varName: '',
-      formula: '',
+      value: { formula: '' },
     };
   },
 
   compile: async (item, helper): Promise<UpdateVarCompiled> => {
     const dt = item as UpdateVarData;
-    const value = await helper.evalFormula(dt.formula);
+    const value = await helper.evalFormula(dt.value);
     if (value === undefined) {
       // undefined in evaluateFormula means variable doesnt exist
       throw new Error('UpdateVar should not set undefined');
@@ -122,7 +122,7 @@ export const UpdateVar: Widget = {
           </Alert>
         );
       }
-      if (item.formula.trim().length === 0) {
+      if (item.value.formula.trim().length === 0) {
         return (
           <Alert severity="error">
             {trans('UpdateVar error formula empty')}
@@ -137,7 +137,7 @@ export const UpdateVar: Widget = {
           fontStyle="italic"
           fontSize="9px"
         >
-          {item.varName} = {item.formula}
+          {item.varName} = {item.value.formula}
         </Typography>
       );
     }
@@ -190,8 +190,8 @@ export const UpdateVar: Widget = {
 
         <InputApplyOnEnter
           component={TextField}
-          value={item.formula}
-          onChange={val => props.setItem({ ...item, formula: val })}
+          value={item.value.formula}
+          onChange={val => props.setItem({ ...item, value: { formula: val } })}
           label={trans('formula')}
           id="UpdateVar-Formula"
           InputProps={inputFAdornment}
