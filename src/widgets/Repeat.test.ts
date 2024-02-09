@@ -17,8 +17,9 @@ import {
 } from '../unitTestHelpers';
 import { sampleReport } from '../editor/sampleReport';
 import type { Report } from '../types';
-import { TextHtmlData, ValueInternalFromEditor } from './TextHtml';
+import { TextHtmlData } from './TextHtml/TextHtml';
 import { FrameData } from './Frame';
+import { valueInternalFromEditor } from './TextHtml/internalRepresentation';
 
 test('text', async () => {
   const dt: ForceChildren<RepeatData | TextSimpleData> = {
@@ -41,7 +42,7 @@ test('text', async () => {
 test('complete rows', async () => {
   const txt: TextHtmlData = {
     type: 'TextHtml',
-    value: ValueInternalFromEditor('<data>item</data>'),
+    value: valueInternalFromEditor('<data>item</data>'),
     font: {},
     children: [],
   };
@@ -69,7 +70,7 @@ test('complete rows', async () => {
 test('repeat columns', async () => {
   const txt: TextHtmlData = {
     type: 'TextHtml',
-    value: ValueInternalFromEditor('<data>item</data>'),
+    value: valueInternalFromEditor('<data>item</data>'),
     font: {},
     children: [],
   };
@@ -88,7 +89,7 @@ test('repeat columns', async () => {
 test('complete grid', async () => {
   const txt: TextHtmlData = {
     type: 'TextHtml',
-    value: ValueInternalFromEditor('<data>item</data>'),
+    value: valueInternalFromEditor('<data>item</data>'),
     font: {},
     children: [],
   };

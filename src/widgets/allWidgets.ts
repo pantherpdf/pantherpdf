@@ -8,7 +8,7 @@
 import type { Widget } from './types';
 import { TextSimple } from './TextSimple';
 import { Repeat } from './Repeat';
-import { TextHtml } from './TextHtml';
+import { TextHtml } from './TextHtml/TextHtml';
 import { Image } from './Image';
 import { Columns, ColumnsCt } from './Columns';
 import { Condition } from './Condition';

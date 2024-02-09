@@ -7,21 +7,17 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {
-  TextHtmlData,
-  TextHtmlCompiled,
-  ValueInternalFromEditor,
-  extractTag,
-} from './TextHtml';
+import { TextHtmlData, TextHtmlCompiled } from './TextHtml';
 import {
   ReportForceWidgets,
   compileComponentTest,
   compileTest,
   renderWidget,
-} from '../unitTestHelpers';
-import renderToHtml from '../data/renderToHtml';
-import { sampleReport } from '../editor/sampleReport';
-import { defaultWidgets } from './allWidgets';
+} from '../../unitTestHelpers';
+import renderToHtml from '../../data/renderToHtml';
+import { sampleReport } from '../../editor/sampleReport';
+import { defaultWidgets } from '../allWidgets';
+import { extractTag, valueInternalFromEditor } from './internalRepresentation';
 
 test('parse TextHtml formula', async () => {
   const html = `aaa
@@ -30,7 +26,7 @@ d<b id="&quot;">ef</b> <data data-adjust="123&gt;4"><i></i><b>d</b>ata.def</data
 <div>ghi</div>
 <p></p>`;
 
-  const arr = ValueInternalFromEditor(html);
+  const arr = valueInternalFromEditor(html);
   expect((arr[0] as any).value).toBe(`aaa
 <div>a<b style="color:white">b</b>c</div>
 d<b id="&quot;">ef</b> <b>`);
@@ -56,7 +52,7 @@ test('extractTag', () => {
 test('TextHtml 2', async () => {
   const dt: TextHtmlData = {
     type: 'TextHtml',
-    value: ValueInternalFromEditor('Hello <data><i></i><b>data.txt</b></data>'),
+    value: valueInternalFromEditor('Hello <data><i></i><b>data.txt</b></data>'),
     children: [],
     font: {},
   };
@@ -71,7 +67,7 @@ test('TextHtml 2', async () => {
 test('TextHtml Filter', async () => {
   const dt: TextHtmlData = {
     type: 'TextHtml',
-    value: ValueInternalFromEditor(
+    value: valueInternalFromEditor(
       'Hello <data data-adjust="num, 2 dec">data.num</data>',
     ),
     children: [],
@@ -88,7 +84,7 @@ test('TextHtml Filter', async () => {
 test('TextHtml should render html', async () => {
   const dt: TextHtmlData = {
     type: 'TextHtml',
-    value: ValueInternalFromEditor('Hello <b>world</b>'),
+    value: valueInternalFromEditor('Hello <b>world</b>'),
     children: [],
     font: { size: '20px' },
   };
@@ -102,7 +98,7 @@ test('TextHtml should include google font', async () => {
     widgets: [
       {
         type: 'TextHtml',
-        value: ValueInternalFromEditor('text'),
+        value: valueInternalFromEditor('text'),
         children: [],
         font: { size: '20px', family: 'Lato' },
       },
