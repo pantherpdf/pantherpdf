@@ -47,9 +47,9 @@ export default function PropertiesEditor(props: WidgetEditorProps) {
   return (
     <>
       <PropertyFont
+        api={props.api}
         value={item.font}
         onChange={val => props.setItem({ ...props.item, font: val })}
-        googleFontApiKey={props.api.googleFontApiKey}
       />
       <Divider />
       <ToggleButtonGroup

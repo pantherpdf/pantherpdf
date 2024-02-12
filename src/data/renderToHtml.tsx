@@ -8,11 +8,10 @@
 import React, { CSSProperties } from 'react';
 import { renderToString } from 'react-dom/server';
 import { defaultReportCss } from '../types';
-import type { ReportCompiled } from '../types';
+import type { ApiEndpoints, ReportCompiled } from '../types';
 import type { WidgetPreviewPropsBase, Widget } from '../widgets/types';
 import { getWidget } from '../widgets/allWidgets';
 import { PropertyFontGenCss } from '../widgets/PropertyFont';
-import { GoogleFontUrlImport } from '../widgets/GoogleFonts';
 
 export function renderBody(
   report: ReportCompiled,
@@ -53,16 +52,17 @@ export function renderBody(
 export default function renderToHtml(
   report: ReportCompiled,
   widgets: Widget[],
+  api: ApiEndpoints,
   externalHelpers: { [key: string]: unknown } = {},
 ): string {
   // render content
   const bodyElement = renderBody(report, widgets, externalHelpers);
   const bodyTxt = renderToString(bodyElement);
 
-  const fontUrl = GoogleFontUrlImport(report.properties.fontsUsed);
+  const fontUrl = api.fonts?.getCssUrls(report.properties.fontsUsed) || [];
   const fontHtml = fontUrl
-    ? `<link rel="stylesheet" href="${fontUrl}"></link>`
-    : '';
+    .map(url => `<link rel="stylesheet" href="${url}"></link>`)
+    .join('\n');
 
   const html = `<!DOCTYPE html>
 <html lang="en-US">

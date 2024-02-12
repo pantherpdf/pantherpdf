@@ -36,7 +36,7 @@ function useCompiledHtml(props: GeneralProps): DataOrError {
           props.widgets,
           props.api,
         );
-        const result = renderToHtml(c, props.widgets);
+        const result = renderToHtml(c, props.widgets, props.api);
         setHtml({ ok: true, value: result });
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : String(err);

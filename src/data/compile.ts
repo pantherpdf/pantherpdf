@@ -16,7 +16,7 @@ import type {
 import formulaEvaluate from '../formula/formula';
 import { getWidget } from '../widgets/allWidgets';
 import type { CompileHelper, Widget, WidgetItem } from '../widgets/types';
-import { PropertyFontExtractStyle } from '../widgets/PropertyFont';
+import { propertyFontExtractStyle } from '../widgets/PropertyFont';
 
 type TOvrr = [string, unknown];
 
@@ -141,9 +141,9 @@ async function compilePrprt(
     obj.fileName = res;
   }
   if (prprt.font) {
-    const style = PropertyFontExtractStyle(prprt.font);
-    if (style) {
-      obj.fontsUsed.push(style);
+    const font = propertyFontExtractStyle(prprt.font);
+    if (font) {
+      obj.fontsUsed.push(font);
     }
   }
   return obj;

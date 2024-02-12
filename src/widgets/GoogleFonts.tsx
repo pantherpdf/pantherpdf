@@ -1,96 +1,14 @@
 /**
  * @project PantherPDF Report Editor
- * @copyright Ignac Banic 2021-2023
+ * @copyright Ignac Banic 2021-2024
  * @license MIT
  */
 
-import React, { useState, useEffect } from 'react';
-import type { TFontStyle } from './PropertyFont';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
+import type { FontStyle } from './PropertyFont';
 
-async function load(apiKey: string) {
-  const url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${encodeURIComponent(
-    apiKey,
-  )}&sort=popularity`;
-  const r = await fetch(url);
-  if (!r.ok) {
-    throw new Error('Error fetching fonts');
-  }
-  const js = (await r.json()) as GoogleFontsApiResponse;
-  return js.items;
-}
-
-interface GoogleFontsApiEntry {
-  kind: string;
-  family: string;
-  subsets: string[];
-  variants: string[];
-  version: string;
-  lastModified: string;
-  files: { [key: string]: string };
-}
-interface GoogleFontsApiResponse {
-  kind: string;
-  items: GoogleFontsApiEntry[];
-}
-interface FontSelectorProps {
-  apiKey: string;
-  value: string;
-  onChange: (selected: string) => void;
-}
-
-let cache: GoogleFontsApiEntry[] | undefined = undefined;
-export function GoogleFontSelector(props: FontSelectorProps) {
-  const [list, setList] = useState<GoogleFontsApiEntry[]>(cache || []);
-  useEffect(() => {
-    if (cache) {
-      return;
-    }
-    load(props.apiKey).then(list2 => {
-      cache = list2;
-      setList(cache);
-    });
-  }, [props.apiKey]);
-
-  const selected = props.value.toLowerCase();
-  return (
-    <List sx={{ pt: 0, minWidth: '20rem' }}>
-      {list.map(e => (
-        <ListItem disableGutters key={e.family}>
-          <ListItemButton
-            onClick={() => props.onChange(e.family)}
-            selected={e.family.toLowerCase() === selected}
-          >
-            <ListItemText primary={e.family} />
-          </ListItemButton>
-        </ListItem>
-      ))}
-    </List>
-  );
-}
-
-export function GoogleFontUrlImport(arr: TFontStyle[]): string | undefined {
-  const systemFonts = [
-    '',
-    'arial',
-    'verdana',
-    'helvetica',
-    'trebuchet ms',
-    'times new roman',
-    'helvetica',
-    'calibri',
-    'cambria',
-    'comic sans ms',
-  ];
-  const group: { [key: string]: TFontStyle[] } = {};
+export function googleFontCssUrl(arr: FontStyle[]): string | null {
+  const group: { [key: string]: FontStyle[] } = {};
   for (const obj of arr) {
-    const name2 = obj.name.toLowerCase();
-    if (systemFonts.indexOf(name2) !== -1) {
-      continue;
-    }
     if (!(obj.name in group)) {
       group[obj.name] = [];
     }
@@ -120,12 +38,12 @@ export function GoogleFontUrlImport(arr: TFontStyle[]): string | undefined {
     url += values.map(v => `${v.italic ? '1' : '0'},${v.weight}`).join(';');
   }
   if (url.length === 0) {
-    return undefined;
+    return null;
   }
   return `https://fonts.googleapis.com/css2${url}&display=swap`;
 }
 
-export function destructGoogleFontUrl(url: string): TFontStyle[] {
+export function destructGoogleFontUrl(url: string): FontStyle[] {
   if (!url.startsWith('https://fonts.googleapis.com/css2')) {
     // url doesnt look like Google Font url
     // cant be favicon.ico or something else
@@ -140,7 +58,7 @@ export function destructGoogleFontUrl(url: string): TFontStyle[] {
     .split('&')
     .filter(v => v.startsWith('family='))
     .map(v => v.substring(7));
-  const arr: TFontStyle[] = [];
+  const arr: FontStyle[] = [];
   for (const val of parts) {
     const idxAt = val.indexOf('@');
     if (idxAt === -1) {
@@ -182,7 +100,7 @@ export function destructGoogleFontUrl(url: string): TFontStyle[] {
   return arr;
 }
 
-export function LoadGoogleFontCss(obj: TFontStyle): void {
+export function loadGoogleFontCss(obj: FontStyle): void {
   const els = window.document.getElementsByTagName('link');
   for (const el of els) {
     if (el.rel !== 'stylesheet') {
@@ -200,9 +118,9 @@ export function LoadGoogleFontCss(obj: TFontStyle): void {
     }
   }
   if (typeof window.document === 'undefined') {
-    throw new Error('LoadGoogleFontCss() is only available on browser.');
+    throw new Error('loadGoogleFontCss() is only available on browser.');
   }
-  const url = GoogleFontUrlImport([obj]);
+  const url = googleFontCssUrl([obj]);
   if (!url) {
     return;
   }

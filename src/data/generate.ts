@@ -57,7 +57,7 @@ export default async function generate(
     useWidgets,
     props.api,
   );
-  const html = renderToHtml(reportCompiled, useWidgets);
+  const html = renderToHtml(reportCompiled, useWidgets, props.api);
   return {
     html,
     properties: reportCompiled.properties,

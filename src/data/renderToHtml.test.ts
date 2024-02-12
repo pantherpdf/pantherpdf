@@ -6,11 +6,13 @@
  */
 
 import { compileTest, renderWidget } from '../unitTestHelpers';
-import type { Report } from '../types';
+import type { ApiEndpoints, Report } from '../types';
 import type { TextSimpleData } from '../widgets/TextSimple';
 import { sampleReport } from '../editor/sampleReport';
 import renderToHtml from './renderToHtml';
 import { defaultWidgets } from '../widgets/allWidgets';
+import compile from './compile';
+import { googleFontCssUrl } from '../widgets/GoogleFonts';
 
 test('text', async () => {
   const el: TextSimpleData = {
@@ -34,8 +36,17 @@ test('should include google font', async () => {
       family: 'Roboto Mono',
     },
   };
-  const compiled = await compileTest(report, {});
-  const html = renderToHtml(compiled, defaultWidgets);
+  const api: ApiEndpoints = {
+    fonts: {
+      list: [],
+      getCssUrls: arr => {
+        const url = googleFontCssUrl(arr);
+        return url ? [url] : [];
+      },
+    },
+  };
+  const compiled = await compile(report, {}, defaultWidgets, api);
+  const html = renderToHtml(compiled, defaultWidgets, api);
   const expectedUrl1 =
     'https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400&display=swap';
   const expectedUrl2 =
@@ -48,6 +59,6 @@ test('should include google font', async () => {
 test('should include globalCss', async () => {
   const compiled = await compileTest(sampleReport, {});
   compiled.properties.globalCss = '.abc-def-123-456 { font-weight: bold }';
-  const html = renderToHtml(compiled, defaultWidgets);
+  const html = renderToHtml(compiled, defaultWidgets, {});
   expect(html.indexOf('.abc-def-123-456 { font-weight: bold }')).not.toBe(-1);
 });

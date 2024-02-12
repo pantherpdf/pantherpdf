@@ -11,13 +11,15 @@ import { TextHtmlData, TextHtmlCompiled } from './TextHtml';
 import {
   ReportForceWidgets,
   compileComponentTest,
-  compileTest,
   renderWidget,
 } from '../../unitTestHelpers';
 import renderToHtml from '../../data/renderToHtml';
 import { sampleReport } from '../../editor/sampleReport';
 import { defaultWidgets } from '../allWidgets';
 import { extractTag, valueInternalFromEditor } from './internalRepresentation';
+import { ApiEndpoints } from '../../types';
+import { googleFontCssUrl } from '../GoogleFonts';
+import compile from '../../data/compile';
 
 test('parse TextHtml formula', async () => {
   const html = `aaa
@@ -104,8 +106,17 @@ test('TextHtml should include google font', async () => {
       },
     ],
   };
-  const compiled = await compileTest(report, {});
-  const html = renderToHtml(compiled, defaultWidgets);
+  const api: ApiEndpoints = {
+    fonts: {
+      list: [],
+      getCssUrls: arr => {
+        const url = googleFontCssUrl(arr);
+        return url ? [url] : [];
+      },
+    },
+  };
+  const compiled = await compile(report, {}, defaultWidgets, api);
+  const html = renderToHtml(compiled, defaultWidgets, api);
   expect(html).toContain(
     'https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400&display=swap',
   );

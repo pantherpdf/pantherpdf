@@ -7,9 +7,9 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import { defaultReportCss } from '../types';
-import { LoadGoogleFontCss } from '../widgets/GoogleFonts';
+import { loadGoogleFontCss } from '../widgets/GoogleFonts';
 import {
-  PropertyFontExtractStyle,
+  propertyFontExtractStyle,
   PropertyFontGenCss,
 } from '../widgets/PropertyFont';
 import type { GeneralProps } from './types';
@@ -21,10 +21,10 @@ export default function EditorContent(props: GeneralProps) {
     ...PropertyFontGenCss(props.report.properties.font || {}),
   };
   const fontStyle = props.report.properties.font
-    ? PropertyFontExtractStyle(props.report.properties.font)
+    ? propertyFontExtractStyle(props.report.properties.font)
     : undefined;
   if (fontStyle) {
-    LoadGoogleFontCss(fontStyle);
+    loadGoogleFontCss(fontStyle);
   }
   const width = props.report.properties.paper?.width || 210;
   style.maxWidth = `${(width * 800) / 210}px`;

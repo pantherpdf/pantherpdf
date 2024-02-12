@@ -6,9 +6,11 @@
  */
 
 import { ReportForceWidgets, compileTest } from '../unitTestHelpers';
-import type { Report } from '../types';
+import type { ApiEndpoints, Report } from '../types';
 import type { TextSimpleData, TextSimpleCompiled } from '../widgets/TextSimple';
 import { sampleReport } from '../editor/sampleReport';
+import { defaultWidgets } from '../widgets/allWidgets';
+import compile from './compile';
 
 test('text data', async () => {
   const report: ReportForceWidgets<TextSimpleData> = {
@@ -70,11 +72,12 @@ test('fonts used', async () => {
     widgets: [],
   };
   report.properties.font = {
-    family: 'Arial',
+    family: 'Lato',
   };
-  const obj = {};
-  const compiled = await compileTest(report, obj);
+  const data = {};
+  const api: ApiEndpoints = {};
+  const compiled = await compile(report, data, defaultWidgets, api);
   expect(compiled.properties.fontsUsed).toStrictEqual([
-    { name: 'Arial', weight: 400, italic: false },
+    { name: 'Lato', weight: 400, italic: false },
   ]);
 });

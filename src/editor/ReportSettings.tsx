@@ -226,11 +226,11 @@ export default function ReportSettings(props: GeneralProps) {
           />
 
           <PropertyFont
+            api={props.api}
             value={
               props.report.properties.font ? props.report.properties.font : {}
             }
             onChange={changeFont}
-            googleFontApiKey={props.api.googleFontApiKey}
           />
 
           <PaperEditor

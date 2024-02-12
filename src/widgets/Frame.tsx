@@ -16,11 +16,11 @@ import InputApplyOnEnter, {
   WidthRegex,
 } from '../components/InputApplyOnEnter';
 import PropertyFont, {
-  PropertyFontExtractStyle,
+  propertyFontExtractStyle,
   PropertyFontGenCss,
   TFont,
 } from './PropertyFont';
-import { LoadGoogleFontCss } from './GoogleFonts';
+import { loadGoogleFontCss } from './GoogleFonts';
 import useStateDelayed from '../useStateDelayed';
 import SectionName from '../components/SectionName';
 import InputLabel from '@mui/material/InputLabel';
@@ -184,7 +184,7 @@ export const Frame: Widget = {
     const dt2: FrameCompiled = JSON.parse(
       JSON.stringify({ ...dt, children: [] }),
     );
-    const style = PropertyFontExtractStyle(dt.font);
+    const style = propertyFontExtractStyle(dt.font);
     if (style) {
       helpers.propertiesCompiled.fontsUsed.push(style);
     }
@@ -194,9 +194,9 @@ export const Frame: Widget = {
 
   Editor: function (props) {
     const item = props.item as FrameData;
-    const fontStyle = PropertyFontExtractStyle(item.font);
+    const fontStyle = propertyFontExtractStyle(item.font);
     if (fontStyle) {
-      LoadGoogleFontCss(fontStyle);
+      loadGoogleFontCss(fontStyle);
     }
     return (
       <WidgetEditorName
@@ -328,9 +328,9 @@ export const Frame: Widget = {
 
         <SectionName text={trans('other')} />
         <PropertyFont
+          api={props.api}
           value={item.font}
           onChange={val => props.setItem({ ...props.item, font: val })}
-          googleFontApiKey={props.api.googleFontApiKey}
         />
         <FormControlLabel
           control={

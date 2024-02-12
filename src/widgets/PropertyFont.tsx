@@ -12,18 +12,16 @@ import InputApplyOnEnter, {
   WidthOptions,
 } from '../components/InputApplyOnEnter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisH, faFont } from '@fortawesome/free-solid-svg-icons';
-import { GoogleFontSelector } from './GoogleFonts';
-import SimpleDialog from '../components/SimpleDialog';
+import { faFont } from '@fortawesome/free-solid-svg-icons';
 import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
 import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Stack from '@mui/material/Stack';
 import Secondary from '../components/Secondary';
+import { ApiEndpoints } from '../types';
 
 // prettier-ignore
 type Narrowable = string | number | boolean | symbol | object | NonNullable<unknown> | void | null | undefined;
@@ -47,7 +45,7 @@ export interface TFont {
   lineHeight?: number;
 }
 
-export interface TFontStyle {
+export interface FontStyle {
   name: string;
   weight: number;
   italic: boolean;
@@ -127,7 +125,7 @@ export function PropertyFontGenCss(obj: TFont): CSSProperties {
   return css;
 }
 
-export function PropertyFontExtractStyle(obj: TFont): TFontStyle | undefined {
+export function propertyFontExtractStyle(obj: TFont): FontStyle | undefined {
   if (!obj.family) {
     return undefined;
   }
@@ -140,15 +138,14 @@ export function PropertyFontExtractStyle(obj: TFont): TFontStyle | undefined {
 }
 
 interface Props {
+  api: ApiEndpoints;
   value: TFont;
   onChange: (obj: TFont) => void;
   textButton?: boolean;
   iconButton?: boolean;
   id?: string;
-  googleFontApiKey?: string;
 }
 export default function PropertyFont(props: Props) {
-  const [showModal, setShowModal] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
   function handleInputChange(name: keyof TFont, value: string) {
@@ -221,21 +218,23 @@ export default function PropertyFont(props: Props) {
         }}
       >
         <Stack direction="column" spacing={2} sx={{ p: 2 }}>
-          <Stack direction="row">
-            <InputApplyOnEnter
-              component={TextField}
-              value={family}
-              onChange={val => handleInputChange('family', val)}
-              id="family"
-              label={trans('font-family')}
-              fullWidth
-            />
-            {props.googleFontApiKey && (
-              <IconButton onClick={() => setShowModal(true)}>
-                <FontAwesomeIcon icon={faEllipsisH} />
-              </IconButton>
-            )}
-          </Stack>
+          <TextField
+            select
+            id="family"
+            label={trans('font-family')}
+            value={family}
+            onChange={e => handleInputChange('family', e.target.value)}
+            fullWidth
+          >
+            <MenuItem value="">
+              <Secondary>{trans('inherit')}</Secondary>
+            </MenuItem>
+            {props.api.fonts?.list.map(fontName => (
+              <MenuItem value={fontName} key={fontName}>
+                {fontName}
+              </MenuItem>
+            ))}
+          </TextField>
           <InputApplyOnEnter
             component={TextField}
             value={size}
@@ -324,31 +323,6 @@ export default function PropertyFont(props: Props) {
           )}
         </Stack>
       </Popover>
-
-      <SimpleDialog
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        title={trans('font-select-family')}
-      >
-        <>
-          {showModal && props.googleFontApiKey && (
-            <GoogleFontSelector
-              apiKey={props.googleFontApiKey}
-              value={family}
-              onChange={x => {
-                const obj: TFont = { ...props.value };
-                if (x) {
-                  obj.family = x;
-                } else {
-                  delete obj.family;
-                }
-                props.onChange(obj as TFont);
-                setShowModal(false);
-              }}
-            />
-          )}
-        </>
-      </SimpleDialog>
     </>
   );
 }

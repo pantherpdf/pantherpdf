@@ -5,7 +5,7 @@
  */
 
 import type { CSSProperties } from 'react';
-import type { TFont, TFontStyle } from './widgets/PropertyFont';
+import type { TFont, FontStyle } from './widgets/PropertyFont';
 import type { WidgetItem, WidgetCompiled } from './widgets/types';
 import type { TransformItem } from './transforms/types';
 
@@ -42,7 +42,7 @@ export interface ReportProperties
 export interface ReportPropertiesCompiled
   extends Omit<ReportProperties, 'fileName'> {
   fileName?: string;
-  fontsUsed: TFontStyle[];
+  fontsUsed: FontStyle[];
   globalCss: string;
 }
 
@@ -132,8 +132,13 @@ export interface ApiEndpoints {
     name: string,
   ) => Promise<{ data: ArrayBuffer; mimeType: string }>;
 
-  /** To access metadata for all families served by Google Fonts */
-  googleFontApiKey?: string;
+  /** Font service */
+  fonts?: {
+    /** List of available font names */
+    list: string[];
+    /** Retrieve URL to font CSS or null for system fonts */
+    getCssUrls: (fontsUsed: FontStyle[]) => string[];
+  };
 
   /** Used by print preview to generate PDF */
   generatePdf?: (report: GenerateResult) => Promise<Uint8Array>;

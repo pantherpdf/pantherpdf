@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Report, Editor, SourceData } from '../src/index';
+import { Report, Editor, SourceData, ApiEndpoints } from '../src/index';
 import Typography from '@mui/material/Typography';
+import { googleFontCssUrl } from '../src/widgets/GoogleFonts';
 
 const sampleReport: Report = {
   widgets: [],
@@ -46,6 +47,22 @@ const sampleDataWrapper: SourceData = {
   description: 'Employee Alice',
 };
 
+const systemFonts = ['Arial', 'Verdana', 'Helvetica', 'Times New Roman'];
+const googleFonts = ['Roboto', 'Lato', 'Open Sans', 'Roboto Mono'];
+
+const api: ApiEndpoints = {
+  fonts: {
+    list: [...systemFonts, ...googleFonts],
+    getCssUrls: arr => {
+      const googleUsed = arr.filter(
+        obj => googleFonts.indexOf(obj.name) !== -1,
+      );
+      const url = googleFontCssUrl(googleUsed);
+      return url ? [url] : [];
+    },
+  },
+};
+
 export default function Container() {
   const [report, setReport] = useState<Report>(sampleReport);
 
@@ -78,7 +95,7 @@ export default function Container() {
       report={report}
       setReport={setReport2}
       sourceData={sampleDataWrapper}
-      api={{}}
+      api={api}
       navbar={{
         hasUndoRedo: true,
         undo: undoNext > 1 ? undo : undefined,

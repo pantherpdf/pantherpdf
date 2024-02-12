@@ -49,6 +49,7 @@ import WidgetEditorName from './widgets/WidgetEditorName';
 import { defaultWidgets } from './widgets/allWidgets';
 import SectionName from './components/SectionName';
 import InputApplyOnEnter from './components/InputApplyOnEnter';
+import { FontStyle } from './widgets/PropertyFont';
 
 const emptyReport: Report = {
   widgets: [],
@@ -96,6 +97,7 @@ export type {
   ApiReportMetaData,
   ApiFileMetaData,
   ApiUploadMetaData,
+  FontStyle,
   //
   Transform,
   TransformItem,
