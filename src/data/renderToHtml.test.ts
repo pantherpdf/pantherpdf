@@ -5,14 +5,17 @@
  * @license MIT
  */
 
-import { compileTest, renderWidget } from '../unitTestHelpers';
+import {
+  compileTest,
+  sampleFontServiceCssUrl,
+  renderWidget,
+} from '../unitTestHelpers';
 import type { ApiEndpoints, Report } from '../types';
 import type { TextSimpleData } from '../widgets/TextSimple';
 import { sampleReport } from '../editor/sampleReport';
 import renderToHtml from './renderToHtml';
 import { defaultWidgets } from '../widgets/allWidgets';
 import compile from './compile';
-import { googleFontCssUrl } from '../widgets/GoogleFonts';
 
 test('text', async () => {
   const el: TextSimpleData = {
@@ -25,7 +28,7 @@ test('text', async () => {
   expect(html).toMatchSnapshot();
 });
 
-test('should include google font', async () => {
+test('should include external font', async () => {
   const report: Report = {
     ...sampleReport,
     widgets: [],
@@ -39,18 +42,15 @@ test('should include google font', async () => {
   const api: ApiEndpoints = {
     fonts: {
       list: [],
-      getCssUrls: arr => {
-        const url = googleFontCssUrl(arr);
-        return url ? [url] : [];
-      },
+      getCssUrls: arr => arr.map(sampleFontServiceCssUrl),
     },
   };
   const compiled = await compile(report, {}, defaultWidgets, api);
   const html = renderToHtml(compiled, defaultWidgets, api);
   const expectedUrl1 =
-    'https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400&display=swap';
+    'https://my-font-service.com/css?family=Roboto+Mono:ital,wght@0,400&display=swap';
   const expectedUrl2 =
-    'https://fonts.googleapis.com/css2?family=Roboto%20Mono:ital,wght@0,400&display=swap';
+    'https://my-font-service.com/css?family=Roboto%20Mono:ital,wght@0,400&display=swap';
   expect(
     html.indexOf(expectedUrl1) !== -1 || html.indexOf(expectedUrl2) !== -1,
   ).toBeTruthy();

@@ -1,6 +1,5 @@
 import React from 'react';
-import { loadGoogleFontCss } from '../GoogleFonts';
-import { propertyFontExtractStyle, PropertyFontGenCss } from '../PropertyFont';
+import { propertyFontGenCss } from '../PropertyFont';
 import WidgetEditorName from '../WidgetEditorName';
 import { WidgetEditorProps } from '../types';
 import Editor from './Editor';
@@ -14,13 +13,8 @@ import { name } from './options';
 
 export default function EditorWrapper(props: WidgetEditorProps) {
   const item = props.item as TextHtmlData;
-  const css = PropertyFontGenCss(item.font);
+  const css = propertyFontGenCss(item.font);
   css.minHeight = '20px';
-  const font2 = propertyFontExtractStyle(item.font);
-  if (font2) {
-    loadGoogleFontCss(font2);
-  }
-
   return (
     <WidgetEditorName
       {...props}

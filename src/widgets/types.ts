@@ -15,6 +15,7 @@ import type {
 import type { FormulaHelper } from '../data/compile';
 import type { GeneralProps } from '../editor/types';
 import type { TransName } from '../translation';
+import { FontStyle } from './PropertyFont';
 
 /** Building blocks for editor */
 export interface Widget {
@@ -52,6 +53,12 @@ export interface Widget {
 
   /** Can user select Item by clicking ot it? Default true. */
   canSelect?: boolean;
+
+  /** Get fonts used in this item */
+  getFontsUsed?: (
+    parentFont: FontStyle,
+    item: WidgetItem,
+  ) => FontStyle | FontStyle[];
 }
 
 /**

@@ -11,7 +11,7 @@ import { defaultReportCss } from '../types';
 import type { ApiEndpoints, ReportCompiled } from '../types';
 import type { WidgetPreviewPropsBase, Widget } from '../widgets/types';
 import { getWidget } from '../widgets/allWidgets';
-import { PropertyFontGenCss } from '../widgets/PropertyFont';
+import { propertyFontGenCss } from '../widgets/PropertyFont';
 
 export function renderBody(
   report: ReportCompiled,
@@ -44,7 +44,7 @@ export function renderBody(
   // prepare css
   const cssObj: CSSProperties = {
     ...defaultReportCss,
-    ...PropertyFontGenCss(report.properties.font || {}),
+    ...propertyFontGenCss(report.properties.font || {}),
   };
   return <body style={cssObj}>{children}</body>;
 }

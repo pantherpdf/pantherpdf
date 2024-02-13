@@ -4,28 +4,24 @@
  * @license MIT
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import { defaultReportCss } from '../types';
-import { loadGoogleFontCss } from '../widgets/GoogleFonts';
-import {
-  propertyFontExtractStyle,
-  PropertyFontGenCss,
-} from '../widgets/PropertyFont';
+import { propertyFontGenCss } from '../widgets/PropertyFont';
 import type { GeneralProps } from './types';
 import trans from '../translation';
+import getFontsUsed from '../data/getFontsUsed';
 
 export default function EditorContent(props: GeneralProps) {
+  useEffect(() => {
+    const fontsUsed = getFontsUsed(props.report, props.widgets);
+    const urls = props.api.fonts?.getCssUrls(fontsUsed) || [];
+    loadFonts(urls);
+  });
   const style = {
     ...defaultReportCss,
-    ...PropertyFontGenCss(props.report.properties.font || {}),
+    ...propertyFontGenCss(props.report.properties.font || {}),
   };
-  const fontStyle = props.report.properties.font
-    ? propertyFontExtractStyle(props.report.properties.font)
-    : undefined;
-  if (fontStyle) {
-    loadGoogleFontCss(fontStyle);
-  }
   const width = props.report.properties.paper?.width || 210;
   style.maxWidth = `${(width * 800) / 210}px`;
   style.margin = `0 auto`;
@@ -39,4 +35,18 @@ export default function EditorContent(props: GeneralProps) {
       )}
     </div>
   );
+}
+
+const loadedUrls: string[] = [];
+function loadFonts(urls: string[]): void {
+  for (const url of urls) {
+    if (loadedUrls.indexOf(url) !== -1) {
+      continue;
+    }
+    loadedUrls.push(url);
+    const link = window.document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = url;
+    window.document.head.appendChild(link);
+  }
 }

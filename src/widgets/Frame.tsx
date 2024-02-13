@@ -16,11 +16,10 @@ import InputApplyOnEnter, {
   WidthRegex,
 } from '../components/InputApplyOnEnter';
 import PropertyFont, {
-  propertyFontExtractStyle,
-  PropertyFontGenCss,
-  TFont,
+  propertyFontGenCss,
+  Font,
+  combineFont,
 } from './PropertyFont';
-import { loadGoogleFontCss } from './GoogleFonts';
 import useStateDelayed from '../useStateDelayed';
 import SectionName from '../components/SectionName';
 import InputLabel from '@mui/material/InputLabel';
@@ -40,7 +39,7 @@ interface Properties {
   height: string;
   backgroundColor?: string;
   pageBreakAvoid?: boolean;
-  font: TFont;
+  font: Font;
 }
 export type FrameData = WidgetItem & Properties;
 export type FrameCompiled = WidgetCompiled &
@@ -96,7 +95,7 @@ function genStyle(
     css.pageBreakInside = 'avoid';
   }
 
-  const cssFont = PropertyFontGenCss(item.font);
+  const cssFont = propertyFontGenCss(item.font);
   Object.assign(css, cssFont);
 
   return css;
@@ -184,20 +183,12 @@ export const Frame: Widget = {
     const dt2: FrameCompiled = JSON.parse(
       JSON.stringify({ ...dt, children: [] }),
     );
-    const style = propertyFontExtractStyle(dt.font);
-    if (style) {
-      helpers.propertiesCompiled.fontsUsed.push(style);
-    }
     dt2.children = await helpers.compileChildren(dt.children, helpers);
     return dt2;
   },
 
   Editor: function (props) {
     const item = props.item as FrameData;
-    const fontStyle = propertyFontExtractStyle(item.font);
-    if (fontStyle) {
-      loadGoogleFontCss(fontStyle);
-    }
     return (
       <WidgetEditorName
         {...props}
@@ -348,6 +339,9 @@ export const Frame: Widget = {
       </>
     );
   },
+
+  getFontsUsed: (parentFont, item) =>
+    combineFont(parentFont, (item as FrameData).font),
 };
 
 interface SizeInputProps {

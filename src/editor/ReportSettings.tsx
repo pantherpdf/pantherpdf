@@ -10,7 +10,7 @@ import type { GeneralProps } from './types';
 import type { Report, Paper } from '../types';
 import isReport from '../data/isReport';
 import trans from '../translation';
-import PropertyFont, { TFont } from '../widgets/PropertyFont';
+import PropertyFont, { Font } from '../widgets/PropertyFont';
 import PaperEditor from './PaperEditor';
 import InputApplyOnEnter, {
   inputFAdornment,
@@ -124,7 +124,7 @@ function ShowUpload(props: GeneralProps) {
 export default function ReportSettings(props: GeneralProps) {
   const [showMore, setShowMore] = useState<boolean>(false);
 
-  async function changeFont(value: TFont) {
+  async function changeFont(value: Font) {
     const obj: Report = {
       ...props.report,
       properties: { ...props.report.properties },

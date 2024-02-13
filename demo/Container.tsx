@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Report, Editor, SourceData, ApiEndpoints } from '../src/index';
 import Typography from '@mui/material/Typography';
-import { googleFontCssUrl } from '../src/widgets/GoogleFonts';
+import { FontStyle } from '../src/widgets/PropertyFont';
 
 const sampleReport: Report = {
   widgets: [],
@@ -52,14 +52,11 @@ const googleFonts = ['Roboto', 'Lato', 'Open Sans', 'Roboto Mono'];
 
 const api: ApiEndpoints = {
   fonts: {
-    list: [...systemFonts, ...googleFonts],
-    getCssUrls: arr => {
-      const googleUsed = arr.filter(
-        obj => googleFonts.indexOf(obj.name) !== -1,
-      );
-      const url = googleFontCssUrl(googleUsed);
-      return url ? [url] : [];
-    },
+    list: [...systemFonts, '', ...googleFonts],
+    getCssUrls: arr =>
+      arr
+        .filter(obj => googleFonts.indexOf(obj.name) !== -1)
+        .map(googleFontCssUrl),
   },
 };
 
@@ -112,4 +109,8 @@ function Brand() {
       PantherPDF
     </Typography>
   );
+}
+
+function googleFontCssUrl(f: FontStyle) {
+  return `https://fonts.googleapis.com/css2?family=${encodeURIComponent(f.name)}:ital,wght@${f.italic ? 1 : 0},${encodeURIComponent(f.weight)}&display=swap`;
 }

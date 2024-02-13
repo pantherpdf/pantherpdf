@@ -1,4 +1,3 @@
-import { propertyFontExtractStyle } from '../PropertyFont';
 import { listOfAdjusts } from '../formulaAdjust';
 import { CompileHelper, WidgetItem } from '../types';
 import type { TextHtmlCompiled, TextHtmlData } from './TextHtml';
@@ -8,10 +7,6 @@ export default async function compile(
   helper: CompileHelper,
 ): Promise<TextHtmlCompiled> {
   const dt = item as TextHtmlData;
-  const style = propertyFontExtractStyle(dt.font);
-  if (style) {
-    helper.propertiesCompiled.fontsUsed.push(style);
-  }
   // combine parts
   let html = '';
   for (const part of dt.value) {

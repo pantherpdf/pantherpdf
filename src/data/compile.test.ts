@@ -11,6 +11,7 @@ import type { TextSimpleData, TextSimpleCompiled } from '../widgets/TextSimple';
 import { sampleReport } from '../editor/sampleReport';
 import { defaultWidgets } from '../widgets/allWidgets';
 import compile from './compile';
+import { FrameData } from '../widgets/Frame';
 
 test('text data', async () => {
   const report: ReportForceWidgets<TextSimpleData> = {
@@ -79,5 +80,50 @@ test('fonts used', async () => {
   const compiled = await compile(report, data, defaultWidgets, api);
   expect(compiled.properties.fontsUsed).toStrictEqual([
     { name: 'Lato', weight: 400, italic: false },
+  ]);
+});
+
+test('fonts used inheritance', async () => {
+  const report: ReportForceWidgets<TextSimpleData | FrameData> = {
+    ...sampleReport,
+    widgets: [
+      {
+        type: 'Frame',
+        margin: [0, 0, 0, 0],
+        padding: [0, 0, 0, 0],
+        border: {
+          width: 0,
+          color: '#000000',
+          style: 'solid',
+        },
+        width: '',
+        height: '',
+        font: {
+          weight: 'bold',
+        },
+        children: [
+          {
+            type: 'TextSimple',
+            value: { formula: '"Abc"' },
+            children: [],
+          },
+        ],
+      },
+      {
+        type: 'TextSimple',
+        value: { formula: '"Def"' },
+        children: [],
+      },
+    ],
+  };
+  report.properties.font = {
+    family: 'Lato',
+  };
+  const data = {};
+  const api: ApiEndpoints = {};
+  const compiled = await compile(report, data, defaultWidgets, api);
+  expect(compiled.properties.fontsUsed).toStrictEqual([
+    { name: 'Lato', weight: 400, italic: false },
+    { name: 'Lato', weight: 700, italic: false },
   ]);
 });

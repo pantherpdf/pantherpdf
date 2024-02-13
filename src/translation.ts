@@ -231,6 +231,7 @@ const tr2 = {
   'uploaded report': { en: 'Uploaded report', sl: 'Naložen report' },
 
   inherit: { en: 'Inherit', sl: 'Podeduj' },
+  none: { en: 'None', sl: 'Brez' },
 };
 
 export type trKeys = keyof typeof tr2;

@@ -16,7 +16,7 @@ import type {
 import formulaEvaluate from '../formula/formula';
 import { getWidget } from '../widgets/allWidgets';
 import type { CompileHelper, Widget, WidgetItem } from '../widgets/types';
-import { propertyFontExtractStyle } from '../widgets/PropertyFont';
+import getFontsUsed from './getFontsUsed';
 
 type TOvrr = [string, unknown];
 
@@ -81,6 +81,9 @@ export default async function compile(
     evalFormulaWrapper,
   );
 
+  // fonts used
+  propsCompiled.fontsUsed = getFontsUsed(report, widgets);
+
   const helper: CompileHelper = {
     wid: [],
     report: report,
@@ -139,12 +142,6 @@ async function compilePrprt(
       );
     }
     obj.fileName = res;
-  }
-  if (prprt.font) {
-    const font = propertyFontExtractStyle(prprt.font);
-    if (font) {
-      obj.fontsUsed.push(font);
-    }
   }
   return obj;
 }

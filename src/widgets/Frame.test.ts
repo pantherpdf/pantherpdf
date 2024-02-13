@@ -12,7 +12,7 @@ import { compileTest, renderWidget } from '../unitTestHelpers';
 import type { WidgetNewProps } from './types';
 import { TextSimple, TextSimpleData } from './TextSimple';
 
-test('Frame should include google font', async () => {
+test('Frame should include external font', async () => {
   const helper: WidgetNewProps = { report: sampleReport };
   const el = (await Frame.newItem(helper)) as FrameData;
   el.font.family = 'Lato';
@@ -24,6 +24,7 @@ test('Frame should include google font', async () => {
   };
   const compiled = await compileTest(report, {});
   expect(compiled.properties.fontsUsed).toStrictEqual([
+    { name: 'sans-serif', weight: 400, italic: false },
     { name: 'Lato', weight: 700, italic: true },
   ]);
 });

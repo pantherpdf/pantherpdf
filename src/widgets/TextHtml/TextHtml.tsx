@@ -11,7 +11,7 @@
 
 import React from 'react';
 import type { WidgetItem, WidgetCompiled, Widget } from '../types';
-import { PropertyFontGenCss, TFont } from '../PropertyFont';
+import { propertyFontGenCss, Font, combineFont } from '../PropertyFont';
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import trans from '../../translation';
 import PropertiesEditor from './PropertiesEditor';
@@ -24,13 +24,13 @@ import EditorWrapper from './EditorWrapper';
 export interface TextHtmlData extends WidgetItem {
   type: 'TextHtml';
   value: TextHtmlDataValue[];
-  font: TFont;
+  font: Font;
 }
 
 export interface TextHtmlCompiled extends WidgetCompiled {
   type: 'TextHtml';
   value: string;
-  font: TFont;
+  font: Font;
 }
 
 export const TextHtml: Widget = {
@@ -60,11 +60,14 @@ export const TextHtml: Widget = {
 
   Preview: function (props) {
     const item = props.item as TextHtmlCompiled;
-    const css = PropertyFontGenCss(item.font);
+    const css = propertyFontGenCss(item.font);
     return <div style={css} dangerouslySetInnerHTML={{ __html: item.value }} />;
   },
 
   Properties: PropertiesEditor,
 
   canDrag: false,
+
+  getFontsUsed: (parentFont, item) =>
+    combineFont(parentFont, (item as TextHtmlData).font),
 };

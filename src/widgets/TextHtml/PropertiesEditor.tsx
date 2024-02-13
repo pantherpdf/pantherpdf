@@ -217,7 +217,9 @@ function TagEditor(props: WidgetEditorProps) {
         id="tag-adjust"
         label={trans('adjust')}
       >
-        <MenuItem value=""></MenuItem>
+        <MenuItem value="">
+          <Secondary>{trans('none')}</Secondary>
+        </MenuItem>
         {adjustOptionsWithSeparatos().map(flt =>
           flt.key.startsWith('separator-') ? (
             <MenuItem disabled key={flt.key}>

@@ -36,7 +36,7 @@ type TWeightOption = (typeof WeightOptions)[number];
 const StyleOptions = tuple('normal', 'italic');
 type TStyleOption = (typeof StyleOptions)[number];
 
-export interface TFont {
+export interface Font {
   family?: string;
   size?: string;
   weight?: TWeightOption;
@@ -65,7 +65,7 @@ const weightName: { [key in TWeightOption]: string } = {
   '900': '900',
 };
 
-const WeightOptionToNumeric: { [key in TWeightOption]: number } = {
+export const weightOptionToNumeric: { [key in TWeightOption]: number } = {
   normal: 400,
   bold: 700,
   '100': 100,
@@ -93,7 +93,7 @@ const lineHeightOptions: { txt: string; value: number }[] = [
   { txt: '200%', value: 2.0 },
 ];
 
-export function PropertyFontGenCss(obj: TFont): CSSProperties {
+export function propertyFontGenCss(obj: Font): CSSProperties {
   const css: CSSProperties = {};
   if (obj.family) {
     css.fontFamily = obj.family + ', sans-serif';
@@ -125,22 +125,10 @@ export function PropertyFontGenCss(obj: TFont): CSSProperties {
   return css;
 }
 
-export function propertyFontExtractStyle(obj: TFont): FontStyle | undefined {
-  if (!obj.family) {
-    return undefined;
-  }
-  const w = obj.weight || 'normal';
-  return {
-    name: obj.family,
-    weight: WeightOptionToNumeric[w],
-    italic: obj.style === 'italic',
-  };
-}
-
 interface Props {
   api: ApiEndpoints;
-  value: TFont;
-  onChange: (obj: TFont) => void;
+  value: Font;
+  onChange: (obj: Font) => void;
   textButton?: boolean;
   iconButton?: boolean;
   id?: string;
@@ -148,8 +136,8 @@ interface Props {
 export default function PropertyFont(props: Props) {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
-  function handleInputChange(name: keyof TFont, value: string) {
-    let obj: TFont;
+  function handleInputChange(name: keyof Font, value: string) {
+    let obj: Font;
     if (value === '') {
       obj = { ...props.value };
       delete obj[name];
@@ -229,11 +217,22 @@ export default function PropertyFont(props: Props) {
             <MenuItem value="">
               <Secondary>{trans('inherit')}</Secondary>
             </MenuItem>
-            {props.api.fonts?.list.map(fontName => (
-              <MenuItem value={fontName} key={fontName}>
-                {fontName}
-              </MenuItem>
-            ))}
+            <MenuItem disabled>──────────</MenuItem>
+            {props.api.fonts?.list.map((fontName, fontIdx) => {
+              if (fontName.length > 0) {
+                return (
+                  <MenuItem value={fontName} key={fontName}>
+                    {fontName}
+                  </MenuItem>
+                );
+              } else {
+                return (
+                  <MenuItem disabled key={`separator-${fontIdx}`}>
+                    ──────────
+                  </MenuItem>
+                );
+              }
+            })}
           </TextField>
           <InputApplyOnEnter
             component={TextField}
@@ -251,7 +250,7 @@ export default function PropertyFont(props: Props) {
               value={lineHeight}
               onChange={e => {
                 const val = e.target.value;
-                let obj: TFont;
+                let obj: Font;
                 if (val === '') {
                   obj = { ...props.value };
                   delete obj.lineHeight;
@@ -325,4 +324,18 @@ export default function PropertyFont(props: Props) {
       </Popover>
     </>
   );
+}
+
+export function combineFont(parent: FontStyle, override: Font): FontStyle {
+  const obj: FontStyle = { ...parent };
+  if (override.family) {
+    obj.name = override.family;
+  }
+  if (override.style) {
+    obj.italic = override.style === 'italic';
+  }
+  if (override.weight) {
+    obj.weight = weightOptionToNumeric[override.weight];
+  }
+  return obj;
 }

@@ -13,6 +13,7 @@ import { renderBody } from './data/renderToHtml';
 import { sampleReport } from './editor/sampleReport';
 import { renderToString } from 'react-dom/server';
 import type { WidgetItem, WidgetCompiled } from './widgets/types';
+import { FontStyle } from './widgets/PropertyFont';
 
 export async function compileComponentTest(
   cmpData: object,
@@ -53,3 +54,7 @@ export async function renderWidget(
 export type ForceChildren<T> = T & { children: ForceChildren<T>[] };
 
 export type ReportForceWidgets<T> = Report & { widgets: ForceChildren<T>[] };
+
+export function sampleFontServiceCssUrl(f: FontStyle): string {
+  return `https://my-font-service.com/css?family=${encodeURIComponent(f.name)}:ital,wght@${f.italic ? 1 : 0},${encodeURIComponent(f.weight)}&display=swap`;
+}

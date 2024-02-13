@@ -5,7 +5,7 @@
  */
 
 import type { CSSProperties } from 'react';
-import type { TFont, FontStyle } from './widgets/PropertyFont';
+import type { Font, FontStyle } from './widgets/PropertyFont';
 import type { WidgetItem, WidgetCompiled } from './widgets/types';
 import type { TransformItem } from './transforms/types';
 
@@ -34,7 +34,7 @@ export interface GenerateResultProperties {
 
 export interface ReportProperties
   extends Omit<GenerateResultProperties, 'fileName'> {
-  font?: TFont;
+  font?: Font;
   lang?: string;
   fileName?: FormulaObject;
 }
