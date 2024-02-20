@@ -4,7 +4,13 @@
  * @license MIT
  */
 
-import type { ApiEndpoints, GenerateResult, Report } from '../types';
+import type {
+  ApiEndpoints,
+  GenerateResult,
+  GenerateResultProperties,
+  Report,
+  ReportPropertiesCompiled,
+} from '../types';
 import compile from './compile';
 import fetchSourceData, { SourceData } from './fetchSourceData';
 import { transformData } from '../transforms/transformData';
@@ -60,7 +66,7 @@ export default async function generate(
   const html = renderToHtml(reportCompiled, useWidgets, props.api);
   return {
     html,
-    properties: reportCompiled.properties,
+    properties: propertiesCompiledToResult(reportCompiled.properties),
   };
 }
 
@@ -80,4 +86,18 @@ export async function generateData(props: GenerateArgs): Promise<unknown> {
     : defaultTransforms;
 
   return await transformData(useTransforms, source, report.transforms, api);
+}
+
+/** Convert properties to different format to remove unnecessary fields. */
+function propertiesCompiledToResult(
+  src: ReportPropertiesCompiled,
+): GenerateResultProperties {
+  const obj: GenerateResultProperties = {};
+  if (src.paper !== undefined) {
+    obj.paper = src.paper;
+  }
+  if (src.fileName !== undefined) {
+    obj.fileName = src.fileName;
+  }
+  return obj;
 }
