@@ -13,6 +13,7 @@ import renderToHtml from '../data/renderToHtml';
 import trans from '../translation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { calcPaperScreenSize } from './EditorContent';
 
 const loadingMagicKey = 'loading';
 
@@ -57,11 +58,13 @@ export default function PrintPreview(props: GeneralProps) {
   if (html === loadingMagicKey) {
     return <FontAwesomeIcon icon={faSpinner} spin />;
   }
+  const screenWidth = calcPaperScreenSize(props.report.properties.paper?.width);
   return (
     <iframe
       srcDoc={html}
       style={{
         width: '100%',
+        minWidth: `${screenWidth.min}px`,
         height: 'calc(100vh - 190px)',
         border: 'none',
         backgroundColor: 'white',

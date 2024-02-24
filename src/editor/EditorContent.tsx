@@ -22,8 +22,9 @@ export default function EditorContent(props: GeneralProps) {
     ...defaultReportCss,
     ...propertyFontGenCss(props.report.properties.font || {}),
   };
-  const width = props.report.properties.paper?.width || 210;
-  style.maxWidth = `${(width * 800) / 210}px`;
+  const screenWidth = calcPaperScreenSize(props.report.properties.paper?.width);
+  style.maxWidth = `${screenWidth.max}px`;
+  style.minWidth = `${screenWidth.min}px`;
   style.margin = `0 auto`;
   return (
     <div style={style}>
@@ -49,4 +50,17 @@ function loadFonts(urls: string[]): void {
     link.href = url;
     window.document.head.appendChild(link);
   }
+}
+
+interface PaperScreenWidth {
+  max: number;
+  min: number;
+}
+
+export function calcPaperScreenSize(
+  width: number | undefined,
+): PaperScreenWidth {
+  width = width === undefined ? 210 : width;
+  const widthPx = (width * 800) / 210;
+  return { max: widthPx, min: widthPx * 0.75 };
 }

@@ -33,7 +33,7 @@ export default function EditorMenu(props: GeneralProps) {
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        sx={{ height: '100%' }}
+        sx={{ height: '100%', overflowX: 'auto' }}
       >
         {navbarProps.left || <div />}
         <Stack direction="row" spacing={3} data-testid="center-buttons">
@@ -43,7 +43,7 @@ export default function EditorMenu(props: GeneralProps) {
             onClick={() => setShownModalPrint(true)}
             data-testid="print"
           >
-            <FontAwesomeIcon icon={faPrint} fixedWidth />
+            <FontAwesomeIcon icon={faPrint} />
           </Button>
           {navbarProps.hasUndoRedo && (
             <ButtonGroup variant="contained" size="large">
@@ -52,14 +52,14 @@ export default function EditorMenu(props: GeneralProps) {
                 disabled={!navbarProps.undo}
                 data-testid="undo"
               >
-                <FontAwesomeIcon icon={faUndo} fixedWidth />
+                <FontAwesomeIcon icon={faUndo} />
               </Button>
               <Button
                 onClick={navbarProps.redo}
                 disabled={!navbarProps.redo}
                 data-testid="redo"
               >
-                <FontAwesomeIcon icon={faRedo} fixedWidth />
+                <FontAwesomeIcon icon={faRedo} />
               </Button>
             </ButtonGroup>
           )}
