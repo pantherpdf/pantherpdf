@@ -47,7 +47,7 @@ const styleSelected: CSSProperties = {
  *
  * See EditorProps for more information
  */
-export default function Editor(props: EditorProps) {
+export default function Editor(props: EditorProps): JSX.Element {
   const [selected, setSelected] = useState<number[] | null>(null);
   const [sourceDataOverride, setSourceDataOverride] = useState<
     SourceData | undefined

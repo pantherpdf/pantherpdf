@@ -28,7 +28,7 @@ interface Props {
 }
 
 /** Title for a section in editor's properties */
-export default function SectionName(props: Props) {
+export default function SectionName(props: Props): JSX.Element {
   return (
     <Bg elevation={2}>
       <Typography style={styleFill} fontWeight="bold">

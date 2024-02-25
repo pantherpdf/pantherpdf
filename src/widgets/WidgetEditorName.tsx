@@ -46,7 +46,9 @@ export interface WidgetEditorNameProps extends WidgetEditorProps {
   visible?: boolean;
 }
 
-export default function WidgetEditorName(props: WidgetEditorNameProps) {
+export default function WidgetEditorName(
+  props: WidgetEditorNameProps,
+): JSX.Element {
   return (
     <BoxParent style={props.style}>
       <NameDiv

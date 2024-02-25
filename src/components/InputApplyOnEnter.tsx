@@ -32,7 +32,7 @@ type Props<T extends AbstractComponent, TValue> = Omit<
  */
 export default function InputApplyOnEnter<T extends AbstractComponent>(
   props: Props<T, string> & { regex?: RegExp },
-) {
+): JSX.Element {
   const Cmp = props.component;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const props2: any = { ...props };
